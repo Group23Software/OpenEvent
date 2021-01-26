@@ -8,5 +8,7 @@
   &lt;TestAncestor&gt;
     &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Create.ShouldCreateNewUser&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Create.ShouldFailNonUniqueUser&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Destroy.ShouldDestroyUser&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Destroy.ShouldNotFindUser&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

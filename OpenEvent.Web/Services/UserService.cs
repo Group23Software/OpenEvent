@@ -12,6 +12,7 @@ namespace OpenEvent.Web.Services
     public interface IUserService
     {
         Task<User> Create(NewUserInput userInput);
+        Task Destroy(Guid id);
     }
 
     public class UserService : IUserService
@@ -69,6 +70,29 @@ namespace OpenEvent.Web.Services
                 throw;
             }
 
+        }
+
+        public async Task Destroy(Guid id)
+        {
+            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                Logger.LogInformation("User doesnt exist");
+                throw new Exception("User doesnt exist");
+            }
+
+            try
+            {
+                ApplicationContext.Users.Remove(user);
+                await ApplicationContext.SaveChangesAsync();
+            }
+            catch
+            {
+                Logger.LogInformation("User failed to save");
+                throw;
+            }
+            
         }
     }
 }

@@ -31,5 +31,19 @@ namespace OpenEvent.Web.Controllers
             }
              
         }
+
+        [HttpDelete]
+        public async Task<ActionResult> Destroy(Guid id)
+        {
+            try
+            {
+                await UserService.Destroy(id);
+                return Ok("Destroyed");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
     }
 }

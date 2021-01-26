@@ -17,17 +17,17 @@ namespace OpenEvent.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<string>> Authenticate([FromBody] AuthBody authBody)
+        public async Task<IActionResult> Authenticate([FromBody] AuthBody authBody)
         {
             try
             {
                 var result = await AuthService.Authenticate(authBody.Email, authBody.Password);
-                return result;
+                return Ok(new {token = result});
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return BadRequest();
+                return Unauthorized();
             }
         }
     }

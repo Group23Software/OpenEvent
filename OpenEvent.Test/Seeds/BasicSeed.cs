@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Models;
@@ -10,6 +11,7 @@ namespace OpenEvent.Test.Seeds
         {
             User user = new User()
             {
+                Id = new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"),
                 Email = "exists@email.co.uk",
                 Password = "Password",
                 UserName = "ExistingUser",
