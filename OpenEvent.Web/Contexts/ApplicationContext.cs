@@ -6,12 +6,12 @@ using OpenEvent.Web.Models;
 
 namespace OpenEvent.Web.Contexts
 {
-    public class ApplicationContext : ApiAuthorizationDbContext<User>
+    public class ApplicationContext : DbContext
     {
-        public ApplicationContext(
-            DbContextOptions options,
-            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
+        public ApplicationContext(DbContextOptions<ApplicationContext> dbContextOptions) : base(dbContextOptions)
         {
         }
+
+        public DbSet<User> Users { get; set; }
     }
 }
