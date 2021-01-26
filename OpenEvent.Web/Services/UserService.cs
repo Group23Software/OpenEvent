@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace OpenEvent.Web.Services
     {
         Task<User> Create(NewUserInput userInput);
         Task Destroy(Guid id);
+        Task<UserAccountModel> Get(Guid id);
     }
 
     public class UserService : IUserService
@@ -93,6 +95,29 @@ namespace OpenEvent.Web.Services
                 throw;
             }
             
+        }
+
+        public async Task<UserAccountModel> Get(Guid id)
+        {
+            var user = await ApplicationContext.Users.Select(x => new UserAccountModel
+            {
+                Id = x.Id,
+                Avatar = x.Avatar,
+                Email = x.Email,
+                Token = x.Token,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                PhoneNumber = x.PhoneNumber,
+                UserName = x.UserName
+            }).FirstOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                Logger.LogInformation("User not found");
+                throw new Exception("User not found");
+            }
+
+            return user;
         }
     }
 }

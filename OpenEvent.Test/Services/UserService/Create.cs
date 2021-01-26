@@ -13,29 +13,8 @@ using OpenEvent.Web.Models;
 namespace OpenEvent.Test.Services.UserService
 {
     [TestFixture]
-    public class Create
+    public class Create : BasicTestFixture
     {
-        private ApplicationContext Context;
-        private IOptions<AppSettings> _appSettings;
-
-        [SetUp]
-        public async Task Setup()
-        {
-            Context = await new BasicSetup().Setup();
-
-            _appSettings = Options.Create(new AppSettings()
-            {
-                Secret = "this is a secret"
-            });
-        }
-
-        [TearDown]
-        public async Task TearDown()
-        {
-            await Context.Database.EnsureDeletedAsync();
-            await Context.DisposeAsync();
-        }
-
         [Test]
         public async Task ShouldCreateNewUser()
         {
