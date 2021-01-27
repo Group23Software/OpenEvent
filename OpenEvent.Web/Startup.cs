@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,16 @@ namespace OpenEvent.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "AllowOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod()
+                            .AllowCredentials();
+                    });
+            });
+
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
@@ -57,7 +68,9 @@ namespace OpenEvent.Web
                         ValidateAudience = false
                     };
                 });
-            
+
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
 
@@ -70,9 +83,9 @@ namespace OpenEvent.Web
                     options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                 }
             );
-            
+
             services.AddSwaggerGen();
-            
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
         }
@@ -100,14 +113,13 @@ namespace OpenEvent.Web
 
             app.UseRouting();
 
+            app.UseCors("AllowOrigin");
+
             app.UseAuthentication();
-            
+
             app.UseSwagger();
-            
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenEvent");
-            });
+
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "OpenEvent"); });
 
             app.UseEndpoints(endpoints =>
             {
@@ -120,9 +132,9 @@ namespace OpenEvent.Web
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
-            
+
                 spa.Options.SourcePath = "ClientApp";
-            
+
                 if (env.IsDevelopment())
                 {
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
