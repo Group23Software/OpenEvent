@@ -2,23 +2,20 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Moq;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using OpenEvent.Test.Setups;
 using OpenEvent.Web;
 using OpenEvent.Web.Contexts;
+using OpenEvent.Web.Models;
 using OpenEvent.Web.Services;
-using ILogger = NUnit.Framework.Internal.ILogger;
 
-namespace OpenEvent.Test
+namespace OpenEvent.Test.Services.AuthService
 {
-    public class BasicTestFixture
+    public class AuthTestFixture
     {
         protected ApplicationContext Context;
         protected IMapper Mapper;
         protected IOptions<AppSettings> AppSettings;
-        protected IUserService UserService;
         protected IAuthService AuthService;
 
         [SetUp]
@@ -35,12 +32,19 @@ namespace OpenEvent.Test
                 Secret = "this is a secret"
             });
 
-            AuthService = new AuthService(Context,
-                new Logger<AuthService>(new LoggerFactory()), AppSettings, Mapper);
-
-            UserService = new UserService(Context,
-                new Logger<UserService>(new LoggerFactory()),
+            AuthService = new Web.Services.AuthService(Context,
+                new Logger<Web.Services.AuthService>(new LoggerFactory()), AppSettings, Mapper);
+            
+            var userService = new Web.Services.UserService(Context,
+                new Logger<Web.Services.UserService>(new LoggerFactory()),
                 Mapper, AuthService);
+
+            await userService.Create(new NewUserInput()
+            {
+                Email = "email@email.co.uk",
+                Password = "Password"
+            });
+
         }
 
         [TearDown]

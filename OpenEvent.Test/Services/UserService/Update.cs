@@ -8,7 +8,7 @@ using OpenEvent.Web.Models;
 namespace OpenEvent.Test.Services.UserService
 {
     [TestFixture]
-    public class Update : BasicTestFixture
+    public class Update : UserTestFixture
     {
         // [Test]
         // public async Task ShouldUpdateUser()

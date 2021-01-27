@@ -18,7 +18,7 @@ namespace OpenEvent.Web.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<User>> Create([FromBody] NewUserInput newUserInput)
+        public async Task<ActionResult<UserViewModel>> Create([FromBody] NewUserInput newUserInput)
         {
             try
             {
@@ -59,5 +59,23 @@ namespace OpenEvent.Web.Controllers
         //         return BadRequest(e);
         //     }
         // }
+
+        [HttpGet("UserNameExists")]
+        public async Task<ActionResult<bool>> UserNameExists(string username)
+        {
+            return Ok(await UserService.UserNameExists(username));
+        }
+        
+        [HttpGet("EmailExists")]
+        public async Task<ActionResult<bool>> EmailExists(string email)
+        {
+            return Ok(await UserService.EmailExists(email));
+        }
+        
+        [HttpGet("PhoneExists")]
+        public async Task<ActionResult<bool>> PhoneExists(string phoneNumber)
+        {
+            return Ok(await UserService.PhoneExists(phoneNumber));
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace OpenEvent.Web.Models
         public byte[] Avatar { get; set; }
         public string PhoneNumber { get; set; }
         public string Token { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 
     public class NewUserInput
@@ -29,6 +30,9 @@ namespace OpenEvent.Web.Models
         public string UserName { get; set; }
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        
+        public bool Remember { get; set; }
     }
 
     public class UserViewModel
@@ -53,5 +57,6 @@ namespace OpenEvent.Web.Models
         public byte[] Avatar { get; set; }
         public string PhoneNumber { get; set; }
         public string Token { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 }

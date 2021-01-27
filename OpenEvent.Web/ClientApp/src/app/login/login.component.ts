@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {min} from "rxjs/operators";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../_Services/auth.service";
-import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {CreateAccountComponent} from "./create-account/create-account.component";
 
 @Component({
   selector: 'app-login',
@@ -17,14 +18,14 @@ export class LoginComponent implements OnInit
 
   loginFormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.min(8), Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]),
+    password: new FormControl('', [Validators.required]),
     remember: new FormControl('')
   });
   loading: boolean = false;
   loginError: string = null;
 
 
-  constructor (private authService: AuthService, private router: Router)
+  constructor (private authService: AuthService, private router: Router, private dialog: MatDialog)
   {
   }
 
@@ -50,7 +51,8 @@ export class LoginComponent implements OnInit
       (response) =>
       {
         // TODO: redirect to app
-        this.router.navigate(['/account']).then(r => {
+        this.router.navigate(['/account']).then(r =>
+        {
           if (r) console.log('Navigated');
         });
       },
@@ -65,6 +67,8 @@ export class LoginComponent implements OnInit
   public create ()
   {
     console.log("sign up has been pressed");
-
+    let dialog = this.dialog.open(CreateAccountComponent, {
+      width: "80vw"
+    });
   }
 }

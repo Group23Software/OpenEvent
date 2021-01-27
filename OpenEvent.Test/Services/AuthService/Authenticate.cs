@@ -1,34 +1,34 @@
+using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
+using FluentAssertions;
 using NUnit.Framework;
-using OpenEvent.Test.Setups;
-using OpenEvent.Web;
-using OpenEvent.Web.Contexts;
 
 namespace OpenEvent.Test.Services.AuthService
 {
     [TestFixture]
-    public class Authenticate
+    public class Authenticate : AuthTestFixture
     {
-        private ApplicationContext Context;
-        private IOptions<AppSettings> _appSettings;
-
-        [SetUp]
-        public async Task Setup()
+        [Test]
+        public async Task ShouldAuthenticate()
         {
-            Context = await new BasicSetup().Setup();
-
-            _appSettings = Options.Create(new AppSettings()
-            {
-                Secret = "this is a secret"
-            });
+            var result = await AuthService.Authenticate("email@email.co.uk", "Password", false);
+            result.Should().NotBeNull();
         }
 
-        [TearDown]
-        public async Task TearDown()
+        [Test]
+        public async Task ShouldBeIncorrect()
         {
-            await Context.Database.EnsureDeletedAsync();
-            await Context.DisposeAsync();
+            FluentActions.Invoking(async () => await AuthService.Authenticate("email@email.co.uk", "Wrong", false))
+                .Should().Throw<Exception>()
+                .WithMessage("Password incorrect");
+        }
+
+        [Test]
+        public async Task ShouldNotExist()
+        {
+            FluentActions.Invoking(async () => await AuthService.Authenticate("wrong@email.co.uk", "Wrong", false))
+                .Should().Throw<Exception>()
+                .WithMessage("User does not exist");
         }
     }
 }

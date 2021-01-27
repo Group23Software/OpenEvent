@@ -21,6 +21,10 @@ import {AuthGuard} from "./_guards/auth.guard";
 import {AuthInterceptor} from "./_guards/auth.interceptor";
 import { CreateAccountComponent } from './login/create-account/create-account.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+import {ImageCropperModule} from "ngx-image-cropper";
 
 @NgModule({
   declarations: [
@@ -49,9 +53,14 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     MatButtonModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    ImageCropperModule,
   ],
   providers: [CookieService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [CreateAccountComponent]
 })
 export class AppModule
 {

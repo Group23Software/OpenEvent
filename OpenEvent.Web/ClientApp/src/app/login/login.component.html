@@ -1,5 +1,5 @@
 <div id="login">
-  <div class="display-3 mx-auto m-5">Login / Create account</div>
+  <div class="display-3 mx-auto m-5">Login / Sign up</div>
 
   <form class="d-flex justify-content-between flex-column" [formGroup]="loginFormGroup" (ngSubmit)="login()">
 
@@ -14,9 +14,6 @@
     <mat-form-field appearance="outline">
       <mat-label>Password</mat-label>
       <input matInput type="password" formControlName="password" placeholder="Password123">
-      <mat-error>
-        Password must have 8+ characters, 1+ uppercase letter, lowercase letter, number and special character
-      </mat-error>
     </mat-form-field>
 
     <mat-checkbox formControlName="remember" class="ml-3">Remember me</mat-checkbox>

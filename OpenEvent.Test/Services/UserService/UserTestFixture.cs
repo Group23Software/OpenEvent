@@ -2,24 +2,21 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Moq;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using OpenEvent.Test.Setups;
 using OpenEvent.Web;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Services;
-using ILogger = NUnit.Framework.Internal.ILogger;
 
-namespace OpenEvent.Test
+namespace OpenEvent.Test.Services.UserService
 {
-    public class BasicTestFixture
+    public class UserTestFixture
     {
         protected ApplicationContext Context;
         protected IMapper Mapper;
         protected IOptions<AppSettings> AppSettings;
-        protected IUserService UserService;
         protected IAuthService AuthService;
+        protected IUserService UserService;
 
         [SetUp]
         public async Task Setup()
@@ -35,11 +32,11 @@ namespace OpenEvent.Test
                 Secret = "this is a secret"
             });
 
-            AuthService = new AuthService(Context,
-                new Logger<AuthService>(new LoggerFactory()), AppSettings, Mapper);
+            AuthService = new Web.Services.AuthService(Context,
+                new Logger<Web.Services.AuthService>(new LoggerFactory()), AppSettings, Mapper);
 
-            UserService = new UserService(Context,
-                new Logger<UserService>(new LoggerFactory()),
+            UserService = new Web.Services.UserService(Context,
+                new Logger<Web.Services.UserService>(new LoggerFactory()),
                 Mapper, AuthService);
         }
 

@@ -16,3 +16,16 @@ export interface AuthBody
   Password: string;
   Remember: boolean;
 }
+
+export interface NewUserInput
+{
+  UserName: string;
+  Password: string;
+  Email: string;
+  FirstName: string;
+  LastName: string;
+  Avatar: any[];
+  PhoneNumber: string;
+  DateOfBirth: Date;
+  Remember: boolean;
+}

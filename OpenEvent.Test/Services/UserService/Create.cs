@@ -1,26 +1,18 @@
 using System;
 using System.Threading.Tasks;
-using AutoMapper;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NUnit.Framework;
-using OpenEvent.Test.Setups;
-using OpenEvent.Web;
-using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Models;
 
 namespace OpenEvent.Test.Services.UserService
 {
     [TestFixture]
-    public class Create : BasicTestFixture
+    public class Create : UserTestFixture
     {
         [Test]
         public async Task ShouldCreateNewUser()
         {
-            var userService =
-                new Web.Services.UserService(Context, new Logger<Web.Services.UserService>(new LoggerFactory()));
-
             NewUserInput user = new NewUserInput()
             {
                 Email = "email@email.co.uk",
@@ -28,26 +20,27 @@ namespace OpenEvent.Test.Services.UserService
                 FirstName = "Joe",
                 LastName = "Blogs",
                 UserName = "JoeBlogs",
-                PhoneNumber = "0000000000"
+                PhoneNumber = "0000000000",
+                Avatar = new byte[100],
+                Remember = false,
+                DateOfBirth = DateTime.Now.AddYears(-18)
             };
 
-            var result = await userService.Create(user);
+            var result = await UserService.Create(user);
             result.Should().NotBeNull();
         }
-        
+
         [Test]
         public async Task ShouldFailNonUniqueUser()
         {
-            var userService = new Web.Services.UserService(Context, new Logger<Web.Services.UserService>(new LoggerFactory()));
-
             NewUserInput user = new NewUserInput()
             {
                 Email = "exists@email.co.uk",
                 Password = "Fail",
                 UserName = "ExistingUser"
             };
-            
-            FluentActions.Invoking(async () => await userService.Create(user))
+
+            FluentActions.Invoking(async () => await UserService.Create(user))
                 .Should().Throw<Exception>()
                 .WithMessage("User already exists");
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,26 +13,37 @@ namespace OpenEvent.Web.Services
 {
     public interface IUserService
     {
-        Task<User> Create(NewUserInput userInput);
+        Task<UserViewModel> Create(NewUserInput userInput);
         Task Destroy(Guid id);
+
         Task<UserAccountModel> Get(Guid id);
+
         // Task<User> UpdateBasicInfo(UserAccountModel user);
+        Task<bool> UserNameExists(string username);
+        Task<bool> EmailExists(string email);
+        Task<bool> PhoneExists(string phoneNumber);
     }
 
     public class UserService : IUserService
     {
         private ILogger<UserService> Logger;
         private ApplicationContext ApplicationContext;
+        private IMapper Mapper;
+        private IAuthService AuthService;
 
-        public UserService(ApplicationContext context, ILogger<UserService> logger)
+        public UserService(ApplicationContext context, ILogger<UserService> logger, IMapper mapper,
+            IAuthService authService)
         {
             Logger = logger;
             ApplicationContext = context;
+            Mapper = mapper;
+            AuthService = authService;
         }
-        
-        public async Task<User> Create(NewUserInput userInput)
+
+        public async Task<UserViewModel> Create(NewUserInput userInput)
         {
-            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == userInput.Email || x.UserName == userInput.UserName);
+            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x =>
+                x.Email == userInput.Email || x.UserName == userInput.UserName);
 
             if (user != null)
             {
@@ -39,7 +51,7 @@ namespace OpenEvent.Web.Services
                 // TODO: custom or more appropriate exception
                 throw new Exception("User already exists");
             }
-            
+
             PasswordHasher<User> hasher = new PasswordHasher<User>(
                 new OptionsWrapper<PasswordHasherOptions>(
                     new PasswordHasherOptions()
@@ -47,7 +59,7 @@ namespace OpenEvent.Web.Services
                         CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2
                     })
             );
-            
+
             User newUser = new User
             {
                 Email = userInput.Email,
@@ -55,7 +67,8 @@ namespace OpenEvent.Web.Services
                 FirstName = userInput.FirstName,
                 LastName = userInput.LastName,
                 PhoneNumber = userInput.PhoneNumber,
-                UserName = userInput.UserName
+                UserName = userInput.UserName,
+                DateOfBirth = userInput.DateOfBirth
             };
 
             newUser.Password = hasher.HashPassword(newUser, userInput.Password);
@@ -64,15 +77,15 @@ namespace OpenEvent.Web.Services
             {
                 await ApplicationContext.Users.AddAsync(newUser);
                 await ApplicationContext.SaveChangesAsync();
-                newUser.Password = null;
-                return newUser;
+                // newUser.Password = null;
+                // return Mapper.Map<UserViewModel>(newUser);
+                return await AuthService.Authenticate(newUser.Email, userInput.Password, userInput.Remember);
             }
             catch
             {
                 Logger.LogWarning("User failed to save");
                 throw;
             }
-
         }
 
         public async Task Destroy(Guid id)
@@ -95,7 +108,6 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("User failed to save");
                 throw;
             }
-            
         }
 
         public async Task<UserAccountModel> Get(Guid id)
@@ -120,7 +132,22 @@ namespace OpenEvent.Web.Services
 
             return user;
         }
+
+        public async Task<bool> UserNameExists(string username)
+        {
+            return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.UserName == username) != null;
+        }
+
+        public async Task<bool> EmailExists(string email)
+        {
+            return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email) != null;
+        }
         
+        public async Task<bool> PhoneExists(string phoneNumber)
+        {
+            return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber) != null;
+        }
+
         // public async Task<User> UpdateBasicInfo(UserAccountModel user)
         // {
         //     var userCheck = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == user.Id);

@@ -46,7 +46,7 @@ namespace OpenEvent.Web
             var appSettings = appSettingsSection.Get<AppSettings>();
 
             services.AddDbContext<ApplicationContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("SQLConnection"),
+                options.UseMySql(Configuration.GetConnectionString("SQLConnectionLocal"),
                     new MySqlServerVersion(new Version(8, 0, 23)),
                     mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend)));
 

@@ -1,0 +1,79 @@
+<form [formGroup]="createAccountForm" (ngSubmit)="createAccount()" class="d-flex flex-column">
+
+  <div id="signUpHeader">
+    <div class="display-4 mb-3">Sign up</div>
+
+    <div class="d-flex flex-row">
+      <mat-checkbox formControlName="remember" labelPosition="before" id="remember">Remember me</mat-checkbox>
+      <button type="submit" color="primary" mat-stroked-button>Sign up</button>
+    </div>
+  </div>
+
+  <div class="d-flex flex-row">
+    <div id="info">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="joe@blogs.co.uk">
+        <mat-error *ngIf="email.errors && email.errors.email">
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="email.errors && email.errors.emailExists">
+          Email already in use
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>User name</mat-label>
+        <input matInput type="text" formControlName="userName" placeholder="JoeBlogs">
+        <mat-error *ngIf="username.errors && username.errors.usernameExists">
+          Username already in use
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>First name</mat-label>
+        <input matInput type="text" formControlName="firstName" placeholder="Joe">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Last name</mat-label>
+        <input matInput type="text" formControlName="lastName" placeholder="Blogs">
+      </mat-form-field>
+    </div>
+
+    <div class="d-flex flex-column">
+      <div id="avatarPreview">
+        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1" [onlyScaleDown]="true" format="png" (imageCropped)="imageCropped($event)" [imageBase64]="DefaultProfile" (loadImageFailed)="loadImageFailed()"></image-cropper>
+      </div>
+      <input type="file" (change)="fileChangeEvent($event)" class="m-auto"/>
+    </div>
+  </div>
+
+
+  <mat-form-field appearance="outline">
+    <mat-label>Date of birth</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="dOB" [max]="maxDate">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="outline">
+    <mat-label>Phone number</mat-label>
+    <input matInput type="tel" formControlName="phoneNumber">
+    <mat-error *ngIf="phoneNumber.errors && phoneNumber.errors.phoneExists">
+      Phone number already in use
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Password</mat-label>
+    <input matInput type="password" formControlName="password" placeholder="Password123">
+    <mat-error>
+      Password must have 8+ characters, 1+ uppercase letter, lowercase letter, number and special character
+    </mat-error>
+  </mat-form-field>
+
+</form>
+
+<loading *ngIf="loading"></loading>
