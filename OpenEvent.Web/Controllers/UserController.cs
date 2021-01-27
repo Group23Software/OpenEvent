@@ -45,5 +45,19 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
+
+        // [HttpPut]
+        // public async Task<ActionResult> Update(UserAccountModel user)
+        // {
+        //     try
+        //     {
+        //         var result = await UserService.Update(user);
+        //         return Ok(result);
+        //     }
+        //     catch (Exception e)
+        //     {
+        //         return BadRequest(e);
+        //     }
+        // }
     }
 }

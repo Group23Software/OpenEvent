@@ -1,0 +1,36 @@
+/*.mat-form-field {*/
+/*  width: 100%;*/
+/*  min-width: 300px;*/
+/*}*/
+
+button {
+  margin-bottom: 1.59375em;
+}
+
+:host {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+#login {
+  height: min-content;
+  margin: auto;
+}
+
+form {
+  width: 80%;
+  margin: auto;
+}
+
+#loginButtons {
+  display: flex;
+  flex-direction: row;
+  /*justify-content: space-around;*/
+}
+
+#loginButtons button {
+  width: 100%;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}

@@ -15,6 +15,7 @@ namespace OpenEvent.Web.Services
         Task<User> Create(NewUserInput userInput);
         Task Destroy(Guid id);
         Task<UserAccountModel> Get(Guid id);
+        // Task<User> UpdateBasicInfo(UserAccountModel user);
     }
 
     public class UserService : IUserService
@@ -119,5 +120,29 @@ namespace OpenEvent.Web.Services
 
             return user;
         }
+        
+        // public async Task<User> UpdateBasicInfo(UserAccountModel user)
+        // {
+        //     var userCheck = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
+        //     
+        //     if (userCheck == null)
+        //     {
+        //         Logger.LogInformation("User doesnt exist");
+        //         throw new Exception("User doesnt exist");
+        //     }
+        //     
+        //     // ApplicationContext.Entry(user).State = EntityState.Modified;
+        //
+        //     try
+        //     {
+        //         await ApplicationContext.SaveChangesAsync();
+        //         return user;
+        //     }
+        //     catch
+        //     {
+        //         Logger.LogInformation("User failed to save");  
+        //         throw;
+        //     }
+        // }
     }
 }
