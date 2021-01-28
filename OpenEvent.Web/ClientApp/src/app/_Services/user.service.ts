@@ -1,9 +1,9 @@
 import {Inject, Injectable} from '@angular/core';
 import {NewUserInput, UserViewModel} from "../_Models/User";
 import {Observable, of} from "rxjs";
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
-import {map} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
 import jwtDecode, {JwtPayload} from "jwt-decode";
 
 @Injectable({
@@ -53,18 +53,34 @@ export class UserService
     );
   }
 
+  private FlushUser ()
+  {
+    this.User = null;
+    this.cookieService.deleteAll();
+  }
+
   public UserNameExists (username: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + 'api/user/UserNameExists', {params: new HttpParams().set("username", username)});
+    return this.http.get<boolean>(this.BaseUrl + 'api/user/UserNameExists', {params: new HttpParams().set('username', username)});
   }
 
   public EmailExists (email: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + 'api/user/EmailExists', {params: new HttpParams().set("email", email)});
+    return this.http.get<boolean>(this.BaseUrl + 'api/user/EmailExists', {params: new HttpParams().set('email', email)});
   }
 
   public PhoneExists (phoneNumber: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + 'api/user/PhoneExists', {params: new HttpParams().set("phoneNumber", phoneNumber)});
+    return this.http.get<boolean>(this.BaseUrl + 'api/user/PhoneExists', {params: new HttpParams().set('phoneNumber', phoneNumber)});
+  }
+
+  public Destroy (id: string): Observable<any>
+  {
+    return this.http.delete(this.BaseUrl + 'api/user', {params: new HttpParams().set('id', id)}).pipe(
+      map(result =>
+      {
+        this.FlushUser();
+        return result;
+      }));
   }
 }

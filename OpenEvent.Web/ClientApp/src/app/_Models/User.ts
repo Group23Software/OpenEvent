@@ -5,7 +5,7 @@ export interface UserViewModel
   Email: string;
   FirstName: string;
   LastName: string;
-  Avatar: any[];
+  Avatar: string;
   PhoneNumber: string;
   Token: string;
 }
@@ -15,6 +15,12 @@ export interface AuthBody
   Email: string;
   Password: string;
   Remember: boolean;
+}
+
+export interface UpdatePasswordBody
+{
+  Email: string;
+  Password: string;
 }
 
 export interface NewUserInput

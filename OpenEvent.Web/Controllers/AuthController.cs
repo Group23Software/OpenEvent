@@ -38,7 +38,6 @@ namespace OpenEvent.Web.Controllers
         [HttpPost("authenticateToken")]
         public async Task<ActionResult<UserViewModel>> AuthenticateToken([FromBody] AuthId id)
         {
-            Console.WriteLine("Authenticating token");
             try
             {
                 var result = await AuthService.Authenticate(id.Id);
@@ -48,6 +47,21 @@ namespace OpenEvent.Web.Controllers
             {
                 Console.WriteLine(e);
                 return Unauthorized(e.Message);
+            }
+        }
+
+        [HttpPost("updatePassword")]
+        public async Task<ActionResult> UpdatePassword([FromBody] UpdatePasswordBody updatePasswordBody)
+        {
+            try
+            {
+                await AuthService.UpdatePassword(updatePasswordBody.Email, updatePasswordBody.Password);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return BadRequest(e.Message);
             }
         }
     }
@@ -62,5 +76,11 @@ namespace OpenEvent.Web.Controllers
         public string Email { get; set; }
         public string Password { get; set; }
         public bool Remember { get; set; }
+    }
+
+    public class UpdatePasswordBody
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }

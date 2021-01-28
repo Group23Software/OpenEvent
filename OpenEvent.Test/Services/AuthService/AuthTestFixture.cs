@@ -34,16 +34,6 @@ namespace OpenEvent.Test.Services.AuthService
 
             AuthService = new Web.Services.AuthService(Context,
                 new Logger<Web.Services.AuthService>(new LoggerFactory()), AppSettings, Mapper);
-            
-            var userService = new Web.Services.UserService(Context,
-                new Logger<Web.Services.UserService>(new LoggerFactory()),
-                Mapper, AuthService);
-
-            await userService.Create(new NewUserInput()
-            {
-                Email = "email@email.co.uk",
-                Password = "Password"
-            });
 
         }
 

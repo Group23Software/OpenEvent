@@ -1,0 +1,21 @@
+#basicAccountPanel {
+  display: flex;
+  flex-direction: row;
+  margin: 1rem;
+}
+
+#basicInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 0 1rem;
+}
+
+#newPassword mat-form-field {
+  width: 100%;
+}
+
+#newPassword button {
+  height: 59.5px;
+  margin: .25em 0;
+}

@@ -1,2 +1,60 @@
-<p>account works!</p>
-{{user.Email}}
+<div class="display-4 m-3">Account config</div>
+
+<!--<hr>-->
+
+<div *ngIf="user" id="basicAccountPanel">
+  <img width="250px" height="250px" class="shadow-sm" [src]="user?.Avatar">
+
+  <div id="basicInfo">
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput [value]="user.Email" [disabled]="true"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>User name</mat-label>
+      <input matInput [value]="user.UserName" [disabled]="true"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>First name</mat-label>
+      <input matInput [value]="user.FirstName" [disabled]="true"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Last name</mat-label>
+      <input matInput [value]="user.LastName" [disabled]="true"/>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Phone number</mat-label>
+      <input matInput [value]="user.PhoneNumber" [disabled]="true"/>
+    </mat-form-field>
+
+    <form [formGroup]="newPasswordForm" class="d-flex flex-row" id="newPassword" (ngSubmit)="UpdatePassword()">
+      <mat-form-field appearance="outline" class="mr-3">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="P@ssword1">
+        <mat-error>
+          Password must have 8+ characters, 1+ uppercase letter, lowercase letter, number and special character
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="mr-3" >
+        <mat-label>Confirm Password</mat-label>
+        <input matInput type="password" formControlName="passwordConfirm" placeholder="P@ssword1">
+        <mat-error *ngIf="passwordConfirm.hasError('matches')">
+          Passwords must match
+        </mat-error>
+      </mat-form-field>
+      <button type="submit" mat-stroked-button>Save</button>
+    </form>
+
+    <div>{{newPasswordError}}</div>
+
+    <div id="accountControls">
+      <button mat-stroked-button color="warn" (click)="DeleteAccount()">Delete account</button>
+    </div>
+
+    <div>{{deleteAccountError}}</div>
+  </div>
+</div>

@@ -19,6 +19,7 @@ namespace OpenEvent.Web.Services
         Task<UserViewModel> Authenticate(string email, string password, bool remember);
         Task<UserViewModel> Authenticate(Guid id);
         Task ForgotPassword(string email);
+        Task UpdatePassword(string email, string password);
     }
 
     public class AuthService : IAuthService
@@ -42,8 +43,8 @@ namespace OpenEvent.Web.Services
 
             if (user == null)
             {
-                Logger.LogInformation("User does not exist");
-                throw new Exception("User does not exist");
+                Logger.LogInformation("User not found");
+                throw new Exception("User not found");
             }
 
             PasswordHasher<User> hasher = new PasswordHasher<User>(
@@ -56,8 +57,8 @@ namespace OpenEvent.Web.Services
 
             if (hasher.VerifyHashedPassword(user, user.Password, password) == PasswordVerificationResult.Failed)
             {
-                Logger.LogInformation("Password incorrect");
-                throw new Exception("Password incorrect");
+                Logger.LogInformation("Incorrect password");
+                throw new Exception("Incorrect password");
             }
 
             int days = remember ? 30 : 1;
@@ -80,7 +81,7 @@ namespace OpenEvent.Web.Services
             {
                 Id = user.Id,
                 Email = user.Email,
-                Avatar = user.Avatar,
+                Avatar = Encoding.UTF8.GetString(user.Avatar, 0, user.Avatar.Length),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 PhoneNumber = user.PhoneNumber,
@@ -97,19 +98,50 @@ namespace OpenEvent.Web.Services
 
             if (user == null)
             {
-                Logger.LogInformation("User does not exist");
-                throw new Exception("User does not exist");
+                Logger.LogInformation("User not found");
+                throw new Exception("User not found");
             }
 
             return Mapper.Map<UserViewModel>(user);
             
             //TODO: Authenticate with existing token saved as cookie
-            throw new NotImplementedException();
         }
 
         public Task ForgotPassword(string email)
         {
             throw new System.NotImplementedException();
+        }
+
+        public async Task UpdatePassword(string email, string password)
+        {
+            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email);
+
+            if (user == null)
+            {
+                Logger.LogInformation("User not found");
+                throw new Exception("User not found");
+            }
+
+            PasswordHasher<User> hasher = new PasswordHasher<User>(
+                new OptionsWrapper<PasswordHasherOptions>(
+                    new PasswordHasherOptions()
+                    {
+                        CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2
+                    })
+            );
+
+            user.Password = hasher.HashPassword(user, password);
+            ApplicationContext.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await ApplicationContext.SaveChangesAsync();
+            }
+            catch
+            {
+                Logger.LogWarning("User failed to save");
+                throw;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
@@ -102,6 +103,8 @@ namespace OpenEvent.Web.Services
             {
                 ApplicationContext.Users.Remove(user);
                 await ApplicationContext.SaveChangesAsync();
+                Logger.LogInformation("Destroyed user");
+                
             }
             catch
             {
@@ -115,7 +118,7 @@ namespace OpenEvent.Web.Services
             var user = await ApplicationContext.Users.Select(x => new UserAccountModel
             {
                 Id = x.Id,
-                Avatar = x.Avatar,
+                Avatar = Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length),
                 Email = x.Email,
                 Token = x.Token,
                 FirstName = x.FirstName,

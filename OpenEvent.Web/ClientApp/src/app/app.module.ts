@@ -25,6 +25,9 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {ImageCropperModule} from "ngx-image-cropper";
+import {MatDividerModule} from "@angular/material/divider";
+import { ConfirmDialogComponent } from './_extensions/confirm-dialog/confirm-dialog.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -35,6 +38,7 @@ import {ImageCropperModule} from "ngx-image-cropper";
     ExploreComponent,
     AccountComponent,
     CreateAccountComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -57,10 +61,12 @@ import {ImageCropperModule} from "ngx-image-cropper";
     MatDatepickerModule,
     MatNativeDateModule,
     ImageCropperModule,
+    MatDividerModule,
+    MatSnackBarModule,
   ],
   providers: [CookieService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent],
-  entryComponents: [CreateAccountComponent]
+  entryComponents: [CreateAccountComponent, ConfirmDialogComponent]
 })
 export class AppModule
 {

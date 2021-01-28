@@ -38,7 +38,7 @@ namespace OpenEvent.Web.Controllers
             try
             {
                 await UserService.Destroy(id);
-                return Ok("Destroyed");
+                return Ok();
             }
             catch (Exception e)
             {
