@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {NewUserInput, UserViewModel} from "../_Models/User";
+import {NewUserInput, UpdateAvatarBody, UpdateUserNameBody, UserViewModel} from "../_Models/User";
 import {Observable, of} from "rxjs";
 import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
@@ -82,5 +82,19 @@ export class UserService
         this.FlushUser();
         return result;
       }));
+  }
+
+  public UpdateUserName (updateUserNameBody: UpdateUserNameBody) : Observable<any>
+  {
+    return this.http.post<any>(this.BaseUrl + 'api/user/updateUserName',updateUserNameBody).pipe(map(result => {
+      this.User.UserName = result.username;
+    }));
+  }
+
+  public UpdateAvatar (updateAvatarBody: UpdateAvatarBody)
+  {
+    return this.http.post<any>(this.BaseUrl + 'api/user/updateAvatar',updateAvatarBody).pipe(map(result => {
+      this.User.Avatar = result.avatar;
+    }));
   }
 }

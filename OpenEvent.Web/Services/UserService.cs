@@ -20,6 +20,8 @@ namespace OpenEvent.Web.Services
         Task<UserAccountModel> Get(Guid id);
 
         // Task<User> UpdateBasicInfo(UserAccountModel user);
+        Task<string> UpdateAvatar(Guid id, byte[] avatar);
+        Task<string> UpdateUserName(Guid id, string name);
         Task<bool> UserNameExists(string username);
         Task<bool> EmailExists(string email);
         Task<bool> PhoneExists(string phoneNumber);
@@ -134,6 +136,66 @@ namespace OpenEvent.Web.Services
             }
 
             return user;
+        }
+
+        public async Task<string> UpdateAvatar(Guid id, byte[] avatar)
+        {
+            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            
+            if (user == null)
+            {
+                Logger.LogInformation("User not found");
+                throw new Exception("User not found");
+            }
+
+            user.Avatar = avatar;
+            ApplicationContext.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await ApplicationContext.SaveChangesAsync();
+                Logger.LogInformation("User's avatar updated");
+                return Encoding.UTF8.GetString(user.Avatar, 0, user.Avatar.Length);
+            }
+            catch
+            {
+                Logger.LogWarning("User failed to save");
+                throw;
+            }
+        }
+
+        public async Task<string> UpdateUserName(Guid id, string name)
+        {
+            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            
+            if (user == null)
+            {
+                Logger.LogInformation("User not found");
+                throw new Exception("User not found");
+            }
+
+            var exists = await UserNameExists(name);
+
+            if (exists)
+            {
+                Logger.LogInformation("Username already exists");
+                throw new Exception("Username already exists");
+            }
+
+            user.UserName = name;
+            ApplicationContext.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await ApplicationContext.SaveChangesAsync();
+                Logger.LogInformation("User's username updated");
+                return user.UserName;
+            }
+            catch
+            {
+                Logger.LogWarning("User failed to save");
+                throw;
+            }
         }
 
         public async Task<bool> UserNameExists(string username)

@@ -4,5 +4,6 @@ namespace OpenEvent.Web
     {
         public string Secret { get; set; }
         public string ConnectionString { get; set; }
+        public string LocalConnectionString { get; set; }
     }
 }

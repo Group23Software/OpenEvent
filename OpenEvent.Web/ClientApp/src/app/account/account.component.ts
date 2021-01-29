@@ -1,14 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../_Services/user.service";
-import {AbstractControl, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserValidatorsService} from "../_Services/user-validators.service";
-import {MatDividerModule} from "@angular/material/divider";
 import {MatDialog} from "@angular/material/dialog";
-import {ConfirmDialogComponent, ConfirmDialogData} from "../_extensions/confirm-dialog/confirm-dialog.component";
-import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import {ConfirmDialogComponent} from "../_extensions/confirm-dialog/confirm-dialog.component";
+import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {AuthService} from "../_Services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ImageCroppedEvent} from "ngx-image-cropper";
+import {ImageManipulationService} from "../_extensions/image-manipulation.service";
 
 
 @Component({
@@ -20,6 +21,12 @@ export class AccountComponent implements OnInit
 {
   public newPasswordError: string;
   public deleteAccountError: string;
+  public newUserNameError: string;
+  public newAvatarError: string;
+
+  public imageChangedEvent: any = '';
+  public croppedImage: any = '';
+
 
   get passwordConfirm ()
   {
@@ -28,8 +35,9 @@ export class AccountComponent implements OnInit
 
   public newPasswordForm = new FormGroup({
     password: new FormControl('', [Validators.required]),
-    passwordConfirm: new FormControl('', [Validators.required,this.userValidators.matches('password')])
+    passwordConfirm: new FormControl('', [Validators.required, this.userValidators.matches('password')])
   });
+  public userName = new FormControl('', [Validators.required], [this.userValidators.usernameValidator()]);
 
   constructor (
     private userService: UserService,
@@ -45,6 +53,11 @@ export class AccountComponent implements OnInit
   {
   }
 
+  get username ()
+  {
+    return this.userName;
+  }
+
   get user ()
   {
     return this.userService.User;
@@ -57,10 +70,11 @@ export class AccountComponent implements OnInit
       Password: this.newPasswordForm.value.password
     }).subscribe(response =>
     {
-      this.snackBar.open('Updated password','close',{duration: 500})
+      this.snackBar.open('Updated password', 'close', {duration: 500})
     }, (error: HttpErrorResponse) =>
     {
       this.newPasswordError = error.message;
+      this.newPasswordForm.setErrors({http: true});
       console.error(error);
     })
   }
@@ -88,6 +102,46 @@ export class AccountComponent implements OnInit
           this.deleteAccountError = error.message
         });
       }
+    });
+  }
+
+  public UpdateUserName ()
+  {
+    this.userService.UpdateUserName({Id: this.user.Id, UserName: this.username.value}).subscribe(response =>
+    {
+      this.snackBar.open('Updated username', 'close', {duration: 500});
+    }, (error: HttpErrorResponse) =>
+    {
+      this.newUserNameError = error.message;
+      this.userName.setErrors({http: true});
+      console.error(error);
+    });
+  }
+
+  public fileChangeEvent (event: any): void
+  {
+    this.imageChangedEvent = event;
+  }
+
+  public imageCropped (event: ImageCroppedEvent): void
+  {
+    this.croppedImage = event.base64;
+  }
+
+  public loadImageFailed () : void
+  {
+    // TODO: error message
+  }
+
+  public NewAvatar ()
+  {
+    this.userService.UpdateAvatar({Id: this.user.Id, Avatar: (new ImageManipulationService).toUTF8Array(this.croppedImage)}).subscribe(response =>
+    {
+      this.snackBar.open('Updated avatar', 'close', {duration: 500});
+    }, (error: HttpErrorResponse) =>
+    {
+      this.newAvatarError = error.message;
+      console.error(error);
     });
   }
 }

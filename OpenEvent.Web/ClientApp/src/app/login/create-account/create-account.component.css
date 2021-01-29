@@ -1,8 +1,6 @@
 #avatarPreview {
   width: 250px;
   height: 250px;
-  /*background: lightgrey;*/
-  /*border: solid black 1px;*/
   padding: 0.25em;
   border-radius: 5%;
 }

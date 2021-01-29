@@ -35,3 +35,15 @@ export interface NewUserInput
   DateOfBirth: Date;
   Remember: boolean;
 }
+
+export interface UpdateUserNameBody
+{
+  Id: string;
+  UserName: string;
+}
+
+export interface UpdateAvatarBody
+{
+  Id: string;
+  Avatar: any[];
+}

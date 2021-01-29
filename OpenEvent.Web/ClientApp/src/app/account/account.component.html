@@ -3,7 +3,15 @@
 <!--<hr>-->
 
 <div *ngIf="user" id="basicAccountPanel">
-  <img width="250px" height="250px" class="shadow-sm" [src]="user?.Avatar">
+<!--  <img width="250px" height="250px" class="shadow-sm" [src]="user?.Avatar">-->
+  <div id="newAvatar">
+    <div id="avatarPreview">
+      <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1" [onlyScaleDown]="true" format="png" (imageCropped)="imageCropped($event)" [imageBase64]="user.Avatar" (loadImageFailed)="loadImageFailed()"></image-cropper>
+    </div>
+    <input type="file" (change)="fileChangeEvent($event)"/>
+    <button mat-stroked-button (click)="NewAvatar()">Save</button>
+    <mat-error>{{newAvatarError}}</mat-error>
+  </div>
 
   <div id="basicInfo">
     <mat-form-field appearance="outline">
@@ -11,10 +19,18 @@
       <input matInput [value]="user.Email" [disabled]="true"/>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>User name</mat-label>
-      <input matInput [value]="user.UserName" [disabled]="true"/>
-    </mat-form-field>
+    <form id="newUserName" (ngSubmit)="UpdateUserName()">
+      <mat-form-field appearance="outline">
+        <mat-label>User name</mat-label>
+        <input matInput [value]="user.UserName" type="text" [formControl]="userName" placeholder="JoeBlogs">
+        <mat-error *ngIf="username.errors && username.errors.usernameExists">
+          Username already in use
+        </mat-error>
+        <mat-error *ngIf="username.errors && username.errors.http">{{newUserNameError}}</mat-error>
+      </mat-form-field>
+
+      <button mat-stroked-button type="submit">Save</button>
+    </form>
 
     <mat-form-field appearance="outline">
       <mat-label>First name</mat-label>
@@ -31,15 +47,15 @@
       <input matInput [value]="user.PhoneNumber" [disabled]="true"/>
     </mat-form-field>
 
-    <form [formGroup]="newPasswordForm" class="d-flex flex-row" id="newPassword" (ngSubmit)="UpdatePassword()">
-      <mat-form-field appearance="outline" class="mr-3">
+    <form [formGroup]="newPasswordForm" id="newPassword" (ngSubmit)="UpdatePassword()">
+      <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
         <input matInput type="password" formControlName="password" placeholder="P@ssword1">
         <mat-error>
           Password must have 8+ characters, 1+ uppercase letter, lowercase letter, number and special character
         </mat-error>
       </mat-form-field>
-      <mat-form-field appearance="outline" class="mr-3" >
+      <mat-form-field appearance="outline">
         <mat-label>Confirm Password</mat-label>
         <input matInput type="password" formControlName="passwordConfirm" placeholder="P@ssword1">
         <mat-error *ngIf="passwordConfirm.hasError('matches')">
@@ -47,9 +63,8 @@
         </mat-error>
       </mat-form-field>
       <button type="submit" mat-stroked-button>Save</button>
+      <mat-error *ngIf="newPasswordForm.errors && newPasswordForm.errors.http">{{newPasswordError}}</mat-error>
     </form>
-
-    <div>{{newPasswordError}}</div>
 
     <div id="accountControls">
       <button mat-stroked-button color="warn" (click)="DeleteAccount()">Delete account</button>

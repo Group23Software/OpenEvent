@@ -30,7 +30,7 @@ We will be seperating each "sprint" of work into git branches so you have to mak
 To change branch all you need to do is checkout.
 
 ```sh
-$ git checkout branch-name
+$ git checkout SPRINT-1
 ```
 
 You can check which branch you are on by listing the branches (the one with the star is your current)
@@ -47,3 +47,8 @@ $ git status // to view all the changes added
 $ git commit -m "message describing what has been done"
 $ git push
 ```
+
+## Links
+
+https://github.com/Group23Software/OpenEvent
+https://harrisonbarker.atlassian.net/secure/RapidBoard.jspa?projectKey=EVENT&useStoredSettings=true&rapidView=7&atlOrigin=eyJpIjoiMjBmMWJmMTE3ZTExNDc0OThhY2EyNTk0NjFkN2FiYjEiLCJwIjoiaiJ9

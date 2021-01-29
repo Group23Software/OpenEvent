@@ -46,7 +46,7 @@ namespace OpenEvent.Web
             var appSettings = appSettingsSection.Get<AppSettings>();
 
             services.AddDbContext<ApplicationContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("SQLConnectionLocal"),
+                options.UseMySql(appSettings.ConnectionString,
                     new MySqlServerVersion(new Version(8, 0, 23)),
                     mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend)));
 
@@ -137,8 +137,8 @@ namespace OpenEvent.Web
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-                    // spa.UseAngularCliServer(npmScript: "start");
+                    // spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    spa.UseAngularCliServer(npmScript: "start");
                 }
             });
         }

@@ -27,7 +27,8 @@ namespace OpenEvent.Test.Seeds
                 Password = "Password",
                 FirstName = "exists",
                 LastName = "already",
-                PhoneNumber = "0000000000"
+                PhoneNumber = "0000000000",
+                Avatar = new Byte[]{1,1,1,1}
             };
 
             user.Password = hasher.HashPassword(user, "Password");

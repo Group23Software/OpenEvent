@@ -19,15 +19,16 @@ import {ExploreComponent} from './explore/explore.component';
 import {AccountComponent} from './account/account.component';
 import {AuthGuard} from "./_guards/auth.guard";
 import {AuthInterceptor} from "./_guards/auth.interceptor";
-import { CreateAccountComponent } from './login/create-account/create-account.component';
+import {CreateAccountComponent} from './login/create-account/create-account.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {ImageCropperModule} from "ngx-image-cropper";
 import {MatDividerModule} from "@angular/material/divider";
-import { ConfirmDialogComponent } from './_extensions/confirm-dialog/confirm-dialog.component';
+import {ConfirmDialogComponent} from './_extensions/confirm-dialog/confirm-dialog.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+
 
 @NgModule({
   declarations: [
@@ -45,7 +46,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      // {path: '', component: HomeComponent, pathMatch: 'full'},
+      {path: '', redirectTo: 'account', pathMatch: 'full'},
       {path: 'login', component: LoginComponent},
       {path: 'account', component: AccountComponent, canActivate: [AuthGuard]}
     ]),

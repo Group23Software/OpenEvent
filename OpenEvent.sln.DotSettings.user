@@ -15,5 +15,10 @@
     &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.AuthService.Authenticate&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.AuthService.UpdatePassword.ShouldUpdatePassword&lt;/TestId&gt;
     &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.AuthService.UpdatePassword.ShouldNotFindUser&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateUserName.ShouldUpdate&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateUserName.ShouldNotFindUser&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateAvatar.ShouldUpdate&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateAvatar&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateUserName.ShouldAlreadyExist&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

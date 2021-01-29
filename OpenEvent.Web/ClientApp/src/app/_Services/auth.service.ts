@@ -77,6 +77,6 @@ export class AuthService
 
   public UpdatePassword (updatePasswordBody: UpdatePasswordBody): Observable<any>
   {
-    return this.http.post(this.BaseUrl + 'api/auth/updatePassword', updatePasswordBody);
+    return this.http.post<string>(this.BaseUrl + 'api/auth/updatePassword', updatePasswordBody);
   }
 }
