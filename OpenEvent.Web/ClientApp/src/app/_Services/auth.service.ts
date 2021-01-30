@@ -1,8 +1,8 @@
 import {Inject, Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpResponse} from "@angular/common/http";
-import {Observable, of, throwError} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {Observable, of} from "rxjs";
 import {AuthBody, UpdatePasswordBody, UserViewModel} from "../_Models/User";
-import {catchError, flatMap, map, switchMap} from "rxjs/operators";
+import {map, switchMap} from "rxjs/operators";
 import {CookieService} from "ngx-cookie-service";
 import jwtDecode, {JwtPayload} from "jwt-decode";
 import {UserService} from "./user.service";

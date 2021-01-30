@@ -1,0 +1,22 @@
+mat-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  font: 200 20px/32px Roboto, "Helvetica Neue", sans-serif;
+}
+
+.navControls {
+  font-size: small;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#title {
+  font-size: xx-large;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+#title:hover {
+  color: rgba(0, 0, 0, 0.87);
+}

@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {NewUserInput, UpdateAvatarBody, UpdateUserNameBody, UserViewModel} from "../_Models/User";
+import {NewUserInput, UpdateAvatarBody, UpdateUserNameBody, UserAccountModel, UserViewModel} from "../_Models/User";
 import {Observable, of} from "rxjs";
 import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
@@ -11,17 +11,17 @@ import jwtDecode, {JwtPayload} from "jwt-decode";
 })
 export class UserService
 {
-  set User (value: UserViewModel)
+  set User (value: UserAccountModel)
   {
     this._User = value;
   }
 
-  get User (): UserViewModel
+  get User (): UserAccountModel
   {
     return this._User;
   }
 
-  private _User: UserViewModel;
+  private _User: UserAccountModel;
 
   private readonly BaseUrl: string;
 
@@ -31,7 +31,7 @@ export class UserService
     this.BaseUrl = 'http://localhost:5000/';
   }
 
-  public GetUserAsync (): Observable<UserViewModel | null>
+  public GetUserAsync (): Observable<UserAccountModel | null>
   {
     // console.log(this._User);
     return of(this._User);
@@ -47,10 +47,19 @@ export class UserService
         let payload: JwtPayload = jwtDecode(user.Token);
         this.cookieService.set('token', user.Token, new Date(payload.exp * 1000));
         this.cookieService.set('id', user.Id, new Date(payload.exp * 1000));
-        this.User = user;
+        this.User = {
+          Id: user.Id,
+          Avatar: user.Avatar,
+          UserName: user.UserName
+        };
         return user;
       })
     );
+  }
+
+  public GetAccountUser (id: string): Observable<UserAccountModel>
+  {
+    return this.http.get<UserAccountModel>(this.BaseUrl + 'api/user/account', {params: new HttpParams().set('id', id)}).pipe(map(user => this.User = user));
   }
 
   private FlushUser ()
@@ -84,17 +93,24 @@ export class UserService
       }));
   }
 
-  public UpdateUserName (updateUserNameBody: UpdateUserNameBody) : Observable<any>
+  public UpdateUserName (updateUserNameBody: UpdateUserNameBody): Observable<any>
   {
-    return this.http.post<any>(this.BaseUrl + 'api/user/updateUserName',updateUserNameBody).pipe(map(result => {
+    return this.http.post<any>(this.BaseUrl + 'api/user/updateUserName', updateUserNameBody).pipe(map(result =>
+    {
       this.User.UserName = result.username;
     }));
   }
 
   public UpdateAvatar (updateAvatarBody: UpdateAvatarBody)
   {
-    return this.http.post<any>(this.BaseUrl + 'api/user/updateAvatar',updateAvatarBody).pipe(map(result => {
+    return this.http.post<any>(this.BaseUrl + 'api/user/updateAvatar', updateAvatarBody).pipe(map(result =>
+    {
       this.User.Avatar = result.avatar;
     }));
+  }
+
+  public LogOut ()
+  {
+    this.FlushUser();
   }
 }

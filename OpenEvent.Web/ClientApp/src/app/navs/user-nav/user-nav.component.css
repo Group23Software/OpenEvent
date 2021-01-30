@@ -1,0 +1,44 @@
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+#avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 5%;
+  cursor: pointer;
+  border: solid transparent 0.25rem;
+  transition: border linear 200ms;
+}
+
+#avatar:hover {
+  border-color: #EBEBEB;
+}
+
+.navSpacer {
+  flex: 1 1 auto;
+}
+
+#usernameAvatar {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+mat-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  font: 200 20px/32px Roboto, "Helvetica Neue", sans-serif;
+}
+
+.navControls {
+  font-size: small;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#title {
+  font-size: xx-large;
+  font-weight: normal;
+}

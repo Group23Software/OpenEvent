@@ -80,11 +80,7 @@ namespace OpenEvent.Web.Services
             UserViewModel userViewModel = new UserViewModel()
             {
                 Id = user.Id,
-                Email = user.Email,
                 Avatar = Encoding.UTF8.GetString(user.Avatar, 0, user.Avatar.Length),
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                PhoneNumber = user.PhoneNumber,
                 UserName = user.UserName,
                 Token = tokenHandler.WriteToken(token)
             };

@@ -1,33 +1,36 @@
-<div id="login">
-  <div class="display-3 mx-auto m-5">Login / Sign up</div>
+<div class="main">
+  <public-nav></public-nav>
 
-  <form class="d-flex justify-content-between flex-column" [formGroup]="loginFormGroup" (ngSubmit)="login()">
+  <div id="login">
+    <div class="display-3 mx-auto m-5">Login / Sign up</div>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" placeholder="joe@blogs.co.uk">
-      <mat-error *ngIf="email.errors && email.errors.email">
-        Please enter a valid email address
-      </mat-error>
-    </mat-form-field>
+    <form class="d-flex justify-content-between flex-column" [formGroup]="loginFormGroup" (ngSubmit)="login()">
 
-    <mat-form-field appearance="outline">
-      <mat-label>Password</mat-label>
-      <input matInput type="password" formControlName="password" placeholder="Password123">
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="joe@blogs.co.uk">
+        <mat-error *ngIf="email.errors && email.errors.email">
+          Please enter a valid email address
+        </mat-error>
+      </mat-form-field>
 
-    <mat-checkbox formControlName="remember" class="ml-3">Remember me</mat-checkbox>
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Password123">
+      </mat-form-field>
 
-    <div id="loginButtons">
-      <button (click)="create()" type="button" mat-stroked-button>Sign up</button>
-      <button type="submit" color="primary" cdkFocusInitial mat-stroked-button [disabled]="!loginFormGroup.valid">Login</button>
-    </div>
+      <mat-checkbox formControlName="remember" class="ml-3">Remember me</mat-checkbox>
 
-    <mat-error>{{loginError}}</mat-error>
-  </form>
+      <div id="loginButtons">
+        <button (click)="create()" type="button" mat-stroked-button>Sign up</button>
+        <button type="submit" color="primary" cdkFocusInitial mat-stroked-button [disabled]="!loginFormGroup.valid">Login</button>
+      </div>
+
+      <mat-error>{{loginError}}</mat-error>
+    </form>
 
 
+    <loading *ngIf="loading"></loading>
 
-  <loading *ngIf="loading"></loading>
-
+  </div>
 </div>

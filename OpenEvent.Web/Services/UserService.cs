@@ -80,8 +80,6 @@ namespace OpenEvent.Web.Services
             {
                 await ApplicationContext.Users.AddAsync(newUser);
                 await ApplicationContext.SaveChangesAsync();
-                // newUser.Password = null;
-                // return Mapper.Map<UserViewModel>(newUser);
                 return await AuthService.Authenticate(newUser.Email, userInput.Password, userInput.Remember);
             }
             catch
@@ -122,11 +120,11 @@ namespace OpenEvent.Web.Services
                 Id = x.Id,
                 Avatar = Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length),
                 Email = x.Email,
-                Token = x.Token,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 PhoneNumber = x.PhoneNumber,
-                UserName = x.UserName
+                UserName = x.UserName,
+                DateOfBirth = x.DateOfBirth
             }).FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null)

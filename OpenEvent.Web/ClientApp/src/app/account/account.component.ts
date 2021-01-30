@@ -51,6 +51,10 @@ export class AccountComponent implements OnInit
 
   ngOnInit ()
   {
+    this.userService.GetAccountUser(this.userService.User.Id).subscribe(response => console.log(response),(error: HttpErrorResponse) =>
+    {
+      // TODO: Get account user error handle, Redirect?
+    });
   }
 
   get username ()
@@ -128,14 +132,17 @@ export class AccountComponent implements OnInit
     this.croppedImage = event.base64;
   }
 
-  public loadImageFailed () : void
+  public loadImageFailed (): void
   {
     // TODO: error message
   }
 
   public NewAvatar ()
   {
-    this.userService.UpdateAvatar({Id: this.user.Id, Avatar: (new ImageManipulationService).toUTF8Array(this.croppedImage)}).subscribe(response =>
+    this.userService.UpdateAvatar({
+      Id: this.user.Id,
+      Avatar: (new ImageManipulationService).toUTF8Array(this.croppedImage)
+    }).subscribe(response =>
     {
       this.snackBar.open('Updated avatar', 'close', {duration: 500});
     }, (error: HttpErrorResponse) =>

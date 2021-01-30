@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Models;
 using OpenEvent.Web.Services;
 
@@ -58,6 +59,20 @@ namespace OpenEvent.Web.Controllers
         //         return BadRequest(e);
         //     }
         // }
+
+        [HttpGet("Account")]
+        public async Task<ActionResult<UserAccountModel>> GetAccountUser(Guid id)
+        {
+            try
+            {
+                var result = await UserService.Get(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
 
         [HttpGet("UserNameExists")]
         public async Task<ActionResult<bool>> UserNameExists(string username)

@@ -5,12 +5,11 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {RouterModule} from '@angular/router';
 
 import {AppComponent} from './app.component';
-import {NavMenuComponent} from './nav-menu/nav-menu.component';
 import {LoginComponent} from './login/login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatInputModule} from "@angular/material/input";
 import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatIconModule} from "@angular/material/icon";
+import {MatIcon, MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {LoadingComponent} from './loading/loading.component';
@@ -28,18 +27,24 @@ import {ImageCropperModule} from "ngx-image-cropper";
 import {MatDividerModule} from "@angular/material/divider";
 import {ConfirmDialogComponent} from './_extensions/confirm-dialog/confirm-dialog.component';
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatMenuModule} from "@angular/material/menu";
+import {UserNavComponent} from "./navs/user-nav/user-nav.component";
+import {PublicNavComponent} from "./navs/public-nav/public-nav.component";
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
+    UserNavComponent,
+    PublicNavComponent,
     LoginComponent,
     LoadingComponent,
     ExploreComponent,
     AccountComponent,
     CreateAccountComponent,
     ConfirmDialogComponent,
+
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -64,6 +69,9 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     ImageCropperModule,
     MatDividerModule,
     MatSnackBarModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule,
   ],
   providers: [CookieService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent],

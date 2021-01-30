@@ -2,12 +2,20 @@ export interface UserViewModel
 {
   Id: string;
   UserName: string;
-  Email: string;
-  FirstName: string;
-  LastName: string;
   Avatar: string;
-  PhoneNumber: string;
   Token: string;
+}
+
+export interface UserAccountModel
+{
+  Id: string;
+  UserName: string;
+  Email?: string;
+  FirstName?: string;
+  LastName?: string;
+  Avatar: string;
+  PhoneNumber?: string;
+  DateOfBirth?: Date;
 }
 
 export interface AuthBody
