@@ -1,19 +1,36 @@
 let authPaths: ApiAuthPaths = {
-  BasePath: '/api/auth',
-  Login: this.BasePath + '/login',
-  Authenticate: this.BasePath + '/authenticateToken',
-  UpdatePassword: this.BasePath + '/updatePassword',
+  BasePath: 'api/auth',
+  Authenticate: '',
+  UpdatePassword: '',
+  Login: ''
+}
+
+authPaths = {
+  ...authPaths,
+  Login: authPaths.BasePath + '/login',
+  Authenticate: authPaths.BasePath + '/authenticateToken',
+  UpdatePassword: authPaths.BasePath + '/updatePassword',
 }
 
 let userPaths: ApiUserPaths =
 {
-  BasePath: '/api/user',
-  Account: this.BasePath + '/account',
-  EmailExists: this.BasePath + '/emailExists',
-  PhoneExists: this.BasePath + '/phoneExists',
-  UserNameExists: this.BasePath + '/userNameExists',
-  UpdateAvatar: this.BasePath + '/updateAvatar',
-  UpdateUserName: this.BasePath + '/update',
+  BasePath: 'api/user',
+  Account: null,
+  EmailExists: null,
+  PhoneExists: null,
+  UserNameExists: null,
+  UpdateAvatar: null,
+  UpdateUserName: null,
+}
+
+userPaths = {
+  ...userPaths,
+  Account: userPaths.BasePath + '/account',
+  EmailExists: userPaths.BasePath + '/emailExists',
+  PhoneExists: userPaths.BasePath + '/phoneExists',
+  UserNameExists: userPaths.BasePath + '/userNameExists',
+  UpdateAvatar: userPaths.BasePath + '/updateAvatar',
+  UpdateUserName: userPaths.BasePath + '/updateUserName',
 }
 
 interface ApiAuthPaths
@@ -34,3 +51,6 @@ interface ApiUserPaths
   readonly UpdateUserName: string;
   readonly UpdateAvatar: string;
 }
+
+export const UserPaths: ApiUserPaths = userPaths;
+export const AuthPaths: ApiAuthPaths = authPaths;

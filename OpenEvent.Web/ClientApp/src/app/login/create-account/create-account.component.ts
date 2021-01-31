@@ -103,7 +103,7 @@ export class CreateAccountComponent implements OnInit
     {
       // TODO: redirect to app
       this.loading = false;
-      this.router.navigate(['/account']);
+      this.router.navigate(['/user/account']);
       this.dialogRef.close();
     }, (error: HttpErrorResponse) =>
     {

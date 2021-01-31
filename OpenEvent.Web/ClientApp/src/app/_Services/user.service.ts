@@ -5,6 +5,7 @@ import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
 import {map, tap} from "rxjs/operators";
 import jwtDecode, {JwtPayload} from "jwt-decode";
+import {UserPaths} from "../_extensions/api.constants";
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,7 @@ export class UserService
 
   public CreateUser (newUserInput: NewUserInput): Observable<UserViewModel>
   {
-    return this.http.post<UserViewModel>(this.BaseUrl + userPaths.BasePath, newUserInput).pipe(
+    return this.http.post<UserViewModel>(this.BaseUrl + UserPaths.BasePath, newUserInput).pipe(
       map(user =>
       {
         let payload: JwtPayload = jwtDecode(user.Token);
@@ -55,33 +56,36 @@ export class UserService
 
   public GetAccountUser (id: string): Observable<UserAccountModel>
   {
-    return this.http.get<UserAccountModel>(this.BaseUrl + userPaths.Account, {params: new HttpParams().set('id', id)}).pipe(map(user => this.User = user));
+    return this.http.get<UserAccountModel>(this.BaseUrl + UserPaths.Account, {params: new HttpParams().set('id', id)}).pipe(map(user => this.User = user));
   }
 
   private FlushUser () : void
   {
     this.User = null;
-    this.cookieService.deleteAll();
+    this.cookieService.delete('id');
+    this.cookieService.delete('token');
+    this.cookieService.deleteAll('/');
+    console.log(this.cookieService.getAll());
   }
 
   public UserNameExists (username: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + userPaths.UserNameExists, {params: new HttpParams().set('username', username)});
+    return this.http.get<boolean>(this.BaseUrl + UserPaths.UserNameExists, {params: new HttpParams().set('username', username)});
   }
 
   public EmailExists (email: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + userPaths.EmailExists, {params: new HttpParams().set('email', email)});
+    return this.http.get<boolean>(this.BaseUrl + UserPaths.EmailExists, {params: new HttpParams().set('email', email)});
   }
 
   public PhoneExists (phoneNumber: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + userPaths.PhoneExists, {params: new HttpParams().set('phoneNumber', phoneNumber)});
+    return this.http.get<boolean>(this.BaseUrl + UserPaths.PhoneExists, {params: new HttpParams().set('phoneNumber', phoneNumber)});
   }
 
   public Destroy (id: string): Observable<any>
   {
-    return this.http.delete(this.BaseUrl + userPaths.BasePath, {params: new HttpParams().set('id', id)}).pipe(
+    return this.http.delete(this.BaseUrl + UserPaths.BasePath, {params: new HttpParams().set('id', id)}).pipe(
       map(result =>
       {
         this.FlushUser();
@@ -91,7 +95,7 @@ export class UserService
 
   public UpdateUserName (updateUserNameBody: UpdateUserNameBody): Observable<any>
   {
-    return this.http.post<any>(this.BaseUrl + userPaths.UpdateUserName, updateUserNameBody).pipe(map(result =>
+    return this.http.post<any>(this.BaseUrl + UserPaths.UpdateUserName, updateUserNameBody).pipe(map(result =>
     {
       this.User.UserName = result.username;
     }));
@@ -99,7 +103,7 @@ export class UserService
 
   public UpdateAvatar (updateAvatarBody: UpdateAvatarBody)
   {
-    return this.http.post<any>(this.BaseUrl + userPaths.UpdateAvatar, updateAvatarBody).pipe(map(result =>
+    return this.http.post<any>(this.BaseUrl + UserPaths.UpdateAvatar, updateAvatarBody).pipe(map(result =>
     {
       this.User.Avatar = result.avatar;
     }));

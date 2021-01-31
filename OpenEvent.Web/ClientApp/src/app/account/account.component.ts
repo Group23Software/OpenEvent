@@ -29,6 +29,7 @@ export class AccountComponent implements OnInit
   public avatarFileName: string;
   public updatePasswordLoading: boolean = false;
   public updateUserNameLoading: boolean = false;
+  public updateAvatarLoading: boolean = false;
 
 
   get passwordConfirm ()
@@ -41,6 +42,7 @@ export class AccountComponent implements OnInit
     passwordConfirm: new FormControl('', [Validators.required, this.userValidators.matches('password')])
   });
   public userName = new FormControl('', [Validators.required], [this.userValidators.usernameValidator()]);
+
 
   constructor (
     private userService: UserService,
@@ -148,17 +150,20 @@ export class AccountComponent implements OnInit
     this.newAvatarError = "Failed to load image";
   }
 
-  public NewAvatar ()
+  public UpdateAvatar ()
   {
+    this.updateAvatarLoading = true;
     this.userService.UpdateAvatar({
       Id: this.user.Id,
       Avatar: (new ImageManipulationService).toUTF8Array(this.croppedImage)
     }).subscribe(response =>
     {
+      this.updateAvatarLoading = false;
       this.avatarFileName = null;
       this.snackBar.open('Updated avatar', 'close', {duration: 500});
     }, (error: HttpErrorResponse) =>
     {
+      this.updateAvatarLoading = false;
       this.newAvatarError = error.message;
       console.error(error);
     });

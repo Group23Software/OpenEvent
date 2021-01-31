@@ -20,11 +20,14 @@
           <mat-card-actions>
             <button mat-stroked-button (click)="avatarInput.click()">Upload file</button>
             <input hidden #avatarInput type="file" (change)="fileChangeEvent($event)"/>
-            <button mat-stroked-button (click)="NewAvatar()">Save</button>
+            <button mat-stroked-button (click)="UpdateAvatar()">Save</button>
           </mat-card-actions>
           <mat-card-footer style="padding: 0 0.5rem 0 0.5rem;">
             <div>{{avatarFileName}}</div>
             <mat-error>{{newAvatarError}}</mat-error>
+            <div class="mb-3 mx-3">
+              <mat-progress-bar mode="indeterminate" *ngIf="updateAvatarLoading"></mat-progress-bar>
+            </div>
           </mat-card-footer>
         </mat-card>
       </div>
@@ -49,7 +52,9 @@
                 </mat-error>
                 <mat-error *ngIf="username.errors && username.errors.http">{{newUserNameError}}</mat-error>
               </mat-form-field>
-              <button type="submit" mat-fab><mat-icon>save</mat-icon></button>
+              <button type="submit" mat-fab>
+                <mat-icon>save</mat-icon>
+              </button>
             </form>
 
             <mat-form-field appearance="outline">
@@ -94,7 +99,9 @@
                   Passwords must match
                 </mat-error>
               </mat-form-field>
-              <button type="submit" mat-fab><mat-icon>save</mat-icon></button>
+              <button type="submit" mat-fab>
+                <mat-icon>save</mat-icon>
+              </button>
               <mat-error *ngIf="newPasswordForm.errors && newPasswordForm.errors.http">{{newPasswordError}}</mat-error>
             </form>
           </mat-card-content>

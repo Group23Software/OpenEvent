@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit
   {
     this.authService.IsAuthenticated().subscribe(isAuthenticated => {
       // TODO : This will need to navigate to app not account in future
-      if (isAuthenticated) this.router.navigate(['/account']);
+      if (isAuthenticated) this.router.navigate(['/user/account']);
     });
   }
 
@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit
       (response) =>
       {
         // TODO: redirect to app
-        this.router.navigate(['/account']).then(r =>
+        this.router.navigate(['/user/account']).then(r =>
         {
           if (r) console.log('Navigated');
         });
