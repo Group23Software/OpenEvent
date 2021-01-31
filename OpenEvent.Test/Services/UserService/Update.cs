@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using OpenEvent.Web.Models;
 
 namespace OpenEvent.Test.Services.UserService
 {

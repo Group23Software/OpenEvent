@@ -24,7 +24,7 @@ export class AuthService
 
   public Login (auth: AuthBody): Observable<UserViewModel>
   {
-    return this.http.post<UserViewModel>(this.BaseUrl + 'api/auth/authenticate', auth).pipe(
+    return this.http.post<UserViewModel>(this.BaseUrl + 'api/auth/login', auth).pipe(
       map(user =>
       {
         console.log(user);

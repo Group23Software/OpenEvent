@@ -80,7 +80,7 @@ namespace OpenEvent.Web.Services
             {
                 await ApplicationContext.Users.AddAsync(newUser);
                 await ApplicationContext.SaveChangesAsync();
-                return await AuthService.Authenticate(newUser.Email, userInput.Password, userInput.Remember);
+                return await AuthService.Login(newUser.Email, userInput.Password, userInput.Remember);
             }
             catch
             {
@@ -147,7 +147,6 @@ namespace OpenEvent.Web.Services
             }
 
             user.Avatar = avatar;
-            ApplicationContext.Entry(user).State = EntityState.Modified;
 
             try
             {
@@ -181,8 +180,7 @@ namespace OpenEvent.Web.Services
             }
 
             user.UserName = name;
-            ApplicationContext.Entry(user).State = EntityState.Modified;
-
+            
             try
             {
                 await ApplicationContext.SaveChangesAsync();

@@ -23,12 +23,12 @@ namespace OpenEvent.Web.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public async Task<ActionResult<UserViewModel>> Authenticate([FromBody] AuthBody authBody)
+        [HttpPost("login")]
+        public async Task<ActionResult<UserViewModel>> Login([FromBody] AuthBody authBody)
         {
             try
             {
-                var result = await AuthService.Authenticate(authBody.Email, authBody.Password, authBody.Remember);
+                var result = await AuthService.Login(authBody.Email, authBody.Password, authBody.Remember);
                 return Ok(result);
             }
             catch (Exception e)
@@ -39,7 +39,7 @@ namespace OpenEvent.Web.Controllers
         }
 
         [HttpPost("authenticateToken")]
-        public async Task<ActionResult<UserViewModel>> AuthenticateToken([FromBody] AuthId id)
+        public async Task<ActionResult<UserViewModel>> Authenticate([FromBody] AuthId id)
         {
             try
             {

@@ -16,7 +16,7 @@ namespace OpenEvent.Web.Services
 {
     public interface IAuthService
     {
-        Task<UserViewModel> Authenticate(string email, string password, bool remember);
+        Task<UserViewModel> Login(string email, string password, bool remember);
         Task<UserViewModel> Authenticate(Guid id);
         Task ForgotPassword(string email);
         Task UpdatePassword(string email, string password);
@@ -37,7 +37,7 @@ namespace OpenEvent.Web.Services
             Mapper = mapper;
         }
 
-        public async Task<UserViewModel> Authenticate(string email, string password, bool remember)
+        public async Task<UserViewModel> Login(string email, string password, bool remember)
         {
             var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email);
 
@@ -125,7 +125,6 @@ namespace OpenEvent.Web.Services
             );
 
             user.Password = hasher.HashPassword(user, password);
-            ApplicationContext.Entry(user).State = EntityState.Modified;
 
             try
             {

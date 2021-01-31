@@ -12,6 +12,6 @@ namespace OpenEvent.Web.Contexts
         {
         }
 
-        public DbSet<User> Users { get; set; }
+        public virtual DbSet<User> Users { get; set; }
     }
 }

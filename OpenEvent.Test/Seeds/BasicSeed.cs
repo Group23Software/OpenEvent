@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models;
+using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Test.Seeds
 {

@@ -28,7 +28,7 @@ namespace OpenEvent.Test
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
             Mapper = new Mapper(configuration);
 
-            Context = await new BasicSetup().Setup();
+            // Context = await new BasicSetup().Setup();
 
             AppSettings = Options.Create(new AppSettings()
             {

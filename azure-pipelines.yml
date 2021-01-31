@@ -41,3 +41,4 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
+    publishTestResults: true
