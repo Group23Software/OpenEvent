@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models;
+using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Services
 {
@@ -210,29 +210,5 @@ namespace OpenEvent.Web.Services
         {
             return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber) != null;
         }
-
-        // public async Task<User> UpdateBasicInfo(UserAccountModel user)
-        // {
-        //     var userCheck = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
-        //     
-        //     if (userCheck == null)
-        //     {
-        //         Logger.LogInformation("User doesnt exist");
-        //         throw new Exception("User doesnt exist");
-        //     }
-        //     
-        //     // ApplicationContext.Entry(user).State = EntityState.Modified;
-        //
-        //     try
-        //     {
-        //         await ApplicationContext.SaveChangesAsync();
-        //         return user;
-        //     }
-        //     catch
-        //     {
-        //         Logger.LogInformation("User failed to save");  
-        //         throw;
-        //     }
-        // }
     }
 }

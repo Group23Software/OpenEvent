@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models;
+using Microsoft.Extensions.Logging;
+using OpenEvent.Web.Models.User;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
@@ -11,11 +11,13 @@ namespace OpenEvent.Web.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private IUserService UserService;
+        private readonly IUserService UserService;
+        private readonly ILogger<UserController> Logger;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
             UserService = userService;
+            Logger = logger;
         }
 
         [HttpPost]
@@ -28,6 +30,7 @@ namespace OpenEvent.Web.Controllers
             }
             catch (Exception e)
             {
+                Logger.LogError(e.ToString());
                 return BadRequest(e);
             }
         }
@@ -42,23 +45,10 @@ namespace OpenEvent.Web.Controllers
             }
             catch (Exception e)
             {
+                Logger.LogError(e.ToString());
                 return BadRequest(e);
             }
         }
-
-        // [HttpPut]
-        // public async Task<ActionResult> Update(UserAccountModel user)
-        // {
-        //     try
-        //     {
-        //         var result = await UserService.Update(user);
-        //         return Ok(result);
-        //     }
-        //     catch (Exception e)
-        //     {
-        //         return BadRequest(e);
-        //     }
-        // }
 
         [HttpGet("Account")]
         public async Task<ActionResult<UserAccountModel>> GetAccountUser(Guid id)
@@ -70,6 +60,7 @@ namespace OpenEvent.Web.Controllers
             }
             catch (Exception e)
             {
+                Logger.LogError(e.ToString());
                 return BadRequest(e);
             }
         }
@@ -105,7 +96,7 @@ namespace OpenEvent.Web.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.LogError(e.ToString());
                 return BadRequest(e);
             }
         }
@@ -120,21 +111,9 @@ namespace OpenEvent.Web.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Logger.LogError(e.ToString());
                 return BadRequest(e);
             }
         }
-    }
-
-    public class UpdateAvatarBody
-    {
-        public Guid Id { get; set; }
-        public byte[] Avatar { get; set; }
-    }
-
-    public class UpdateUserNameBody
-    {
-        public Guid Id { get; set; }
-        public string UserName { get; set; }
     }
 }

@@ -9,7 +9,7 @@
     </div>
   </div>
 
-  <div class="d-flex flex-row">
+  <div class="d-flex flex-row mb-3">
     <div id="info">
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
@@ -41,12 +41,32 @@
       </mat-form-field>
     </div>
 
-    <div class="d-flex flex-column">
-      <div id="avatarPreview">
-        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1" [onlyScaleDown]="true" format="png" (imageCropped)="imageCropped($event)" [imageBase64]="DefaultProfile" (loadImageFailed)="loadImageFailed()"></image-cropper>
-      </div>
-      <input type="file" (change)="fileChangeEvent($event)" class="m-auto"/>
-    </div>
+<!--    <div class="d-flex flex-column">-->
+<!--      <div id="avatarPreview">-->
+<!--        <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1" [onlyScaleDown]="true" format="png" (imageCropped)="imageCropped($event)" [imageBase64]="DefaultProfile" (loadImageFailed)="loadImageFailed()"></image-cropper>-->
+<!--      </div>-->
+<!--      <input type="file" (change)="fileChangeEvent($event)" class="m-auto"/>-->
+<!--    </div>-->
+
+    <mat-card>
+<!--      <mat-card-header>-->
+<!--        <mat-card-title>Avatar</mat-card-title>-->
+<!--        <mat-card-subtitle>Images must be .png format</mat-card-subtitle>-->
+<!--      </mat-card-header>-->
+      <mat-card-content>
+        <div id="avatarPreview">
+          <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1" [onlyScaleDown]="true" format="png" (imageCropped)="imageCropped($event)" [imageBase64]="DefaultProfile" (loadImageFailed)="loadImageFailed()"></image-cropper>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-stroked-button (click)="avatarInput.click()">Upload file</button>
+        <input hidden #avatarInput type="file" (change)="fileChangeEvent($event)"/>
+      </mat-card-actions>
+      <mat-card-footer style="padding: 0 0.5rem 0 0.5rem;">
+        <div>{{avatarFileName}}</div>
+        <mat-error>{{avatarError}}</mat-error>
+      </mat-card-footer>
+    </mat-card>
   </div>
 
 

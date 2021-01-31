@@ -24,19 +24,6 @@ export class UserValidatorsService
     };
   }
 
-  // public matches (s, d): ValidatorFn
-  // {
-  //   return (group: FormGroup): { [key: string]: any } =>
-  //   {
-  //     let sC = group.get(s).value;
-  //     let dC = group.get(d).value;
-  //
-  //     console.log(sC, dC);
-  //
-  //     return sC === dC ? null : {matches: true};
-  //   }
-  // }
-
   public usernameValidator (): AsyncValidatorFn
   {
     return (control: AbstractControl): Observable<ValidationErrors | null> =>

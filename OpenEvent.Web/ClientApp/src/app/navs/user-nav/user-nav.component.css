@@ -41,4 +41,9 @@ mat-toolbar {
 #title {
   font-size: xx-large;
   font-weight: normal;
+  text-decoration: none;
+}
+
+#title:hover {
+  color: rgba(0, 0, 0, 0.87);
 }

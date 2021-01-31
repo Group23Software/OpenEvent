@@ -2,7 +2,7 @@ using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using OpenEvent.Web.Models;
+using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Contexts
 {

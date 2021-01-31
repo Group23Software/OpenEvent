@@ -1,6 +1,6 @@
 using System.Text;
 using AutoMapper;
-using OpenEvent.Web.Models;
+using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web
 {

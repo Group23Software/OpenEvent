@@ -13,7 +13,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models;
 using OpenEvent.Web.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
@@ -137,8 +136,8 @@ namespace OpenEvent.Web
 
                 if (env.IsDevelopment())
                 {
-                    // spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-                    spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    // spa.UseAngularCliServer(npmScript: "start");
                 }
             });
         }

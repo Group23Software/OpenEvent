@@ -26,6 +26,9 @@ export class AccountComponent implements OnInit
 
   public imageChangedEvent: any = '';
   public croppedImage: any = '';
+  public avatarFileName: string;
+  public updatePasswordLoading: boolean = false;
+  public updateUserNameLoading: boolean = false;
 
 
   get passwordConfirm ()
@@ -69,14 +72,17 @@ export class AccountComponent implements OnInit
 
   public UpdatePassword ()
   {
+    this.updatePasswordLoading = true;
     this.authService.UpdatePassword({
       Email: this.user.Email,
       Password: this.newPasswordForm.value.password
     }).subscribe(response =>
     {
+      this.updatePasswordLoading = false;
       this.snackBar.open('Updated password', 'close', {duration: 500})
     }, (error: HttpErrorResponse) =>
     {
+      this.updatePasswordLoading = false;
       this.newPasswordError = error.message;
       this.newPasswordForm.setErrors({http: true});
       console.error(error);
@@ -111,11 +117,14 @@ export class AccountComponent implements OnInit
 
   public UpdateUserName ()
   {
+    this.updateUserNameLoading = true;
     this.userService.UpdateUserName({Id: this.user.Id, UserName: this.username.value}).subscribe(response =>
     {
+      this.updateUserNameLoading = false;
       this.snackBar.open('Updated username', 'close', {duration: 500});
     }, (error: HttpErrorResponse) =>
     {
+      this.updateUserNameLoading = false;
       this.newUserNameError = error.message;
       this.userName.setErrors({http: true});
       console.error(error);
@@ -124,7 +133,9 @@ export class AccountComponent implements OnInit
 
   public fileChangeEvent (event: any): void
   {
+    this.avatarFileName = event.target.files[0].name;
     this.imageChangedEvent = event;
+    this.newAvatarError = null;
   }
 
   public imageCropped (event: ImageCroppedEvent): void
@@ -134,7 +145,7 @@ export class AccountComponent implements OnInit
 
   public loadImageFailed (): void
   {
-    // TODO: error message
+    this.newAvatarError = "Failed to load image";
   }
 
   public NewAvatar ()
@@ -144,6 +155,7 @@ export class AccountComponent implements OnInit
       Avatar: (new ImageManipulationService).toUTF8Array(this.croppedImage)
     }).subscribe(response =>
     {
+      this.avatarFileName = null;
       this.snackBar.open('Updated avatar', 'close', {duration: 500});
     }, (error: HttpErrorResponse) =>
     {

@@ -31,6 +31,9 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatMenuModule} from "@angular/material/menu";
 import {UserNavComponent} from "./navs/user-nav/user-nav.component";
 import {PublicNavComponent} from "./navs/public-nav/public-nav.component";
+import {MatCardModule} from "@angular/material/card";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 @NgModule({
@@ -72,6 +75,9 @@ import {PublicNavComponent} from "./navs/public-nav/public-nav.component";
     MatToolbarModule,
     MatIconModule,
     MatMenuModule,
+    MatCardModule,
+    MatTabsModule,
+    MatProgressBarModule,
   ],
   providers: [CookieService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent],

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models;
+using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Services
 {
@@ -99,8 +99,6 @@ namespace OpenEvent.Web.Services
             }
 
             return Mapper.Map<UserViewModel>(user);
-            
-            //TODO: Authenticate with existing token saved as cookie
         }
 
         public Task ForgotPassword(string email)

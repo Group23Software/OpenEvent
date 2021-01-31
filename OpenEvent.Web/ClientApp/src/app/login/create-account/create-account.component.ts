@@ -36,6 +36,8 @@ export class CreateAccountComponent implements OnInit
   public imageChangedEvent: any = '';
   public croppedImage: any = '';
   public loading: boolean = false;
+  public avatarFileName: string;
+  public avatarError: string;
 
   public get email ()
   {
@@ -54,6 +56,7 @@ export class CreateAccountComponent implements OnInit
 
 // , Validators.pattern('^(((\\+44\\s?\\d{4}|\\(?0\\d{4}\\)?)\\s?\\d{3}\\s?\\d{3})|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$\n')
 
+
   constructor (private userValidators: UserValidatorsService, private userService: UserService, private dialogRef: MatDialogRef<CreateAccountComponent>, private router: Router)
   {
     const currentYear = new Date().getFullYear();
@@ -66,6 +69,7 @@ export class CreateAccountComponent implements OnInit
 
   public fileChangeEvent (event: any): void
   {
+    this.avatarFileName = event.target.files[0].name;
     this.imageChangedEvent = event;
   }
 
@@ -76,7 +80,7 @@ export class CreateAccountComponent implements OnInit
 
   public loadImageFailed () : void
   {
-    // TODO: error message
+    this.avatarError = "Failed to load image";
   }
 
   public createAccount () : void
