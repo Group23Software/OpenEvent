@@ -2,7 +2,9 @@ using System;
 
 namespace OpenEvent.Web.Models.User
 {
-    // Detailed user data for the "Account Page"
+    /// <summary>
+    /// Detailed user data for account page.
+    /// </summary>
     public class UserAccountModel
     {
         public Guid Id { get; set; }

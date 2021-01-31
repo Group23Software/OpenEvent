@@ -24,7 +24,7 @@ export class AuthService
 
   public Login (auth: AuthBody): Observable<UserViewModel>
   {
-    return this.http.post<UserViewModel>(this.BaseUrl + 'api/auth/login', auth).pipe(
+    return this.http.post<UserViewModel>(this.BaseUrl + authPaths.Login, auth).pipe(
       map(user =>
       {
         console.log(user);
@@ -38,9 +38,9 @@ export class AuthService
     );
   }
 
-  public Authorise (id: string): Observable<UserViewModel>
+  public Authenticate (id: string): Observable<UserViewModel>
   {
-    return this.http.post<UserViewModel>(this.BaseUrl + 'api/auth/authenticateToken', {id: id}).pipe(map(user =>
+    return this.http.post<UserViewModel>(this.BaseUrl + authPaths.Authenticate, {id: id}).pipe(map(user =>
     {
       this.userService.User = user;
       // this.userService.User.Avatar = 'data:image/png;base64,' + this.userService.User.Avatar;
@@ -61,7 +61,7 @@ export class AuthService
             if (this.cookieService.check('id'))
             {
               console.log("Client has token saved, getting user");
-              return this.Authorise(id).pipe(map(x => !!x));
+              return this.Authenticate(id).pipe(map(x => !!x));
             }
             return of(false);
           }
@@ -77,6 +77,6 @@ export class AuthService
 
   public UpdatePassword (updatePasswordBody: UpdatePasswordBody): Observable<any>
   {
-    return this.http.post<string>(this.BaseUrl + 'api/auth/updatePassword', updatePasswordBody);
+    return this.http.post<string>(this.BaseUrl + authPaths.UpdatePassword, updatePasswordBody);
   }
 }

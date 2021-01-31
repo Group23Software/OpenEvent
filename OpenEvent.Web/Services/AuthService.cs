@@ -10,10 +10,14 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using OpenEvent.Web.Contexts;
+using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Services
 {
+    /// <summary>
+    /// AuthService interface
+    /// </summary>
     public interface IAuthService
     {
         Task<UserViewModel> Login(string email, string password, bool remember);
@@ -22,13 +26,23 @@ namespace OpenEvent.Web.Services
         Task UpdatePassword(string email, string password);
     }
 
+    /// <summary>
+    /// Service providing all logic for user authentication
+    /// </summary>
     public class AuthService : IAuthService
     {
-        private ILogger<AuthService> Logger;
-        private ApplicationContext ApplicationContext;
-        private AppSettings AppSettings;
+        private readonly ILogger<AuthService> Logger;
+        private readonly ApplicationContext ApplicationContext;
+        private readonly AppSettings AppSettings;
         private readonly IMapper Mapper;
 
+        /// <summary>
+        /// AuthService default constructor
+        /// </summary>
+        /// <param name="context"><see cref="ApplicationContext"/>></param>
+        /// <param name="logger"></param>
+        /// <param name="appSettings"></param>
+        /// <param name="mapper"></param>
         public AuthService(ApplicationContext context, ILogger<AuthService> logger, IOptions<AppSettings> appSettings, IMapper mapper)
         {
             Logger = logger;
@@ -36,7 +50,18 @@ namespace OpenEvent.Web.Services
             AppSettings = appSettings.Value;
             Mapper = mapper;
         }
-
+        
+        /// <summary>
+        /// Main login method.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <param name="remember"></param>
+        /// <returns>
+        /// A task of type <see cref="UserViewModel"/> representing basic user information.
+        /// </returns>
+        /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
+        /// <exception cref="IncorrectPasswordException">Thrown when the password is incorrect.</exception>
         public async Task<UserViewModel> Login(string email, string password, bool remember)
         {
             var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email);
@@ -44,25 +69,30 @@ namespace OpenEvent.Web.Services
             if (user == null)
             {
                 Logger.LogInformation("User not found");
-                throw new Exception("User not found");
+                throw new UserNotFoundException();
             }
 
-            PasswordHasher<User> hasher = new PasswordHasher<User>(
-                new OptionsWrapper<PasswordHasherOptions>(
-                    new PasswordHasherOptions()
-                    {
-                        CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2
-                    })
-            );
+            var hasher = PasswordHasher();
 
             if (hasher.VerifyHashedPassword(user, user.Password, password) == PasswordVerificationResult.Failed)
             {
                 Logger.LogInformation("Incorrect password");
-                throw new Exception("Incorrect password");
+                throw new IncorrectPasswordException();
             }
 
-            int days = remember ? 30 : 1;
-            
+            UserViewModel userViewModel = new UserViewModel()
+            {
+                Id = user.Id,
+                Avatar = Encoding.UTF8.GetString(user.Avatar, 0, user.Avatar.Length),
+                UserName = user.UserName,
+                Token = GenerateToken(user, remember ? 30 : 1)
+            };
+
+            return userViewModel;
+        }
+
+        private string GenerateToken(User user, int days)
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -76,18 +106,17 @@ namespace OpenEvent.Web.Services
                     SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            
-            UserViewModel userViewModel = new UserViewModel()
-            {
-                Id = user.Id,
-                Avatar = Encoding.UTF8.GetString(user.Avatar, 0, user.Avatar.Length),
-                UserName = user.UserName,
-                Token = tokenHandler.WriteToken(token)
-            };
-
-            return userViewModel;
+            return tokenHandler.WriteToken(token);
         }
 
+        /// <summary>
+        /// Method for authenticating the user once a token has been obtained.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>
+        /// A task of type <see cref="UserViewModel"/> representing basic user information.
+        /// </returns>
+        /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         public async Task<UserViewModel> Authenticate(Guid id)
         {
             var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -95,17 +124,26 @@ namespace OpenEvent.Web.Services
             if (user == null)
             {
                 Logger.LogInformation("User not found");
-                throw new Exception("User not found");
+                throw new UserNotFoundException();
             }
 
             return Mapper.Map<UserViewModel>(user);
         }
-
+        
         public Task ForgotPassword(string email)
         {
             throw new System.NotImplementedException();
         }
 
+        /// <summary>
+        /// Method for updating updating the user's password.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns>
+        /// A completed task once updated.
+        /// </returns>
+        /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         public async Task UpdatePassword(string email, string password)
         {
             var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email);
@@ -113,16 +151,10 @@ namespace OpenEvent.Web.Services
             if (user == null)
             {
                 Logger.LogInformation("User not found");
-                throw new Exception("User not found");
+                throw new UserNotFoundException();
             }
 
-            PasswordHasher<User> hasher = new PasswordHasher<User>(
-                new OptionsWrapper<PasswordHasherOptions>(
-                    new PasswordHasherOptions()
-                    {
-                        CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2
-                    })
-            );
+            var hasher = PasswordHasher();
 
             user.Password = hasher.HashPassword(user, password);
 
@@ -135,6 +167,18 @@ namespace OpenEvent.Web.Services
                 Logger.LogWarning("User failed to save");
                 throw;
             }
+        }
+
+        private static PasswordHasher<User> PasswordHasher()
+        {
+            PasswordHasher<User> hasher = new PasswordHasher<User>(
+                new OptionsWrapper<PasswordHasherOptions>(
+                    new PasswordHasherOptions()
+                    {
+                        CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2
+                    })
+            );
+            return hasher;
         }
     }
 }

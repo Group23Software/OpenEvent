@@ -14,7 +14,6 @@ export class AuthInterceptor implements HttpInterceptor
 
   intercept (req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>
   {
-    // console.log("using interceptor");
     let token = this.authService.GetToken();
 
     if (token != null) {

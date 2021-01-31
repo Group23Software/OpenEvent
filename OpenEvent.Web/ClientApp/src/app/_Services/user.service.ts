@@ -22,7 +22,6 @@ export class UserService
   }
 
   private _User: UserAccountModel;
-
   private readonly BaseUrl: string;
 
   constructor (private http: HttpClient, @Inject('BASE_URL') baseUrl: string, private cookieService: CookieService)
@@ -33,17 +32,14 @@ export class UserService
 
   public GetUserAsync (): Observable<UserAccountModel | null>
   {
-    // console.log(this._User);
     return of(this._User);
   }
 
   public CreateUser (newUserInput: NewUserInput): Observable<UserViewModel>
   {
-    return this.http.post<UserViewModel>(this.BaseUrl + 'api/user', newUserInput).pipe(
+    return this.http.post<UserViewModel>(this.BaseUrl + userPaths.BasePath, newUserInput).pipe(
       map(user =>
       {
-        console.log(user);
-        // this.Token = user.Token;
         let payload: JwtPayload = jwtDecode(user.Token);
         this.cookieService.set('token', user.Token, new Date(payload.exp * 1000));
         this.cookieService.set('id', user.Id, new Date(payload.exp * 1000));
@@ -59,10 +55,10 @@ export class UserService
 
   public GetAccountUser (id: string): Observable<UserAccountModel>
   {
-    return this.http.get<UserAccountModel>(this.BaseUrl + 'api/user/account', {params: new HttpParams().set('id', id)}).pipe(map(user => this.User = user));
+    return this.http.get<UserAccountModel>(this.BaseUrl + userPaths.Account, {params: new HttpParams().set('id', id)}).pipe(map(user => this.User = user));
   }
 
-  private FlushUser ()
+  private FlushUser () : void
   {
     this.User = null;
     this.cookieService.deleteAll();
@@ -70,22 +66,22 @@ export class UserService
 
   public UserNameExists (username: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + 'api/user/UserNameExists', {params: new HttpParams().set('username', username)});
+    return this.http.get<boolean>(this.BaseUrl + userPaths.UserNameExists, {params: new HttpParams().set('username', username)});
   }
 
   public EmailExists (email: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + 'api/user/EmailExists', {params: new HttpParams().set('email', email)});
+    return this.http.get<boolean>(this.BaseUrl + userPaths.EmailExists, {params: new HttpParams().set('email', email)});
   }
 
   public PhoneExists (phoneNumber: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + 'api/user/PhoneExists', {params: new HttpParams().set('phoneNumber', phoneNumber)});
+    return this.http.get<boolean>(this.BaseUrl + userPaths.PhoneExists, {params: new HttpParams().set('phoneNumber', phoneNumber)});
   }
 
   public Destroy (id: string): Observable<any>
   {
-    return this.http.delete(this.BaseUrl + 'api/user', {params: new HttpParams().set('id', id)}).pipe(
+    return this.http.delete(this.BaseUrl + userPaths.BasePath, {params: new HttpParams().set('id', id)}).pipe(
       map(result =>
       {
         this.FlushUser();
@@ -95,7 +91,7 @@ export class UserService
 
   public UpdateUserName (updateUserNameBody: UpdateUserNameBody): Observable<any>
   {
-    return this.http.post<any>(this.BaseUrl + 'api/user/updateUserName', updateUserNameBody).pipe(map(result =>
+    return this.http.post<any>(this.BaseUrl + userPaths.UpdateUserName, updateUserNameBody).pipe(map(result =>
     {
       this.User.UserName = result.username;
     }));
@@ -103,13 +99,13 @@ export class UserService
 
   public UpdateAvatar (updateAvatarBody: UpdateAvatarBody)
   {
-    return this.http.post<any>(this.BaseUrl + 'api/user/updateAvatar', updateAvatarBody).pipe(map(result =>
+    return this.http.post<any>(this.BaseUrl + userPaths.UpdateAvatar, updateAvatarBody).pipe(map(result =>
     {
       this.User.Avatar = result.avatar;
     }));
   }
 
-  public LogOut ()
+  public LogOut () : void
   {
     this.FlushUser();
   }

@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using NUnit.Framework;
+using OpenEvent.Web.Exceptions;
 
 namespace OpenEvent.Test.Services.UserService
 {
@@ -21,8 +21,7 @@ namespace OpenEvent.Test.Services.UserService
         public async Task ShouldNotFindUser()
         {
             FluentActions.Invoking(async () => await UserService.Get(new Guid()))
-                 .Should().Throw<Exception>()
-                 .WithMessage("User not found");
+                .Should().Throw<UserNotFoundException>();
         }
     }
 }

@@ -1,9 +1,12 @@
+using System;
+
 namespace OpenEvent.Web.Models.Auth
 {
+    /// <summary>
+    /// Request body for authenticating.
+    /// </summary>
     public class AuthBody
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public bool Remember { get; set; }
+        public Guid Id { get; set; }
     }
 }

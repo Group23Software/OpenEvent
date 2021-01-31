@@ -20,9 +20,14 @@ $ dotnet restore
 $ dotnet run
 ```
 
-This will start the API server and the Angular server.
+This will start the API server. To start the Angular server in another terminal run:
 
-Visit http://localhost:5000/
+```sh
+$ cd OpenEvent.Web/ClientApp/
+$ ng serve
+```
+
+Visit http://localhost:4200/
 
 ## Developing
 

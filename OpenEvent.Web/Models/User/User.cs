@@ -2,7 +2,9 @@ using System;
 
 namespace OpenEvent.Web.Models.User
 {
-    // Full user model with all data
+    /// <summary>
+    /// Full user model with all data.
+    /// </summary>
     public class User
     {
         public Guid Id { get; set; }

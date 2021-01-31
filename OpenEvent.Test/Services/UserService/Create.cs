@@ -3,9 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Test.Services.UserService
@@ -23,7 +23,7 @@ namespace OpenEvent.Test.Services.UserService
                 FirstName = "Joe",
                 LastName = "Blogs",
                 UserName = "JoeBlogs",
-                PhoneNumber = "0000000000",
+                PhoneNumber = "1111111111",
                 Avatar = new byte[100],
                 Remember = false,
                 DateOfBirth = DateTime.Now.AddYears(-18)
@@ -44,8 +44,7 @@ namespace OpenEvent.Test.Services.UserService
             };
 
             FluentActions.Invoking(async () => await UserService.Create(user))
-                .Should().Throw<Exception>()
-                .WithMessage("User already exists");
+                .Should().Throw<UserAlreadyExistsException>();
         }
 
         [Test]
@@ -62,7 +61,7 @@ namespace OpenEvent.Test.Services.UserService
                 FirstName = "Joe",
                 LastName = "Blogs",
                 UserName = "JoeBlogs",
-                PhoneNumber = "0000000000",
+                PhoneNumber = "1111111111",
                 Avatar = new byte[100],
                 Remember = false,
                 DateOfBirth = DateTime.Now.AddYears(-18)

@@ -3,13 +3,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using OpenEvent.Test.Setups;
-using OpenEvent.Web;
-using OpenEvent.Web.Contexts;
+using OpenEvent.Web.Exceptions;
 
 namespace OpenEvent.Test.Services.UserService
 {
@@ -29,8 +25,7 @@ namespace OpenEvent.Test.Services.UserService
         public async Task ShouldNotFindUser()
         {
             FluentActions.Invoking(async () => await UserService.Destroy(Guid.NewGuid()))
-                .Should().Throw<Exception>()
-                .WithMessage("User doesnt exist");
+                .Should().Throw<UserNotFoundException>();
         }
         
         [Test]

@@ -1,11 +1,12 @@
 namespace OpenEvent.Web.Models.Auth
 {
     /// <summary>
-    /// Request body for updating user's password.
+    /// Request body for user login.
     /// </summary>
-    public class UpdatePasswordBody
+    public class LoginBody
     {
         public string Email { get; set; }
         public string Password { get; set; }
+        public bool Remember { get; set; }
     }
 }

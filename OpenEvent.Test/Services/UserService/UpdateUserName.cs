@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Web.Exceptions;
 
 namespace OpenEvent.Test.Services.UserService
 {
@@ -25,16 +26,14 @@ namespace OpenEvent.Test.Services.UserService
         {
             FluentActions.Invoking(async () =>
                     await UserService.UpdateUserName(new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"), "ExistingUser"))
-                .Should().Throw<Exception>()
-                .WithMessage("Username already exists");
+                .Should().Throw<UserNameAlreadyExistsException>();
         }
 
         [Test]
         public async Task ShouldNotFindUser()
         {
             FluentActions.Invoking(async () => await UserService.UpdateUserName(Guid.NewGuid(), ""))
-                .Should().Throw<Exception>()
-                .WithMessage("User not found");
+                .Should().Throw<UserNotFoundException>();
         }
 
         [Test]

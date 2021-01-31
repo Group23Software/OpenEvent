@@ -25,11 +25,16 @@ namespace OpenEvent.Web
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Get app settings from appsettings.json
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            
+            // Add cors so angular dev server can make requests.
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "AllowOrigin",
@@ -40,15 +45,13 @@ namespace OpenEvent.Web
                     });
             });
 
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-            var appSettings = appSettingsSection.Get<AppSettings>();
-
+            // Add Db context using connection string from app settings.
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseMySql(appSettings.ConnectionString,
                     new MySqlServerVersion(new Version(8, 0, 23)),
                     mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend)));
 
+            // Register JWT using secret from app settings.
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
             services.AddAuthentication(x =>
                 {
@@ -68,8 +71,10 @@ namespace OpenEvent.Web
                     };
                 });
 
+            // Add automapping configuration.
             services.AddAutoMapper(typeof(Startup));
 
+            // Add services.
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
 
@@ -103,7 +108,7 @@ namespace OpenEvent.Web
                 app.UseHsts();
             }
 
-            // app.UseHttpsRedirection();
+            // app.UseHttpsRedirection(); Disabled for dev.
             app.UseStaticFiles();
             if (!env.IsDevelopment())
             {
@@ -129,15 +134,12 @@ namespace OpenEvent.Web
 
             app.UseSpa(spa =>
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
                 {
-                    // spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-                    spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                    // spa.UseAngularCliServer(npmScript: "start");
                 }
             });
         }

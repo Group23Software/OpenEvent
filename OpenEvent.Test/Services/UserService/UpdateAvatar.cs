@@ -6,6 +6,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Web.Exceptions;
 
 namespace OpenEvent.Test.Services.UserService
 {
@@ -25,8 +26,7 @@ namespace OpenEvent.Test.Services.UserService
         public async Task ShouldNotFindUser()
         {
             FluentActions.Invoking(async () => await UserService.UpdateAvatar(Guid.NewGuid(), null))
-                .Should().Throw<Exception>()
-                .WithMessage("User not found");
+                .Should().Throw<UserNotFoundException>();
         }
 
         [Test]

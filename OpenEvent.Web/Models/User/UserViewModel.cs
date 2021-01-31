@@ -2,7 +2,9 @@ using System;
 
 namespace OpenEvent.Web.Models.User
 {
-    // Basic user data returned when authenticating the user
+    /// <summary>
+    /// Minimal user data.
+    /// </summary>
     public class UserViewModel
     {
         public Guid Id { get; set; }

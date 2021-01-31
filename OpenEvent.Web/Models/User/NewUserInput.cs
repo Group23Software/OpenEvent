@@ -2,7 +2,9 @@ using System;
 
 namespace OpenEvent.Web.Models.User
 {
-    // Data collected when making a new user
+    /// <summary>
+    /// Data collected when making a new user.
+    /// </summary>
     public class NewUserInput
     {
         public string Email { get; set; }

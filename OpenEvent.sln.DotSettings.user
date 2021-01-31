@@ -5,28 +5,5 @@
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=99876efe_002D373a_002D4ac3_002D870a_002D03ac22d35645/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ShouldCreateNewUser #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;TestAncestor&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Create.ShouldCreateNewUser&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Create.ShouldFailNonUniqueUser&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Destroy.ShouldDestroyUser&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Destroy.ShouldNotFindUser&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Create&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Get&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.AuthService.Authenticate&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.AuthService.UpdatePassword.ShouldUpdatePassword&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.AuthService.UpdatePassword.ShouldNotFindUser&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateUserName.ShouldUpdate&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateUserName.ShouldNotFindUser&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateAvatar.ShouldUpdate&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateAvatar&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateUserName.ShouldAlreadyExist&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.EmailExists&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.PhoneExists&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.UpdateUserName&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Destroy.ShouldThrowDbUpdateException&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.AuthService.UpdatePassword.ShouldThrowDbUpdateException&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.AuthService.Login.ShouldReturn30DayToken&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.AuthService.Login.ShouldReturn1DayToken&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.AuthService.Login&lt;/TestId&gt;
-  &lt;/TestAncestor&gt;
+  &lt;Project Location="/Users/harrison/Desktop/OpenEvent/OpenEvent.Test" Presentation="&amp;lt;OpenEvent.Test&amp;gt;" /&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

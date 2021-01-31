@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Web.Exceptions;
 
 namespace OpenEvent.Test.Services.AuthService
 {
@@ -20,16 +21,14 @@ namespace OpenEvent.Test.Services.AuthService
         public async Task PasswordShouldBeIncorrect()
         {
             FluentActions.Invoking(async () => await AuthService.Login("exists@email.co.uk", "Wrong", false))
-                .Should().Throw<Exception>()
-                .WithMessage("Incorrect password");
+                .Should().Throw<IncorrectPasswordException>();
         }
         
         [Test]
         public async Task ShouldNotFind()
         {
             FluentActions.Invoking(async () => await AuthService.Login("wrong@email.co.uk", "Wrong", false))
-                .Should().Throw<Exception>()
-                .WithMessage("User not found");
+                .Should().Throw<UserNotFoundException>();
         }
 
         [Test]

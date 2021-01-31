@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Web.Exceptions;
 
 namespace OpenEvent.Test.Services.AuthService
 {
@@ -19,8 +20,7 @@ namespace OpenEvent.Test.Services.AuthService
         public async Task ShouldNotFind()
         {
             FluentActions.Invoking(async () => await AuthService.Authenticate(new Guid()))
-                .Should().Throw<Exception>()
-                .WithMessage("User not found");
+                .Should().Throw<UserNotFoundException>();
         }
     }
 }
