@@ -19,12 +19,12 @@ module.exports = function (config) {
     },
     reporters: ['progress', 'junit', 'kjhtml', 'coverage-istanbul'],
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, '../../coverage/Site'),
+      dir: require('path').join(__dirname, '../coverage/Site'),
       reports: ['html', 'lcovonly', 'text-summary', 'cobertura'],
       fixWebpackSourcePaths: true
     },
     junitReporter: {
-      outputDir: require('path').join(__dirname, '../../junit/Site'),
+      outputDir: require('path').join(__dirname, '../junit/Site'),
     },
     customLaunchers: {
       ChromeDebugging: {
