@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenEvent.Web.Contexts;
 
 namespace OpenEvent.Web.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210203184115_eventsAndTickets")]
+    partial class eventsAndTickets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +73,7 @@ namespace OpenEvent.Web.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("money(65,30)");
 
                     b.Property<DateTime>("StartLocal")
                         .HasColumnType("datetime(6)");
@@ -138,6 +140,9 @@ namespace OpenEvent.Web.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Token")
                         .HasColumnType("longtext");
 
                     b.Property<string>("UserName")
@@ -221,29 +226,7 @@ namespace OpenEvent.Web.Migrations
 
                             b1.HasKey("EventId", "Id");
 
-                            b1.ToTable("Events_Images");
-
-                            b1.WithOwner()
-                                .HasForeignKey("EventId");
-                        });
-
-                    b.OwnsOne("OpenEvent.Web.Models.Event.Image", "Thumbnail", b1 =>
-                        {
-                            b1.Property<Guid>("EventId")
-                                .HasColumnType("char(36)");
-
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("char(36)");
-
-                            b1.Property<string>("Label")
-                                .HasColumnType("longtext");
-
-                            b1.Property<byte[]>("Source")
-                                .HasColumnType("longblob");
-
-                            b1.HasKey("EventId");
-
-                            b1.ToTable("Events");
+                            b1.ToTable("Image");
 
                             b1.WithOwner()
                                 .HasForeignKey("EventId");
@@ -279,8 +262,6 @@ namespace OpenEvent.Web.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("SocialLinks");
-
-                    b.Navigation("Thumbnail");
                 });
 
             modelBuilder.Entity("OpenEvent.Web.Models.Ticket.Ticket", b =>

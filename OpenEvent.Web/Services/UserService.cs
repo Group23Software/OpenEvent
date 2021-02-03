@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
+using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Services
@@ -166,7 +167,7 @@ namespace OpenEvent.Web.Services
                 PhoneNumber = x.PhoneNumber,
                 UserName = x.UserName,
                 DateOfBirth = x.DateOfBirth,
-                IsDarkMode = x.IsDarkMode
+                IsDarkMode = x.IsDarkMode,
             }).FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null)

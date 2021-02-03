@@ -1,3 +1,5 @@
+import {TicketViewModel} from "./Ticket";
+
 export interface UserViewModel
 {
   Id: string;
@@ -7,17 +9,18 @@ export interface UserViewModel
   IsDarkMode: boolean;
 }
 
-export interface UserAccountModel
+export interface UserAccountModel extends UserViewModel
 {
-  Id: string;
-  UserName: string;
+  // Id: string;
+  // UserName: string;
   Email?: string;
   FirstName?: string;
   LastName?: string;
-  Avatar: string;
+  // Avatar: string;
   PhoneNumber?: string;
   DateOfBirth?: Date;
-  IsDarkMode: boolean;
+  // IsDarkMode: boolean;
+  Tickets?: TicketViewModel[];
 }
 
 export interface AuthBody

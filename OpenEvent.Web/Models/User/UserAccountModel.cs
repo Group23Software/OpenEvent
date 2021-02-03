@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using OpenEvent.Web.Models.Ticket;
 
 namespace OpenEvent.Web.Models.User
 {
