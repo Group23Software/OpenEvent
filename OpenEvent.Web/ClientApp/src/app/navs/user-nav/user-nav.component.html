@@ -1,20 +1,23 @@
 <header>
-  <mat-toolbar *ngIf="User">
+  <mat-toolbar color="primary" *ngIf="User">
 
     <div class="navControls">
-      <button mat-button class="mr-2" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>
-      <button mat-button [routerLink]="['/search']" [routerLinkActive]="['/search']">Search</button>
+      <button mat-stroked-button  class="mr-2" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>
+      <button mat-flat-button color="accent" [routerLink]="['/search']" [routerLinkActive]="['/search']">Search</button>
     </div>
 
-    <a mat-button id="title" [routerLink]="['/']">Open Event</a>
+    <a mat-button id="title" (click)="routeHome()">Open Event</a>
 
     <div class="navControls justify-content-end">
-      <button mat-button class="mr-1" [routerLink]="['/create-event']" [routerLinkActive]="['activeLink']">Create Event</button>
+      <button mat-flat-button color="accent" class="mr-2" [routerLink]="['/create-event']" [routerLinkActive]="['activeLink']">Create Event</button>
       <img [src]="User.Avatar" id="avatar" [mat-menu-trigger-for]="menu">
       <mat-menu #menu="matMenu">
         <button mat-menu-item [routerLink]="['/user/account']" [routerLinkActive]="['activeLink']"><mat-icon>settings</mat-icon><span>User Settings</span></button>
         <button mat-menu-item [routerLink]="['/user/tickets']" [routerLinkActive]="['activeLink']"><mat-icon>local_activity</mat-icon><span>Your Tickets</span></button>
         <button mat-menu-item [routerLink]="['/user/events']" [routerLinkActive]="['activeLink']"><mat-icon>festival</mat-icon><span>Your Events</span></button>
+        <button mat-menu-item><mat-icon>dark_mode</mat-icon>
+          <mat-slide-toggle labelPosition="before" #themeToggle [checked]="User.IsDarkMode" (click)="$event.stopPropagation();toggleTheme(themeToggle.checked)">Dark Mode</mat-slide-toggle>
+        </button>
         <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon><span>Log Out</span></button>
       </mat-menu>
     </div>

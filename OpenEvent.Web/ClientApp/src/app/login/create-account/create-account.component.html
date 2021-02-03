@@ -14,10 +14,10 @@
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" placeholder="joe@blogs.co.uk">
-        <mat-error *ngIf="email.errors && email.errors.email">
+        <mat-error *ngIf="email.hasError('email')">
           Please enter a valid email address
         </mat-error>
-        <mat-error *ngIf="email.errors && email.errors.emailExists">
+        <mat-error *ngIf="email.hasError('emailExists')">
           Email already in use
         </mat-error>
       </mat-form-field>
@@ -25,7 +25,7 @@
       <mat-form-field appearance="outline">
         <mat-label>User name</mat-label>
         <input matInput type="text" formControlName="userName" placeholder="JoeBlogs">
-        <mat-error *ngIf="username.errors && username.errors.usernameExists">
+        <mat-error *ngIf="username.hasError('usernameExists')">
           Username already in use
         </mat-error>
       </mat-form-field>
@@ -60,7 +60,7 @@
       </mat-card-content>
       <mat-card-actions>
         <button mat-stroked-button (click)="avatarInput.click()">Upload file</button>
-        <input hidden #avatarInput type="file" (change)="fileChangeEvent($event)"/>
+        <input id="avatar" hidden #avatarInput type="file" (change)="fileChangeEvent($event)"/>
       </mat-card-actions>
       <mat-card-footer style="padding: 0 0.5rem 0 0.5rem;">
         <div>{{avatarFileName}}</div>
@@ -81,7 +81,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Phone number</mat-label>
     <input matInput type="tel" formControlName="phoneNumber">
-    <mat-error *ngIf="phoneNumber.errors && phoneNumber.errors.phoneExists">
+    <mat-error *ngIf="phoneNumber.hasError('phoneExists')">
       Phone number already in use
     </mat-error>
   </mat-form-field>

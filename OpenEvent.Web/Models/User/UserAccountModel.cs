@@ -15,5 +15,6 @@ namespace OpenEvent.Web.Models.User
         public string Avatar { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public bool IsDarkMode { get; set; }
     }
 }

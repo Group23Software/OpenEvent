@@ -7,6 +7,7 @@ import {CookieService} from "ngx-cookie-service";
 import jwtDecode, {JwtPayload} from "jwt-decode";
 import {UserService} from "./user.service";
 import {AuthPaths} from "../_extensions/api.constants";
+import {TriggerService} from "./trigger.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,13 @@ export class AuthService
   private Token: string;
   private readonly BaseUrl: string;
 
-  constructor (private http: HttpClient, @Inject('BASE_URL') baseUrl: string, private cookieService: CookieService, private userService: UserService)
-  {
+  constructor (
+    private http: HttpClient,
+    @Inject('BASE_URL') baseUrl: string,
+    private cookieService: CookieService,
+    private userService: UserService,
+    private trigger: TriggerService
+  ) {
     this.BaseUrl = baseUrl;
     this.BaseUrl = 'http://localhost:5000/';
   }
@@ -44,8 +50,8 @@ export class AuthService
     return this.http.post<UserViewModel>(this.BaseUrl + AuthPaths.Authenticate, {id: id}).pipe(map(user =>
     {
       this.userService.User = user;
-      // this.userService.User.Avatar = 'data:image/png;base64,' + this.userService.User.Avatar;
-      console.log(this.userService.User)
+      this.trigger.isDark.emit(user.IsDarkMode);
+      console.log(this.userService.User);
       return user;
     }));
   }

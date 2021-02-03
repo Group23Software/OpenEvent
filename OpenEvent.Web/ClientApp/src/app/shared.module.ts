@@ -19,8 +19,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {BrowserModule} from "@angular/platform-browser";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 
 @NgModule({
@@ -49,6 +48,7 @@ import {BrowserModule} from "@angular/platform-browser";
     MatCardModule,
     MatTabsModule,
     MatProgressBarModule,
+    MatSlideToggleModule,
   ],
   exports: [
 
@@ -76,6 +76,7 @@ import {BrowserModule} from "@angular/platform-browser";
     MatCardModule,
     MatTabsModule,
     MatProgressBarModule,
+    MatSlideToggleModule,
   ]
 })
 export class SharedModule

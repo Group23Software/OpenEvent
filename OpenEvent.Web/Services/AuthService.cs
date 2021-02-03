@@ -85,7 +85,8 @@ namespace OpenEvent.Web.Services
                 Id = user.Id,
                 Avatar = Encoding.UTF8.GetString(user.Avatar, 0, user.Avatar.Length),
                 UserName = user.UserName,
-                Token = GenerateToken(user, remember ? 30 : 1)
+                Token = GenerateToken(user, remember ? 30 : 1),
+                IsDarkMode = user.IsDarkMode
             };
 
             return userViewModel;

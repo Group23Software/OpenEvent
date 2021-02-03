@@ -4,6 +4,7 @@ export interface UserViewModel
   UserName: string;
   Avatar: string;
   Token: string;
+  IsDarkMode: boolean;
 }
 
 export interface UserAccountModel
@@ -16,6 +17,7 @@ export interface UserAccountModel
   Avatar: string;
   PhoneNumber?: string;
   DateOfBirth?: Date;
+  IsDarkMode: boolean;
 }
 
 export interface AuthBody
@@ -54,4 +56,10 @@ export interface UpdateAvatarBody
 {
   Id: string;
   Avatar: any[];
+}
+
+export interface UpdateThemePreferenceBody
+{
+  Id: string;
+  IsDarkMode: boolean;
 }

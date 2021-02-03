@@ -1,13 +1,11 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
-- main
+  branches:
+    include:
+      - main
+      - SPRINT-*
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'Ubuntu-16.04'
   demands: npm
 
 variables:
@@ -15,35 +13,77 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-steps:
-- task: NuGetToolInstaller@1
+stages: 
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+  - stage:
+    displayName: "Build"
+    jobs:
+      - job: "Build"
+        steps:
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '12.x'
+          - task: DeleteFiles@1
+            condition: always()
+            displayName: 'Delete JUnit files'
+            inputs:
+              SourceFolder: $(System.DefaultWorkingDirectory)/OpenEvent.Web/ClientApp/junit
+              Contents: 'TESTS*.xml'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+          - task: DotNetCoreCli@2
+            condition: succeeded()
+            inputs:
+              command: 'test'
+              projects: '**/*.Test/*.csproj'
+              arguments: -c $(BuildConfiguration) --collect:"XPlat Code Coverage"
+              testRunTitle: 'Run .net unit tests and collect coverage'
+            displayName: 'Unit Tests (.net)'
 
-# - task: VSTest@2
-#   inputs:
-#     platform: '$(buildPlatform)'
-#     configuration: '$(buildConfiguration)'
+          - task: Npm@1
+            condition: succeededOrFailed()
+            displayName: "npm install"
+            inputs:
+              command: install
+              workingDir: 'OpenEvent.Web/ClientApp'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+          - task: Npm@1
+            displayName: 'Tests (Angular Application)'
+            condition: succeededOrFailed()
+            inputs:
+              command: custom
+              customCommand: run test -- --watch=false --code-coverage --browsers=ChromeHeadless
+              workingDir: 'OpenEvent.Web/ClientApp'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-    artifactName: 'OpenEvent'
+          - task: PublishTestResults@2
+            displayName: 'Publish Angular test results'
+            condition: succeededOrFailed()
+            inputs:
+              searchFolder: '$(Build.SourcesDirectory)/OpenEvent.Web/ClientApp/junit'
+              testRunTitle: Angular
+              testResultsFormat: JUnit
+              testResultsFiles: "**/TESTS*.xml"
+
+          - task: reportgenerator@4
+            displayName: 'Combine code coverage reports'
+            condition: succeededOrFailed()
+            inputs:
+              reports: '$(Build.SourcesDirectory)/OpenEvent.Web/ClientApp/coverage/**/cobertura-coverage.xml;$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+              targetdir: '$(Build.SourcesDirectory)/CodeCoverage'
+              reporttypes: 'HtmlInline_AzurePipelines;Cobertura;Badges'
+
+
+          - task: PublishCodeCoverageResults@1
+            displayName: 'Publish code coverage report'
+            condition: succeededOrFailed()
+            inputs:
+              codeCoverageTool: Cobertura
+              summaryFileLocation: $(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml
+              reportDirectory: $(Build.SourcesDirectory)/CodeCoverage
+          
+          - task: DotNetCoreCLI@2
+            displayName: "Publish OpenEvent"
+            condition: succeeded()
+            inputs:
+              command: publish
+              publishWebProjects: True
+              projects: 'OpenEvent.Web/OpenEvent.Web.csproj'
+              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/dotnet'
+              zipAfterPublish: True

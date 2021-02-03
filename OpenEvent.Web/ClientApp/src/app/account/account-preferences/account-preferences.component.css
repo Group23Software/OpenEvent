@@ -1,0 +1,70 @@
+#basicAccountPanel {
+  display: flex;
+  flex-direction: row;
+  margin: 1rem;
+}
+
+#basicInfo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 0 1rem;
+}
+
+#newPassword{
+  display: flex;
+  flex-direction: row;
+}
+
+#newPassword mat-form-field {
+  width: 100%;
+  margin-right: 1rem;
+}
+
+#newPassword button {
+  /*height: 54.81px;*/
+  /*margin: .25em 0;*/
+  height: fit-content;
+}
+
+#newUserName {
+  display: flex;
+  flex-direction: row;
+}
+
+#newUserName button {
+  /*height: 59.5px;*/
+  /*margin: .25em 0;*/
+  height: fit-content;
+}
+
+#newUserName mat-form-field {
+  width: 100%;
+  margin-right: 1rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+#avatarPreview {
+  width: 250px;
+  height: 250px;
+  padding: 0.25em;
+  border-radius: 5%;
+}
+
+#avatarPreview img {
+  width: 100%;
+  height: 100%;
+}
+
+#newAvatar {
+  display: flex;
+  flex-direction: column;
+}
+
+#newAvatar button {
+  margin-top: 0.5rem;
+  width: fit-content;
+}

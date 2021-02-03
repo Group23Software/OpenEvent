@@ -143,41 +143,6 @@
           }
         }
       }
-    },
-    "buildingBlocks": {
-      "projectType": "library",
-      "root": "projects/building-blocks",
-      "sourceRoot": "projects/building-blocks/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "projects/building-blocks/tsconfig.lib.json",
-            "project": "projects/building-blocks/ng-package.json"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/building-blocks/src/test.ts",
-            "tsConfig": "projects/building-blocks/tsconfig.spec.json",
-            "karmaConfig": "projects/building-blocks/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/building-blocks/tsconfig.lib.json",
-              "projects/building-blocks/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
     }
   },
   "defaultProject": "OpenEvent.Web"

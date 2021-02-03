@@ -4,11 +4,13 @@ import {RouterModule} from "@angular/router";
 import {AccountComponent} from "./account.component";
 import {SharedModule} from "../shared.module";
 import {UserModule} from "../user.module";
+import { AccountPreferencesComponent } from './account-preferences/account-preferences.component';
 
 
 @NgModule({
   declarations: [
     AccountComponent,
+    AccountPreferencesComponent,
   ],
   imports: [
     CommonModule,

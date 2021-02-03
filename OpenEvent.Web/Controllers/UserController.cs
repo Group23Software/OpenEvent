@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using OpenEvent.Web.Migrations;
 using OpenEvent.Web.Models.User;
 using OpenEvent.Web.Services;
 
@@ -177,6 +178,23 @@ namespace OpenEvent.Web.Controllers
             {
                 var result = await UserService.UpdateAvatar(updateAvatarBody.Id, updateAvatarBody.Avatar);
                 return Ok(new {avatar = result});
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.ToString());
+                return BadRequest(e);
+            }
+        }
+
+        [HttpPost("updateThemePreference")]
+        public async Task<ActionResult<bool>> UpdateThemePreference(
+            [FromBody] UpdateThemePreferenceBody updateThemePreferenceBody)
+        {
+            try
+            {
+                await UserService.UpdateThemePreference(updateThemePreferenceBody.Id,
+                    updateThemePreferenceBody.IsDarkMode);
+                return Ok(new {isDarkMode = updateThemePreferenceBody.IsDarkMode});
             }
             catch (Exception e)
             {

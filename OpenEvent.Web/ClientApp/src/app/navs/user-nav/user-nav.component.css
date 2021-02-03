@@ -7,13 +7,13 @@
   height: 50px;
   border-radius: 5%;
   cursor: pointer;
-  border: solid transparent 0.25rem;
-  transition: border linear 200ms;
+  /*border: solid transparent 0.25rem;*/
+  /*transition: border linear 200ms;*/
 }
 
-#avatar:hover {
-  border-color: #EBEBEB;
-}
+/*#avatar:hover {*/
+/*  border-color: #EBEBEB;*/
+/*}*/
 
 .navSpacer {
   flex: 1 1 auto;
@@ -41,9 +41,9 @@ mat-toolbar {
 #title {
   font-size: xx-large;
   font-weight: normal;
-  text-decoration: none;
+  /*text-decoration: none;*/
 }
 
 #title:hover {
-  color: rgba(0, 0, 0, 0.87);
+  /*color: rgba(0, 0, 0, 0.87);*/
 }

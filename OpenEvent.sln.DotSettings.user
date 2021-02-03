@@ -1,7 +1,7 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3156c958_002D9ddc_002D425f_002Da1a1_002Df1e51f1acff6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ShouldCreateNewUser" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
-    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::.NETCoreApp,Version=v5.0::OpenEvent.Test.Services.UserService.Get.ShouldCreateNewUser&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::net5.0::OpenEvent.Test.Services.UserService.Get.ShouldCreateNewUser&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=99876efe_002D373a_002D4ac3_002D870a_002D03ac22d35645/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ShouldCreateNewUser #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;

@@ -27,6 +27,7 @@ namespace OpenEvent.Web.Services
         Task<bool> UserNameExists(string username);
         Task<bool> EmailExists(string email);
         Task<bool> PhoneExists(string phoneNumber);
+        Task UpdateThemePreference(Guid id, bool isDarkMode);
     }
 
     /// <summary>
@@ -164,7 +165,8 @@ namespace OpenEvent.Web.Services
                 LastName = x.LastName,
                 PhoneNumber = x.PhoneNumber,
                 UserName = x.UserName,
-                DateOfBirth = x.DateOfBirth
+                DateOfBirth = x.DateOfBirth,
+                IsDarkMode = x.IsDarkMode
             }).FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
@@ -292,6 +294,30 @@ namespace OpenEvent.Web.Services
         public async Task<bool> PhoneExists(string phoneNumber)
         {
             return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber) != null;
+        }
+
+        public async Task UpdateThemePreference(Guid id, bool isDarkMode)
+        {
+            var user = await User(id);
+            
+            if (user == null)
+            {
+                Logger.LogInformation("User not found");
+                throw new UserNotFoundException();
+            }
+
+            user.IsDarkMode = isDarkMode;
+
+            try
+            {
+                await ApplicationContext.SaveChangesAsync();
+                Logger.LogInformation("User's theme preference updated");
+            }
+            catch
+            {
+                Logger.LogWarning("User failed to save");
+                throw;
+            }
         }
     }
 }

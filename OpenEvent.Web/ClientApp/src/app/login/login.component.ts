@@ -13,16 +13,13 @@ import {CreateAccountComponent} from "./create-account/create-account.component"
 })
 export class LoginComponent implements OnInit
 {
-
-  hide = true;
-
-  loginFormGroup = new FormGroup({
+  public loginFormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
     remember: new FormControl('')
   });
-  loading: boolean = false;
-  loginError: string = null;
+  public loading: boolean = false;
+  public loginError: string = null;
 
 
   constructor (private authService: AuthService, private router: Router, private dialog: MatDialog)
@@ -55,10 +52,7 @@ export class LoginComponent implements OnInit
       (response) =>
       {
         // TODO: redirect to app
-        this.router.navigate(['/user/account']).then(r =>
-        {
-          if (r) console.log('Navigated');
-        });
+        this.router.navigate(['/user/account']);
       },
       (error: HttpErrorResponse) =>
       {

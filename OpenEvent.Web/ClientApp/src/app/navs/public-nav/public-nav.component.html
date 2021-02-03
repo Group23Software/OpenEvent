@@ -1,15 +1,15 @@
 <header>
-  <mat-toolbar>
+  <mat-toolbar color="primary">
 
     <div class="navControls">
 <!--      <button mat-button class="mr-2" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>-->
 <!--      <button mat-button [routerLink]="['/search']" [routerLinkActive]="['/search']">Search</button>-->
     </div>
 
-    <a mat-button id="title" [routerLink]="['/']">Open Event</a>
+    <a mat-button id="title" (click)="routeHome()">Open Event</a>
 
     <div class="navControls justify-content-end">
-      <button mat-button class="mr-1" [routerLink]="['/login']" [routerLinkActive]="['activeLink']">Login / Sign up</button>
+      <button id="login" mat-button class="mr-1" [routerLink]="['/login']" [routerLinkActive]="['activeLink']">Login / Sign up</button>
     </div>
 
   </mat-toolbar>

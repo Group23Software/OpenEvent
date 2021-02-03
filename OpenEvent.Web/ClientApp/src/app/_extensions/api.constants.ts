@@ -21,6 +21,7 @@ let userPaths: ApiUserPaths =
   UserNameExists: null,
   UpdateAvatar: null,
   UpdateUserName: null,
+  UpdateThemePreference: null,
 }
 
 userPaths = {
@@ -31,6 +32,7 @@ userPaths = {
   UserNameExists: userPaths.BasePath + '/userNameExists',
   UpdateAvatar: userPaths.BasePath + '/updateAvatar',
   UpdateUserName: userPaths.BasePath + '/updateUserName',
+  UpdateThemePreference: userPaths.BasePath + '/updateThemePreference'
 }
 
 interface ApiAuthPaths
@@ -50,6 +52,7 @@ interface ApiUserPaths
   readonly PhoneExists: string;
   readonly UpdateUserName: string;
   readonly UpdateAvatar: string;
+  readonly UpdateThemePreference: string;
 }
 
 export const UserPaths: ApiUserPaths = userPaths;
