@@ -23,7 +23,7 @@ describe('UserValidatorsService', () =>
 
   it('FormControls should match',  () =>
   {
-    const service: UserValidatorsService = TestBed.get(UserValidatorsService);
+    const service: UserValidatorsService = TestBed.inject(UserValidatorsService);
     let formGroup: FormGroup = new FormGroup({
       email: new FormControl(''),
       emailConfirm: new FormControl('',[service.matches('email')])
@@ -37,7 +37,7 @@ describe('UserValidatorsService', () =>
 
   it('FormControls should not match',  () =>
   {
-    const service: UserValidatorsService = TestBed.get(UserValidatorsService);
+    const service: UserValidatorsService = TestBed.inject(UserValidatorsService);
     let formGroup: FormGroup = new FormGroup({
       email: new FormControl(''),
       emailConfirm: new FormControl('',[service.matches('email')])
@@ -51,7 +51,7 @@ describe('UserValidatorsService', () =>
   it('should validate username', () =>
   {
     userServiceMock.UserNameExists.and.returnValue(of(false));
-    const service: UserValidatorsService = TestBed.get(UserValidatorsService);
+    const service: UserValidatorsService = TestBed.inject(UserValidatorsService);
     let formControl: FormControl = new FormControl('');
     formControl.setAsyncValidators(service.usernameValidator());
     expect(formControl.errors).toBeNull();
@@ -62,7 +62,7 @@ describe('UserValidatorsService', () =>
   it('should invalidate username', () =>
   {
     userServiceMock.UserNameExists.and.returnValue(of(true));
-    const service: UserValidatorsService = TestBed.get(UserValidatorsService);
+    const service: UserValidatorsService = TestBed.inject(UserValidatorsService);
     let formControl: FormControl = new FormControl('');
     formControl.setAsyncValidators(service.usernameValidator());
     expect(formControl.errors).toBeNull();
@@ -73,7 +73,7 @@ describe('UserValidatorsService', () =>
   it('should validate email', () =>
   {
     userServiceMock.EmailExists.and.returnValue(of(false));
-    const service: UserValidatorsService = TestBed.get(UserValidatorsService);
+    const service: UserValidatorsService = TestBed.inject(UserValidatorsService);
     let formControl: FormControl = new FormControl('');
     formControl.setAsyncValidators(service.emailValidator());
     expect(formControl.errors).toBeNull();
@@ -84,7 +84,7 @@ describe('UserValidatorsService', () =>
   it('should invalidate email', () =>
   {
     userServiceMock.EmailExists.and.returnValue(of(true));
-    const service: UserValidatorsService = TestBed.get(UserValidatorsService);
+    const service: UserValidatorsService = TestBed.inject(UserValidatorsService);
     let formControl: FormControl = new FormControl('');
     formControl.setAsyncValidators(service.emailValidator());
     expect(formControl.errors).toBeNull();
@@ -95,7 +95,7 @@ describe('UserValidatorsService', () =>
   it('should validate phone number', () =>
   {
     userServiceMock.PhoneExists.and.returnValue(of(false));
-    const service: UserValidatorsService = TestBed.get(UserValidatorsService);
+    const service: UserValidatorsService = TestBed.inject(UserValidatorsService);
     let formControl: FormControl = new FormControl('');
     formControl.setAsyncValidators(service.phoneValidator());
     expect(formControl.errors).toBeNull();
@@ -106,7 +106,7 @@ describe('UserValidatorsService', () =>
   it('should invalidate phone number', () =>
   {
     userServiceMock.PhoneExists.and.returnValue(of(true));
-    const service: UserValidatorsService = TestBed.get(UserValidatorsService);
+    const service: UserValidatorsService = TestBed.inject(UserValidatorsService);
     let formControl: FormControl = new FormControl('');
     formControl.setAsyncValidators(service.phoneValidator());
     expect(formControl.errors).toBeNull();

@@ -42,7 +42,7 @@ describe('AuthService', () =>
 
   it('should be created', () =>
   {
-    const service: AuthService = TestBed.get(AuthService);
+    const service: AuthService = TestBed.inject(AuthService);
     expect(service).toBeTruthy();
   });
 
@@ -50,7 +50,7 @@ describe('AuthService', () =>
   {
     let u: UserViewModel = {Avatar: "", Id: "", IsDarkMode: false, Token: "", UserName: ""};
     userServiceMock.GetUserAsync.and.returnValue(of(u));
-    const service: AuthService = TestBed.get(AuthService);
+    const service: AuthService = TestBed.inject(AuthService);
     service.IsAuthenticated().subscribe(result => expect(result).toBe(true));
   });
 
@@ -61,7 +61,7 @@ describe('AuthService', () =>
     cookieServiceMock.get.and.returnValue(null);
     cookieServiceMock.check.and.returnValue(true);
     httpClientMock.post.and.returnValue(of(u));
-    const service: AuthService = TestBed.get(AuthService);
+    const service: AuthService = TestBed.inject(AuthService);
     service.IsAuthenticated().subscribe(result => {
       expect(result).toBe(true);
       expect(cookieServiceMock.check).toHaveBeenCalledWith('id');
@@ -74,14 +74,14 @@ describe('AuthService', () =>
     userServiceMock.GetUserAsync.and.returnValue(of(null));
     cookieServiceMock.get.and.returnValue(null);
     cookieServiceMock.check.and.returnValue(false);
-    const service: AuthService = TestBed.get(AuthService);
+    const service: AuthService = TestBed.inject(AuthService);
     service.IsAuthenticated().subscribe(result => expect(result).toBe(false));
   });
 
   it('should get token', () =>
   {
     cookieServiceMock.get.and.returnValue('token');
-    const service: AuthService = TestBed.get(AuthService);
+    const service: AuthService = TestBed.inject(AuthService);
     expect(service.GetToken()).not.toBeNull();
   });
 
@@ -89,7 +89,7 @@ describe('AuthService', () =>
   {
     let u: UserViewModel = {Avatar: "", Id: "", IsDarkMode: false, Token: "", UserName: ""};
     httpClientMock.post.and.returnValue(of(u));
-    const service: AuthService = TestBed.get(AuthService);
+    const service: AuthService = TestBed.inject(AuthService);
     service.Authenticate('legit id').subscribe(result => expect(result).not.toBeNull());
   });
 
@@ -97,7 +97,7 @@ describe('AuthService', () =>
   {
     let u: UserViewModel = {Avatar: "", Id: "", IsDarkMode: false, Token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c", UserName: ""};
     httpClientMock.post.and.returnValue(of(u));
-    const service: AuthService = TestBed.get(AuthService);
+    const service: AuthService = TestBed.inject(AuthService);
     service.Login({Email: '', Password: '', Remember: false}).subscribe(result =>
     {
       expect(result).not.toBeNull();
@@ -109,7 +109,7 @@ describe('AuthService', () =>
   it('should change password', async (() =>
   {
     httpClientMock.post.and.returnValue(of())
-    const service: AuthService = TestBed.get(AuthService);
+    const service: AuthService = TestBed.inject(AuthService);
     service.UpdatePassword({Email: '', Password: ''}).subscribe(result =>
     {
       expect(result).toBeNull();

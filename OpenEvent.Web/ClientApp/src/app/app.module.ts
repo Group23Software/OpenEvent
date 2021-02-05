@@ -50,8 +50,7 @@ import {CommonModule} from "@angular/common";
     ]),
   ],
   providers: [CookieService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
-  bootstrap: [AppComponent],
-  entryComponents: [CreateAccountComponent, ConfirmDialogComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule
 {

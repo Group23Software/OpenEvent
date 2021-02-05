@@ -42,13 +42,13 @@ describe('UserService', () =>
 
   it('should be created', () =>
   {
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     expect(service).toBeTruthy();
   });
 
   it('should get user async', async(() =>
   {
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.GetUserAsync().subscribe(u => expect(u).toEqual(service.User));
   }));
 
@@ -66,7 +66,7 @@ describe('UserService', () =>
       UserName: ""
     };
     httpClientMock.get.and.returnValue(of(aU));
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.GetAccountUser(null).subscribe(u => expect(u).not.toBeNull());
   }));
 
@@ -93,7 +93,7 @@ describe('UserService', () =>
 
     httpClientMock.post.and.returnValue(of(u));
 
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.CreateUser(input).subscribe(result =>
     {
       expect(result).toEqual(u);
@@ -104,7 +104,7 @@ describe('UserService', () =>
   it('should destroy user', async(() =>
   {
     httpClientMock.delete.and.returnValue(of(any));
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.Destroy(null).subscribe(result =>
     {
       expect(cookieServiceMock.delete).toHaveBeenCalledTimes(2);
@@ -118,7 +118,7 @@ describe('UserService', () =>
     let u: UpdateUserNameBody = {Id: "1", UserName: "name"}
     let res = {username: u.UserName};
     httpClientMock.post.and.returnValue(of(res));
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.User = {Avatar: "", Id: "", IsDarkMode: false, UserName: ""}
 
     service.UpdateUserName(u).subscribe(result =>
@@ -133,7 +133,7 @@ describe('UserService', () =>
     let u: UpdateAvatarBody = {Avatar: [0, 0, 0, 0], Id: ""}
     let res = {avatar: "0,0,0,0"}
     httpClientMock.post.and.returnValue(of(res));
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.User = {Avatar: "", Id: "", IsDarkMode: false, UserName: ""}
 
     service.UpdateAvatar(u).subscribe(result =>
@@ -148,7 +148,7 @@ describe('UserService', () =>
     let u: UpdateThemePreferenceBody = {Id: "", IsDarkMode: true}
     let res = {isDarkMode: true}
     httpClientMock.post.and.returnValue(of(res));
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.User = {Avatar: "", Id: "", IsDarkMode: false, UserName: ""}
 
     service.UpdateThemePreference(u).subscribe(result =>
@@ -161,7 +161,7 @@ describe('UserService', () =>
 
   it('should log out', async(() =>
   {
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.LogOut();
     expect(cookieServiceMock.delete).toHaveBeenCalledTimes(2);
     expect(cookieServiceMock.deleteAll).toHaveBeenCalled();
@@ -171,21 +171,21 @@ describe('UserService', () =>
   it('username should exist', async(() =>
   {
     httpClientMock.get.and.returnValue(of(true));
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.UserNameExists("").subscribe(result => expect(result).toBe(true));
   }));
 
   it('email should exist', async(() =>
   {
     httpClientMock.get.and.returnValue(of(true));
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.EmailExists("").subscribe(result => expect(result).toBe(true));
   }));
 
   it('phone should exist', async(() =>
   {
     httpClientMock.get.and.returnValue(of(true));
-    const service: UserService = TestBed.get(UserService);
+    const service: UserService = TestBed.inject(UserService);
     service.PhoneExists("").subscribe(result => expect(result).toBe(true));
   }));
 });

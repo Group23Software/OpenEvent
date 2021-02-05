@@ -71,7 +71,7 @@ describe('LoginComponent', () =>
 
   beforeEach(() =>
     {
-      router = TestBed.get(Router);
+      router = TestBed.inject(Router);
       fixture = TestBed.createComponent(LoginComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();

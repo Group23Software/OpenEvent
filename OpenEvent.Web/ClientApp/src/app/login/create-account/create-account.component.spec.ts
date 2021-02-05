@@ -96,7 +96,7 @@ describe('CreateAccountComponent', () =>
 
   beforeEach(() =>
     {
-      router = TestBed.get(Router);
+      router = TestBed.inject(Router);
       fixture = TestBed.createComponent(CreateAccountComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();

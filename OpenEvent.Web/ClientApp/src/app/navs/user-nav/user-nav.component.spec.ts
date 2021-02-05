@@ -98,9 +98,9 @@ describe('UserNavComponent', () =>
 
   beforeEach(() =>
     {
-      router = TestBed.get(Router);
-      location = TestBed.get(Location);
-      trigger = TestBed.get(TriggerService);
+      router = TestBed.inject(Router);
+      location = TestBed.inject(Location);
+      trigger = TestBed.inject(TriggerService);
       fixture = TestBed.createComponent(UserNavComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
@@ -130,7 +130,7 @@ describe('UserNavComponent', () =>
   // it('should toggle theme', fakeAsync(() =>
   // {
   //   let triggerSpy = spyOn(trigger.isDark,'emit');
-  //   // let userServiceSpy = spyOn(TestBed.get(UserService), 'UpdateThemePreference');
+  //   // let userServiceSpy = spyOn(TestBed.inject(UserService), 'UpdateThemePreference');
   //   component.toggleTheme(true);
   //   tick();
   //   fixture.detectChanges();
