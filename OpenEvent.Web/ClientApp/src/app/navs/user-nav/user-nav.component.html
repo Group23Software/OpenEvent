@@ -9,7 +9,7 @@
     <a mat-button id="title" (click)="routeHome()">Open Event</a>
 
     <div class="navControls justify-content-end">
-      <button mat-flat-button color="accent" class="mr-2" [routerLink]="['/create-event']" [routerLinkActive]="['activeLink']">Create Event</button>
+      <button mat-flat-button color="accent" class="mr-2" [routerLink]="['/host/create']" [routerLinkActive]="['activeLink']">Create Event</button>
       <img [src]="User.Avatar" id="avatar" [mat-menu-trigger-for]="menu">
       <mat-menu #menu="matMenu">
         <button mat-menu-item [routerLink]="['/user/account']" [routerLinkActive]="['activeLink']"><mat-icon>settings</mat-icon><span>User Settings</span></button>

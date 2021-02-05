@@ -1,4 +1,4 @@
-export class ImageViewModel
+export interface ImageViewModel
 {
   Label: string;
   Source: string;

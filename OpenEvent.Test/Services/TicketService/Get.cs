@@ -5,7 +5,7 @@ using NUnit.Framework;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Ticket;
 
-namespace OpenEvent.Test.Services.TestService
+namespace OpenEvent.Test.Services.TicketService
 {
     [TestFixture]
     public class Get : TicketTestFixture

@@ -6,7 +6,7 @@ import {
   UpdateUserNameBody,
   UserAccountModel,
   UserViewModel
-} from "../_Models/User";
+} from "../_models/User";
 import {Observable, of} from "rxjs";
 import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";

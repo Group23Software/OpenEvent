@@ -23,19 +23,26 @@ namespace OpenEvent.Web.UserOwnsEvent
             IHeaderDictionary headers = context.HttpContext.Request.Headers;
             string eventId = headers["eventId"];
             string userId = headers["userId"];
-            if (eventId == null || userId == null)
-            {
-                context.Result = new UnauthorizedResult();
-                throw new UserDoesNotOwnException();
-            }
-            
-            var userOwns = await UserService.HostOwnsEvent(Guid.Parse(eventId), Guid.Parse(userId));
-
-            if (!userOwns)
+            if (eventId == null || userId == null || eventId == string.Empty || userId == string.Empty)
             {
                 context.Result = new UnauthorizedResult();
                 return;
-                // context.Result.ExecuteResultAsync()
+            }
+
+            try
+            {
+                var userOwns = await UserService.HostOwnsEvent(Guid.Parse(eventId), Guid.Parse(userId));
+
+                if (!userOwns)
+                {
+                    context.Result = new UnauthorizedResult();
+                    return;
+                }
+            }
+            catch
+            {
+                context.Result = new UnauthorizedResult();
+                return;
             }
         }
     }

@@ -20,7 +20,7 @@ import {BrowserDynamicTestingModule} from "@angular/platform-browser-dynamic/tes
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatInputModule} from "@angular/material/input";
 import {UserValidatorsService} from "../../_Services/user-validators.service";
-import {NewUserInput, UserViewModel} from "../../_Models/User";
+import {NewUserInput, UserViewModel} from "../../_models/User";
 import {HttpErrorResponse} from "@angular/common/http";
 
 // const inputs = {

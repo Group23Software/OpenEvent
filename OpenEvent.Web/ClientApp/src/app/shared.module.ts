@@ -20,6 +20,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatStepperModule} from "@angular/material/stepper";
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
     MatTabsModule,
     MatProgressBarModule,
     MatSlideToggleModule,
+    MatStepperModule,
   ],
   exports: [
 
@@ -77,6 +79,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
     MatTabsModule,
     MatProgressBarModule,
     MatSlideToggleModule,
+    MatStepperModule,
   ]
 })
 export class SharedModule

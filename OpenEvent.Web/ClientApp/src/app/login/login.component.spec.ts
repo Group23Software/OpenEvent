@@ -19,7 +19,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {Router} from "@angular/router";
 import {Observable, of, throwError} from "rxjs";
 import {AuthService} from "../_Services/auth.service";
-import {UserViewModel} from "../_Models/User";
+import {UserViewModel} from "../_models/User";
 import {HttpErrorResponse} from "@angular/common/http";
 
 describe('LoginComponent', () =>

@@ -3,7 +3,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserValidatorsService} from "../../_Services/user-validators.service";
 import {ImageCroppedEvent} from "ngx-image-cropper";
 import {UserService} from "../../_Services/user.service";
-import {NewUserInput} from "../../_Models/User";
+import {NewUserInput} from "../../_models/User";
 import {MatDialogRef} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";

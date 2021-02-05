@@ -10,7 +10,7 @@ using OpenEvent.Web;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Services;
 
-namespace OpenEvent.Test.Services.TestService
+namespace OpenEvent.Test.Services.TicketService
 {
     public class TicketTestFixture
     {

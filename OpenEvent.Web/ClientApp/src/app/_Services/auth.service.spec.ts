@@ -5,7 +5,7 @@ import {CookieService} from "ngx-cookie-service";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "./user.service";
 import {of} from "rxjs";
-import {UserViewModel} from "../_Models/User";
+import {UserViewModel} from "../_models/User";
 
 describe('AuthService', () =>
 {

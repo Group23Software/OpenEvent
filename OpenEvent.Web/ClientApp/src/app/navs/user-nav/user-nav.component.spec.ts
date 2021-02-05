@@ -12,7 +12,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {themePreferenceBody, UserService} from "../../_Services/user.service";
 import {TriggerService} from "../../_Services/trigger.service";
 import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
-import {UpdateThemePreferenceBody, UserAccountModel} from "../../_Models/User";
+import {UpdateThemePreferenceBody, UserAccountModel} from "../../_models/User";
 import {Observable, of} from "rxjs";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 

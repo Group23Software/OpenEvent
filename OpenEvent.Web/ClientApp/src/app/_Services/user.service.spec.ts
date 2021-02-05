@@ -2,19 +2,17 @@ import {async, TestBed} from '@angular/core/testing';
 
 import {UserService} from './user.service';
 import {CookieService} from "ngx-cookie-service";
-import * as http from "http";
 import {
   NewUserInput,
   UpdateAvatarBody,
-  UpdatePasswordBody, UpdateThemePreferenceBody,
+  UpdateThemePreferenceBody,
   UpdateUserNameBody,
   UserAccountModel,
   UserViewModel
-} from "../_Models/User";
-import {HttpClient, HttpResponse} from "@angular/common/http";
+} from "../_models/User";
+import {HttpClient} from "@angular/common/http";
 import {of} from "rxjs";
 import any = jasmine.any;
-import {UpdateCommand} from "@angular/cli/commands/update-impl";
 
 describe('UserService', () =>
 {

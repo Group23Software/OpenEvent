@@ -1,4 +1,4 @@
-import {CategoryViewModel} from "./Category";
+import {Category, CategoryViewModel} from "./Category";
 import {Address} from "./Address";
 import {SocialLinkViewModel} from "./SocialLink";
 import {ImageViewModel} from "./Image";
@@ -37,4 +37,21 @@ export interface EventViewModel
   Price: number;
 
   Categories: CategoryViewModel[];
+}
+
+export interface CreateEventBody
+{
+  Name: string;
+  Description: string;
+  Thumbnail: ImageViewModel;
+  Images: ImageViewModel[];
+  SocialLinks: SocialLinkViewModel[];
+  StartLocal: Date;
+  EndLocal: Date;
+  Price: number;
+  HostId: string;
+  Address: Address;
+  IsOnline: boolean;
+  NumberOfTickets: number;
+  Categories: Category;
 }

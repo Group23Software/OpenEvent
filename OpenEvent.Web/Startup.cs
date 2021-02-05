@@ -80,7 +80,7 @@ namespace OpenEvent.Web
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEventService, EventService>();
 
-            // services.AddScoped<UserOwnsEventFilter>();
+            services.AddScoped<UserOwnsEventFilter>();
 
             services.AddLogging();
 
