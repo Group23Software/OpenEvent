@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -21,14 +23,17 @@ namespace OpenEvent.Web.Services
     {
         Task<UserViewModel> Create(NewUserInput userInput);
         Task Destroy(Guid id);
+
         Task<UserAccountModel> Get(Guid id);
+
         // Task<User> UpdateBasicInfo(UserAccountModel user);
         Task<string> UpdateAvatar(Guid id, byte[] avatar);
         Task<string> UpdateUserName(Guid id, string name);
         Task<bool> UserNameExists(string username);
         Task<bool> EmailExists(string email);
         Task<bool> PhoneExists(string phoneNumber);
-        Task UpdateThemePreference(Guid id, bool isDarkMode);
+        Task<bool> UpdateThemePreference(Guid id, bool isDarkMode);
+        Task<bool> HostOwnsEvent(Guid eventId, Guid userId);
     }
 
     /// <summary>
@@ -37,9 +42,9 @@ namespace OpenEvent.Web.Services
     public class UserService : IUserService
     {
         private readonly ILogger<UserService> Logger;
-        private readonly  ApplicationContext ApplicationContext;
-        private readonly  IMapper Mapper;
-        private readonly  IAuthService AuthService;
+        private readonly ApplicationContext ApplicationContext;
+        private readonly IMapper Mapper;
+        private readonly IAuthService AuthService;
 
         /// <summary>
         /// UserService default constructor
@@ -68,7 +73,8 @@ namespace OpenEvent.Web.Services
         public async Task<UserViewModel> Create(NewUserInput userInput)
         {
             var user = await ApplicationContext.Users.FirstOrDefaultAsync(x =>
-                x.Email == userInput.Email || x.UserName == userInput.UserName || x.PhoneNumber == userInput.PhoneNumber);
+                x.Email == userInput.Email || x.UserName == userInput.UserName ||
+                x.PhoneNumber == userInput.PhoneNumber);
 
             if (user != null)
             {
@@ -138,7 +144,6 @@ namespace OpenEvent.Web.Services
                 ApplicationContext.Users.Remove(user);
                 await ApplicationContext.SaveChangesAsync();
                 Logger.LogInformation("Destroyed user");
-                
             }
             catch
             {
@@ -191,7 +196,7 @@ namespace OpenEvent.Web.Services
         public async Task<string> UpdateAvatar(Guid id, byte[] avatar)
         {
             var user = await User(id);
-            
+
             if (user == null)
             {
                 Logger.LogInformation("User not found");
@@ -226,7 +231,7 @@ namespace OpenEvent.Web.Services
         public async Task<string> UpdateUserName(Guid id, string name)
         {
             var user = await User(id);
-            
+
             if (user == null)
             {
                 Logger.LogInformation("User not found");
@@ -242,7 +247,7 @@ namespace OpenEvent.Web.Services
             }
 
             user.UserName = name;
-            
+
             try
             {
                 await ApplicationContext.SaveChangesAsync();
@@ -284,7 +289,7 @@ namespace OpenEvent.Web.Services
         {
             return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email) != null;
         }
-        
+
         /// <summary>
         /// Method for checking if a user with a phone number exists.
         /// </summary>
@@ -297,28 +302,37 @@ namespace OpenEvent.Web.Services
             return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber) != null;
         }
 
-        public async Task UpdateThemePreference(Guid id, bool isDarkMode)
+        public async Task<bool> UpdateThemePreference(Guid id, bool isDarkMode)
         {
             var user = await User(id);
-            
+
             if (user == null)
             {
                 Logger.LogInformation("User not found");
                 throw new UserNotFoundException();
             }
-
+            
             user.IsDarkMode = isDarkMode;
 
             try
             {
                 await ApplicationContext.SaveChangesAsync();
                 Logger.LogInformation("User's theme preference updated");
+                return user.IsDarkMode;
             }
             catch
             {
                 Logger.LogWarning("User failed to save");
                 throw;
             }
+        }
+
+        public async Task<bool> HostOwnsEvent(Guid eventId, Guid userId)
+        {
+            var e = (await ApplicationContext.Events.Include(x => x.Host)
+                .FirstOrDefaultAsync(x => x.Id == eventId && x.Host.Id == userId)) != null;
+            Logger.LogInformation("Checking if user owns event", e);
+            return e;
         }
     }
 }

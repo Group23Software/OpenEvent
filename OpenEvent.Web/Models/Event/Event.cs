@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using OpenEvent.Web.Models.Category;
 
@@ -25,7 +26,8 @@ namespace OpenEvent.Web.Models.Event
         public Address Address { get; set; }
         public bool IsOnline { get; set; }
         public List<Ticket.Ticket> Tickets { get; set; }
-        public int TicketsLeft => Tickets.Select(x => x == null).Count();
+        [NotMapped] public int TicketsLeft => Tickets.Select(x => x == null).Count();
         public List<EventCategory> EventCategories { get; set; }
+        public bool isCanceled { get; set; }
     }
 }

@@ -20,6 +20,12 @@ namespace OpenEvent.Web
             CreateMap<Image, ImageViewModel>().ForMember(d => d.Source,
                 m => m.MapFrom(x => Encoding.UTF8.GetString(x.Source, 0, x.Source.Length)));
             CreateMap<Category, CategoryViewModel>();
+            CreateMap<SocialLink, SocialLinkViewModel>();
+            CreateMap<ImageViewModel, Image>().ForMember(d => d.Source, m => m.MapFrom(x => Encoding.UTF8.GetBytes(x.Source)));
+            CreateMap<Event, EventViewModel>();
+            CreateMap<SocialLinkViewModel, SocialLink>();
+            CreateMap<Ticket, TicketDetailModel>().ForMember(d => d.QRCode,
+                m => m.MapFrom(x => Encoding.UTF8.GetString(x.QRCode, 0, x.QRCode.Length)));
         }
     }
 }

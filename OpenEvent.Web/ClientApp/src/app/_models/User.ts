@@ -5,7 +5,7 @@ export interface UserViewModel
   Id: string;
   UserName: string;
   Avatar: string;
-  Token: string;
+  Token?: string;
   IsDarkMode: boolean;
 }
 

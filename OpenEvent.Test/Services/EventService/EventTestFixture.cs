@@ -3,21 +3,21 @@ using AutoMapper;
 using EntityFrameworkCoreMock;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Moq;
 using NUnit.Framework;
 using OpenEvent.Test.Setups;
 using OpenEvent.Web;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Services;
 
-namespace OpenEvent.Test.Services.UserService
+namespace OpenEvent.Test.Services.EventService
 {
-    public class UserTestFixture
+    public class EventTestFixture
     {
         protected DbContextMock<ApplicationContext> MockContext;
         protected IMapper Mapper;
         protected IOptions<AppSettings> AppSettings;
-        protected IAuthService AuthService;
-        protected IUserService UserService;
+        protected IEventService EventService;
 
         [SetUp]
         public async Task Setup()
@@ -33,19 +33,7 @@ namespace OpenEvent.Test.Services.UserService
                 Secret = "this is a secret"
             });
 
-            AuthService = new Web.Services.AuthService(MockContext.Object,
-                new Logger<Web.Services.AuthService>(new LoggerFactory()), AppSettings, Mapper);
-
-            UserService = new Web.Services.UserService(MockContext.Object,
-                new Logger<Web.Services.UserService>(new LoggerFactory()),
-                Mapper, AuthService);
-        }
-
-        [TearDown]
-        public async Task TearDown()
-        {
-            // await MockContext.Object.Database.EnsureDeletedAsync();
-            // await MockContext.Object.DisposeAsync();
+            EventService = new Web.Services.EventService(MockContext.Object,new Mock<ILogger<Web.Services.EventService>>().Object,Mapper);
         }
     }
 }

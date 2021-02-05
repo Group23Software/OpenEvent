@@ -12,7 +12,7 @@ namespace OpenEvent.Web.Models.Event
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public Image Thumbnail { get; set; }
+        public ImageViewModel Thumbnail { get; set; }
         public bool IsOnline { get; set; }
         
         public DateTime StartLocal { get; set; }

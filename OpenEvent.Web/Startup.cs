@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Services;
+using OpenEvent.Web.UserOwnsEvent;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace OpenEvent.Web
@@ -77,6 +78,9 @@ namespace OpenEvent.Web
             // Add services.
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IEventService, EventService>();
+
+            // services.AddScoped<UserOwnsEventFilter>();
 
             services.AddLogging();
 
