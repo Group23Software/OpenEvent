@@ -49,10 +49,6 @@
 <!--    </div>-->
 
     <mat-card>
-<!--      <mat-card-header>-->
-<!--        <mat-card-title>Avatar</mat-card-title>-->
-<!--        <mat-card-subtitle>Images must be .png format</mat-card-subtitle>-->
-<!--      </mat-card-header>-->
       <mat-card-content>
         <div id="avatarPreview">
           <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1" [onlyScaleDown]="true" format="png" (imageCropped)="imageCropped($event)" [imageBase64]="DefaultProfile" (loadImageFailed)="loadImageFailed()"></image-cropper>

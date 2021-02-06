@@ -21,10 +21,16 @@ import {HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatStepperModule} from "@angular/material/stepper";
+import {MatSliderModule} from "@angular/material/slider";
+import {NgxMatDatetimePickerModule, NgxMatNativeDateModule} from "@angular-material-components/datetime-picker";
+import {LoadingComponent} from "./loading/loading.component";
+import {MatChipsModule} from "@angular/material/chips";
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    LoadingComponent,
+  ],
   imports: [
     HttpClientModule,
     FormsModule,
@@ -51,6 +57,10 @@ import {MatStepperModule} from "@angular/material/stepper";
     MatProgressBarModule,
     MatSlideToggleModule,
     MatStepperModule,
+    MatSliderModule,
+    NgxMatNativeDateModule,
+    NgxMatDatetimePickerModule,
+    MatChipsModule,
   ],
   exports: [
 
@@ -80,6 +90,12 @@ import {MatStepperModule} from "@angular/material/stepper";
     MatProgressBarModule,
     MatSlideToggleModule,
     MatStepperModule,
+    MatSliderModule,
+    NgxMatNativeDateModule,
+    NgxMatDatetimePickerModule,
+    MatChipsModule,
+
+    LoadingComponent,
   ]
 })
 export class SharedModule

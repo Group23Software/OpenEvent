@@ -1,0 +1,18 @@
+<!--<input type="file" (change)="fileChangeEvent($event)" />-->
+<mat-dialog-content>
+  <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="config.width/config.height" format="png" (imageCropped)="imageCropped($event)" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+
+  <mat-form-field appearance="outline" color="accent" class="w-100">
+    <mat-label>Label</mat-label>
+    <input matInput [formControl]="ImageLabel" autocomplete="off" placeholder="event site">
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<input hidden #imageInput type="file" (change)="fileChangeEvent($event)"/>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-stroked-button (click)="imageInput.click()">Upload file</button>
+  <button mat-stroked-button color="primary" type="submit" [disabled]="!croppedImage" (click)="close()" cdkFocusInitial>Confirm</button>
+</mat-dialog-actions><!--[cropperStaticHeight]="config.height"--><!--[cropperStaticWidth]="config.width"-->

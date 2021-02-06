@@ -13,16 +13,16 @@ authPaths = {
 }
 
 let userPaths: ApiUserPaths =
-{
-  BasePath: 'api/user',
-  Account: null,
-  EmailExists: null,
-  PhoneExists: null,
-  UserNameExists: null,
-  UpdateAvatar: null,
-  UpdateUserName: null,
-  UpdateThemePreference: null,
-}
+  {
+    BasePath: 'api/user',
+    Account: null,
+    EmailExists: null,
+    PhoneExists: null,
+    UserNameExists: null,
+    UpdateAvatar: null,
+    UpdateUserName: null,
+    UpdateThemePreference: null,
+  }
 
 userPaths = {
   ...userPaths,
@@ -33,6 +33,22 @@ userPaths = {
   UpdateAvatar: userPaths.BasePath + '/updateAvatar',
   UpdateUserName: userPaths.BasePath + '/updateUserName',
   UpdateThemePreference: userPaths.BasePath + '/updateThemePreference'
+}
+
+let eventPaths: ApiEventPaths = {
+  BasePath: 'api/event',
+  CancelEvent: '',
+  GetAllHostsEvents: '',
+  GetForPublic: '',
+  GetAllCategories: ''
+}
+
+eventPaths = {
+  ...eventPaths,
+  CancelEvent: eventPaths.BasePath + '/cancel',
+  GetForPublic: eventPaths.BasePath + '/public',
+  GetAllHostsEvents: eventPaths.BasePath + '/host',
+  GetAllCategories: eventPaths.BasePath + '/categories',
 }
 
 interface ApiAuthPaths
@@ -55,5 +71,15 @@ interface ApiUserPaths
   readonly UpdateThemePreference: string;
 }
 
+interface ApiEventPaths
+{
+  readonly BasePath: string;
+  readonly CancelEvent: string;
+  readonly GetForPublic: string;
+  readonly GetAllHostsEvents: string;
+  readonly GetAllCategories: string;
+}
+
 export const UserPaths: ApiUserPaths = userPaths;
 export const AuthPaths: ApiAuthPaths = authPaths;
+export const EventPaths: ApiEventPaths = eventPaths;

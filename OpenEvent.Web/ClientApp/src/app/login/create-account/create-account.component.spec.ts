@@ -20,19 +20,9 @@ import {BrowserDynamicTestingModule} from "@angular/platform-browser-dynamic/tes
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatInputModule} from "@angular/material/input";
 import {UserValidatorsService} from "../../_Services/user-validators.service";
-import {NewUserInput, UserViewModel} from "../../_models/User";
+import {UserViewModel} from "../../_models/User";
 import {HttpErrorResponse} from "@angular/common/http";
-
-// const inputs = {
-//   emailInput: compiled.querySelector('input[formControlName="email"]'),
-//   passwordInput: compiled.querySelector('input[formControlName="password"]'),
-//   firstNameInput: compiled.querySelector('input[formControlName="firstName"]'),
-//   lastNameInput: compiled.querySelector('input[formControlName="lastName"]'),
-//   userNameInput: compiled.querySelector('input[formControlName="userName"]'),
-//   phoneNumberInput: compiled.querySelector('input[formControlName="phoneNumber"]'),
-//   dOBInput: compiled.querySelector('input[formControlName="dOB"]'),
-//   avatarInput: compiled.querySelector('input[id="avatar"]')
-// }
+import 'jasmine';
 
 export class DialogRef
 {

@@ -53,5 +53,5 @@ export interface CreateEventBody
   Address: Address;
   IsOnline: boolean;
   NumberOfTickets: number;
-  Categories: Category;
+  Categories: Category[];
 }

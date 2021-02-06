@@ -1,47 +1,160 @@
-<mat-horizontal-stepper [linear]="true" r #eventStepper>
+<user-nav></user-nav>
+
+<mat-horizontal-stepper [linear]="false" #eventStepper>
   <mat-step [stepControl]="createEventForm" [editable]="isEditable">
-    <form [formGroup]="createEventForm">
+    <form [formGroup]="createEventForm" id="createEventForm">
       <ng-template matStepLabel>Basic info</ng-template>
 
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
-        <input matInput type="text" formControlName="Name" placeholder="Event name">
+        <input matInput type="text" formControlName="Name" placeholder="Event name" autocomplete="off">
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Description</mat-label>
-        <textarea matInput formControlName="Description" placeholder="Event description"></textarea>
+        <textarea matInput formControlName="Description" placeholder="Event description" autocomplete="off"></textarea>
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
-        <input matInput type="text" formControlName="Name" placeholder="Event name">
-      </mat-form-field>
+      <div id="newThumbnailTile" (click)="thumbnailUpload()">
+        <img id="thumbnail" *ngIf="thumbnail" [src]="thumbnail.Source" [alt]="thumbnail.Label">
+      </div>
 
-      <mat-form-field appearance="fill">
-<!--        <mat-label>Enter a date range</mat-label>-->
-<!--        <mat-date-range-input [formGroup]="createEventForm.controls.Date" [rangePicker]="picker">-->
-<!--          <input matStartDate formControlName="start" placeholder="Start date"> <input matEndDate formControlName="end" placeholder="End date">-->
-<!--        </mat-date-range-input>-->
-<!--        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>-->
-<!--        <mat-date-range-picker #picker></mat-date-range-picker>-->
+      <div class="d-flex flex-row">
+        <mat-form-field appearance="outline" class="w-100 mr-3">
+          <mat-label>Start date</mat-label>
+          <input autocomplete="off" matInput [ngxMatDatetimePicker]="startPicker" placeholder="Choose a date" [formControl]="DateForm.controls.StartLocal" [min]="minDate">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #startPicker [stepHour]="1" [stepMinute]="1" [defaultTime]="defaultTime" [stepSecond]="0"></ngx-mat-datetime-picker>
+        </mat-form-field>
 
-<!--        <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>-->
-<!--        <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>-->
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>End date</mat-label>
+          <input autocomplete="off" matInput [ngxMatDatetimePicker]="endPicker" placeholder="Choose a date" [formControl]="DateForm.controls.EndLocal" [min]="DateForm.controls.StartLocal.value">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <ngx-mat-datetime-picker #endPicker [stepHour]="1" [stepMinute]="1" [defaultTime]="defaultTime" [stepSecond]="0"></ngx-mat-datetime-picker>
+        </mat-form-field>
+      </div>
 
+      <div class="d-flex flex-row">
+        <mat-form-field appearance="outline" class="mr-3">
+          <mat-label>Price (£)</mat-label>
+          <input #eventPrice autocomplete="off" matInput type="number" min="0" step="0.01" formControlName="Price" placeholder="00.00">
+        </mat-form-field>
 
+        <!--      //TODO: Break down of fees. //TODO: Slider for price.-->
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tickets</mat-label>
+          <input autocomplete="off" matInput type="number" min="0" step="1" formControlName="NumberOfTickets" placeholder="1">
+        </mat-form-field>
+      </div>
+
+      <mat-chip-list><mat-chip *ngFor="let category of categories" (click)="removeCategory(category)">{{category.Name}}</mat-chip></mat-chip-list>
+
+      <mat-divider class="my-3"></mat-divider>
+
+      <mat-chip-list><mat-chip *ngFor="let category of categoryStore" (click)="addCategory(category)">{{category.Name}}</mat-chip></mat-chip-list>
     </form>
   </mat-step>
   <mat-step [stepControl]="addressForm" [editable]="isEditable">
     <form [formGroup]="addressForm">
       <ng-template matStepLabel>Address</ng-template>
+      <mat-checkbox [formControl]="IsOnline" (click)="clickedOnline()">Online?</mat-checkbox>
+
+      <div class="d-flex flex-column">
+        <mat-form-field appearance="outline">
+          <mat-label>Address line 1</mat-label>
+          <input matInput type="text" formControlName="AddressLine1" placeholder="21 Main Street">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Address line 2</mat-label>
+          <input matInput type="text" formControlName="AddressLine2" placeholder="Apt 1">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput type="text" formControlName="City" placeholder="London">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Postcode</mat-label>
+          <input matInput type="text" formControlName="PostalCode" placeholder="AA1 1AA">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Country</mat-label>
+          <input matInput type="text" disabled [value]="addressForm.controls.CountryName.value">
+        </mat-form-field>
+      </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="extraForm" [editable]="isEditable">
-    <form [formGroup]="extraForm">
+  <mat-step [stepControl]="SocialLinks" [editable]="isEditable">
+    <form [formGroup]="SocialLinks">
       <ng-template matStepLabel>Images & Social</ng-template>
+      <div id="images">
+        <div *ngFor="let image of eventImages" class="eventImg">
+          <img [src]="image.Source" [alt]="image.Label"> <label>{{image.Label}}</label>
+        </div>
+        <div class="eventImg" id="newImageTile" (click)="imageUpload()"></div>
+      </div>
 
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Site URL</mat-label>
+        <input matInput formControlName="Site" placeholder="https://www.custom.co.uk" autocomplete="off">
+      </mat-form-field>
+
+      <div class="d-flex flex-row">
+        <div class="d-flex flex-column w-100 mr-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Instagram</mat-label>
+            <input matInput formControlName="Instagram" placeholder="username" class="w-100" autocomplete="off">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Twitter</mat-label>
+            <input matInput formControlName="Twitter" placeholder="@username" class="w-100" autocomplete="off">
+          </mat-form-field>
+        </div>
+        <div class="d-flex flex-column w-100">
+          <mat-form-field appearance="outline">
+            <mat-label>Facebook</mat-label>
+            <input matInput formControlName="Facebook" placeholder="username" class="w-100" autocomplete="off">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Reddit</mat-label>
+            <input matInput formControlName="Reddit" placeholder="username" class="w-100" autocomplete="off">
+          </mat-form-field>
+        </div>
+      </div>
     </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Confirm</ng-template>
+    <div>{{createEventForm.controls.Name.value}}</div>
+    <div>{{createEventForm.controls.Description.value}}</div>
+    <div>{{DateForm.controls.StartLocal.value}}</div>
+    <div>{{DateForm.controls.EndLocal.value}}</div>
+    <div>{{createEventForm.controls.NumberOfTickets.value}}</div>
+    <div>{{createEventForm.controls.Price.value}}</div>
+    <div *ngIf="this.IsOnline.value == true">Online event</div>
+    <div *ngIf="!(this.IsOnline.value == true)">
+      <div>{{this.addressForm.controls.AddressLine1.value}}</div>
+      <div>{{this.addressForm.controls.AddressLine2.value}}</div>
+      <div>{{this.addressForm.controls.City.value}}</div>
+      <div>{{this.addressForm.controls.PostalCode.value}}</div>
+      <div>{{this.addressForm.controls.CountryName.value}}</div>
+    </div>
+    <div>{{this.SocialLinks.controls.Site.value}}</div>
+    <div>{{this.SocialLinks.controls.Instagram.value}}</div>
+    <div>{{this.SocialLinks.controls.Twitter.value}}</div>
+    <div>{{this.SocialLinks.controls.Facebook.value}}</div>
+    <div>{{this.SocialLinks.controls.Reddit.value}}</div>
+
+    <!--    [disabled]="createEventForm.invalid || addressForm.invalid || SocialLinks.invalid"-->
+    <button type="submit" mat-stroked-button (click)="create()">Create event</button>
   </mat-step>
 </mat-horizontal-stepper>
+
+<loading *ngIf="loading"></loading>

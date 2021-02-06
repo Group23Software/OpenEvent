@@ -24,6 +24,8 @@ namespace OpenEvent.Web.Services
         //public methods
         Task<EventDetailModel> GetForPublic(Guid id);
         Task<List<EventViewModel>> Search(); //TODO: Search params
+
+        Task<List<Category>> GetAllCategories();
     }
 
     public class EventService : IEventService
@@ -169,6 +171,11 @@ namespace OpenEvent.Web.Services
         public Task<List<EventViewModel>> Search()
         {
             throw new NotImplementedException();
+        }
+
+        public Task<List<Category>> GetAllCategories()
+        {
+            return ApplicationContext.Categories.ToListAsync();
         }
     }
 }

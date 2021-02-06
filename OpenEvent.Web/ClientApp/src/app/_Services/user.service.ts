@@ -8,9 +8,9 @@ import {
   UserViewModel
 } from "../_models/User";
 import {Observable, of} from "rxjs";
-import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
-import {map, tap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import jwtDecode, {JwtPayload} from "jwt-decode";
 import {UserPaths} from "../_extensions/api.constants";
 

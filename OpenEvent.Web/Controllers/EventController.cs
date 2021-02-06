@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Contexts;
+using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Services;
 using OpenEvent.Web.UserOwnsEvent;
@@ -89,6 +90,12 @@ namespace OpenEvent.Web.Controllers
                 Logger.LogInformation(e.ToString());
                 return BadRequest(e);
             }
+        }
+
+        [HttpGet("categories")]
+        public async Task<ActionResult<List<Category>>> GetAllCategories()
+        {
+            return await EventService.GetAllCategories();
         }
     }
 }

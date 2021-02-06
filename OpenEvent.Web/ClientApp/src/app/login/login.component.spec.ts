@@ -21,6 +21,7 @@ import {Observable, of, throwError} from "rxjs";
 import {AuthService} from "../_Services/auth.service";
 import {UserViewModel} from "../_models/User";
 import {HttpErrorResponse} from "@angular/common/http";
+// import 'jest';
 
 describe('LoginComponent', () =>
 {

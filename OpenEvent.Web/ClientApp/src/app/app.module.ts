@@ -25,7 +25,6 @@ import {CommonModule} from "@angular/common";
     AppComponent,
     PublicNavComponent,
     LoginComponent,
-    LoadingComponent,
     ExploreComponent,
     CreateAccountComponent,
     ConfirmDialogComponent,
@@ -48,8 +47,11 @@ import {CommonModule} from "@angular/common";
         canActivate: [AuthGuard]
       }
     ]),
+
   ],
   providers: [CookieService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule
