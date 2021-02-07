@@ -25,11 +25,19 @@ import {MatSliderModule} from "@angular/material/slider";
 import {NgxMatDatetimePickerModule, NgxMatNativeDateModule} from "@angular-material-components/datetime-picker";
 import {LoadingComponent} from "./loading/loading.component";
 import {MatChipsModule} from "@angular/material/chips";
+import {UserNavComponent} from "./navs/user-nav/user-nav.component";
+import {IvyCarouselModule} from "angular-responsive-carousel";
+import { SocialComponent } from './event/social/social.component';
+import {SafePipe} from "safe-pipe/lib/safe-pipe.pipe";
+import {SafePipeModule} from "safe-pipe";
+import {RouterModule} from "@angular/router";
 
 
 @NgModule({
   declarations: [
     LoadingComponent,
+    SocialComponent,
+    UserNavComponent,
   ],
   imports: [
     HttpClientModule,
@@ -37,6 +45,7 @@ import {MatChipsModule} from "@angular/material/chips";
     ReactiveFormsModule,
 
     CommonModule,
+    RouterModule,
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
@@ -61,11 +70,13 @@ import {MatChipsModule} from "@angular/material/chips";
     NgxMatNativeDateModule,
     NgxMatDatetimePickerModule,
     MatChipsModule,
+    IvyCarouselModule,
+    SafePipeModule,
   ],
   exports: [
 
     CommonModule,
-
+    RouterModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
@@ -94,8 +105,12 @@ import {MatChipsModule} from "@angular/material/chips";
     NgxMatNativeDateModule,
     NgxMatDatetimePickerModule,
     MatChipsModule,
+    IvyCarouselModule,
+    SafePipeModule,
 
     LoadingComponent,
+    SocialComponent,
+    UserNavComponent,
   ]
 })
 export class SharedModule

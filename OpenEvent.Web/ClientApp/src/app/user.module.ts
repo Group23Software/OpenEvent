@@ -8,7 +8,7 @@ import {UserNavComponent} from "./navs/user-nav/user-nav.component";
 
 @NgModule({
   declarations: [
-    UserNavComponent
+
   ],
   imports: [
     CommonModule,
@@ -20,9 +20,6 @@ import {UserNavComponent} from "./navs/user-nav/user-nav.component";
         canActivate: [AuthGuard]
       }
     ])
-  ],
-  exports: [
-    UserNavComponent
   ]
 })
 export class UserModule

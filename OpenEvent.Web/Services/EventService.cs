@@ -50,7 +50,7 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("User not found");
                 throw new UserNotFoundException();
             }
-            
+
             Event newEvent = new Event()
             {
                 Name = createEventBody.Name,
@@ -65,12 +65,18 @@ namespace OpenEvent.Web.Services
                 StartUTC = createEventBody.StartLocal.ToUniversalTime(),
                 Host = host,
                 Images = createEventBody.Images.Select(x => Mapper.Map<Image>(x)).ToList(),
-                Thumbnail = createEventBody.Thumbnail != null ? Mapper.Map<Image>(createEventBody.Thumbnail): new Image(),
-                EventCategories = createEventBody.Categories != null ? createEventBody.Categories.Select(c => new EventCategory(){CategoryId = c.Id}).ToList() : new List<EventCategory>(),
-                SocialLinks = createEventBody.SocialLinks != null ? createEventBody.SocialLinks.Select(x => Mapper.Map<SocialLink>(x)).ToList() : new List<SocialLink>(),
-                Tickets = Enumerable.Repeat(new Ticket(),createEventBody.NumberOfTickets).ToList()
+                Thumbnail = createEventBody.Thumbnail != null
+                    ? Mapper.Map<Image>(createEventBody.Thumbnail)
+                    : new Image(),
+                EventCategories = createEventBody.Categories != null
+                    ? createEventBody.Categories.Select(c => new EventCategory() {CategoryId = c.Id}).ToList()
+                    : new List<EventCategory>(),
+                SocialLinks = createEventBody.SocialLinks != null
+                    ? createEventBody.SocialLinks.Select(x => Mapper.Map<SocialLink>(x)).ToList()
+                    : new List<SocialLink>(),
+                Tickets = Enumerable.Repeat(new Ticket(), createEventBody.NumberOfTickets).ToList()
             };
-            
+
             try
             {
                 // Saving user to Db.
@@ -116,55 +122,63 @@ namespace OpenEvent.Web.Services
 
         public async Task<List<EventHostModel>> GetAllHosts(Guid hostId)
         {
-            var events = await ApplicationContext.Events.Include(x => x.Tickets).Where(x => x.Host.Id == hostId).Select(x => new EventHostModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                Address = x.Address,
-                Categories = x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList(),
-                Price = x.Price,
-                Thumbnail = x.Thumbnail,
-                Images = x.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList(),
-                Tickets = x.Tickets.Select(t => Mapper.Map<TicketViewModel>(t)).ToList(),
-                EndLocal = x.EndLocal,
-                IsOnline = x.IsOnline,
-                SocialLinks = x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
-                StartLocal = x.StartLocal,
-                TicketsLeft = x.TicketsLeft,
-                EndUTC = x.EndUTC,
-                StartUTC = x.StartUTC
-            }).AsNoTracking().ToListAsync();
+            var events = await ApplicationContext.Events.Include(x => x.Tickets).Where(x => x.Host.Id == hostId).Select(
+                x => new EventHostModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Address = x.Address,
+                    Categories = x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList(),
+                    Price = x.Price,
+                    Thumbnail = x.Thumbnail,
+                    Images = x.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList(),
+                    Tickets = x.Tickets.Select(t => Mapper.Map<TicketViewModel>(t)).ToList(),
+                    EndLocal = x.EndLocal,
+                    IsOnline = x.IsOnline,
+                    SocialLinks = x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
+                    StartLocal = x.StartLocal,
+                    TicketsLeft = x.TicketsLeft,
+                    EndUTC = x.EndUTC,
+                    StartUTC = x.StartUTC
+                }).AsNoTracking().ToListAsync();
             return events;
         }
 
         public async Task<EventDetailModel> GetForPublic(Guid id)
         {
-            var e = await ApplicationContext.Events.Include(x => x.Tickets).Select(x => new EventDetailModel()
-            {
-                Id = x.Id,
-                Address = x.Address,
-                Name = x.Name,
-                Description = x.Description,
-                Categories = x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList(),
-                Images = x.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList(),
-                Price = x.Price,
-                Thumbnail = Mapper.Map<ImageViewModel>(x.Thumbnail),
-                EndLocal = x.EndLocal,
-                IsOnline = x.IsOnline,
-                SocialLinks = x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
-                StartLocal = x.StartLocal,
-                TicketsLeft = x.TicketsLeft,
-                EndUTC = x.EndUTC,
-                StartUTC = x.StartUTC
-            }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var e = await ApplicationContext.Events
+                .Include(x => x.Address)
+                .Include(x => x.EventCategories)
+                .Include(x => x.Images)
+                .Include(x => x.Thumbnail)
+                .Include(x => x.SocialLinks)
+                .Include(x => x.Tickets).Select(x =>
+                    new EventDetailModel()
+                    {
+                        Id = x.Id,
+                        Address = x.Address,
+                        Name = x.Name,
+                        Description = x.Description,
+                        Categories = x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList(),
+                        Images = x.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList(),
+                        Price = x.Price,
+                        Thumbnail = Mapper.Map<ImageViewModel>(x.Thumbnail),
+                        EndLocal = x.EndLocal,
+                        IsOnline = x.IsOnline,
+                        SocialLinks = x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
+                        StartLocal = x.StartLocal,
+                        TicketsLeft = x.Tickets.Count,
+                        EndUTC = x.EndUTC,
+                        StartUTC = x.StartUTC
+                    }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (e == null)
             {
                 Logger.LogInformation("Event not fond");
                 throw new EventNotFoundException();
             }
-            
+
             return e;
         }
 

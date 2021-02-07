@@ -1,0 +1,71 @@
+<user-nav></user-nav>
+<div class="container" *ngIf="Event">
+  <div id="eventHeader">
+    <button mat-icon-button (click)="back()"><mat-icon>arrow_back</mat-icon></button>
+    <div id="eventName" class="display-4">{{Event.Name}}</div>
+    <div id="ticketsAndPrice">
+      <div class="mr-3">{{Event.TicketsLeft}} ticket(s) left!</div>
+      <button mat-flat-button color="primary">£{{Event.Price}}</button>
+    </div>
+  </div>
+  <mat-card id="mediaSpace">
+    <carousel [objectFit]="'cover'" [cellWidth]="'100%'" [height]="300" [borderRadius]="10" [autoplay]="true" [dots]="true" [loop]="true">
+      <div class="carousel-cell" *ngFor="let image of Event.Images">
+        <img [src]="image.Source" [alt]="image.Label" style="object-fit: cover">
+      </div>
+    </carousel>
+  </mat-card>
+  <div id="eventInfo">
+
+
+    <mat-card>
+      <div>Starts at <span class="dateTime">{{Event.StartLocal | date:'medium'}}</span> and finishes <span class="dateTime">{{Event.EndLocal | date:'medium'}}</span></div>
+    </mat-card>
+    <div class="d-flex flex-row">
+      <mat-card id="info">
+        <mat-card-content>
+          <div class="mb-3">
+            <mat-chip-list>
+              <mat-chip *ngFor="let category of Event.Categories">{{category.Name}}</mat-chip>
+            </mat-chip-list>
+          </div>
+          <div>{{Event.Description}}</div>
+        </mat-card-content>
+      </mat-card>
+
+
+      <div>
+        <mat-card id="location">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>place</mat-icon>
+            <mat-card-title>Location</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="Event.IsOnline">Online event</div>
+            <div *ngIf="!Event.IsOnline">
+              <div>{{Event.Address.AddressLine1}}</div>
+              <div>{{Event.Address.AddressLine2}}</div>
+              <div>{{Event.Address.City}}</div>
+              <div>{{Event.Address.CountryName}}</div>
+              <div>{{Event.Address.PostalCode.toUpperCase()}}</div>
+              <div id="map">
+                <div class="mapouter">
+                  <div class="gmap_canvas">
+                    <iframe width="300" height="250" id="gmap_canvas" [src]="mapLink | safe:'resourceUrl'" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card>
+          <div id="socialIcons">
+            <div class="mx-auto" *ngFor="let socialMedia of Event.SocialLinks">
+              <social *ngIf="socialMedia.Link" [socialLink]="socialMedia"></social>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

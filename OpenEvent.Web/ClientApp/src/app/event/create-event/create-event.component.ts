@@ -81,7 +81,7 @@ export class CreateEventComponent implements OnInit
   public defaultTime: number[];
   private CreateError: string;
   loading: boolean = false;
-  public categoryStore: Category[];
+  public categoryStore: Category[] = [];
 
 
   constructor (private dialog: MatDialog, private userService: UserService, private eventService: EventService)
@@ -111,11 +111,10 @@ export class CreateEventComponent implements OnInit
     // this.avatarError = "Failed to load image";
   }
 
-  clickedOnline ()
+  public clickedOnline ()
   {
     if (!this.IsOnline.value)
     {
-      // this.addressForm.controls.AddressLine1.disable();
       for (let control in this.addressForm.controls)
       {
         this.addressForm.controls[control].disable();

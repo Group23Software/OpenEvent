@@ -14,10 +14,11 @@ import {AuthGuard} from "./_guards/auth.guard";
 import {AuthInterceptor} from "./_guards/auth.interceptor";
 import {CreateAccountComponent} from './login/create-account/create-account.component';
 import {ConfirmDialogComponent} from './_extensions/confirm-dialog/confirm-dialog.component';
-import {UserNavComponent} from "./navs/user-nav/user-nav.component";
 import {PublicNavComponent} from "./navs/public-nav/public-nav.component";
 import {SharedModule} from "./shared.module";
 import {CommonModule} from "@angular/common";
+import {EventComponent} from "./event/event/event.component";
+import {UserNavComponent} from "./navs/user-nav/user-nav.component";
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import {CommonModule} from "@angular/common";
     ExploreComponent,
     CreateAccountComponent,
     ConfirmDialogComponent,
+    EventComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -45,13 +47,15 @@ import {CommonModule} from "@angular/common";
         path: 'host',
         loadChildren: () => import('./host.module').then(m => m.HostModule),
         canActivate: [AuthGuard]
-      }
+      },
+      {
+        path:'event/:id',
+        component: EventComponent,
+        canActivate: [AuthGuard]
+      },
     ]),
-
   ],
   providers: [CookieService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
-  exports: [
-  ],
   bootstrap: [AppComponent]
 })
 export class AppModule

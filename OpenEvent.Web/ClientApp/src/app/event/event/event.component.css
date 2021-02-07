@@ -1,0 +1,66 @@
+#eventHeader {
+  display: flex;
+  flex-direction: row;
+  /*justify-content: space-between;*/
+  align-items: center;
+}
+
+#eventName{
+  flex: 1;
+}
+
+#ticketsAndPrice {
+  display: flex;
+  flex-direction: row;
+  height: fit-content;
+  margin: auto;
+  align-items: center;
+}
+
+#mediaSpace {
+  /*background-color: lightgrey;*/
+  /*min-height: 20vh;*/
+}
+
+#eventInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+#info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.dateTime {
+  font-weight: bold;
+}
+
+mat-card {
+  margin-bottom: 1rem;
+}
+
+.mapouter {
+  position: relative;
+  text-align: right;
+  /*height: 500px;*/
+  /*width: 600px;*/
+}
+
+.gmap_canvas {
+  overflow: hidden;
+  background: none !important;
+  /*height: 500px;*/
+  /*width: 600px;*/
+}
+
+#location {
+  height: fit-content;
+}
+
+#socialIcons {
+  display: flex;
+  flex-direction: row;
+}

@@ -2,6 +2,6 @@ import {SocialMedia} from "./SocialMedia";
 
 export interface SocialLinkViewModel
 {
-  SocialMedia: SocialMedia;
+  SocialMedia: SocialMedia | string;
   Link: string;
 }

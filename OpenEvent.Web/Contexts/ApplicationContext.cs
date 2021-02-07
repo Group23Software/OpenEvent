@@ -20,7 +20,7 @@ namespace OpenEvent.Web.Contexts
         }
 
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Models.Event.Event> Events { get; set; }
+        public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<EventCategory> EventCategories { get; set; }

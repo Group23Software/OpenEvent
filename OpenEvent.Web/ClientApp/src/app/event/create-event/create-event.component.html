@@ -59,7 +59,7 @@
   <mat-step [stepControl]="addressForm" [editable]="isEditable">
     <form [formGroup]="addressForm">
       <ng-template matStepLabel>Address</ng-template>
-      <mat-checkbox [formControl]="IsOnline" (click)="clickedOnline()">Online?</mat-checkbox>
+      <mat-checkbox id="isOnline" [formControl]="IsOnline" (click)="clickedOnline()">Online?</mat-checkbox>
 
       <div class="d-flex flex-column">
         <mat-form-field appearance="outline">
