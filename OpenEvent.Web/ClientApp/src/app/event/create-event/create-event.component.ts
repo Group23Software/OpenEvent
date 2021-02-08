@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {ImageCroppedEvent} from "ngx-image-cropper";
 import {ImageViewModel} from "../../_models/Image";
 import {MatDialog} from "@angular/material/dialog";
 import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
 import {testImg} from "./TestImage";
-import {CreateEventBody} from "../../_models/Event";
+import {CreateEventBody, EventDetailModel} from "../../_models/Event";
 import {UserService} from "../../_Services/user.service";
 import {SocialMedia} from "../../_models/SocialMedia";
 import {EventService} from "../../_Services/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Category} from "../../_models/Category";
+import {StepperSelectionEvent} from "@angular/cdk/stepper";
 
 @Component({
   selector: 'app-create-event',
@@ -80,8 +80,9 @@ export class CreateEventComponent implements OnInit
   public minDate: Date;
   public defaultTime: number[];
   private CreateError: string;
-  loading: boolean = false;
+  public loading: boolean = false;
   public categoryStore: Category[] = [];
+  public eventPreview: EventDetailModel = null;
 
 
   constructor (private dialog: MatDialog, private userService: UserService, private eventService: EventService)
@@ -92,24 +93,47 @@ export class CreateEventComponent implements OnInit
 
   ngOnInit ()
   {
-    this.eventService.GetAllCategories().subscribe(x => this.categoryStore = x);
+    this.eventService.GetAllCategories().subscribe(x => this.categoryStore = x, error => console.error(error));
   }
 
-  public fileChangeEvent (event: any): void
+  loadEventDate (event: StepperSelectionEvent)
   {
-    // this.thumbnailFileName = event.target.files[0].name;
-    // this.imageChangedEvent = event;
+    if (event.selectedIndex == 3)
+    {
+      console.log('updating preview data');
+      this.eventPreview = {
+        Address: {
+          AddressLine1: this.addressForm.controls.AddressLine1.value,
+          AddressLine2: this.addressForm.controls.AddressLine2.value,
+          City: this.addressForm.controls.City.value,
+          CountryCode: this.addressForm.controls.CountryCode.value,
+          CountryName: this.addressForm.controls.CountryName.value,
+          PostalCode: this.addressForm.controls.PostalCode.value
+        },
+        Categories: this.categories,
+        Description: this.createEventForm.controls.Description.value,
+        EndLocal: this.DateForm.controls.EndLocal.value,
+        EndUTC: undefined,
+        Id: "",
+        Images: this.eventImages,
+        IsOnline: this.IsOnline.value == true,
+        Name: this.createEventForm.controls.Name.value,
+        Price: this.createEventForm.controls.Price.value,
+        SocialLinks: [
+          {SocialMedia: SocialMedia.Site, Link: this.SocialLinks.controls.Site.value},
+          {SocialMedia: SocialMedia.Instagram, Link: this.SocialLinks.controls.Instagram.value},
+          {SocialMedia: SocialMedia.Twitter, Link: this.SocialLinks.controls.Twitter.value},
+          {SocialMedia: SocialMedia.Facebook, Link: this.SocialLinks.controls.Facebook.value},
+          {SocialMedia: SocialMedia.Reddit, Link: this.SocialLinks.controls.Reddit.value},
+        ],
+        StartLocal: this.DateForm.controls.StartLocal.value,
+        StartUTC: undefined,
+        Thumbnail: this.thumbnail,
+        TicketsLeft: this.createEventForm.controls.NumberOfTickets.value
+      }
+    }
   }
 
-  public imageCropped (event: ImageCroppedEvent): void
-  {
-    // this.croppedImage = event.base64;
-  }
-
-  public loadImageFailed (): void
-  {
-    // this.avatarError = "Failed to load image";
-  }
 
   public clickedOnline ()
   {

@@ -31,6 +31,7 @@ import { SocialComponent } from './event/social/social.component';
 import {SafePipe} from "safe-pipe/lib/safe-pipe.pipe";
 import {SafePipeModule} from "safe-pipe";
 import {RouterModule} from "@angular/router";
+import {EventComponent} from "./event/event/event.component";
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import {RouterModule} from "@angular/router";
     LoadingComponent,
     SocialComponent,
     UserNavComponent,
+    EventComponent,
   ],
   imports: [
     HttpClientModule,
@@ -111,6 +113,7 @@ import {RouterModule} from "@angular/router";
     LoadingComponent,
     SocialComponent,
     UserNavComponent,
+    EventComponent,
   ]
 })
 export class SharedModule

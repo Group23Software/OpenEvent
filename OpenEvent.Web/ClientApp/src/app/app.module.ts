@@ -29,7 +29,6 @@ import {UserNavComponent} from "./navs/user-nav/user-nav.component";
     ExploreComponent,
     CreateAccountComponent,
     ConfirmDialogComponent,
-    EventComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -49,7 +48,7 @@ import {UserNavComponent} from "./navs/user-nav/user-nav.component";
         canActivate: [AuthGuard]
       },
       {
-        path:'event/:id',
+        path: 'event/:id',
         component: EventComponent,
         canActivate: [AuthGuard]
       },

@@ -36,7 +36,8 @@ export class EventService
     return this.http.get<EventDetailModel>(this.BaseUrl + EventPaths.GetForPublic, {params: new HttpParams().set('id', id)}).pipe(map(e =>
     {
       let socialLinks = e.SocialLinks;
-      socialLinks.map(s => {
+      socialLinks.map(s =>
+      {
         s.SocialMedia = SocialMedia[s.SocialMedia] as SocialMedia;
         return s;
       });

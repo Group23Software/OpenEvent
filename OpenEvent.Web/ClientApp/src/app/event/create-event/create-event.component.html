@@ -1,6 +1,6 @@
 <user-nav></user-nav>
 
-<mat-horizontal-stepper [linear]="false" #eventStepper>
+<mat-horizontal-stepper [linear]="false" (selectionChange)="loadEventDate($event)">
   <mat-step [stepControl]="createEventForm" [editable]="isEditable">
     <form [formGroup]="createEventForm" id="createEventForm">
       <ng-template matStepLabel>Basic info</ng-template>
@@ -38,7 +38,7 @@
       <div class="d-flex flex-row">
         <mat-form-field appearance="outline" class="mr-3">
           <mat-label>Price (£)</mat-label>
-          <input #eventPrice autocomplete="off" matInput type="number" min="0" step="0.01" formControlName="Price" placeholder="00.00">
+          <input autocomplete="off" matInput type="number" min="0" step="0.01" formControlName="Price" placeholder="00.00">
         </mat-form-field>
 
         <!--      //TODO: Break down of fees. //TODO: Slider for price.-->
@@ -49,11 +49,15 @@
         </mat-form-field>
       </div>
 
-      <mat-chip-list><mat-chip *ngFor="let category of categories" (click)="removeCategory(category)">{{category.Name}}</mat-chip></mat-chip-list>
+      <mat-chip-list>
+        <mat-chip *ngFor="let category of categories" (click)="removeCategory(category)">{{category.Name}}</mat-chip>
+      </mat-chip-list>
 
       <mat-divider class="my-3"></mat-divider>
 
-      <mat-chip-list><mat-chip *ngFor="let category of categoryStore" (click)="addCategory(category)">{{category.Name}}</mat-chip></mat-chip-list>
+      <mat-chip-list>
+        <mat-chip *ngFor="let category of categoryStore" (click)="addCategory(category)">{{category.Name}}</mat-chip>
+      </mat-chip-list>
     </form>
   </mat-step>
   <mat-step [stepControl]="addressForm" [editable]="isEditable">
@@ -132,28 +136,17 @@
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Confirm</ng-template>
-    <div>{{createEventForm.controls.Name.value}}</div>
-    <div>{{createEventForm.controls.Description.value}}</div>
-    <div>{{DateForm.controls.StartLocal.value}}</div>
-    <div>{{DateForm.controls.EndLocal.value}}</div>
-    <div>{{createEventForm.controls.NumberOfTickets.value}}</div>
-    <div>{{createEventForm.controls.Price.value}}</div>
-    <div *ngIf="this.IsOnline.value == true">Online event</div>
-    <div *ngIf="!(this.IsOnline.value == true)">
-      <div>{{this.addressForm.controls.AddressLine1.value}}</div>
-      <div>{{this.addressForm.controls.AddressLine2.value}}</div>
-      <div>{{this.addressForm.controls.City.value}}</div>
-      <div>{{this.addressForm.controls.PostalCode.value}}</div>
-      <div>{{this.addressForm.controls.CountryName.value}}</div>
+    <div id="eventPreview">
+      <mat-card class="d-flex flex-row align-items-center my-3">
+        <div style="flex: 1; font-size: larger">Preview</div>
+        <button type="submit" mat-flat-button color="primary" (click)="create()" [disabled]="createEventForm.invalid || addressForm.invalid || SocialLinks.invalid">Create event</button>
+      </mat-card>
+      <mat-card>
+        <mat-card-content>
+          <event *ngIf="eventPreview" [EventPreview]="eventPreview"></event>
+        </mat-card-content>
+      </mat-card>
     </div>
-    <div>{{this.SocialLinks.controls.Site.value}}</div>
-    <div>{{this.SocialLinks.controls.Instagram.value}}</div>
-    <div>{{this.SocialLinks.controls.Twitter.value}}</div>
-    <div>{{this.SocialLinks.controls.Facebook.value}}</div>
-    <div>{{this.SocialLinks.controls.Reddit.value}}</div>
-
-    <!--    [disabled]="createEventForm.invalid || addressForm.invalid || SocialLinks.invalid"-->
-    <button type="submit" mat-stroked-button (click)="create()">Create event</button>
   </mat-step>
 </mat-horizontal-stepper>
 

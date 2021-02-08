@@ -1,4 +1,4 @@
-<user-nav></user-nav>
+<user-nav *ngIf="!EventPreview"></user-nav>
 <div class="container" *ngIf="Event">
   <div id="eventHeader">
     <button mat-icon-button (click)="back()"><mat-icon>arrow_back</mat-icon></button>
@@ -48,7 +48,7 @@
               <div>{{Event.Address.City}}</div>
               <div>{{Event.Address.CountryName}}</div>
               <div>{{Event.Address.PostalCode.toUpperCase()}}</div>
-              <div id="map">
+              <div id="map" *ngIf="mapLink">
                 <div class="mapouter">
                   <div class="gmap_canvas">
                     <iframe width="300" height="250" id="gmap_canvas" [src]="mapLink | safe:'resourceUrl'" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>

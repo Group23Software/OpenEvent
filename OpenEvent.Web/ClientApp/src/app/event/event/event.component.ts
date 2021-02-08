@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {EventDetailModel} from "../../_models/Event";
 import {EventService} from "../../_Services/event.service";
@@ -6,13 +6,13 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {Location} from '@angular/common';
 
 @Component({
-  selector: 'app-event',
+  selector: 'event',
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.css']
 })
-export class EventComponent implements OnInit
+export class EventComponent implements OnInit, OnChanges
 {
-
+  @Input() EventPreview: EventDetailModel;
   private event: EventDetailModel;
   public mapLink: string;
 
@@ -27,23 +27,31 @@ export class EventComponent implements OnInit
 
   ngOnInit (): void
   {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.eventService.GetForPublic(id).subscribe(response =>
+    if (!this.EventPreview)
     {
-      if (response)
+      const id = this.route.snapshot.paramMap.get('id');
+      this.eventService.GetForPublic(id).subscribe(response =>
       {
-        this.event = response;
-        if (this.event.Address && !this.event.IsOnline)
+        if (response)
         {
-          this.mapLink = this.createMapLink();
+          this.event = response;
+          if (this.event.Address && !this.event.IsOnline)
+          {
+            this.mapLink = this.createMapLink();
+          }
         }
+      }, (error: HttpErrorResponse) =>
+      {
+        this.back();
+        console.error(error);
+      });
+    } else {
+      this.event = this.EventPreview;
+      if (this.event.Address && !this.event.IsOnline)
+      {
+        this.mapLink = this.createMapLink();
       }
-    }, (error: HttpErrorResponse) =>
-    {
-      this.back();
-      console.error(error);
-    });
-
+    }
   }
 
   private createMapLink (): string
@@ -55,6 +63,11 @@ export class EventComponent implements OnInit
   public back ()
   {
     this.location.back();
+  }
+
+  ngOnChanges (changes: SimpleChanges): void
+  {
+    this.ngOnInit();
   }
 }
 
