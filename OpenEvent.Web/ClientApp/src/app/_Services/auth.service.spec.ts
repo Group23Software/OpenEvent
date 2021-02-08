@@ -2,7 +2,7 @@ import {async, TestBed} from '@angular/core/testing';
 
 import {AuthService} from './auth.service';
 import {CookieService} from "ngx-cookie-service";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpResponse} from "@angular/common/http";
 import {UserService} from "./user.service";
 import {of} from "rxjs";
 import {UserViewModel} from "../_models/User";
@@ -108,11 +108,12 @@ describe('AuthService', () =>
 
   it('should change password', async (() =>
   {
-    httpClientMock.post.and.returnValue(of())
+    httpClientMock.post.and.returnValue(of(new HttpResponse({status: 200})))
     const service: AuthService = TestBed.inject(AuthService);
     service.UpdatePassword({Email: '', Password: ''}).subscribe(result =>
     {
-      expect(result).toBeNull();
+      expect(result.status).toEqual(200);
+      expect(result.body).toBeNull();
     });
   }));
 

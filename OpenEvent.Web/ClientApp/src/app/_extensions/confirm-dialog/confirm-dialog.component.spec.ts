@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImageUploadComponent } from './image-upload.component';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
-describe('ImageUploadComponent', () => {
-  let component: ImageUploadComponent;
-  let fixture: ComponentFixture<ImageUploadComponent>;
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {ConfirmDialogComponent} from "./confirm-dialog.component";
+
+describe('ConfirmDialogComponent', () => {
+  let component: ConfirmDialogComponent;
+  let fixture: ComponentFixture<ConfirmDialogComponent>;
 
   let dialogRefMock;
 
@@ -14,17 +15,16 @@ describe('ImageUploadComponent', () => {
     dialogRefMock = jasmine.createSpyObj('matDialogRef', ['close']);
 
     await TestBed.configureTestingModule({
-      declarations: [ ImageUploadComponent ],
+      declarations: [ ConfirmDialogComponent ],
       providers:[
         {provide: MAT_DIALOG_DATA, useValue: {}},
         {provide: MatDialogRef, useValue: dialogRefMock},
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ImageUploadComponent);
+    fixture = TestBed.createComponent(ConfirmDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

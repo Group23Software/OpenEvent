@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="config.width/config.height" format="png" (imageCropped)="imageCropped($event)" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
 
-  <mat-form-field appearance="outline" color="accent" class="w-100">
+  <mat-form-field appearance="outline" color="accent" class="w-100" *ngIf="!config.isAvatar">
     <mat-label>Label</mat-label>
     <input matInput [formControl]="ImageLabel" autocomplete="off" placeholder="event site">
   </mat-form-field>

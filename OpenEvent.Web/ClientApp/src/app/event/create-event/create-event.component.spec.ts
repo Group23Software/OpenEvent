@@ -1,12 +1,11 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {CreateEventComponent} from './create-event.component';
-import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {UserService} from "../../_Services/user.service";
 import {EventService} from "../../_Services/event.service";
 import {BrowserDynamicTestingModule} from "@angular/platform-browser-dynamic/testing";
 import {of} from "rxjs";
-import {By} from "@angular/platform-browser";
 import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
 
 describe('CreateEventComponent', () =>

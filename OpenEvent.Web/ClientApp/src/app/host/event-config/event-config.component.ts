@@ -23,20 +23,20 @@ export class EventConfigComponent implements OnInit
   public categoryStore: Category[];
   public categories: Category[];
 
-  Name = new FormControl('', [Validators.required]);
-  Description = new FormControl('', [Validators.required]);
-  Price = new FormControl(10, [Validators.required]);
-  NumberOfTickets = new FormControl(10, [Validators.required]);
-  StartLocal = new FormControl('', [Validators.required]);
-  EndLocal = new FormControl('', [Validators.required]);
+  public Name = new FormControl('', [Validators.required]);
+  public Description = new FormControl('', [Validators.required]);
+  public Price = new FormControl(10, [Validators.required]);
+  public NumberOfTickets = new FormControl(10, [Validators.required]);
+  public StartLocal = new FormControl('', [Validators.required]);
+  public EndLocal = new FormControl('', [Validators.required]);
 
-  Site = new FormControl('');
-  Instagram = new FormControl('');
-  Twitter = new FormControl('');
-  Facebook = new FormControl('');
-  Reddit = new FormControl('');
+  public Site = new FormControl('');
+  public Instagram = new FormControl('');
+  public Twitter = new FormControl('');
+  public Facebook = new FormControl('');
+  public Reddit = new FormControl('');
 
-  IsOnline = new FormControl();
+  public IsOnline = new FormControl();
   public addressForm = new FormGroup({
     AddressLine1: new FormControl('', [Validators.required]),
     AddressLine2: new FormControl(''),
@@ -45,20 +45,19 @@ export class EventConfigComponent implements OnInit
     CountryCode: new FormControl('GB'),
     CountryName: new FormControl('United Kingdom'),
   })
-  loading: boolean = false;
+  public loading: boolean = false;
+  public minDate: Date;
 
   constructor (private route: ActivatedRoute, private eventService: EventService,private dialog: MatDialog, private snackBar: MatSnackBar)
   {
-
+    this.minDate = new Date();
   }
 
   ngOnInit (): void
   {
     this.eventService.GetAllCategories().subscribe(x =>
     {
-      this.categoryStore = x
-
-
+      this.categoryStore = x;
       const id = this.route.snapshot.paramMap.get('id');
       if (this.eventService.HostsEvents)
       {
@@ -190,7 +189,6 @@ export class EventConfigComponent implements OnInit
     {
       if (image)
       {
-        console.log(image);
         this.event.Images.push(image);
       }
     });
@@ -209,7 +207,6 @@ export class EventConfigComponent implements OnInit
     {
       if (image)
       {
-        console.log(image);
         this.event.Thumbnail = image;
       }
     });

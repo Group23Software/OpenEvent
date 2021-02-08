@@ -4,6 +4,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {EventDetailModel, EventHostModel, EventViewModel} from "../../_models/Event";
 import {MatDrawerContainer} from "@angular/material/sidenav";
 import {Router} from "@angular/router";
+import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +15,6 @@ import {Router} from "@angular/router";
 export class DashboardComponent implements OnInit, AfterViewChecked
 {
   public eventPreview: EventDetailModel;
-  // private events: EventHostModel[];
   private updated: boolean = false;
 
   @ViewChild(MatDrawerContainer) sideNavContainer: MatDrawerContainer
@@ -23,7 +24,7 @@ export class DashboardComponent implements OnInit, AfterViewChecked
     return this.eventService.HostsEvents;
   }
 
-  constructor (private eventService: EventService, private router: Router)
+  constructor (private eventService: EventService, private router: Router, private dialog: MatDialog)
   {
   }
 
@@ -56,8 +57,34 @@ export class DashboardComponent implements OnInit, AfterViewChecked
     }
   }
 
-  public navigateToConfig (event: EventHostModel)
+  public navigateToConfig ()
   {
+    let event = this.Events.find(x => x.Id == this.eventPreview.Id);
     this.router.navigate(['/host/config/', event.Id], {state: event});
+  }
+
+  cancelEvent (id: string)
+  {
+    let cancelEvent = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Are you sure?',
+        message: `Are you sure you want to cancel "${this.eventPreview.Name}", this cannot be undone`,
+        color: 'warn'
+      }
+    });
+
+    cancelEvent.afterClosed().subscribe(result =>
+    {
+      if (result)
+      {
+        this.eventService.Cancel(id).subscribe((response) =>
+        {
+          // this.router.navigate(['/login']);
+        }, (error: HttpErrorResponse) =>
+        {
+          console.error(error);
+        });
+      }
+    });
   }
 }

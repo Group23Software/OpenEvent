@@ -9,6 +9,7 @@ export interface uploadConfig
 {
   height: number;
   width: number;
+  isAvatar: boolean;
 }
 
 
@@ -61,9 +62,16 @@ export class ImageUploadComponent implements OnInit
 
   close ()
   {
-    this.dialogRef.close({
-      Source: this.croppedImage,
-      Label: this.ImageLabel.value
-    } as ImageViewModel);
+    if (this.config.isAvatar)
+    {
+      this.dialogRef.close(this.croppedImage as string);
+    } else
+    {
+      this.dialogRef.close({
+        Source: this.croppedImage,
+        Label: this.ImageLabel.value
+      } as ImageViewModel);
+    }
+
   }
 }

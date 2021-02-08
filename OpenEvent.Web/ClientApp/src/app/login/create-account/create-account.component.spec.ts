@@ -115,7 +115,7 @@ describe('CreateAccountComponent', () =>
       compiled.querySelector('input[formControlName="userName"]'),
       compiled.querySelector('input[formControlName="phoneNumber"]'),
       compiled.querySelector('input[formControlName="dOB"]'),
-      compiled.querySelector('input[id="avatar"]'),
+      compiled.querySelector('button[id="avatarUploadButton"]'),
       compiled.querySelector('mat-checkbox[formControlName="remember"]')
     ];
 
@@ -211,18 +211,4 @@ describe('CreateAccountComponent', () =>
     expect(component.loading).toBeFalsy();
     expect(component.CreateError).toBe("this is an error");
   }));
-
-  it('should file change event', () =>
-  {
-    let event: any = {target: {files:[{name: "image.png"}]}};
-    component.fileChangeEvent(event);
-
-    expect(component.avatarFileName).toBe("image.png");
-    expect(component.imageChangedEvent).toBe(event);
-  });
-
-  it('should load image failed', () => {
-    component.loadImageFailed();
-    expect(component.avatarError).toBe("Failed to load image");
-  });
 });

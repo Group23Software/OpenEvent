@@ -12,6 +12,6 @@ export class AppComponent {
   constructor (private trigger: TriggerService)
   {
     trigger.isDark.subscribe(is => this.isDark = is);
-  }
 
+  }
 }

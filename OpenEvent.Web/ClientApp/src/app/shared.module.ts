@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatInputModule} from "@angular/material/input";
 import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatIconModule} from "@angular/material/icon";
+import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -34,6 +34,7 @@ import {RouterModule} from "@angular/router";
 import {EventComponent} from "./event/event/event.component";
 import {MatListModule} from "@angular/material/list";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {DomSanitizer} from "@angular/platform-browser";
 
 
 @NgModule({
@@ -124,4 +125,12 @@ import {MatExpansionModule} from "@angular/material/expansion";
 })
 export class SharedModule
 {
+  constructor (iconRegistry: MatIconRegistry, sanitizer: DomSanitizer)
+  {
+    iconRegistry.addSvgIcon('instagram', sanitizer.bypassSecurityTrustResourceUrl('../assets/instagram.svg'));
+    iconRegistry.addSvgIcon('twitter', sanitizer.bypassSecurityTrustResourceUrl('../assets/twitter.svg'));
+    iconRegistry.addSvgIcon('facebook', sanitizer.bypassSecurityTrustResourceUrl('../assets/facebook.svg'));
+    iconRegistry.addSvgIcon('reddit', sanitizer.bypassSecurityTrustResourceUrl('../assets/reddit.svg'));
+    iconRegistry.addSvgIcon('site', sanitizer.bypassSecurityTrustResourceUrl('../assets/site.svg'));
+  }
 }

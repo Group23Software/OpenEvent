@@ -4,27 +4,38 @@
   <mat-drawer #eventList mode="side" opened>
     <div mat-subheader>Events</div>
     <mat-selection-list [multiple]="false">
+      <mat-list-option *ngIf="!Events || Events.length < 1">You have no events!</mat-list-option>
       <mat-list-option *ngFor="let event of Events" (click)="togglePreview(event)" [disableRipple]="true">
-        <div class="d-flex flex-row justify-content-between align-items-center">
-          <div>
-            <div mat-line>{{event.Name}}</div>
-            <div mat-line>{{event.StartLocal | date: 'medium'}}</div>
-          </div>
-          <button mat-icon-button (click)="navigateToConfig(event)">
-            <mat-icon>settings</mat-icon>
-          </button>
-        </div>
+        <img *ngIf="event.Thumbnail" [src]="event.Thumbnail.Source" mat-list-avatar>
+        <div mat-line>{{event.Name}}</div>
+        <div mat-line>{{event.StartLocal | date: 'medium'}}</div>
       </mat-list-option>
     </mat-selection-list>
   </mat-drawer>
-  <!--  <mat-drawer-content>-->
-  <div id="eventPreview">
-    <event *ngIf="eventPreview" [EventPreview]="eventPreview"></event>
+
+  <div id="eventPreview" *ngIf="Events">
+    <mat-toolbar>
+      <button mat-icon-button (click)="eventList.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="spacer"></span>
+      <button mat-button color="warn" (click)="cancelEvent(eventPreview.Id)">
+        <mat-icon inline="true">cancel</mat-icon>
+        Cancel
+      </button>
+      <button mat-button (click)="navigateToConfig()">
+        <mat-icon inline="true">settings</mat-icon>
+        Settings
+      </button>
+    </mat-toolbar>
+
+    <mat-card class="m-3">
+      <event *ngIf="eventPreview" [EventPreview]="eventPreview"></event>
+    </mat-card>
   </div>
-  <!--  </mat-drawer-content>-->
+
 </mat-drawer-container>
 
-<!--<button (click)="eventList.toggle()">toggle</button>-->
 <mat-card id="analyticsArea">
   <div>Analytics Area</div>
 </mat-card>

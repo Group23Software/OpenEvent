@@ -1,30 +1,27 @@
 <div *ngIf="user" id="basicAccountPanel">
 
-  <div id="avatar">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Avatar</mat-card-title>
-        <mat-card-subtitle>Upload an image</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div id="avatarPreview">
-          <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="1" [onlyScaleDown]="true" format="png" (imageCropped)="imageCropped($event)" [imageBase64]="user.Avatar" (loadImageFailed)="loadImageFailed()"></image-cropper>
-        </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button class="ml-3" mat-stroked-button (click)="avatarInput.click()">Upload file</button>
-        <input hidden #avatarInput type="file" (change)="fileChangeEvent($event)"/>
-        <button mat-stroked-button (click)="UpdateAvatar()">Save</button>
-      </mat-card-actions>
-      <mat-card-footer style="padding: 0 0.5rem 0 0.5rem;">
-        <div>{{avatarFileName}}</div>
-        <mat-error>{{newAvatarError}}</mat-error>
-        <div class="mb-3 mx-3">
-          <mat-progress-bar mode="indeterminate" *ngIf="updateAvatarLoading"></mat-progress-bar>
-        </div>
-      </mat-card-footer>
-    </mat-card>
-  </div>
+
+  <mat-card id="avatarCard">
+    <mat-card-header>
+      <mat-card-title>Avatar</mat-card-title>
+      <mat-card-subtitle>Upload an image</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="position-relative">
+        <img id="avatarPreview" *ngIf="user.Avatar" [src]="user.Avatar" alt="user's avatar">
+        <button mat-mini-fab id="avatarEditButton" (click)="avatarUpload()">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </mat-card-content>
+    <mat-card-footer style="padding: 0 0.5rem 0 0.5rem;">
+      <div>{{avatarFileName}}</div>
+      <mat-error>{{newAvatarError}}</mat-error>
+      <div class="mb-3 mx-3">
+        <mat-progress-bar mode="indeterminate" *ngIf="updateAvatarLoading"></mat-progress-bar>
+      </div>
+    </mat-card-footer>
+  </mat-card>
 
   <div id="basicInfo">
     <mat-card class="mb-3">
@@ -72,7 +69,7 @@
       </mat-card-footer>
     </mat-card>
 
-    <mat-card class="mb-3" >
+    <mat-card class="mb-3">
       <mat-card-header>
         <mat-card-title>Password</mat-card-title>
         <mat-card-subtitle>Change password</mat-card-subtitle>

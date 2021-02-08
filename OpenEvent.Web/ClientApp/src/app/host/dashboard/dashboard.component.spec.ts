@@ -5,6 +5,7 @@ import {of} from "rxjs";
 import {EventService} from "../../_Services/event.service";
 import {Router} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
+import {MatDialog} from "@angular/material/dialog";
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -12,8 +13,11 @@ describe('DashboardComponent', () => {
 
   let router;
   let eventServiceMock;
+  let dialogMock;
 
   beforeEach(async () => {
+
+    dialogMock = jasmine.createSpyObj('matDialog', ['open']);
 
     eventServiceMock = jasmine.createSpyObj('eventService', ['GetAllHosts']);
     eventServiceMock.GetAllHosts.and.returnValue(of());
@@ -22,7 +26,8 @@ describe('DashboardComponent', () => {
       imports: [RouterTestingModule],
       declarations: [ DashboardComponent ],
       providers: [
-        {provide: EventService, useValue: eventServiceMock}
+        {provide: EventService, useValue: eventServiceMock},
+        {provide: MatDialog, useValue: dialogMock},
       ]
     })
     .compileComponents();

@@ -59,12 +59,12 @@ mat-form-field {
   height: 100%;
 }
 
-#newAvatar {
-  display: flex;
-  flex-direction: column;
+#avatarEditButton {
+  position: absolute;
+  top: -10px;
+  right: -10px;
 }
 
-#newAvatar button {
-  margin-top: 0.5rem;
-  width: fit-content;
+#avatarCard {
+  height: fit-content;
 }

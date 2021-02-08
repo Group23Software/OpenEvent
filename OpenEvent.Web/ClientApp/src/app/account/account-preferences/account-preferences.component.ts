@@ -10,6 +10,8 @@ import {Router} from "@angular/router";
 import {AuthService} from "../../_Services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
+import {ImageViewModel} from "../../_models/Image";
 
 @Component({
   selector: 'account-preferences',
@@ -127,39 +129,35 @@ export class AccountPreferencesComponent implements OnInit
     });
   }
 
-  public fileChangeEvent (event: any): void
+  avatarUpload ()
   {
-    this.avatarFileName = event.target.files[0].name;
-    this.imageChangedEvent = event;
-    this.newAvatarError = null;
-  }
+    let ref = this.dialog.open(ImageUploadComponent, {
+      data: {
+        height: 1,
+        width: 1,
+        isAvatar: true
+      } as uploadConfig
+    });
 
-  public imageCropped (event: ImageCroppedEvent): void
-  {
-    this.croppedImage = event.base64;
-  }
-
-  public loadImageFailed (): void
-  {
-    this.newAvatarError = "Failed to load image";
-  }
-
-  public UpdateAvatar ()
-  {
-    this.updateAvatarLoading = true;
-    this.userService.UpdateAvatar({
-      Id: this.user.Id,
-      Avatar: (new ImageManipulationService).toUTF8Array(this.croppedImage)
-    }).subscribe(response =>
+    ref.afterClosed().subscribe((image: string) =>
     {
+      this.updateAvatarLoading = true;
+      if (image)
+      {
+        this.userService.UpdateAvatar({
+          Id: this.user.Id,
+          Avatar: (new ImageManipulationService).toUTF8Array(image)
+        }).subscribe(response =>
+        {
+          this.avatarFileName = null;
+          this.snackBar.open('Updated avatar', 'close', {duration: 500});
+        }, (error: HttpErrorResponse) =>
+        {
+          this.newAvatarError = error.message;
+          console.error(error);
+        });
+      }
       this.updateAvatarLoading = false;
-      this.avatarFileName = null;
-      this.snackBar.open('Updated avatar', 'close', {duration: 500});
-    }, (error: HttpErrorResponse) =>
-    {
-      this.updateAvatarLoading = false;
-      this.newAvatarError = error.message;
-      console.error(error);
     });
   }
 }

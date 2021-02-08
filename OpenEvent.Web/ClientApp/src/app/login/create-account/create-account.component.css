@@ -30,3 +30,13 @@
 #remember {
   margin: 0.25rem 1rem auto auto;
 }
+
+#avatarUploadButton {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+}
+
+#avatarUploadCard {
+  height: fit-content;
+}

@@ -56,21 +56,24 @@ export class EventService
   {
     return this.http.get<EventHostModel[]>(this.BaseUrl + EventPaths.GetAllHostsEvents, {params: new HttpParams().set('id', this.userService.User.Id)}).pipe(map(events =>
     {
-      this.hostsEvents = events;
-
-      this.hostsEvents.sort((a, b) =>
+      if (events.length > 0)
       {
-        if (a.StartLocal < b.StartLocal)
-        {
-          return -1;
-        }
-        if (a.StartLocal > b.StartLocal)
-        {
-          return 1;
-        }
-        return 0;
-      });
+        console.log('events exist',events);
+        this.hostsEvents = events;
 
+        this.hostsEvents.sort((a, b) =>
+        {
+          if (a.StartLocal < b.StartLocal)
+          {
+            return -1;
+          }
+          if (a.StartLocal > b.StartLocal)
+          {
+            return 1;
+          }
+          return 0;
+        });
+      }
       return events;
     }));
   }
@@ -97,9 +100,21 @@ export class EventService
 
   public Update (updateEventBody: UpdateEventBody): Observable<any>
   {
-    return this.http.post<any>(this.BaseUrl + EventPaths.Update, updateEventBody,{ headers: new HttpHeaders({
+    return this.http.post<any>(this.BaseUrl + EventPaths.Update, updateEventBody, {
+      headers: new HttpHeaders({
         'userId': this.userService.User.Id,
         'eventId': updateEventBody.Id
-      })});
+      })
+    });
+  }
+
+  public Cancel (id: string): Observable<any>
+  {
+    return this.http.post(this.BaseUrl + EventPaths.Cancel, null,{
+      headers: new HttpHeaders({
+        'userId': this.userService.User.Id,
+        'eventId': id
+      }),params: new HttpParams().set('id',id)
+    });
   }
 }

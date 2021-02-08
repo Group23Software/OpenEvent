@@ -24,13 +24,6 @@ namespace OpenEvent.Web.Controllers
             Logger = logger;
         }
 
-        // [UserOwnsEvent]
-        // [HttpGet]
-        // public async Task<ActionResult> Get()
-        // {
-        //     return Ok();
-        // }
-
         [HttpPost]
         public async Task<ActionResult<EventViewModel>> Create([FromBody] CreateEventBody createEventBody)
         {

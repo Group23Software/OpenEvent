@@ -108,6 +108,7 @@ describe('EventService', () =>
 
   it('should create event', () =>
   {
+    httpClientMock.post.and.returnValue(of(mockEventViewModel));
     service.Create(mockCreateEventBody).subscribe(e => {
       expect(e).not.toBeNull();
       expect(e.Name).toEqual(mockCreateEventBody.Name);

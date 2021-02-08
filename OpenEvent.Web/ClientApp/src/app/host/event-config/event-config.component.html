@@ -1,10 +1,11 @@
 <user-nav></user-nav>
 
-<mat-tab-group color="primary">
+<mat-tab-group color="primary" class="overflow-auto">
   <mat-tab label="Event">
     <div *ngIf="event" class="m-3">
-      <mat-card>
+      <mat-card class="d-flex flex-row justify-content-between">
         <button mat-flat-button color="primary" (click)="updateEvent()">Save</button>
+        <mat-spinner diameter="36" *ngIf="loading"></mat-spinner>
       </mat-card>
 
       <mat-card class="d-flex flex-column">
@@ -15,13 +16,13 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Description</mat-label>
-          <textarea matInput [formControl]="Description" placeholder="Event description" autocomplete="off"></textarea>
+          <textarea rows="8" matInput [formControl]="Description" placeholder="Event description" autocomplete="off"></textarea>
         </mat-form-field>
 
         <div class="d-flex flex-row">
           <mat-form-field appearance="outline" class="w-100 mr-3">
             <mat-label>Start date</mat-label>
-            <input autocomplete="off" matInput [ngxMatDatetimePicker]="startPicker" placeholder="Choose a date" [formControl]="StartLocal">  <!-- [min]="minDate" -->
+            <input autocomplete="off" matInput [ngxMatDatetimePicker]="startPicker" placeholder="Choose a date" [formControl]="StartLocal" [min]="minDate">
             <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #startPicker [stepHour]="1" [stepMinute]="1" [stepSecond]="0"></ngx-mat-datetime-picker>
           </mat-form-field>
@@ -41,8 +42,9 @@
                 Tumbnail
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <div id="newThumbnailTile" (click)="thumbnailUpload()">
+            <div id="newThumbnailTile">
               <img id="thumbnail" *ngIf="event.Thumbnail" [src]="event.Thumbnail.Source" [alt]="event.Thumbnail.Label">
+              <button mat-mini-fab class="imageDeleteButton" (click)="thumbnailUpload()"><mat-icon>edit</mat-icon></button>
             </div>
           </mat-expansion-panel>
 
@@ -57,7 +59,7 @@
                 <mat-chip *ngFor="let category of categories" (click)="removeCategory(category)">{{category.Name}}</mat-chip>
               </mat-chip-list>
             </div>
-            <!--            <mat-divider class="mb-3"></mat-divider>-->
+
             <mat-chip-list>
               <mat-chip *ngFor="let category of categoryStore" (click)="addCategory(category)">{{category.Name}}</mat-chip>
             </mat-chip-list>
@@ -101,15 +103,36 @@
             </form>
           </mat-expansion-panel>
 
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Price & Tickets
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="d-flex flex-row">
+              <mat-form-field appearance="outline" class="mr-3">
+                <mat-label>Price (£)</mat-label>
+                <input autocomplete="off" matInput type="number" min="0" step="0.01" [value]="event.Price" disabled placeholder="00.00">
+<!--                <span matPrefix>&pound;</span>-->
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Tickets</mat-label>
+                <input autocomplete="off" matInput type="number" min="0" step="1" [value]="event.TicketsLeft" disabled placeholder="1">
+              </mat-form-field>
+            </div>
+          </mat-expansion-panel>
+
         </mat-accordion>
       </mat-card>
 
       <mat-card>
         <div id="images">
-            <div *ngFor="let image of event.Images" class="eventImg">
-              <img [src]="image.Source" [alt]="image.Label" (click)="removeImage(image)"> <label>{{image.Label}}</label>
+          <div *ngFor="let image of event.Images" class="eventImg">
+            <img [src]="image.Source" [alt]="image.Label"> <label>{{image.Label}}</label>
+            <button mat-mini-fab class="imageDeleteButton" (click)="removeImage(image)"><mat-icon>delete_forever</mat-icon></button>
           </div>
-          <div class="eventImg" id="newImageTile" (click)="imageUpload()"></div>
+          <div id="newImageButton"><button mat-fab (click)="imageUpload()"><mat-icon>add</mat-icon></button></div>
         </div>
       </mat-card>
 
@@ -117,6 +140,7 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Site URL</mat-label>
           <input matInput [formControl]="Site" placeholder="https://www.custom.co.uk" autocomplete="off">
+          <mat-icon matSuffix svgIcon="site"></mat-icon>
         </mat-form-field>
 
         <div class="d-flex flex-row">
@@ -124,22 +148,26 @@
             <mat-form-field appearance="outline">
               <mat-label>Instagram</mat-label>
               <input matInput [formControl]="Instagram" placeholder="username" class="w-100" autocomplete="off">
+              <mat-icon matSuffix svgIcon="instagram"></mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Twitter</mat-label>
               <input matInput [formControl]="Twitter" placeholder="@username" class="w-100" autocomplete="off">
+              <mat-icon matSuffix svgIcon="twitter"></mat-icon>
             </mat-form-field>
           </div>
           <div class="d-flex flex-column w-100">
             <mat-form-field appearance="outline">
               <mat-label>Facebook</mat-label>
               <input matInput [formControl]="Facebook" placeholder="username" class="w-100" autocomplete="off">
+              <mat-icon matSuffix svgIcon="facebook"></mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Reddit</mat-label>
               <input matInput [formControl]="Reddit" placeholder="username" class="w-100" autocomplete="off">
+              <mat-icon matSuffix svgIcon="reddit"></mat-icon>
             </mat-form-field>
           </div>
         </div>
@@ -148,5 +176,3 @@
   </mat-tab>
   <mat-tab label="Promos"></mat-tab>
 </mat-tab-group>
-
-<loading *ngIf="loading"></loading>

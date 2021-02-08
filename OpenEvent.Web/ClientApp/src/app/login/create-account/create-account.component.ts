@@ -4,11 +4,12 @@ import {UserValidatorsService} from "../../_Services/user-validators.service";
 import {ImageCroppedEvent} from "ngx-image-cropper";
 import {UserService} from "../../_Services/user.service";
 import {NewUserInput} from "../../_models/User";
-import {MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
 import {DefaultProfile} from "./default-profile";
 import {ImageManipulationService} from "../../_extensions/image-manipulation.service";
+import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
 
 @Component({
   selector: 'app-create-account',
@@ -35,6 +36,7 @@ export class CreateAccountComponent implements OnInit
 
   public imageChangedEvent: any = '';
   public croppedImage: any = '';
+  public avatar: string = DefaultProfile;
   public loading: boolean = false;
   public avatarFileName: string;
   public avatarError: string;
@@ -56,8 +58,12 @@ export class CreateAccountComponent implements OnInit
 
 // , Validators.pattern('^(((\\+44\\s?\\d{4}|\\(?0\\d{4}\\)?)\\s?\\d{3}\\s?\\d{3})|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$\n')
 
-
-  constructor (private userValidators: UserValidatorsService, private userService: UserService, private dialogRef: MatDialogRef<CreateAccountComponent>, private router: Router)
+  constructor (
+    private userValidators: UserValidatorsService,
+    private userService: UserService,
+    private dialogRef: MatDialogRef<CreateAccountComponent>,
+    private router: Router,
+    private dialog: MatDialog)
   {
     const currentYear = new Date().getFullYear();
     this.maxDate = new Date(currentYear - 18, 0, 0);
@@ -65,22 +71,6 @@ export class CreateAccountComponent implements OnInit
 
   ngOnInit ()
   {
-  }
-
-  public fileChangeEvent (event: any): void
-  {
-    this.avatarFileName = event.target.files[0].name;
-    this.imageChangedEvent = event;
-  }
-
-  public imageCropped (event: ImageCroppedEvent): void
-  {
-    this.croppedImage = event.base64;
-  }
-
-  public loadImageFailed () : void
-  {
-    this.avatarError = "Failed to load image";
   }
 
   public createAccount () : void
@@ -94,7 +84,7 @@ export class CreateAccountComponent implements OnInit
       UserName: this.createAccountForm.value.userName,
       DateOfBirth: this.createAccountForm.value.dOB,
       PhoneNumber: this.createAccountForm.value.phoneNumber,
-      Avatar: (new ImageManipulationService).toUTF8Array(this.croppedImage),
+      Avatar: (new ImageManipulationService).toUTF8Array(this.avatar),
       Password: this.createAccountForm.value.password,
       Remember: this.createAccountForm.value.remember == true
     }
@@ -111,5 +101,24 @@ export class CreateAccountComponent implements OnInit
       this.loading = false;
       this.CreateError = error.error
     })
+  }
+
+  public avatarUpload ()
+  {
+    let ref = this.dialog.open(ImageUploadComponent, {
+      data: {
+        height: 1,
+        width: 1,
+        isAvatar: true
+      } as uploadConfig
+    });
+
+    ref.afterClosed().subscribe((image: string) =>
+    {
+      if (image)
+      {
+        this.avatar = image;
+      }
+    });
   }
 }

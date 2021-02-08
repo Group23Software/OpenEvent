@@ -126,7 +126,7 @@ namespace OpenEvent.Web.Services
         public async Task<List<EventHostModel>> GetAllHosts(Guid hostId)
         {
             var events = await ApplicationContext.Events.Include(x => x.Tickets).Include(x => x.Host)
-                .Where(x => x.Host.Id == hostId).Select(
+                .Where(x => x.Host.Id == hostId && !x.isCanceled).Select(
                     x => new EventHostModel
                     {
                         Id = x.Id,
@@ -146,6 +146,7 @@ namespace OpenEvent.Web.Services
                         EndUTC = x.EndUTC,
                         StartUTC = x.StartUTC
                     }).AsNoTracking().ToListAsync();
+
             return events;
         }
 
@@ -230,7 +231,8 @@ namespace OpenEvent.Web.Services
 
         public async Task Update(UpdateEventBody updateEventBody)
         {
-            var e = await ApplicationContext.Events.FirstOrDefaultAsync(x => x.Id == updateEventBody.Id);
+            var e = await ApplicationContext.Events.Include(x => x.EventCategories)
+                .FirstOrDefaultAsync(x => x.Id == updateEventBody.Id);
 
             if (e == null)
             {
@@ -254,10 +256,10 @@ namespace OpenEvent.Web.Services
             e.StartUTC = updateEventBody.StartLocal.ToUniversalTime();
             e.EndUTC = updateEventBody.EndLocal.ToUniversalTime();
             e.Address = updateEventBody.Address;
-            // e.EventCategories = updateEventBody.Categories != null
-            //     ? updateEventBody.Categories.Select(c => new EventCategory() {CategoryId = c.Id}).ToList()
-            //     : new List<EventCategory>();
-            
+            e.EventCategories = updateEventBody.Categories != null
+                ? updateEventBody.Categories.Select(c => new EventCategory() {CategoryId = c.Id}).ToList()
+                : new List<EventCategory>();
+
             try
             {
                 await ApplicationContext.SaveChangesAsync();
