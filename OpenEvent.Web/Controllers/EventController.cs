@@ -78,16 +78,48 @@ namespace OpenEvent.Web.Controllers
         }
         
         [HttpGet("host")]
-        public async Task<ActionResult<List<EventHostModel>>> GetAllHosts(Guid hostId)
+        public async Task<ActionResult<List<EventHostModel>>> GetAllHosts(Guid id)
         {
             try
             {
-                var result = await EventService.GetAllHosts(hostId);
+                var result = await EventService.GetAllHosts(id);
                 return result;
             }
             catch (Exception e)
             {
                 Logger.LogInformation(e.ToString());
+                return BadRequest(e);
+            }
+        }
+
+        [UserOwnsEvent]
+        [HttpGet("forHost")]
+        public async Task<ActionResult<EventHostModel>> GetForHost(Guid id)
+        {
+            try
+            {
+                var result = await EventService.GetForHost(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                Logger.LogInformation(EventService.ToString());
+                return BadRequest(e);
+            }
+        }
+        
+        [UserOwnsEvent]
+        [HttpPost("update")]
+        public async Task<ActionResult<EventHostModel>> Update(UpdateEventBody updateEventBody)
+        {
+            try
+            {
+                await EventService.Update(updateEventBody);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Logger.LogInformation(EventService.ToString());
                 return BadRequest(e);
             }
         }

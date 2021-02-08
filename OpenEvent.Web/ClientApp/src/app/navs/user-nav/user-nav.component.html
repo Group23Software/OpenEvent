@@ -2,6 +2,7 @@
   <mat-toolbar color="primary" *ngIf="User">
 
     <div class="navControls">
+      <button mat-icon-button (click)="back()"><mat-icon>arrow_back</mat-icon></button>
       <button mat-stroked-button  class="mr-2" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>
       <button mat-flat-button color="accent" [routerLink]="['/search']" [routerLinkActive]="['/search']">Search</button>
     </div>
@@ -14,7 +15,7 @@
       <mat-menu #menu="matMenu">
         <button mat-menu-item [routerLink]="['/user/account']" [routerLinkActive]="['activeLink']"><mat-icon>settings</mat-icon><span>User Settings</span></button>
         <button mat-menu-item [routerLink]="['/user/tickets']" [routerLinkActive]="['activeLink']"><mat-icon>local_activity</mat-icon><span>Your Tickets</span></button>
-        <button mat-menu-item [routerLink]="['/user/events']" [routerLinkActive]="['activeLink']"><mat-icon>festival</mat-icon><span>Your Events</span></button>
+        <button mat-menu-item [routerLink]="['/host/dashboard']" [routerLinkActive]="['activeLink']"><mat-icon>festival</mat-icon><span>Your Events</span></button>
         <button mat-menu-item><mat-icon>dark_mode</mat-icon>
           <mat-slide-toggle labelPosition="before" #themeToggle [checked]="User.IsDarkMode" (click)="$event.stopPropagation();toggleTheme(themeToggle.checked)">Dark Mode</mat-slide-toggle>
         </button>

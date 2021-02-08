@@ -32,6 +32,8 @@ import {SafePipe} from "safe-pipe/lib/safe-pipe.pipe";
 import {SafePipeModule} from "safe-pipe";
 import {RouterModule} from "@angular/router";
 import {EventComponent} from "./event/event/event.component";
+import {MatListModule} from "@angular/material/list";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 
 @NgModule({
@@ -74,6 +76,8 @@ import {EventComponent} from "./event/event/event.component";
     MatChipsModule,
     IvyCarouselModule,
     SafePipeModule,
+    MatListModule,
+    MatExpansionModule,
   ],
   exports: [
 
@@ -109,6 +113,8 @@ import {EventComponent} from "./event/event/event.component";
     MatChipsModule,
     IvyCarouselModule,
     SafePipeModule,
+    MatListModule,
+    MatExpansionModule,
 
     LoadingComponent,
     SocialComponent,

@@ -4,6 +4,7 @@ import {UserService} from "../../_Services/user.service";
 import {TriggerService} from "../../_Services/trigger.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'user-nav',
@@ -13,7 +14,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class UserNavComponent
 {
 
-  constructor (private userService: UserService, private router: Router, private trigger: TriggerService, private snackBar: MatSnackBar)
+  constructor (private userService: UserService, private router: Router, private trigger: TriggerService, private snackBar: MatSnackBar, private location: Location)
   {
   }
 
@@ -45,5 +46,10 @@ export class UserNavComponent
     }, (error: HttpErrorResponse) => {
       console.error(error);
     });
+  }
+
+  public back ()
+  {
+    this.location.back();
   }
 }

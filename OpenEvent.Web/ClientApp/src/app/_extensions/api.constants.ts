@@ -40,7 +40,9 @@ let eventPaths: ApiEventPaths = {
   CancelEvent: '',
   GetAllHostsEvents: '',
   GetForPublic: '',
-  GetAllCategories: ''
+  GetAllCategories: '',
+  GetForHost: '',
+  Update: ''
 }
 
 eventPaths = {
@@ -49,6 +51,8 @@ eventPaths = {
   GetForPublic: eventPaths.BasePath + '/public',
   GetAllHostsEvents: eventPaths.BasePath + '/host',
   GetAllCategories: eventPaths.BasePath + '/categories',
+  GetForHost: eventPaths.BasePath + '/forHost',
+  Update: eventPaths.BasePath + '/update'
 }
 
 interface ApiAuthPaths
@@ -78,6 +82,8 @@ interface ApiEventPaths
   readonly GetForPublic: string;
   readonly GetAllHostsEvents: string;
   readonly GetAllCategories: string;
+  readonly GetForHost: string;
+  readonly Update: string;
 }
 
 export const UserPaths: ApiUserPaths = userPaths;

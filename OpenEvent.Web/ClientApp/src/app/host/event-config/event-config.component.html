@@ -1,0 +1,152 @@
+<user-nav></user-nav>
+
+<mat-tab-group color="primary">
+  <mat-tab label="Event">
+    <div *ngIf="event" class="m-3">
+      <mat-card>
+        <button mat-flat-button color="primary" (click)="updateEvent()">Save</button>
+      </mat-card>
+
+      <mat-card class="d-flex flex-column">
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" [formControl]="Name" placeholder="Event name" autocomplete="off">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput [formControl]="Description" placeholder="Event description" autocomplete="off"></textarea>
+        </mat-form-field>
+
+        <div class="d-flex flex-row">
+          <mat-form-field appearance="outline" class="w-100 mr-3">
+            <mat-label>Start date</mat-label>
+            <input autocomplete="off" matInput [ngxMatDatetimePicker]="startPicker" placeholder="Choose a date" [formControl]="StartLocal">  <!-- [min]="minDate" -->
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <ngx-mat-datetime-picker #startPicker [stepHour]="1" [stepMinute]="1" [stepSecond]="0"></ngx-mat-datetime-picker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>End date</mat-label>
+            <input autocomplete="off" matInput [ngxMatDatetimePicker]="endPicker" placeholder="Choose a date" [formControl]="EndLocal">
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <ngx-mat-datetime-picker #endPicker [stepHour]="1" [stepMinute]="1" [stepSecond]="0"></ngx-mat-datetime-picker>
+          </mat-form-field>
+        </div>
+
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Tumbnail
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div id="newThumbnailTile" (click)="thumbnailUpload()">
+              <img id="thumbnail" *ngIf="event.Thumbnail" [src]="event.Thumbnail.Source" [alt]="event.Thumbnail.Label">
+            </div>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Categories
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="mb-3">
+              <mat-chip-list>
+                <mat-chip *ngFor="let category of categories" (click)="removeCategory(category)">{{category.Name}}</mat-chip>
+              </mat-chip-list>
+            </div>
+            <!--            <mat-divider class="mb-3"></mat-divider>-->
+            <mat-chip-list>
+              <mat-chip *ngFor="let category of categoryStore" (click)="addCategory(category)">{{category.Name}}</mat-chip>
+            </mat-chip-list>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Address
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <form [formGroup]="addressForm">
+              <mat-checkbox id="isOnline" [formControl]="IsOnline" (click)="clickedOnline()">Online?</mat-checkbox>
+
+              <div class="d-flex flex-column">
+                <mat-form-field appearance="outline">
+                  <mat-label>Address line 1</mat-label>
+                  <input matInput type="text" formControlName="AddressLine1" placeholder="21 Main Street">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Address line 2</mat-label>
+                  <input matInput type="text" formControlName="AddressLine2" placeholder="Apt 1">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>City</mat-label>
+                  <input matInput type="text" formControlName="City" placeholder="London">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Postcode</mat-label>
+                  <input matInput type="text" formControlName="PostalCode" placeholder="AA1 1AA">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Country</mat-label>
+                  <input matInput type="text" disabled [value]="addressForm.controls.CountryName.value">
+                </mat-form-field>
+              </div>
+            </form>
+          </mat-expansion-panel>
+
+        </mat-accordion>
+      </mat-card>
+
+      <mat-card>
+        <div id="images">
+            <div *ngFor="let image of event.Images" class="eventImg">
+              <img [src]="image.Source" [alt]="image.Label" (click)="removeImage(image)"> <label>{{image.Label}}</label>
+          </div>
+          <div class="eventImg" id="newImageTile" (click)="imageUpload()"></div>
+        </div>
+      </mat-card>
+
+      <mat-card>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Site URL</mat-label>
+          <input matInput [formControl]="Site" placeholder="https://www.custom.co.uk" autocomplete="off">
+        </mat-form-field>
+
+        <div class="d-flex flex-row">
+          <div class="d-flex flex-column w-100 mr-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Instagram</mat-label>
+              <input matInput [formControl]="Instagram" placeholder="username" class="w-100" autocomplete="off">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Twitter</mat-label>
+              <input matInput [formControl]="Twitter" placeholder="@username" class="w-100" autocomplete="off">
+            </mat-form-field>
+          </div>
+          <div class="d-flex flex-column w-100">
+            <mat-form-field appearance="outline">
+              <mat-label>Facebook</mat-label>
+              <input matInput [formControl]="Facebook" placeholder="username" class="w-100" autocomplete="off">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Reddit</mat-label>
+              <input matInput [formControl]="Reddit" placeholder="username" class="w-100" autocomplete="off">
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </mat-tab>
+  <mat-tab label="Promos"></mat-tab>
+</mat-tab-group>
+
+<loading *ngIf="loading"></loading>

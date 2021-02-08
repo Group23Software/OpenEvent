@@ -12,7 +12,7 @@ export interface EventDetailModel extends EventViewModel
   TicketsLeft: number;
 }
 
-export interface EventHostModel
+export interface EventHostModel extends EventViewModel
 {
   Images: ImageViewModel[];
   SocialLinks: SocialLinkViewModel[];
@@ -53,5 +53,21 @@ export interface CreateEventBody
   Address: Address;
   IsOnline: boolean;
   NumberOfTickets: number;
+  Categories: Category[];
+}
+
+export interface UpdateEventBody
+{
+  Id: string;
+  Name: string;
+  Description: string;
+  Thumbnail: ImageViewModel;
+  Images: ImageViewModel[];
+  SocialLinks: SocialLinkViewModel[];
+  StartLocal: Date;
+  EndLocal: Date;
+  Price: number;
+  Address: Address;
+  IsOnline: boolean;
   Categories: Category[];
 }
