@@ -244,7 +244,7 @@ namespace OpenEvent.Web.Services
             e.Description = updateEventBody.Description;
             e.Price = updateEventBody.Price;
             e.IsOnline = updateEventBody.IsOnline;
-            e.Images = updateEventBody.Images.Select(x => Mapper.Map<Image>(x)).ToList();
+            e.Images = updateEventBody.SocialLinks != null ? updateEventBody.Images.Select(x => Mapper.Map<Image>(x)).ToList() : null;
             e.Thumbnail = updateEventBody.Thumbnail != null
                 ? Mapper.Map<Image>(updateEventBody.Thumbnail)
                 : new Image();

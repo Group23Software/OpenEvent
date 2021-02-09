@@ -69,20 +69,12 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
-        
+
         [HttpGet("host")]
         public async Task<ActionResult<List<EventHostModel>>> GetAllHosts(Guid id)
         {
-            try
-            {
-                var result = await EventService.GetAllHosts(id);
-                return result;
-            }
-            catch (Exception e)
-            {
-                Logger.LogInformation(e.ToString());
-                return BadRequest(e);
-            }
+            var result = await EventService.GetAllHosts(id);
+            return result;
         }
 
         [UserOwnsEvent]
@@ -100,10 +92,10 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
-        
+
         [UserOwnsEvent]
         [HttpPost("update")]
-        public async Task<ActionResult<EventHostModel>> Update(UpdateEventBody updateEventBody)
+        public async Task<ActionResult> Update(UpdateEventBody updateEventBody)
         {
             try
             {

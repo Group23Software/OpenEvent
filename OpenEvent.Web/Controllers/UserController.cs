@@ -146,7 +146,7 @@ namespace OpenEvent.Web.Controllers
         /// BadRequest if any exceptions are caught. 
         /// </returns>
         [HttpPost("updateUserName")]
-        public async Task<IActionResult> UpdateUserName([FromBody] UpdateUserNameBody updateUserNameBody)
+        public async Task<ActionResult<string>> UpdateUserName([FromBody] UpdateUserNameBody updateUserNameBody)
         {
             try
             {
