@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenEvent.Test", "OpenEvent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenEvent.Web", "OpenEvent.Web\OpenEvent.Web.csproj", "{9E668052-2C0C-4B3D-929E-13DAF576C37F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenEvent.Integration.Tests", "OpenEvent.Integration.Tests\OpenEvent.Integration.Tests.csproj", "{A353F924-4FF7-456C-84FD-745D871B38F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{9E668052-2C0C-4B3D-929E-13DAF576C37F}.Release|x64.Build.0 = Release|Any CPU
 		{9E668052-2C0C-4B3D-929E-13DAF576C37F}.Release|x86.ActiveCfg = Release|Any CPU
 		{9E668052-2C0C-4B3D-929E-13DAF576C37F}.Release|x86.Build.0 = Release|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Debug|x64.Build.0 = Debug|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Debug|x86.Build.0 = Debug|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Release|x64.ActiveCfg = Release|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Release|x64.Build.0 = Release|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Release|x86.ActiveCfg = Release|Any CPU
+		{A353F924-4FF7-456C-84FD-745D871B38F4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -67,9 +67,12 @@
 }
 
 #newImageTile {
-  background-color: #dbdbdb;
-  cursor: pointer;
-  height: 201.8px;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  border-radius: 5%;
+  background-color: lightgrey;
   margin-bottom: 32px;
 }
 
@@ -85,14 +88,4 @@ mat-card {
   position: absolute;
   top: -10px;
   right: -10px;
-}
-
-#newImageButton {
-  width: 100%;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  border-radius: 5%;
-  background-color: lightgrey;
-  margin-bottom: 32px;
 }

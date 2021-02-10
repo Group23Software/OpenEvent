@@ -31,13 +31,13 @@
       <mat-card-content>
         <mat-form-field appearance="outline">
           <mat-label>Email</mat-label>
-          <input matInput [value]="user.Email" [disabled]="true"/>
+          <input matInput [value]="user.Email" [disabled]="true" id="email"/>
         </mat-form-field>
 
         <form id="newUserName" (ngSubmit)="UpdateUserName()">
           <mat-form-field appearance="outline">
             <mat-label>User name</mat-label>
-            <input matInput [value]="user.UserName" type="text" [formControl]="userName" placeholder="JoeBlogs">
+            <input matInput [value]="user.UserName" type="text" [formControl]="userName" placeholder="JoeBlogs" id="userName">
             <mat-error *ngIf="username.errors && username.errors.usernameExists">
               Username already in use
             </mat-error>
@@ -50,17 +50,17 @@
 
         <mat-form-field appearance="outline">
           <mat-label>First name</mat-label>
-          <input matInput [value]="user.FirstName" [disabled]="true"/>
+          <input matInput [value]="user.FirstName" [disabled]="true" id="firstName"/>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Last name</mat-label>
-          <input matInput [value]="user.LastName" [disabled]="true"/>
+          <input matInput [value]="user.LastName" [disabled]="true" id="lastName"/>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Phone number</mat-label>
-          <input matInput [value]="user.PhoneNumber" [disabled]="true"/>
+          <input matInput [value]="user.PhoneNumber" [disabled]="true" id="phoneNumber"/>
         </mat-form-field>
       </mat-card-content>
 
@@ -102,7 +102,7 @@
     </mat-card>
 
     <div id="accountControls">
-      <button mat-flat-button color="warn" (click)="DeleteAccount()"><span>Delete account </span>
+      <button mat-flat-button color="warn" (click)="DeleteAccount()" id="deleteUser"><span>Delete account </span>
         <mat-icon>delete</mat-icon>
       </button>
     </div>

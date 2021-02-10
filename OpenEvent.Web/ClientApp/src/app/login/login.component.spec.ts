@@ -17,11 +17,11 @@ import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatInputModule} from "@angular/material/input";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {Router} from "@angular/router";
-import {Observable, of, throwError} from "rxjs";
+import {of, throwError} from "rxjs";
 import {AuthService} from "../_Services/auth.service";
 import {UserViewModel} from "../_models/User";
 import {HttpErrorResponse} from "@angular/common/http";
-// import 'jest';
+import {By} from "@angular/platform-browser";
 
 describe('LoginComponent', () =>
 {
@@ -207,6 +207,10 @@ describe('LoginComponent', () =>
       expect(passwordInput.errors.required).toBeTruthy();
       passwordInput.setValue('password');
       expect(passwordInput.errors).toBeNull();
+    });
+
+    it('should render email error',  () =>
+    {
     });
   });
 });

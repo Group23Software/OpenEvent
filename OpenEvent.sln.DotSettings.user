@@ -2,8 +2,16 @@
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/PredefinedNamingRules/=TypesAndNamespaces/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="" Suffix="" Style="AaBb"&gt;&lt;ExtraRule Prefix="" Suffix="" Style="Aa_bb" /&gt;&lt;/Policy&gt;</s:String>
 	<s:String x:Key="/Default/Environment/Highlighting/HighlightingSourceSnapshotLocation/@EntryValue">/Users/harrison/Library/Caches/JetBrains/Rider2020.3/resharper-host/temp/Rider/vAny/CoverageData/_OpenEvent.-1957969093/Snapshot/snapshot.utdcvr</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0889b908_002D0f8d_002D40ad_002Daff2_002D173ac1d4db27/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;OpenEvent.Test&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Project Location="/Users/harrison/Desktop/OpenEvent/OpenEvent.Test" Presentation="&amp;lt;OpenEvent.Test&amp;gt;" /&gt;
+  &lt;Or&gt;
+    &lt;Project Location="/Users/harrison/Desktop/OpenEvent/OpenEvent.Test" Presentation="&amp;lt;OpenEvent.Test&amp;gt;" /&gt;
+    &lt;TestAncestor&gt;
+      &lt;TestId&gt;NUnit3x::A353F924-4FF7-456C-84FD-745D871B38F4::net5.0::OpenEvent.Integration.Tests.Tests.Test1&lt;/TestId&gt;
+      &lt;TestId&gt;NUnit3x::A353F924-4FF7-456C-84FD-745D871B38F4::net5.0::OpenEvent.Integration.Tests.Tests&lt;/TestId&gt;
+    &lt;/TestAncestor&gt;
+  &lt;/Or&gt;
 &lt;/SessionState&gt;</s:String>
+	
+	
 	
 	
 	

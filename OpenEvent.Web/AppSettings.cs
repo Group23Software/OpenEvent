@@ -8,7 +8,7 @@ namespace OpenEvent.Web
         /// <summary>
         /// JWT secret.
         /// </summary>
-        public string Secret { get; set; }
+        public string Secret { get; init; }
         /// <summary>
         /// Remote connection string.
         /// </summary>

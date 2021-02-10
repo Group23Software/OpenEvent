@@ -22,7 +22,6 @@ namespace OpenEvent.Test.Controllers.TicketController
             Id = new Guid("3BDF91F8-1A80-48E8-B656-F6D4799A0CB9"),
             QRCode = "Code",
         };
-        
         [SetUp]
         public async Task Setup()
         {

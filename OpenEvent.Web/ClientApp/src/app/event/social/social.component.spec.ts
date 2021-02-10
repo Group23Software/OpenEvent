@@ -14,8 +14,6 @@ describe('SocialComponent', () =>
   filenames["Twitter"] = "assets/twitter.svg";
   filenames["Facebook"] = "assets/facebook.svg";
   filenames["Reddit"] = "assets/reddit.svg";
-    // {key: "0", file: "assets/site.svg"},
-    // {key: "1", file: "assets/instagram.svg"}
 
 
   beforeEach(async () =>

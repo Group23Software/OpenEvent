@@ -9,7 +9,7 @@
       <mat-form-field appearance="outline" color="accent">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" id="email" placeholder="joe@blogs.co.uk">
-        <mat-error *ngIf="email.errors && email.errors.email">
+        <mat-error *ngIf="email.hasError('email')" id="emailError">
           Please enter a valid email address
         </mat-error>
       </mat-form-field>
@@ -26,7 +26,7 @@
         <button type="submit" color="accent" cdkFocusInitial mat-stroked-button [disabled]="!loginFormGroup.valid">Login</button>
       </div>
 
-      <mat-error>{{loginError}}</mat-error>
+      <mat-error id="loginError">{{loginError}}</mat-error>
     </form>
 
 

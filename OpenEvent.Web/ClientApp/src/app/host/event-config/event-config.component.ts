@@ -20,8 +20,8 @@ export class EventConfigComponent implements OnInit
 {
 
   public event: EventHostModel;
-  public categoryStore: Category[];
-  public categories: Category[];
+  public categoryStore: Category[] = [];
+  public categories: Category[] = [];
 
   public Name = new FormControl('', [Validators.required]);
   public Description = new FormControl('', [Validators.required]);
