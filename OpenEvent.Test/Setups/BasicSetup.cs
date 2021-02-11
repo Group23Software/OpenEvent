@@ -71,7 +71,9 @@ namespace OpenEvent.Test.Setups
                         City = "City",
                         CountryCode = "GB",
                         CountryName = "United Kingdom",
-                        PostalCode = "AA1 1AA"
+                        PostalCode = "AA1 1AA",
+                        Lat = 51.47338,
+                        Lon = -0.08375
                     },
                     Description = "This is a test event",
                     Host = new User() {Id = new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C")},
@@ -96,6 +98,35 @@ namespace OpenEvent.Test.Setups
                         {
                             CategoryId = new Guid("534DE110-2D1D-4AE8-9293-68FC8037DB5A"),
                             EventId = new Guid("74831876-FC2E-4D03-99D8-B3872BDEFD5C")
+                        }
+                    }
+                },
+                new()
+                {
+                    Id = new Guid("5F35AA8F-4CC5-4E1A-AB73-6875D5769715"),
+                    Description = "This is a different test event",
+                    Host = new User() {Id = new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C")},
+                    Images = new List<Image>()
+                    {
+                        new() {Label = "Image", Source = new Byte[] {1, 1, 1, 1}}
+                    },
+                    isCanceled = false,
+                    Name = "Test different Event",
+                    Price = new decimal(10.10),
+                    Thumbnail = new Image() {Label = "Thumbnail", Source = new Byte[] {1, 1, 1, 1}},
+                    EndLocal = new DateTime(),
+                    EndUTC = new DateTime(),
+                    StartLocal = new DateTime(),
+                    StartUTC = new DateTime(),
+                    IsOnline = true,
+                    SocialLinks = new List<SocialLink> {new() {Link = "custom.co.uk", SocialMedia = SocialMedia.Site}},
+                    Tickets = new List<Ticket>(),
+                    EventCategories = new List<EventCategory>
+                    {
+                        new()
+                        {
+                            CategoryId = new Guid("08CC5B09-70E2-4215-9B35-1E6A067A0204"),
+                            EventId = new Guid("5F35AA8F-4CC5-4E1A-AB73-6875D5769715")
                         }
                     }
                 }

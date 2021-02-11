@@ -1,0 +1,15 @@
+#searchInput {
+  width: 100%;
+}
+
+#searchResults event-preview {
+  margin: 1rem;
+}
+
+mat-chip {
+  cursor: pointer;
+}
+
+#controls mat-card {
+  margin: 1rem;
+}

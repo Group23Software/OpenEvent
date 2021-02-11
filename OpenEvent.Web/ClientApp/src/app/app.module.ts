@@ -1,13 +1,11 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {RouterModule} from '@angular/router';
 
 import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {LoadingComponent} from './loading/loading.component';
 import {CookieService} from "ngx-cookie-service";
 import {ExploreComponent} from './explore/explore.component';
 import {AuthGuard} from "./_guards/auth.guard";
@@ -16,9 +14,9 @@ import {CreateAccountComponent} from './login/create-account/create-account.comp
 import {ConfirmDialogComponent} from './_extensions/confirm-dialog/confirm-dialog.component';
 import {PublicNavComponent} from "./navs/public-nav/public-nav.component";
 import {SharedModule} from "./shared.module";
-import {CommonModule} from "@angular/common";
 import {EventComponent} from "./event/event/event.component";
-import {UserNavComponent} from "./navs/user-nav/user-nav.component";
+import {SearchComponent} from "./search/search.component";
+import {EventPreviewComponent} from "./event/event-preview/event-preview.component";
 
 
 @NgModule({
@@ -29,13 +27,24 @@ import {UserNavComponent} from "./navs/user-nav/user-nav.component";
     ExploreComponent,
     CreateAccountComponent,
     ConfirmDialogComponent,
+    SearchComponent,
+    EventPreviewComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
     BrowserAnimationsModule,
     SharedModule,
     RouterModule.forRoot([
-      {path: '', redirectTo: 'user/account', pathMatch: 'full'},
+      {path: '', redirectTo: 'login', pathMatch: 'full'},
+      // {
+      //   path: 'main',
+      //   loadChildren: () => import('./main.module').then(m => m.MainModule),
+      //   pathMatch: 'full',
+      //   canActivate: [AuthGuard]
+      // },
+      {
+        path: 'search', component: SearchComponent, canActivate: [AuthGuard]
+      },
       {path: 'login', component: LoginComponent},
       {
         path: 'user',

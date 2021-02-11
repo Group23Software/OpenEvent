@@ -1,6 +1,13 @@
 import {Inject, Injectable} from '@angular/core';
 import {Observable} from "rxjs";
-import {CreateEventBody, EventDetailModel, EventHostModel, EventViewModel, UpdateEventBody} from "../_models/Event";
+import {
+  CreateEventBody,
+  EventDetailModel,
+  EventHostModel,
+  EventViewModel,
+  SearchFilter,
+  UpdateEventBody
+} from "../_models/Event";
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {EventPaths} from "../_extensions/api.constants";
 import {Category} from "../_models/Category";
@@ -58,7 +65,7 @@ export class EventService
     {
       if (events.length > 0)
       {
-        console.log('events exist',events);
+        console.log('events exist', events);
         this.hostsEvents = events;
 
         this.hostsEvents.sort((a, b) =>
@@ -110,11 +117,16 @@ export class EventService
 
   public Cancel (id: string): Observable<any>
   {
-    return this.http.post(this.BaseUrl + EventPaths.Cancel, null,{
+    return this.http.post(this.BaseUrl + EventPaths.Cancel, null, {
       headers: new HttpHeaders({
         'userId': this.userService.User.Id,
         'eventId': id
-      }),params: new HttpParams().set('id',id)
+      }), params: new HttpParams().set('id', id)
     });
+  }
+
+  public Search (keyword: string, filters: SearchFilter[]): Observable<EventViewModel[]>
+  {
+    return this.http.post<EventViewModel[]>(this.BaseUrl + EventPaths.Search, filters, {params: new HttpParams().set('keyword', keyword)})
   }
 }

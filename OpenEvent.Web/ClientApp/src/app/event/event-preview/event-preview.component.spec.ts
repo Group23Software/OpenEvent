@@ -1,25 +1,30 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { EventPreviewComponent } from './event-preview.component';
+import {EventPreviewComponent} from './event-preview.component';
+import {RouterTestingModule} from "@angular/router/testing";
 
-describe('EventPreviewComponent', () => {
+describe('EventPreviewComponent', () =>
+{
   let component: EventPreviewComponent;
   let fixture: ComponentFixture<EventPreviewComponent>;
 
-  beforeEach(async () => {
+  beforeEach(async () =>
+  {
     await TestBed.configureTestingModule({
-      declarations: [ EventPreviewComponent ]
-    })
-    .compileComponents();
+      declarations: [EventPreviewComponent],
+      imports: [RouterTestingModule]
+    }).compileComponents();
   });
 
-  beforeEach(() => {
+  beforeEach(() =>
+  {
     fixture = TestBed.createComponent(EventPreviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', () =>
+  {
     expect(component).toBeTruthy();
   });
 });

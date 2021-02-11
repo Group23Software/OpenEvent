@@ -79,6 +79,7 @@ namespace OpenEvent.Web
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEventService, EventService>();
+            services.AddHttpClient<IEventService, EventService>();
 
             services.AddScoped<UserOwnsEventFilter>();
 

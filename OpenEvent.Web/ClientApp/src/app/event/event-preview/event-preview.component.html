@@ -1,1 +1,4 @@
-<p>event-preview works!</p>
+<mat-card (click)="navigateToEvent()" *ngIf="event">
+  <div>{{event.Name}}</div>
+  <div>{{event.StartLocal | date:'medium'}}</div>
+</mat-card>

@@ -8,7 +8,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatNativeDateModule} from "@angular/material/core";
+import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
 import {ImageCropperModule} from "ngx-image-cropper";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
@@ -35,6 +35,7 @@ import {EventComponent} from "./event/event/event.component";
 import {MatListModule} from "@angular/material/list";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {DomSanitizer} from "@angular/platform-browser";
+import {MatSelectModule} from "@angular/material/select";
 
 
 @NgModule({
@@ -79,6 +80,7 @@ import {DomSanitizer} from "@angular/platform-browser";
     SafePipeModule,
     MatListModule,
     MatExpansionModule,
+    MatSelectModule,
   ],
   exports: [
 
@@ -116,6 +118,7 @@ import {DomSanitizer} from "@angular/platform-browser";
     SafePipeModule,
     MatListModule,
     MatExpansionModule,
+    MatSelectModule,
 
     LoadingComponent,
     SocialComponent,

@@ -2,26 +2,25 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from "./shared.module";
 import {RouterModule} from "@angular/router";
+import {SearchComponent} from "./search/search.component";
 import {AuthGuard} from "./_guards/auth.guard";
-import {SearchComponent} from './search/search.component';
 
 
 @NgModule({
   declarations: [
+    // SearchComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
     RouterModule.forChild([
-      {
-        path: 'account',
-        loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
-        canActivate: [AuthGuard]
-      }
+      // {path: 'main', redirectTo: 'search', pathMatch: 'full'},
+      // {
+      //   path: 'search', component: SearchComponent, canActivate: [AuthGuard]
+      // }
     ])
   ]
 })
-export class UserModule
+export class MainModule
 {
-
 }

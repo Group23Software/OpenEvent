@@ -1,15 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {EventViewModel} from "../../_models/Event";
+import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-event-preview',
+  selector: 'event-preview',
   templateUrl: './event-preview.component.html',
   styleUrls: ['./event-preview.component.css']
 })
-export class EventPreviewComponent implements OnInit {
+export class EventPreviewComponent implements OnInit
+{
+  @Input() event: EventViewModel;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor (private router: Router)
+  {
   }
 
+  ngOnInit (): void
+  {
+  }
+
+  public navigateToEvent ()
+  {
+    this.router.navigate(['/event',this.event.Id]);
+  }
 }

@@ -17,5 +17,6 @@ namespace OpenEvent.Web
         /// Local connection string.
         /// </summary>
         public string LocalConnectionString { get; set; }
+        public string AzureMapsKey { get; set; }
     }
 }

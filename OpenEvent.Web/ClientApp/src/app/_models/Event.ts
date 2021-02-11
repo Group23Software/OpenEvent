@@ -71,3 +71,16 @@ export interface UpdateEventBody
   IsOnline: boolean;
   Categories: Category[];
 }
+
+export enum SearchParam
+{
+  Category,
+  Location,
+  IsOnline,
+  Date
+}
+
+export interface SearchFilter {
+  Key: SearchParam;
+  Value: string;
+}

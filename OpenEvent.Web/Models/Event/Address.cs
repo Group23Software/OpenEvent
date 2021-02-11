@@ -14,5 +14,7 @@ namespace OpenEvent.Web.Models.Event
         public string City { get; set; }
         public string CountryCode { get; set; }
         public string CountryName { get; set; }
+        public double Lat { get; set; }
+        public double Lon { get; set; }
     }
 }

@@ -1,13 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
+using OpenEvent.Web.Helpers;
+using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.Ticket;
@@ -24,7 +31,7 @@ namespace OpenEvent.Web.Services
 
         //public methods
         Task<EventDetailModel> GetForPublic(Guid id);
-        Task<List<EventViewModel>> Search(); //TODO: Search params
+        Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters); //TODO: Search params
 
         Task<List<Category>> GetAllCategories();
         Task<ActionResult<EventHostModel>> GetForHost(Guid id);
@@ -36,12 +43,17 @@ namespace OpenEvent.Web.Services
         private readonly ILogger<EventService> Logger;
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
+        private readonly HttpClient HttpClient;
+        private readonly AppSettings AppSettings;
 
-        public EventService(ApplicationContext context, ILogger<EventService> logger, IMapper mapper)
+        public EventService(ApplicationContext context, ILogger<EventService> logger, IMapper mapper,
+            HttpClient httpClient, IOptions<AppSettings> appSettings)
         {
             Logger = logger;
             ApplicationContext = context;
             Mapper = mapper;
+            HttpClient = httpClient;
+            AppSettings = appSettings.Value;
         }
 
         public async Task<EventViewModel> Create(CreateEventBody createEventBody)
@@ -53,6 +65,10 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("User not found");
                 throw new UserNotFoundException();
             }
+
+            var cords = await GetAddressCords(createEventBody.Address);
+            createEventBody.Address.Lat = cords.Lat;
+            createEventBody.Address.Lon = cords.Lon;
 
             Event newEvent = new Event()
             {
@@ -92,6 +108,43 @@ namespace OpenEvent.Web.Services
                 Logger.LogWarning("User failed to save");
                 throw;
             }
+        }
+
+        private async Task<CoordinateAbbreviated> GetAddressCords(Address address)
+        {
+            var addressAsString = $"{address.AddressLine1},{address.City},{address.CountryName},{address.PostalCode}";
+            Uri uri = new Uri(
+                $"https://atlas.microsoft.com/search/address/json?&subscription-key={AppSettings.AzureMapsKey}&api-version=1.0&language=en-US&query=${addressAsString}");
+
+            var response = await HttpClient.GetAsync(uri);
+            response.EnsureSuccessStatusCode();
+
+            if (response.Content.Headers.ContentType?.MediaType == "application/json")
+            {
+                var contentStream = await response.Content.ReadAsStreamAsync();
+
+                using var streamReader = new StreamReader(contentStream);
+                using var jsonReader = new JsonTextReader(streamReader);
+
+                JsonSerializer serializer = new JsonSerializer();
+
+                try
+                {
+                    var searchResponse = serializer.Deserialize<SearchAddressResponse>(jsonReader);
+                    if (searchResponse == null)
+                    {
+                        throw new AddressNotFoundException();
+                    }
+
+                    return searchResponse.Results.First().Position;
+                }
+                catch (JsonReaderException)
+                {
+                    throw new JsonException();
+                }
+            }
+
+            throw new AddressNotFoundException();
         }
 
         public async Task Cancel(Guid id)
@@ -187,9 +240,77 @@ namespace OpenEvent.Web.Services
             return e;
         }
 
-        public Task<List<EventViewModel>> Search()
+        public async Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters)
         {
-            throw new NotImplementedException();
+            List<Guid> searchCategories = filters.Where(x => x.Key == SearchParam.Category)
+                .Select(x => Guid.Parse(x.Value)).ToList();
+            var isOnline = filters.Find(x => x.Key == SearchParam.IsOnline) != null;
+            var cords = filters.Find(x => x.Key == SearchParam.Location)?.Value.Split(",").Select(double.Parse)
+                .ToArray();
+            var date = filters.Find(x => x.Key == SearchParam.Date)?.Value;
+            // var date = isDate != null ? DateTime.Parse(isDate): (DateTime?) null;
+
+            // TODO: this search is not explicit does it want to be?
+            // TODO: order of the result?
+            // var events = await ApplicationContext.Events.Where(
+            //     x => (
+            //              (searchCategories.Any() ? x.EventCategories.Any(c => searchCategories.Contains(c.CategoryId)) : true)) 
+            //          && (keyword != null ? x.Name.Contains(keyword) : true) && (isOnline ? x.IsOnline : true) 
+            //          // && (EventDistance(x,cords))
+            //          // && (cords != null && x.IsOnline ? false : true)
+            //          && !x.isCanceled
+            //          ).Take(50).ToListAsync();
+
+            // var events = ApplicationContext.Events.AsEnumerable().Where(x =>
+            // {
+            //     var containsKeyword = keyword != null ? x.Name.Contains(keyword) : true;
+            //     var hasCategory = searchCategories.Any() ? x.EventCategories.Any(c => searchCategories.Contains(c.CategoryId)) : true;
+            //     // var isClose = cords != null ? EventDistance(x.Address.Lat, x.Address.Lon, cords) : true;
+            //     var isClose = true;
+            //     var online = (isOnline ? x.IsOnline : true);
+            //     return isClose && containsKeyword && hasCategory && online && !x.isCanceled;
+            // }).Take(50);
+
+            IEnumerable<Event> events = ApplicationContext.Events.Include(x => x.EventCategories).AsSplitQuery()
+                .AsEnumerable();
+
+            if (isOnline)
+            {
+                events = events.Where(x => x.IsOnline);
+            }
+
+            if (searchCategories.Any())
+            {
+                events = events.Where(x => x.EventCategories.Any(c => searchCategories.Contains(c.CategoryId)));
+            }
+
+            if (cords != null)
+            {
+                events = events.Where(x => !x.IsOnline && EventDistance(x.Address.Lat, x.Address.Lon, cords));
+            }
+
+            if (date != null)
+            {
+                var realDate = DateTime.Parse(date);
+                events = events.Where(x =>
+                    new DateTime(x.StartLocal.Year, x.StartLocal.Month, x.StartLocal.Day).Equals(new DateTime(realDate.Year,
+                        realDate.Month, realDate.Day)));
+            }
+
+            return events.Select(e => Mapper.Map<EventViewModel>(e)).Take(50).ToList();
+        }
+
+        private static bool EventDistance(double lat, double lon, double[] cords)
+        {
+            return CalculateDistance.Calculate(new Location()
+            {
+                Latitude = lat,
+                Longitude = lon
+            }, new Location()
+            {
+                Latitude = cords[0],
+                Longitude = cords[1]
+            }) < cords[2];
         }
 
         public Task<List<Category>> GetAllCategories()
@@ -244,7 +365,9 @@ namespace OpenEvent.Web.Services
             e.Description = updateEventBody.Description;
             e.Price = updateEventBody.Price;
             e.IsOnline = updateEventBody.IsOnline;
-            e.Images = updateEventBody.SocialLinks != null ? updateEventBody.Images.Select(x => Mapper.Map<Image>(x)).ToList() : null;
+            e.Images = updateEventBody.SocialLinks != null
+                ? updateEventBody.Images.Select(x => Mapper.Map<Image>(x)).ToList()
+                : null;
             e.Thumbnail = updateEventBody.Thumbnail != null
                 ? Mapper.Map<Image>(updateEventBody.Thumbnail)
                 : new Image();

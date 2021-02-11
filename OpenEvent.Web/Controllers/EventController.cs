@@ -104,7 +104,7 @@ namespace OpenEvent.Web.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogInformation(EventService.ToString());
+                Logger.LogInformation(e.ToString());
                 return BadRequest(e);
             }
         }
@@ -113,6 +113,21 @@ namespace OpenEvent.Web.Controllers
         public async Task<ActionResult<List<Category>>> GetAllCategories()
         {
             return await EventService.GetAllCategories();
+        }
+
+        [HttpPost("search")]
+        public async Task<ActionResult<List<EventViewModel>>> Search(string keyword, List<SearchFilter> filters)
+        {
+            try
+            {
+                var results = await EventService.Search(keyword, filters);
+                return results;
+            }
+            catch (Exception e)
+            {
+                Logger.LogInformation(e.ToString());
+                return BadRequest(e);
+            }
         }
     }
 }

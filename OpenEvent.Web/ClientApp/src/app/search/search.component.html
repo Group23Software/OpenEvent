@@ -1,0 +1,68 @@
+<user-nav></user-nav>
+<mat-card id="controls" class="m-3">
+  <div class="d-flex flex-row">
+    <mat-form-field appearance="outline" class="w-100 mr-3">
+      <mat-label>Search</mat-label>
+      <input matInput type="text" id="searchInput" autocomplete="off" (ngModelChange)="triggerSearchChange()" (keyup.enter)="triggerSearchChange()" [(ngModel)]="keyword">
+    </mat-form-field>
+    <button mat-fab (click)="triggerSearchChange()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-chip-list>
+      <mat-chip *ngFor="let category of selectedCategories">
+        {{category.Name}}
+        <mat-icon matChipRemove (click)="removeCategory(category)">clear</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+    <div class="my-3"></div>
+    <mat-chip-list>
+      <mat-chip *ngFor="let category of categories">
+        {{category.Name}}
+        <mat-icon matChipRemove (click)="addCategory(category)">add</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+  </mat-card>
+
+  <div class="d-flex flex-row">
+  <mat-card class="w-100">
+    <mat-checkbox [(ngModel)]="isOnline">Online Event?</mat-checkbox>
+    <div class="align-items-center d-flex">
+      <mat-slide-toggle [disabled]="isOnline" #useCurrentLocation [(ngModel)]="usingCurrentLocation" (change)="toggleCurrentLocation($event)">Use Current Location</mat-slide-toggle>
+    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Distance</mat-label>
+      <mat-select [disabled]="!useCurrentLocation.checked || isOnline" value="1" [(ngModel)]="distanceSelect">
+        <mat-option value="1000">1 km</mat-option>
+        <mat-option value="2000">2 km</mat-option>
+        <mat-option value="5000">5 km</mat-option>
+        <mat-option value="10000">10 km</mat-option>
+        <mat-option value="25000">25 km</mat-option>
+        <mat-option value="50000">50 km</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card>
+
+  <mat-card class="w-100">
+    <div class="d-flex flex-column">
+    <mat-slide-toggle [(ngModel)]="usingDate">Date?</mat-slide-toggle>
+    <mat-form-field appearance="outline">
+      <mat-label>Choose a date</mat-label>
+      <input autocomplete="off" matInput [min]="minDate" [matDatepicker]="picker" [(ngModel)]="date" [disabled]="!usingDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    </div>
+  </mat-card>
+  </div>
+</mat-card>
+
+<mat-card class="m-3">
+  <!--  Results-->
+  <div id="searchResults" *ngIf="!loading">
+    <event-preview *ngFor="let event of events" [event]="event"></event-preview>
+  </div>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading" class="mx-auto"></mat-progress-bar>
+</mat-card>

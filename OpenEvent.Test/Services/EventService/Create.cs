@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -46,8 +47,22 @@ namespace OpenEvent.Test.Services.EventService
         }
 
         [Test]
+        public async Task Should_Not_Find_Address()
+        {
+            // TODO   
+        }
+
+        [Test]
         public async Task ShouldCreateEmptyTickets()
         {
+            // ValidCreateEventBody.Address = new Address()
+            // {
+            //     AddressLine1 = "31 Peckham Road",
+            //     City = "London",
+            //     CountryName = "United Kingdom",
+            //     PostalCode = "se58ub"
+            // };
+            
             var result = await EventService.Create(ValidCreateEventBody);
             result.Should().NotBeNull();
 
