@@ -28,7 +28,7 @@ import {EventPreviewComponent} from "./event/event-preview/event-preview.compone
     CreateAccountComponent,
     ConfirmDialogComponent,
     SearchComponent,
-    EventPreviewComponent
+    EventPreviewComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),

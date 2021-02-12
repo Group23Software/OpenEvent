@@ -21,7 +21,6 @@ import {of, throwError} from "rxjs";
 import {AuthService} from "../_Services/auth.service";
 import {UserViewModel} from "../_models/User";
 import {HttpErrorResponse} from "@angular/common/http";
-import {By} from "@angular/platform-browser";
 
 describe('LoginComponent', () =>
 {
@@ -207,10 +206,6 @@ describe('LoginComponent', () =>
       expect(passwordInput.errors.required).toBeTruthy();
       passwordInput.setValue('password');
       expect(passwordInput.errors).toBeNull();
-    });
-
-    it('should render email error',  () =>
-    {
     });
   });
 });

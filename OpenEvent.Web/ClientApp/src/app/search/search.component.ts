@@ -60,7 +60,7 @@ export class SearchComponent implements OnInit
       Value: `${this.usersLocation.coords.latitude},${this.usersLocation.coords.longitude},${this.distanceSelect}`
     })
 
-    if (this.date) filters.push({Key:SearchParam.Date, Value: this.date.toDateString()})
+    if (this.date && this.usingDate) filters.push({Key:SearchParam.Date, Value: this.date.toDateString()})
 
     console.log(filters);
     this.eventService.Search(this.keyword, filters).subscribe(events =>

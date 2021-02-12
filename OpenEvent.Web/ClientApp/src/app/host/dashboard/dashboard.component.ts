@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit, AfterViewChecked
   private updated: boolean = false;
 
   @ViewChild(MatDrawerContainer) sideNavContainer: MatDrawerContainer
+  public loading: boolean = true;
 
   get Events ()
   {
@@ -32,6 +33,7 @@ export class DashboardComponent implements OnInit, AfterViewChecked
   {
     this.eventService.GetAllHosts().subscribe(response =>
     {
+      this.loading = false;
       if (this.Events)
       {
         this.eventPreview = this.Events[0];

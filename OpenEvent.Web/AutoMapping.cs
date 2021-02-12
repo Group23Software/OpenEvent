@@ -39,7 +39,6 @@ namespace OpenEvent.Web
 
             CreateMap<Ticket, TicketDetailModel>()
                 .ForMember(d => d.QRCode, m => m.MapFrom(x => Encoding.UTF8.GetString(x.QRCode, 0, x.QRCode.Length)));
-            
         }
     }
 }

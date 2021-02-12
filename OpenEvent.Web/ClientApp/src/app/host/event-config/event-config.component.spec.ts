@@ -4,7 +4,7 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {EventService} from "../../_Services/event.service";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {of} from "rxjs";
+import {Observable, of} from "rxjs";
 import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
 import {By} from "@angular/platform-browser";
 import {HarnessLoader} from "@angular/cdk/testing";
@@ -12,13 +12,16 @@ import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {MatCheckboxHarness} from "@angular/material/checkbox/testing";
 import {MatCardModule} from "@angular/material/card";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {MatButtonHarness} from "@angular/material/button/testing";
+import {EventHostModel} from "../../_models/Event";
+import {Category} from "../../_models/Category";
+import {ActivatedRoute} from "@angular/router";
 
 describe('EventConfigComponent', () =>
 {
   let component: EventConfigComponent;
   let fixture: ComponentFixture<EventConfigComponent>;
   let loader: HarnessLoader;
-  let rootLoader: HarnessLoader;
 
   let snackBarMock;
   let dialogMock;
@@ -30,7 +33,7 @@ describe('EventConfigComponent', () =>
 
     dialogMock = jasmine.createSpyObj('matDialog', ['open']);
 
-    eventServiceMock = jasmine.createSpyObj('eventService', ['GetAllCategories', 'GetForHost', 'HostsEvents']);
+    eventServiceMock = jasmine.createSpyObj('eventService', ['GetAllCategories', 'GetForHost'], ['HostsEvents']);
     eventServiceMock.GetAllCategories.and.returnValue(of());
     eventServiceMock.GetForHost.and.returnValue(of());
 
@@ -44,6 +47,7 @@ describe('EventConfigComponent', () =>
         {provide: EventService, useValue: eventServiceMock},
         {provide: MatDialog, useValue: dialogMock},
         {provide: MatSnackBar, useValue: snackBarMock},
+        {provide: ActivatedRoute, useValue: {params: of({id: 'test'})}}
       ]
     }).compileComponents();
   });
@@ -70,9 +74,8 @@ describe('EventConfigComponent', () =>
       Tickets: [],
       TicketsLeft: 0
     }
-    fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
-    rootLoader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+    fixture.detectChanges();
   });
 
   it('should create', () =>
@@ -82,29 +85,52 @@ describe('EventConfigComponent', () =>
 
   it('should load form data', () =>
   {
+    // spyOnProperty(eventServiceMock,'HostsEvents').and.returnValue([{
+    //   Address: undefined,
+    //   Categories: [],
+    //   Description: "",
+    //   EndLocal: undefined,
+    //   EndUTC: undefined,
+    //   Id: "test",
+    //   Images: [],
+    //   IsOnline: false,
+    //   Name: "",
+    //   Price: 0,
+    //   SocialLinks: [],
+    //   StartLocal: undefined,
+    //   StartUTC: undefined,
+    //   Thumbnail: undefined,
+    //   Tickets: [],
+    //   TicketsLeft: 0
+    // }] as EventHostModel[]);
 
-  });
+    console.log(eventServiceMock);
 
-  it('should add category', () =>
-  {
-    component.categoryStore = [
-      {Name: "Music", Id: "1"},
-      {Name: "Comedy", Id: "2"}
-    ];
-    component.addCategory({Name: "Music", Id: "1"});
-    expect(component.categories).toEqual([{Name: "Music", Id: "1"}]);
-    expect(component.categoryStore).toEqual([{Name: "Comedy", Id: "2"}]);
-  });
+    // Object.getOwnPropertyDescriptor(eventServiceMock, "x").get.and.returnValue(7);
 
-  it('should remove category', () =>
-  {
-    component.categories = [
-      {Name: "Music", Id: "1"},
-      {Name: "Comedy", Id: "2"}
-    ];
-    component.removeCategory({Name: "Music", Id: "1"});
-    expect(component.categories).toEqual([{Name: "Comedy", Id: "2"}]);
-    expect(component.categoryStore).toEqual([{Name: "Music", Id: "1"}]);
+    // eventServiceMock.HostsEvents.get.and.returnValue([{
+    //   Address: undefined,
+    //   Categories: [],
+    //   Description: "",
+    //   EndLocal: undefined,
+    //   EndUTC: undefined,
+    //   Id: "test",
+    //   Images: [],
+    //   IsOnline: false,
+    //   Name: "",
+    //   Price: 0,
+    //   SocialLinks: [],
+    //   StartLocal: undefined,
+    //   StartUTC: undefined,
+    //   Thumbnail: undefined,
+    //   Tickets: [],
+    //   TicketsLeft: 0
+    // }] as EventHostModel[]);
+    // eventServiceMock.GetAllCategories.and.returnValue(of([{}] as Category[]));
+    //
+    // component.ngOnInit();
+
+
   });
 
   it('should disable address from', fakeAsync(() =>
@@ -113,7 +139,7 @@ describe('EventConfigComponent', () =>
     fixture.whenStable().then(() =>
     {
       let isOnline = fixture.debugElement.query(By.css('#isOnline'));
-      isOnline.triggerEventHandler("click",{});
+      isOnline.triggerEventHandler("click", {});
       fixture.detectChanges();
       for (let control in component.addressForm.controls)
       {
@@ -123,54 +149,27 @@ describe('EventConfigComponent', () =>
   }));
 
   // TODO: fix this test (harness?)
-  // it('should re-enable address form', () =>
+  // it('should re-enable address form', async () =>
   // {
   //   fixture.detectChanges();
   //   fixture.whenStable().then(() =>
   //   {
   //     let isOnline = fixture.debugElement.query(By.css('#isOnline'));
-  //     isOnline.triggerEventHandler("click",{});
-  //     isOnline.triggerEventHandler("click",{});
+  //     isOnline.triggerEventHandler("click", {});
   //     fixture.detectChanges();
-  //     for (let control in component.addressForm.controls)
+  //     fixture.whenStable().then(() =>
   //     {
-  //       expect(component.addressForm.controls[control].enabled).toBeTrue();
-  //     }
+  //       isOnline.triggerEventHandler("click", {});
+  //       fixture.detectChanges();
+  //       for (let control in component.addressForm.controls)
+  //       {
+  //         expect(component.addressForm.controls[control].enabled).toBeTrue();
+  //       }
+  //     });
   //   });
   // });
 
   it('should update event', () =>
-  {
-
-  });
-
-  it('should open image upload', () =>
-  {
-    fixture.detectChanges();
-    fixture.whenStable().then(() =>
-    {
-      const newButton = fixture.debugElement.query(By.css('#newImageButton'));
-      newButton.nativeElement.click();
-      expect(dialogMock.open).toHaveBeenCalledWith(ImageUploadComponent, {
-        data: {
-          height: 3,
-          width: 4
-        } as uploadConfig
-      });
-    });
-  });
-
-  it('should upload image', () =>
-  {
-
-  });
-
-  it('should upload thumbnail', () =>
-  {
-
-  });
-
-  it('should remove image', () =>
   {
 
   });

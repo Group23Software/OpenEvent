@@ -51,7 +51,6 @@ export class ImageUploadComponent implements OnInit
 
   cropperReady ()
   {
-    // cropper ready
     this.ImageLabel.enable();
   }
 

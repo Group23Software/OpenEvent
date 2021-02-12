@@ -22,7 +22,7 @@ describe('UserService', () =>
   beforeEach(() =>
   {
 
-    cookieServiceMock = jasmine.createSpyObj('cookieService', ['get', 'set', 'check', 'delete', 'deleteAll']);
+    cookieServiceMock = jasmine.createSpyObj('cookieService', ['get', 'set', 'check', 'delete', 'deleteAll','getAll']);
     cookieServiceMock.get.and.returnValue('');
     cookieServiceMock.set.and.callThrough();
     cookieServiceMock.check.and.callThrough();

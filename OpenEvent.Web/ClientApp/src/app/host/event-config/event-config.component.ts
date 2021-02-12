@@ -45,10 +45,11 @@ export class EventConfigComponent implements OnInit
     CountryCode: new FormControl('GB'),
     CountryName: new FormControl('United Kingdom'),
   })
-  public loading: boolean = false;
+  public updatingEvent: boolean = false;
   public minDate: Date;
+  public loading: boolean = true;
 
-  constructor (private route: ActivatedRoute, private eventService: EventService,private dialog: MatDialog, private snackBar: MatSnackBar)
+  constructor (private route: ActivatedRoute, private eventService: EventService, private snackBar: MatSnackBar)
   {
     this.minDate = new Date();
   }
@@ -65,7 +66,6 @@ export class EventConfigComponent implements OnInit
         this.loadFormData();
       }
       console.log(this.event);
-
       if (this.event == null)
       {
         this.eventService.GetForHost(id).subscribe(response =>
@@ -82,6 +82,7 @@ export class EventConfigComponent implements OnInit
 
   private loadFormData ()
   {
+    this.loading = false;
     this.categories = this.categoryStore.filter(c => this.event.Categories.find(eC => eC.Name == c.Name));
     this.categoryStore = this.categoryStore.filter(c => !this.event.Categories.find(eC => eC.Name == c.Name))
     this.Name.setValue(this.event.Name);
@@ -107,18 +108,6 @@ export class EventConfigComponent implements OnInit
     this.Reddit.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Reddit).Link);
   }
 
-  public addCategory (category: Category)
-  {
-    this.categories.push(category);
-    this.categoryStore = this.categoryStore.filter(x => x.Id != category.Id);
-  }
-
-  public removeCategory (category: Category)
-  {
-    this.categoryStore.push(category);
-    this.categories = this.categories.filter(x => x.Id != category.Id);
-  }
-
   public clickedOnline ()
   {
     if (!this.IsOnline.value)
@@ -138,7 +127,7 @@ export class EventConfigComponent implements OnInit
 
   public updateEvent ()
   {
-    this.loading = true;
+    this.updatingEvent = true;
     let updateEvent: UpdateEventBody = {
       Address: {
         AddressLine1: this.addressForm.controls.AddressLine1.value,
@@ -169,51 +158,12 @@ export class EventConfigComponent implements OnInit
     console.log(updateEvent);
     this.eventService.Update(updateEvent).subscribe(response =>
     {
-      this.loading = false;
+      this.updatingEvent = false;
       this.snackBar.open('Updated event', 'close', {duration: 500});
     }, (e: HttpErrorResponse) => {
-      this.loading = false;
+      this.updatingEvent = false;
     });
   }
 
-  public imageUpload ()
-  {
-    let ref = this.dialog.open(ImageUploadComponent, {
-      data: {
-        height: 3,
-        width: 4
-      } as uploadConfig
-    });
 
-    ref.afterClosed().subscribe((image: ImageViewModel) =>
-    {
-      if (image)
-      {
-        this.event.Images.push(image);
-      }
-    });
-  }
-
-  public thumbnailUpload ()
-  {
-    let ref = this.dialog.open(ImageUploadComponent, {
-      data: {
-        height: 3,
-        width: 4
-      } as uploadConfig
-    });
-
-    ref.afterClosed().subscribe((image: ImageViewModel) =>
-    {
-      if (image)
-      {
-        this.event.Thumbnail = image;
-      }
-    });
-  }
-
-  public removeImage (image: ImageViewModel)
-  {
-    this.event.Images = this.event.Images.filter(x => x != image);
-  }
 }

@@ -15,9 +15,7 @@
         <textarea matInput formControlName="Description" placeholder="Event description" autocomplete="off"></textarea>
       </mat-form-field>
 
-      <div id="newThumbnailTile" (click)="thumbnailUpload()">
-        <img id="thumbnail" *ngIf="thumbnail" [src]="thumbnail.Source" [alt]="thumbnail.Label">
-      </div>
+      <thumbnail-edit [thumbnail]="thumbnail" (thumbnailEvent)="thumbnail = $event"></thumbnail-edit>
 
       <div class="d-flex flex-row">
         <mat-form-field appearance="outline" class="w-100 mr-3">
@@ -39,7 +37,6 @@
         <mat-form-field appearance="outline" class="mr-3">
           <mat-label>Price (£)</mat-label>
           <input autocomplete="off" matInput type="number" min="0" step="0.01" formControlName="Price" placeholder="00.00">
-<!--          <span matPrefix>&pound;</span>-->
         </mat-form-field>
 
         <!--      //TODO: Break down of fees. //TODO: Slider for price.-->
@@ -50,15 +47,7 @@
         </mat-form-field>
       </div>
 
-      <mat-chip-list>
-        <mat-chip *ngFor="let category of categories" (click)="removeCategory(category)">{{category.Name}}</mat-chip>
-      </mat-chip-list>
-
-      <mat-divider class="my-3"></mat-divider>
-
-      <mat-chip-list>
-        <mat-chip *ngFor="let category of categoryStore" (click)="addCategory(category)">{{category.Name}}</mat-chip>
-      </mat-chip-list>
+      <category-list [categories]="categoryStore" (categoryEvent)="categories = $event"></category-list>
     </form>
   </mat-step>
   <mat-step [stepControl]="addressForm" [editable]="isEditable">
@@ -97,12 +86,8 @@
   <mat-step [stepControl]="SocialLinks" [editable]="isEditable">
     <form [formGroup]="SocialLinks">
       <ng-template matStepLabel>Images & Social</ng-template>
-      <div id="images">
-        <div *ngFor="let image of eventImages" class="eventImg">
-          <img [src]="image.Source" [alt]="image.Label"> <label>{{image.Label}}</label>
-        </div>
-        <div class="eventImg" id="newImageTile" (click)="imageUpload()"></div>
-      </div>
+
+      <image-list [images]="eventImages" (imageEvent)="eventImages = $event"></image-list>
 
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Site URL</mat-label>

@@ -88,7 +88,8 @@ export class UserService
     this.cookieService.delete('id');
     this.cookieService.delete('token');
     this.cookieService.deleteAll('/');
-    // console.log(this.cookieService.getAll());
+
+    console.log(this.cookieService.getAll());
   }
 
   public UserNameExists (username: string): Observable<boolean>

@@ -21,6 +21,13 @@ export class CreateEventComponent implements OnInit
 {
 
   public categories: Category[] = [];
+  public thumbnail: ImageViewModel;
+  public minDate: Date;
+  public defaultTime: number[];
+  private CreateError: string;
+  public loading: boolean = false;
+  public categoryStore: Category[] = [];
+  public eventPreview: EventDetailModel = null;
 
   public createEventForm = new FormGroup({
     Name: new FormControl('', [Validators.required]),
@@ -53,7 +60,6 @@ export class CreateEventComponent implements OnInit
     Reddit: new FormControl('')
   })
   public isEditable: boolean = true;
-  imageChangedEvent: any;
   public eventImages: ImageViewModel[] = [
     {
       Label: "slippers",
@@ -76,13 +82,6 @@ export class CreateEventComponent implements OnInit
       Source: testImg
     }
   ];
-  public thumbnail: ImageViewModel;
-  public minDate: Date;
-  public defaultTime: number[];
-  private CreateError: string;
-  public loading: boolean = false;
-  public categoryStore: Category[] = [];
-  public eventPreview: EventDetailModel = null;
 
 
   constructor (private dialog: MatDialog, private userService: UserService, private eventService: EventService)
@@ -134,7 +133,6 @@ export class CreateEventComponent implements OnInit
     }
   }
 
-
   public clickedOnline ()
   {
     if (!this.IsOnline.value)
@@ -151,63 +149,6 @@ export class CreateEventComponent implements OnInit
       }
     }
 
-  }
-
-  public imageChangeEvent (event: any)
-  {
-    if (event.target.files && event.target.files[0])
-    {
-      let reader = new FileReader();
-
-      reader.readAsDataURL(event.target.files[0]);
-
-      reader.onload = (event) =>
-      {
-        // console.log(event.target.result);
-        this.eventImages.push({
-          Label: '',
-          Source: event.target.result as string
-        })
-      }
-    }
-  }
-
-  public imageUpload ()
-  {
-    let ref = this.dialog.open(ImageUploadComponent, {
-      data: {
-        height: 3,
-        width: 4
-      } as uploadConfig
-    });
-
-    ref.afterClosed().subscribe((image: ImageViewModel) =>
-    {
-      if (image)
-      {
-        console.log(image);
-        this.eventImages.push(image);
-      }
-    });
-  }
-
-  public thumbnailUpload ()
-  {
-    let ref = this.dialog.open(ImageUploadComponent, {
-      data: {
-        height: 3,
-        width: 4
-      } as uploadConfig
-    });
-
-    ref.afterClosed().subscribe((image: ImageViewModel) =>
-    {
-      if (image)
-      {
-        console.log(image);
-        this.thumbnail = image;
-      }
-    });
   }
 
   create ()
@@ -257,17 +198,5 @@ export class CreateEventComponent implements OnInit
       this.CreateError = error.error;
       this.loading = false;
     });
-  }
-
-  public addCategory (category: Category)
-  {
-    this.categories.push(category);
-    this.categoryStore = this.categoryStore.filter(x => x.Id != category.Id);
-  }
-
-  public removeCategory (category: Category)
-  {
-    this.categoryStore.push(category);
-    this.categories = this.categories.filter(x => x.Id != category.Id);
   }
 }

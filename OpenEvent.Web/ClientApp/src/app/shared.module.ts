@@ -8,7 +8,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
+import {MatNativeDateModule} from "@angular/material/core";
 import {ImageCropperModule} from "ngx-image-cropper";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
@@ -28,7 +28,6 @@ import {MatChipsModule} from "@angular/material/chips";
 import {UserNavComponent} from "./navs/user-nav/user-nav.component";
 import {IvyCarouselModule} from "angular-responsive-carousel";
 import { SocialComponent } from './event/social/social.component';
-import {SafePipe} from "safe-pipe/lib/safe-pipe.pipe";
 import {SafePipeModule} from "safe-pipe";
 import {RouterModule} from "@angular/router";
 import {EventComponent} from "./event/event/event.component";
@@ -36,6 +35,9 @@ import {MatListModule} from "@angular/material/list";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatSelectModule} from "@angular/material/select";
+import { CategoryListComponent } from './category-list/category-list.component';
+import { ImageListComponent } from './image-list/image-list.component';
+import {ThumbnailEditComponent} from "./thumbnail-edit/thumbnail-edit.component";
 
 
 @NgModule({
@@ -44,6 +46,9 @@ import {MatSelectModule} from "@angular/material/select";
     SocialComponent,
     UserNavComponent,
     EventComponent,
+    CategoryListComponent,
+    ImageListComponent,
+    ThumbnailEditComponent,
   ],
   imports: [
     HttpClientModule,
@@ -124,6 +129,9 @@ import {MatSelectModule} from "@angular/material/select";
     SocialComponent,
     UserNavComponent,
     EventComponent,
+    CategoryListComponent,
+    ImageListComponent,
+    ThumbnailEditComponent
   ]
 })
 export class SharedModule

@@ -66,6 +66,7 @@ export class AccountPreferencesComponent implements OnInit
 
   ngOnInit ()
   {
+    this.username.setValue(this.user.UserName);
   }
 
   public UpdatePassword ()
@@ -81,7 +82,7 @@ export class AccountPreferencesComponent implements OnInit
     }, (error: HttpErrorResponse) =>
     {
       this.updatePasswordLoading = false;
-      this.newPasswordError = error.message;
+      this.newPasswordError = error.error.Message;
       this.newPasswordForm.setErrors({http: true});
       console.error(error);
     })
@@ -107,7 +108,7 @@ export class AccountPreferencesComponent implements OnInit
         }, (error: HttpErrorResponse) =>
         {
           console.error(error);
-          this.deleteAccountError = error.message
+          this.deleteAccountError = error.error.Message
         });
       }
     });
@@ -123,7 +124,7 @@ export class AccountPreferencesComponent implements OnInit
     }, (error: HttpErrorResponse) =>
     {
       this.updateUserNameLoading = false;
-      this.newUserNameError = error.message;
+      this.newUserNameError = error.error.Message;
       this.userName.setErrors({http: true});
       console.error(error);
     });
@@ -141,9 +142,10 @@ export class AccountPreferencesComponent implements OnInit
 
     ref.afterClosed().subscribe((image: string) =>
     {
-      this.updateAvatarLoading = true;
       if (image)
       {
+        this.updateAvatarLoading = true;
+        console.log(image);
         this.userService.UpdateAvatar({
           Id: this.user.Id,
           Avatar: (new ImageManipulationService).toUTF8Array(image)
@@ -151,13 +153,15 @@ export class AccountPreferencesComponent implements OnInit
         {
           this.avatarFileName = null;
           this.snackBar.open('Updated avatar', 'close', {duration: 500});
+          this.updateAvatarLoading = false;
         }, (error: HttpErrorResponse) =>
         {
           this.newAvatarError = error.message;
           console.error(error);
+          this.updateAvatarLoading = false;
         });
       }
-      this.updateAvatarLoading = false;
+
     });
   }
 }

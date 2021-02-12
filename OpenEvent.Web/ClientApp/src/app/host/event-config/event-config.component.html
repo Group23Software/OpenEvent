@@ -2,10 +2,11 @@
 
 <mat-tab-group color="primary" class="overflow-auto">
   <mat-tab label="Event">
+    <mat-card class="m-3" *ngIf="loading"><mat-progress-bar mode="indeterminate"></mat-progress-bar></mat-card>
     <div *ngIf="event" class="m-3">
       <mat-card class="d-flex flex-row justify-content-between">
-        <button mat-flat-button color="primary" (click)="updateEvent()">Save</button>
-        <mat-spinner diameter="36" *ngIf="loading"></mat-spinner>
+        <button mat-flat-button color="primary" (click)="updateEvent()" id="save">Save</button>
+        <mat-spinner diameter="36" *ngIf="updatingEvent"></mat-spinner>
       </mat-card>
 
       <mat-card class="d-flex flex-column">
@@ -42,10 +43,7 @@
                 Tumbnail
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <div id="newThumbnailTile">
-              <img id="thumbnail" *ngIf="event.Thumbnail" [src]="event.Thumbnail.Source" [alt]="event.Thumbnail.Label">
-              <button mat-mini-fab class="imageDeleteButton" (click)="thumbnailUpload()"><mat-icon>edit</mat-icon></button>
-            </div>
+            <thumbnail-edit [thumbnail]="event.Thumbnail" (thumbnailEvent)="event.Thumbnail = $event"></thumbnail-edit>
           </mat-expansion-panel>
 
           <mat-expansion-panel>
@@ -54,15 +52,7 @@
                 Categories
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <div class="mb-3">
-              <mat-chip-list>
-                <mat-chip *ngFor="let category of categories" (click)="removeCategory(category)">{{category.Name}}</mat-chip>
-              </mat-chip-list>
-            </div>
-
-            <mat-chip-list>
-              <mat-chip *ngFor="let category of categoryStore" (click)="addCategory(category)">{{category.Name}}</mat-chip>
-            </mat-chip-list>
+            <category-list [categories]="categoryStore" (categoryEvent)="categories = $event"></category-list>
           </mat-expansion-panel>
 
           <mat-expansion-panel>
@@ -72,7 +62,7 @@
               </mat-panel-title>
             </mat-expansion-panel-header>
             <form [formGroup]="addressForm">
-              <mat-checkbox id="isOnline" #isOnline [formControl]="IsOnline" (click)="clickedOnline()">Online?</mat-checkbox>
+              <mat-checkbox id="isOnline" [formControl]="IsOnline" (click)="clickedOnline()">Online?</mat-checkbox>
 
               <div class="d-flex flex-column">
                 <mat-form-field appearance="outline">
@@ -113,7 +103,6 @@
               <mat-form-field appearance="outline" class="mr-3">
                 <mat-label>Price (£)</mat-label>
                 <input autocomplete="off" matInput type="number" min="0" step="0.01" [value]="event.Price" disabled placeholder="00.00">
-<!--                <span matPrefix>&pound;</span>-->
               </mat-form-field>
 
               <mat-form-field appearance="outline">
@@ -127,13 +116,7 @@
       </mat-card>
 
       <mat-card>
-        <div id="images">
-          <div *ngFor="let image of event.Images" class="eventImg">
-            <img [src]="image.Source" [alt]="image.Label"> <label>{{image.Label}}</label>
-            <button mat-mini-fab class="imageDeleteButton" (click)="removeImage(image)"><mat-icon>delete_forever</mat-icon></button>
-          </div>
-          <div id="newImageTile"><button mat-fab (click)="imageUpload()" id="newImageButton"><mat-icon>add</mat-icon></button></div>
-        </div>
+        <image-list [images]="event.Images" (imageEvent)="event.Images = $event"></image-list>
       </mat-card>
 
       <mat-card>

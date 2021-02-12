@@ -1,8 +1,3 @@
-#createEventForm {
-  display: flex;
-  flex-direction: column;
-}
-
 #newThumbnailTile {
   background-color: lightgrey;
   width: 200px;

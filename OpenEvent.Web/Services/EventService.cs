@@ -178,29 +178,39 @@ namespace OpenEvent.Web.Services
 
         public async Task<List<EventHostModel>> GetAllHosts(Guid hostId)
         {
-            var events = await ApplicationContext.Events.Include(x => x.Tickets).Include(x => x.Host)
-                .Where(x => x.Host.Id == hostId && !x.isCanceled).Select(
-                    x => new EventHostModel
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Description = x.Description,
-                        Address = x.Address,
-                        Categories = x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList(),
-                        Price = x.Price,
-                        Thumbnail = Mapper.Map<ImageViewModel>(x.Thumbnail),
-                        Images = x.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList(),
-                        Tickets = x.Tickets.Select(t => Mapper.Map<TicketViewModel>(t)).ToList(),
-                        EndLocal = x.EndLocal,
-                        IsOnline = x.IsOnline,
-                        SocialLinks = x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
-                        StartLocal = x.StartLocal,
-                        TicketsLeft = x.Tickets.Count,
-                        EndUTC = x.EndUTC,
-                        StartUTC = x.StartUTC
-                    }).AsNoTracking().ToListAsync();
+            var events = ApplicationContext.Events.Include(x => x.EventCategories).ThenInclude(x => x.Category).Include(x => x.Tickets).Include(x => x.Host)
+                .AsSplitQuery().AsNoTracking().AsEnumerable();
 
-            return events;
+            events = events.Where(x => x.Host.Id == hostId && !x.isCanceled);
+
+            // var fullEvents = events.ToList();
+            
+            return events.Select(
+                x => new EventHostModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Address = x.Address,
+                    Categories = x.EventCategories.Any() ? x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList() : new List<CategoryViewModel>(),
+                    Price = x.Price,
+                    Thumbnail = x.Thumbnail.Source != null ? Mapper.Map<ImageViewModel>(x.Thumbnail) : null,
+                    Images = x.Images.Any()
+                        ? x.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList()
+                        : new List<ImageViewModel>(),
+                    Tickets = x.Tickets.Any()
+                        ? x.Tickets.Select(t => Mapper.Map<TicketViewModel>(t)).ToList()
+                        : new List<TicketViewModel>(),
+                    EndLocal = x.EndLocal,
+                    IsOnline = x.IsOnline,
+                    SocialLinks = x.SocialLinks.Any()
+                        ? x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList()
+                        : new List<SocialLinkViewModel>(),
+                    StartLocal = x.StartLocal,
+                    TicketsLeft = x.Tickets.Count,
+                    EndUTC = x.EndUTC,
+                    StartUTC = x.StartUTC
+                }).ToList();
         }
 
         public async Task<EventDetailModel> GetForPublic(Guid id)
@@ -293,7 +303,8 @@ namespace OpenEvent.Web.Services
             {
                 var realDate = DateTime.Parse(date);
                 events = events.Where(x =>
-                    new DateTime(x.StartLocal.Year, x.StartLocal.Month, x.StartLocal.Day).Equals(new DateTime(realDate.Year,
+                    new DateTime(x.StartLocal.Year, x.StartLocal.Month, x.StartLocal.Day).Equals(new DateTime(
+                        realDate.Year,
                         realDate.Month, realDate.Day)));
             }
 

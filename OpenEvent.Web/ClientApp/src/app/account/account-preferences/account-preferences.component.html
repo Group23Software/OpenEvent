@@ -37,7 +37,7 @@
         <form id="newUserName" (ngSubmit)="UpdateUserName()">
           <mat-form-field appearance="outline">
             <mat-label>User name</mat-label>
-            <input matInput [value]="user.UserName" type="text" [formControl]="userName" placeholder="JoeBlogs" id="userName">
+            <input matInput type="text" [formControl]="userName" id="userName">
             <mat-error *ngIf="username.errors && username.errors.usernameExists">
               Username already in use
             </mat-error>

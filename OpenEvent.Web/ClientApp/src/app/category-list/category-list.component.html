@@ -1,0 +1,15 @@
+<mat-chip-list>
+  <mat-chip *ngFor="let category of selectedCategories">
+    {{category.Name}}
+    <mat-icon matChipRemove id="remove" (click)="removeCategory(category)">clear</mat-icon>
+  </mat-chip>
+</mat-chip-list>
+<div class="my-3" *ngIf="selectedCategories.length > 0">
+  <mat-divider></mat-divider>
+</div>
+<mat-chip-list>
+  <mat-chip *ngFor="let category of categories">
+    {{category.Name}}
+    <mat-icon matChipRemove id="add" (click)="addCategory(category)">add</mat-icon>
+  </mat-chip>
+</mat-chip-list>

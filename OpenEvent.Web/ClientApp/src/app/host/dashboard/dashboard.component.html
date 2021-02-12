@@ -13,6 +13,8 @@
     </mat-selection-list>
   </mat-drawer>
 
+  <mat-card class="m-3" *ngIf="loading"><mat-progress-bar mode="indeterminate"></mat-progress-bar></mat-card>
+
   <div id="eventPreview" *ngIf="Events">
     <mat-toolbar>
       <button mat-icon-button (click)="eventList.toggle()">

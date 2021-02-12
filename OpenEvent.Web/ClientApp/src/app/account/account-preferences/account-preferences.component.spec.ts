@@ -12,6 +12,15 @@ import {ImageUploadComponent} from "../../_extensions/image-upload/image-upload.
 import {UpdateUserNameBody, UserAccountModel} from "../../_models/User";
 import {HttpResponse} from "@angular/common/http";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
+import {Component} from "@angular/core";
+
+
+@Component({
+  template: ''
+})
+export class fakeComponent {
+
+}
 
 
 describe('AccountPreferencesComponent', () =>
@@ -38,9 +47,10 @@ describe('AccountPreferencesComponent', () =>
     authMock = jasmine.createSpyObj('authService', ['IsAuthenticated', 'Login', 'UpdatePassword']);
     authMock.IsAuthenticated.and.returnValue(of(false));
 
+
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([{path: 'login', component: fakeComponent}]),
         ImageCropperModule,
         MatDialogModule
       ],
@@ -80,7 +90,8 @@ describe('AccountPreferencesComponent', () =>
       compiled.querySelector('button[id="deleteUser"]')
     ];
 
-    inputs.forEach(i => {
+    inputs.forEach(i =>
+    {
       expect(i).toBeTruthy();
     });
 
@@ -215,7 +226,7 @@ describe('AccountPreferencesComponent', () =>
 
   it('should delete user', () =>
   {
-    let routerSpy = spyOn(router,'navigate');
+    let routerSpy = spyOn(router, 'navigate');
     component.user.Id = "ID";
     dialogMock.open.and.returnValue({afterClosed: () => of(true)});
     userServiceMock.Destroy.and.returnValue(of(true));

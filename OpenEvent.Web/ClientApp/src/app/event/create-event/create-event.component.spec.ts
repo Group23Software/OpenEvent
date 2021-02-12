@@ -7,6 +7,7 @@ import {EventService} from "../../_Services/event.service";
 import {BrowserDynamicTestingModule} from "@angular/platform-browser-dynamic/testing";
 import {of} from "rxjs";
 import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
+import {By} from "@angular/platform-browser";
 
 describe('CreateEventComponent', () =>
 {
@@ -74,43 +75,5 @@ describe('CreateEventComponent', () =>
     {
       expect(component.addressForm.controls[control].enabled).toBeTruthy();
     }
-  });
-
-  it('should open image upload dialog', () =>
-  {
-    component.imageUpload();
-    expect(dialogSpy).toHaveBeenCalledWith(ImageUploadComponent, {
-      data: {
-        height: 3,
-        width: 4
-      } as uploadConfig
-    });
-    expect(dialogRefSpyObj.afterClosed).toHaveBeenCalled();
-  });
-
-  it('should open thumbnail upload dialog', () =>
-  {
-    component.thumbnailUpload();
-    expect(dialogSpy).toHaveBeenCalledWith(ImageUploadComponent, {
-      data: {
-        height: 3,
-        width: 4
-      } as uploadConfig
-    });
-    expect(dialogRefSpyObj.afterClosed).toHaveBeenCalled();
-  });
-
-  it('should add category to list', () => {
-    component.categoryStore = [{Id: "1", Name: "Music"},{Id: "2", Name: "Drama"}];
-    component.addCategory({Id: "1", Name: "Music"});
-    expect(component.categoryStore).toEqual([{Id: "2", Name: "Drama"}]);
-    expect(component.categories).toEqual([{Id: "1", Name: "Music"}]);
-  });
-
-  it('should remove category to list', () => {
-    component.categories = [{Id: "1", Name: "Music"},{Id: "2", Name: "Drama"}];
-    component.removeCategory({Id: "1", Name: "Music"});
-    expect(component.categoryStore).toEqual([{Id: "1", Name: "Music"}]);
-    expect(component.categories).toEqual([{Id: "2", Name: "Drama"}]);
   });
 });
