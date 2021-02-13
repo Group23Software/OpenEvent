@@ -12,7 +12,7 @@ import {MatDialog} from "@angular/material/dialog";
 export class ImageListComponent implements OnInit
 {
 
-  @Input() images: ImageViewModel[];
+  @Input() images: ImageViewModel[] = [];
   @Output() public imageEvent = new EventEmitter<ImageViewModel[]>();
 
   constructor (private dialog: MatDialog)

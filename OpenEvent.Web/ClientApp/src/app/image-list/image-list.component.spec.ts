@@ -4,6 +4,7 @@ import {ImageListComponent} from './image-list.component';
 import {MatDialog} from "@angular/material/dialog";
 import {By} from "@angular/platform-browser";
 import {ImageUploadComponent, uploadConfig} from "../_extensions/image-upload/image-upload.component";
+import {of} from "rxjs";
 
 describe('ImageListComponent', () =>
 {
@@ -16,12 +17,14 @@ describe('ImageListComponent', () =>
   {
 
     dialogMock = jasmine.createSpyObj('matDialog', ['open']);
+    dialogMock.open.and.returnValue({afterClosed: () => of(true)});
 
     await TestBed.configureTestingModule({
       declarations: [ImageListComponent],
-      providers: [{provide: MatDialog, useValue: dialogMock}]
-    })
-                 .compileComponents();
+      providers: [
+        {provide: MatDialog, useValue: dialogMock}
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() =>
@@ -38,29 +41,28 @@ describe('ImageListComponent', () =>
 
   it('should open dialog', () =>
   {
-    fixture.detectChanges();
-    fixture.whenStable().then(() =>
-    {
-      const newButton = fixture.debugElement.query(By.css('.imageDeleteButton'));
-      newButton.nativeElement.click();
-      expect(dialogMock.open).toHaveBeenCalledWith(ImageUploadComponent, {
-        data: {
-          height: 3,
-          width: 4
-        } as uploadConfig
-      });
+    component.imageUpload();
+    expect(dialogMock.open).toHaveBeenCalledWith(ImageUploadComponent, {
+      data: {
+        height: 3,
+        width: 4
+      } as uploadConfig
     });
   });
 
   it('should emit image array', () =>
   {
+    spyOn(component.imageEvent, 'emit');
     component.images = [{Label: "label", Source: "Source"}];
-    fixture.detectChanges();
-    fixture.whenStable().then(() =>
-    {
-      const newButton = fixture.debugElement.query(By.css('.imageDeleteButton'));
-      newButton.nativeElement.click();
-      expect(component.imageEvent.emit).toHaveBeenCalledWith(component.images);
-    });
+    component.imageUpload();
+    expect(component.imageEvent.emit).toHaveBeenCalledWith(component.images);
+
+  });
+
+  it('should remove image',  () =>
+  {
+    component.images = [{Label: "label", Source: "Source"},{Label: "secondLabel", Source: "secondSource"}];
+    component.removeImage(component.images[0]);
+    expect(component.images).toEqual([{Label: "secondLabel", Source: "secondSource"}]);
   });
 });

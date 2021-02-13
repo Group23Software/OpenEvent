@@ -36,7 +36,6 @@ export class UserNavComponent
 
   public toggleTheme (isDark: boolean): void
   {
-    console.log('toggling theme',!isDark);
     this.trigger.isDark.emit(!isDark);
     this.userService.UpdateThemePreference({
       Id: this.User.Id,
@@ -44,7 +43,7 @@ export class UserNavComponent
     }).subscribe(response => {
       this.snackBar.open('Updated theme preference', 'close', {duration: 500});
     }, (error: HttpErrorResponse) => {
-      console.error(error);
+      this.snackBar.open(error.error.Message,'close',{duration: 1000})
     });
   }
 

@@ -10,7 +10,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 })
 export class AccountComponent implements OnInit
 {
-
+  public getUserError: string;
   public userLoaded: boolean = false;
 
   constructor (
@@ -20,9 +20,9 @@ export class AccountComponent implements OnInit
 
   ngOnInit ()
   {
-    this.userService.GetAccountUser(this.userService.User.Id).subscribe(response => this.userLoaded = true, (error: HttpErrorResponse) =>
+    this.userService.GetAccountUser(this.userService.User.Id).subscribe(() => this.userLoaded = true, (error: HttpErrorResponse) =>
     {
-      // TODO: Get account user error handle, Redirect?
+      this.getUserError = error.error.Message;
     });
   }
 }

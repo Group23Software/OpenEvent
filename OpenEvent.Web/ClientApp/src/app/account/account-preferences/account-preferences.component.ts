@@ -156,8 +156,7 @@ export class AccountPreferencesComponent implements OnInit
           this.updateAvatarLoading = false;
         }, (error: HttpErrorResponse) =>
         {
-          this.newAvatarError = error.message;
-          console.error(error);
+          this.newAvatarError = error.error.Message;
           this.updateAvatarLoading = false;
         });
       }

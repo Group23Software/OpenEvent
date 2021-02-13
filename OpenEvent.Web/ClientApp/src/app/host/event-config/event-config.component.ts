@@ -4,11 +4,8 @@ import {ActivatedRoute} from "@angular/router";
 import {EventHostModel, UpdateEventBody} from "../../_models/Event";
 import {EventService} from "../../_Services/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {Category, CategoryViewModel} from "../../_models/Category";
+import {Category} from "../../_models/Category";
 import {SocialMedia} from "../../_models/SocialMedia";
-import {ImageViewModel} from "../../_models/Image";
-import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
-import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -19,7 +16,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class EventConfigComponent implements OnInit
 {
 
-  public event: EventHostModel;
+  public event: EventHostModel = null;
   public categoryStore: Category[] = [];
   public categories: Category[] = [];
 
@@ -46,6 +43,9 @@ export class EventConfigComponent implements OnInit
     CountryName: new FormControl('United Kingdom'),
   })
   public updatingEvent: boolean = false;
+  public gettingEventError: string;
+  public updateEventError: string;
+  public gettingCategoriesError: string;
   public minDate: Date;
   public loading: boolean = true;
 
@@ -74,10 +74,14 @@ export class EventConfigComponent implements OnInit
           this.loadFormData();
         }, (e: HttpErrorResponse) =>
         {
-          console.error(e);
+          this.gettingEventError = e.error.Message;
         })
       }
-    }, error => console.error(error));
+    }, (error: HttpErrorResponse) =>
+    {
+      this.gettingCategoriesError = error.error.Message;
+      console.error(error);
+    });
   }
 
   private loadFormData ()
@@ -101,11 +105,14 @@ export class EventConfigComponent implements OnInit
       }
     }
     console.log(this.event);
-    this.Site.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Site).Link);
-    this.Instagram.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Instagram).Link);
-    this.Facebook.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Facebook).Link);
-    this.Twitter.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Twitter).Link);
-    this.Reddit.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Reddit).Link);
+    if (this.event.SocialLinks != null && this.event.SocialLinks.length > 0)
+    {
+      this.Site.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Site).Link);
+      this.Instagram.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Instagram).Link);
+      this.Facebook.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Facebook).Link);
+      this.Twitter.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Twitter).Link);
+      this.Reddit.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Reddit).Link);
+    }
   }
 
   public clickedOnline ()
@@ -160,8 +167,10 @@ export class EventConfigComponent implements OnInit
     {
       this.updatingEvent = false;
       this.snackBar.open('Updated event', 'close', {duration: 500});
-    }, (e: HttpErrorResponse) => {
+    }, (e: HttpErrorResponse) =>
+    {
       this.updatingEvent = false;
+      this.updateEventError = e.error.Message;
     });
   }
 

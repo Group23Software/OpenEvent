@@ -13,10 +13,11 @@ import {themePreferenceBody, UserService} from "../../_Services/user.service";
 import {TriggerService} from "../../_Services/trigger.service";
 import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
 import {UpdateThemePreferenceBody, UserAccountModel} from "../../_models/User";
-import {Observable, of} from "rxjs";
+import {Observable, of, throwError} from "rxjs";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {HttpErrorResponse} from "@angular/common/http";
 
-export class UserServiceStub
+class UserServiceStub
 {
   set User (value: UserAccountModel)
   {
@@ -64,6 +65,7 @@ describe('UserNavComponent', () =>
   }
 
   let userServiceMock;
+  let snackBarMock;
 
   beforeEach(async(() =>
   {
@@ -74,7 +76,9 @@ describe('UserNavComponent', () =>
       set: null
     }
 
-    triggerServiceMock = jasmine.createSpyObj<TriggerService>('triggerService',['isDark']);
+    snackBarMock = jasmine.createSpyObj('matSnackBar', ['open']);
+
+    triggerServiceMock = jasmine.createSpyObj<TriggerService>('triggerService', ['isDark']);
 
     TestBed.configureTestingModule({
       declarations: [UserNavComponent, DummyComponent],
@@ -84,14 +88,12 @@ describe('UserNavComponent', () =>
         MatMenuModule,
         MatIconModule,
         MatSlideToggleModule,
-        MatSnackBarModule,
         BrowserAnimationsModule
       ],
       providers: [
-        // {provide: UserService, userValue: userServiceMock},
         {provide: UserService, useClass: UserServiceStub},
         {provide: TriggerService, useClass: TriggerServiceStub},
-        MatSnackBar
+        {provide: MatSnackBar, useValue: snackBarMock}
       ]
     }).compileComponents();
   }));
@@ -127,16 +129,26 @@ describe('UserNavComponent', () =>
     expect(routerSpy).toHaveBeenCalledWith(['/login']);
   });
 
-  // it('should toggle theme', fakeAsync(() =>
+  it('should toggle theme', () =>
+  {
+    userServiceMock.UpdateThemePreference.and.returnValue(of());
+    let triggerSpy = spyOn(trigger.isDark, 'emit');
+    component.toggleTheme(true);
+    expect(triggerSpy).toHaveBeenCalledWith(false);
+  });
+
+  // it('should update theme preference', () =>
   // {
-  //   let triggerSpy = spyOn(trigger.isDark,'emit');
-  //   // let userServiceSpy = spyOn(TestBed.inject(UserService), 'UpdateThemePreference');
+  //   userServiceMock.UpdateThemePreference.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error when updating theme preference"}})));
   //   component.toggleTheme(true);
-  //   tick();
-  //   fixture.detectChanges();
-  //
-  //   expect(triggerSpy).toHaveBeenCalled();
-  //   // expect(userServiceSpy).toHaveBeenCalled();
-  // }));
+  //   expect(snackBarMock.open).toHaveBeenCalledWith("Error when updating theme preference", 'close', {duration: 1000});
+  // });
+
+  it('should send user back', () =>
+  {
+    let locationSpy = spyOn(location,'back');
+    component.back();
+    expect(locationSpy).toHaveBeenCalled();
+  });
 
 });

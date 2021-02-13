@@ -31,7 +31,7 @@ namespace OpenEvent.Web.Services
 
         //public methods
         Task<EventDetailModel> GetForPublic(Guid id);
-        Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters); //TODO: Search params
+        Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters);
 
         Task<List<Category>> GetAllCategories();
         Task<ActionResult<EventHostModel>> GetForHost(Guid id);

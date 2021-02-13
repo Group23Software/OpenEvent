@@ -140,7 +140,7 @@ describe('LoginComponent', () =>
     expect(component.loginError).toBeNull();
   }));
 
-  it('should render input elements', async(() =>
+  it('should render input elements', () =>
   {
     const compiled = fixture.debugElement.nativeElement;
     const emailInput = compiled.querySelector('input[id="email"]');
@@ -148,7 +148,7 @@ describe('LoginComponent', () =>
 
     expect(emailInput).toBeTruthy();
     expect(passwordInput).toBeTruthy();
-  }));
+  });
 
   it('should open create account dialog', () =>
   {

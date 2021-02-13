@@ -1,11 +1,11 @@
 <user-nav></user-nav>
-
 <mat-tab-group color="primary" class="overflow-auto">
   <mat-tab label="Event">
     <mat-card class="m-3" *ngIf="loading"><mat-progress-bar mode="indeterminate"></mat-progress-bar></mat-card>
     <div *ngIf="event" class="m-3">
       <mat-card class="d-flex flex-row justify-content-between">
         <button mat-flat-button color="primary" (click)="updateEvent()" id="save">Save</button>
+        <div *ngIf="updateEventError">{{updateEventError}}</div>
         <mat-spinner diameter="36" *ngIf="updatingEvent"></mat-spinner>
       </mat-card>
 

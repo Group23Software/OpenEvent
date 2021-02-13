@@ -4,13 +4,13 @@ import {UserService} from "../../_Services/user.service";
 import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Router} from "@angular/router";
-import {of} from "rxjs";
+import {of, throwError} from "rxjs";
 import {AuthService} from "../../_Services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ImageCropperModule} from "ngx-image-cropper";
 import {ImageUploadComponent} from "../../_extensions/image-upload/image-upload.component";
 import {UpdateUserNameBody, UserAccountModel} from "../../_models/User";
-import {HttpResponse} from "@angular/common/http";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
 import {Component} from "@angular/core";
 
@@ -18,7 +18,8 @@ import {Component} from "@angular/core";
 @Component({
   template: ''
 })
-export class fakeComponent {
+export class fakeComponent
+{
 
 }
 
@@ -98,7 +99,7 @@ describe('AccountPreferencesComponent', () =>
     expect(inputs).not.toBeNull();
   });
 
-  it('should open image upload', () =>
+  it('should open avatar upload', () =>
   {
     const compiled = fixture.debugElement.nativeElement;
     const editButton = compiled.querySelector('button[id="avatarEditButton"]');
@@ -110,6 +111,31 @@ describe('AccountPreferencesComponent', () =>
         isAvatar: true
       }
     });
+  });
+
+  it('should update avatar', () =>
+  {
+    userServiceMock.UpdateAvatar.and.returnValue(of(true));
+    dialogMock.open.and.returnValue({afterClosed: () => of("Image")});
+
+    fixture.detectChanges();
+    component.avatarUpload();
+
+    expect(component.avatarFileName).toBeNull();
+    expect(component.updateAvatarLoading).toBeFalse();
+    expect(snackBarMock.open).toHaveBeenCalledWith('Updated avatar', 'close', {duration: 500});
+  });
+
+  it('should handle update avatar error', () =>
+  {
+    userServiceMock.UpdateAvatar.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error updating avatar"}})));
+    dialogMock.open.and.returnValue({afterClosed: () => of("Image")});
+
+    fixture.detectChanges();
+    component.avatarUpload();
+
+    expect(component.updateAvatarLoading).toBeFalse();
+    expect(component.newAvatarError).toEqual("Error updating avatar");
   });
 
   it('should populate inputs with current values', fakeAsync(() =>
@@ -198,6 +224,21 @@ describe('AccountPreferencesComponent', () =>
     expect(snackBarMock.open).toHaveBeenCalledWith('Updated password', 'close', {duration: 500});
   });
 
+  it('should handle password error', () =>
+  {
+    authMock.UpdatePassword.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error updating password"}})));
+    component.newPasswordForm.controls.password.setValue('Password');
+    component.newPasswordForm.controls.passwordConfirm.setValue('Password');
+    component.user.Email = "email@email.co.uk";
+
+    fixture.detectChanges();
+    component.UpdatePassword();
+
+    expect(component.updateUserNameLoading).toBe(false);
+    expect(component.newPasswordError).toEqual("Error updating password");
+    expect(component.newPasswordForm.hasError('http')).toBeTrue();
+  });
+
   it('should update username', () =>
   {
     userServiceMock.UpdateUserName.and.returnValue(of({UserName: 'New Username', Id: 'Id'} as UpdateUserNameBody));
@@ -208,6 +249,19 @@ describe('AccountPreferencesComponent', () =>
     component.UpdateUserName();
     expect(component.updateUserNameLoading).toBe(false);
     expect(snackBarMock.open).toHaveBeenCalledWith('Updated username', 'close', {duration: 500});
+  });
+
+  it('should handle username error', () =>
+  {
+    userServiceMock.UpdateUserName.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error updating username"}})));
+    component.userName.setValue('New Username');
+
+    fixture.detectChanges();
+    component.UpdateUserName();
+
+    expect(component.updateUserNameLoading).toBe(false);
+    expect(component.newUserNameError).toEqual("Error updating username");
+    expect(component.userName.hasError('http')).toBeTrue();
   });
 
   it('should open confirm', () =>
@@ -234,4 +288,16 @@ describe('AccountPreferencesComponent', () =>
     expect(dialogMock.open).toHaveBeenCalled();
     expect(routerSpy).toHaveBeenCalledWith(['/login']);
   });
+
+  it('should handle delete user error', () =>
+  {
+    component.user.Id = "ID";
+    dialogMock.open.and.returnValue({afterClosed: () => of(true)});
+    userServiceMock.Destroy.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error deleting user"}})));
+    component.DeleteAccount();
+    expect(dialogMock.open).toHaveBeenCalled();
+    expect(component.deleteAccountError).toEqual("Error deleting user");
+  });
+
+
 });

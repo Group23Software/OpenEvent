@@ -1,9 +1,14 @@
 <user-nav></user-nav>
 
-<!--<div class="display-4 m-3">Account config</div>-->
-
 <mat-tab-group color="primary">
-  <mat-tab label="Account"><account-preferences *ngIf="userLoaded"></account-preferences></mat-tab>
+  <mat-tab label="Account">
+    <account-preferences *ngIf="userLoaded"></account-preferences>
+  </mat-tab>
   <mat-tab label="Payment Methods"></mat-tab>
   <mat-tab label="Transactions"></mat-tab>
 </mat-tab-group>
+
+<mat-card class="m-3" *ngIf="!userLoaded">
+  <mat-progress-bar mode="indeterminate" *ngIf="!userLoaded"></mat-progress-bar>
+  {{getUserError}}
+</mat-card>

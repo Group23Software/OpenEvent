@@ -1,63 +1,82 @@
 import {ComponentFixture, TestBed, tick} from '@angular/core/testing';
 
-import { ImageUploadComponent } from './image-upload.component';
+import {ImageUploadComponent} from './image-upload.component';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {By} from "@angular/platform-browser";
+import {ImageCroppedEvent} from "ngx-image-cropper";
+import {ImageViewModel} from "../../_models/Image";
 
-describe('ImageUploadComponent', () => {
+describe('ImageUploadComponent', () =>
+{
   let component: ImageUploadComponent;
   let fixture: ComponentFixture<ImageUploadComponent>;
 
   let dialogRefMock;
 
-  beforeEach(async () => {
+  beforeEach(async () =>
+  {
 
     dialogRefMock = jasmine.createSpyObj('matDialogRef', ['close']);
 
     await TestBed.configureTestingModule({
-      declarations: [ ImageUploadComponent ],
-      providers:[
+      declarations: [ImageUploadComponent],
+      providers: [
         {provide: MAT_DIALOG_DATA, useValue: {}},
         {provide: MatDialogRef, useValue: dialogRefMock},
       ]
     })
-    .compileComponents();
+                 .compileComponents();
   });
 
-  beforeEach(() => {
+  beforeEach(() =>
+  {
     fixture = TestBed.createComponent(ImageUploadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', () =>
+  {
     expect(component).toBeTruthy();
   });
 
-  it('should disable label when file changed',  () =>
+  it('should disable label when file changed', () =>
   {
     component.fileChangeEvent("Event");
     expect(component.imageChangedEvent).toEqual("Event");
     expect(component.ImageLabel.disabled).toBeTrue();
   });
 
-  it('should enable label input when ready',  () =>
+  it('should enable label input when ready', () =>
   {
     component.cropperReady();
     expect(component.ImageLabel.enabled).toBeTrue();
   });
 
-  it('should close dialog with image',  () =>
+  it('should should crop image', () =>
   {
-    // component.config.isAvatar = false;
-    // fixture.detectChanges();
-    // fixture.whenStable().then( async () =>
-    // {
-    //   const close = fixture.debugElement.query(By.css('#close')).nativeElement;
-    //   expect(close).toBeTruthy();
-    //   close.click();
-    //   tick();
-    //   expect(dialogRefMock.close).toHaveBeenCalled();
-    // });
+    component.imageCropped({base64: "imageBase64"} as ImageCroppedEvent);
+    expect(component.croppedImage).toEqual("imageBase64");
+  });
+
+  it('should close dialog with avatar', () =>
+  {
+    component.config.isAvatar = true;
+
+    fixture.detectChanges();
+    component.close();
+
+    expect(dialogRefMock.close).toHaveBeenCalled();
+  });
+
+  it('should close dialog with image', () =>
+  {
+    component.ImageLabel.setValue('Image Label');
+    fixture.detectChanges();
+    component.close();
+    expect(dialogRefMock.close).toHaveBeenCalledWith({
+      Source: component.croppedImage,
+      Label: component.ImageLabel.value
+    } as ImageViewModel);
   });
 });
