@@ -16,6 +16,8 @@ export class DashboardComponent implements OnInit, AfterViewChecked
 {
   public eventPreview: EventDetailModel;
   private updated: boolean = false;
+  public cancelingEventError: string;
+  public gettingEventsError: string;
 
   @ViewChild(MatDrawerContainer) sideNavContainer: MatDrawerContainer
   public loading: boolean = true;
@@ -40,6 +42,7 @@ export class DashboardComponent implements OnInit, AfterViewChecked
       }
     }, (e: HttpErrorResponse) =>
     {
+      this.gettingEventsError = e.error.Message;
       console.error(e);
     });
   }
@@ -79,11 +82,12 @@ export class DashboardComponent implements OnInit, AfterViewChecked
     {
       if (result)
       {
-        this.eventService.Cancel(id).subscribe((response) =>
+        this.eventService.Cancel(id).subscribe(() =>
         {
-          // this.router.navigate(['/login']);
+          this.router.navigate(['/host/events']);
         }, (error: HttpErrorResponse) =>
         {
+          this.cancelingEventError = error.error.Message;
           console.error(error);
         });
       }

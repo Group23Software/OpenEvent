@@ -11,6 +11,7 @@ import {EventService} from "../../_Services/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Category} from "../../_models/Category";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-event',
@@ -24,10 +25,11 @@ export class CreateEventComponent implements OnInit
   public thumbnail: ImageViewModel;
   public minDate: Date;
   public defaultTime: number[];
-  private CreateError: string;
+  public CreateError: string;
   public loading: boolean = false;
   public categoryStore: Category[] = [];
   public eventPreview: EventDetailModel = null;
+  public gettingCategoriesError: string;
 
   public createEventForm = new FormGroup({
     Name: new FormControl('', [Validators.required]),
@@ -84,7 +86,7 @@ export class CreateEventComponent implements OnInit
   ];
 
 
-  constructor (private dialog: MatDialog, private userService: UserService, private eventService: EventService)
+  constructor (private dialog: MatDialog, private userService: UserService, private eventService: EventService, private router: Router)
   {
     this.minDate = new Date();
     this.defaultTime = [new Date().getHours() + 1, 0, 0];
@@ -92,7 +94,11 @@ export class CreateEventComponent implements OnInit
 
   ngOnInit ()
   {
-    this.eventService.GetAllCategories().subscribe(x => this.categoryStore = x, error => console.error(error));
+    this.eventService.GetAllCategories().subscribe(x => this.categoryStore = x, error =>
+    {
+      this.gettingCategoriesError = error.error.Message;
+      console.error(error);
+    });
   }
 
   loadEventDate (event: StepperSelectionEvent)
@@ -191,11 +197,12 @@ export class CreateEventComponent implements OnInit
     {
       console.log(response);
       this.loading = false;
+      this.router.navigate(['/event',response.Id])
       //TODO: Redirect to event page
     }, (error: HttpErrorResponse) =>
     {
       console.error(error);
-      this.CreateError = error.error;
+      this.CreateError = error.error.Message;
       this.loading = false;
     });
   }

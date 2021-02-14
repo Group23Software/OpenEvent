@@ -5,14 +5,20 @@ import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {UserService} from "../../_Services/user.service";
 import {EventService} from "../../_Services/event.service";
 import {BrowserDynamicTestingModule} from "@angular/platform-browser-dynamic/testing";
-import {of} from "rxjs";
-import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
-import {By} from "@angular/platform-browser";
+import {of, throwError} from "rxjs";
+import {Category} from "../../_models/Category";
+import {HttpErrorResponse} from "@angular/common/http";
+import {SocialMedia} from "../../_models/SocialMedia";
+import {StepperSelectionEvent} from "@angular/cdk/stepper";
+import {EventDetailModel} from "../../_models/Event";
+import {Router} from "@angular/router";
+import {RouterTestingModule} from "@angular/router/testing";
 
 describe('CreateEventComponent', () =>
 {
   let component: CreateEventComponent;
   let fixture: ComponentFixture<CreateEventComponent>;
+  let router;
   let dialogMock;
   let userServiceMock;
   let eventServiceMock;
@@ -34,6 +40,7 @@ describe('CreateEventComponent', () =>
       declarations: [CreateEventComponent],
       imports: [
         BrowserDynamicTestingModule,
+        RouterTestingModule,
         MatDialogModule
       ],
       providers: [
@@ -46,6 +53,7 @@ describe('CreateEventComponent', () =>
 
   beforeEach(() =>
   {
+    router = TestBed.inject(Router);
     dialogSpy = spyOn(TestBed.get(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
     fixture = TestBed.createComponent(CreateEventComponent);
     component = fixture.componentInstance;
@@ -75,5 +83,101 @@ describe('CreateEventComponent', () =>
     {
       expect(component.addressForm.controls[control].enabled).toBeTruthy();
     }
+  });
+
+  it('should get all categories on init', () =>
+  {
+    const categories: Category[] = [
+      {Id: "1", Name: "Music"},
+      {Id: "2", Name: "Performance"}
+    ]
+    eventServiceMock.GetAllCategories.and.returnValue(of(categories));
+    component.ngOnInit();
+    expect(component.categoryStore).toEqual(categories);
+  });
+
+  it('should handle get all categories error', () =>
+  {
+    eventServiceMock.GetAllCategories.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error getting categories"}})));
+    component.ngOnInit();
+    expect(component.gettingCategoriesError).toEqual("Error getting categories");
+  });
+
+  it('should load event data', () =>
+  {
+    component.addressForm.controls.AddressLine1.setValue("AddressLine1");
+    component.addressForm.controls.AddressLine2.setValue("AddressLine2");
+    component.addressForm.controls.City.setValue("City");
+    component.addressForm.controls.CountryCode.setValue("CountryCode");
+    component.addressForm.controls.CountryName.setValue("CountryName");
+    component.addressForm.controls.PostalCode.setValue("PostalCode");
+    component.categories = null;
+    component.createEventForm.controls.Description.setValue("Description");
+    component.DateForm.controls.EndLocal.setValue(new Date(0));
+    component.eventImages = null;
+    component.IsOnline.setValue(true);
+    component.createEventForm.controls.Name.setValue("Name");
+    component.createEventForm.controls.Price.setValue(10);
+
+    component.SocialLinks.controls.Site.setValue("Site");
+    component.SocialLinks.controls.Instagram.setValue("Instagram");
+    component.SocialLinks.controls.Twitter.setValue("Twitter");
+    component.SocialLinks.controls.Facebook.setValue("Facebook");
+    component.SocialLinks.controls.Reddit.setValue("Reddit");
+
+    component.DateForm.controls.StartLocal.setValue(new Date(0));
+    component.thumbnail = null;
+    component.createEventForm.controls.NumberOfTickets.setValue(10);
+    let e = new StepperSelectionEvent();
+    e.selectedIndex = 3
+    component.loadEventDate(e);
+    const eventPreview: EventDetailModel = {
+      Address: {
+        AddressLine1: "AddressLine1",
+        AddressLine2: "AddressLine2",
+        PostalCode: "PostalCode",
+        CountryName: "CountryName",
+        City: "City",
+        CountryCode: "CountryCode"
+      },
+      Categories: null,
+      Description: "Description",
+      EndLocal: new Date(0),
+      EndUTC: undefined,
+      Id: "",
+      Images: null,
+      IsOnline: true,
+      Name: "Name",
+      Price: 10,
+      SocialLinks: [
+        {SocialMedia: SocialMedia.Site, Link: "Site"},
+        {SocialMedia: SocialMedia.Instagram, Link: "Instagram"},
+        {SocialMedia: SocialMedia.Twitter, Link: "Twitter"},
+        {SocialMedia: SocialMedia.Facebook, Link: "Facebook"},
+        {SocialMedia: SocialMedia.Reddit, Link: "Reddit"}
+      ],
+      StartLocal: new Date(0),
+      StartUTC: undefined,
+      Thumbnail: null,
+      TicketsLeft: 10
+    }
+    expect(component.eventPreview).toEqual(eventPreview);
+  });
+
+  it('should create event', () =>
+  {
+    let routerSpy = spyOn(router, 'navigate');
+    eventServiceMock.Create.and.returnValue(of(true));
+    component.create();
+    expect(component.loading).toBeFalse();
+    expect(routerSpy).toHaveBeenCalled();
+  });
+
+  it('should handle create event error', () =>
+  {
+    eventServiceMock.Create.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error creating event"}})));
+    component.create();
+    expect(component.loading).toBeFalse();
+    expect(component.CreateError).toEqual("Error creating event");
   });
 });

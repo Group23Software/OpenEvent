@@ -57,7 +57,8 @@ namespace OpenEvent.Test.Services.EventService
         [Test]
         public async Task Should_Only_Return_Online_Events()
         {
-            var result = await EventService.Search("Test", new List<SearchFilter>(){new(){Key = SearchParam.IsOnline,Value = "true"}});
+            var result = await EventService.Search("Test",
+                new List<SearchFilter>() {new() {Key = SearchParam.IsOnline, Value = "true"}});
             result.Count.Should().BePositive();
             result.ForEach(e => e.IsOnline.Should().BeTrue());
         }
@@ -71,9 +72,22 @@ namespace OpenEvent.Test.Services.EventService
             await MockContext.Object.Events.AddAsync(e);
             await MockContext.Object.SaveChangesAsync();
             var result = await EventService.Search("",
-                new List<SearchFilter>() {new() {Key = SearchParam.Location, Value = "51.47338,-0.08375,1000"}});
+                new List<SearchFilter> {new() {Key = SearchParam.Location, Value = "51.47338,-0.08375,1000"}});
             result.Should().NotBeNull();
             result.ForEach(x => x.IsOnline.Should().BeFalse());
+        }
+
+        [Test]
+        public async Task Should_Search_By_Date()
+        {
+            var e = TestData.TestEventData.FakeEvent.Generate();
+            e.StartLocal = new DateTime(0);
+            await MockContext.Object.Events.AddAsync(e);
+            await MockContext.Object.SaveChangesAsync();
+            var result = await EventService.Search("",
+                new List<SearchFilter> {new() {Key = SearchParam.Date, Value = new DateTime(0).ToString()}});
+            result.Should().NotBeNull();
+            result.First().StartLocal.Should().Equals(new DateTime(0));
         }
     }
 }

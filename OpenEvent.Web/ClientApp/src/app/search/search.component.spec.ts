@@ -2,8 +2,12 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {SearchComponent} from './search.component';
 import {EventService} from "../_Services/event.service";
-import {of} from "rxjs";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {of, throwError} from "rxjs";
+import {EventViewModel, SearchFilter, SearchParam} from "../_models/Event";
+import {Category} from "../_models/Category";
+import {HttpErrorResponse} from "@angular/common/http";
+import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {success} from "ng-packagr/lib/utils/log";
 
 describe('SearchComponent', () =>
 {
@@ -15,15 +19,14 @@ describe('SearchComponent', () =>
   beforeEach(async () =>
   {
 
-    eventServiceMock = jasmine.createSpyObj('eventService', ['GetAllCategories','Search']);
+    eventServiceMock = jasmine.createSpyObj('eventService', ['GetAllCategories', 'Search']);
     eventServiceMock.GetAllCategories.and.returnValue(of());
     eventServiceMock.Search.and.returnValue(of());
 
     await TestBed.configureTestingModule({
-      // imports: [HttpClientTestingModule],
       declarations: [SearchComponent],
       providers: [
-        {provide: EventService, useValue: eventServiceMock}
+        {provide: EventService, useValue: eventServiceMock},
       ]
     }).compileComponents();
   });
@@ -38,5 +41,127 @@ describe('SearchComponent', () =>
   it('should create', () =>
   {
     expect(component).toBeTruthy();
+  });
+
+  // it('should toggle current location', () =>
+  // {
+  //   const p: Position = {
+  //     coords: {
+  //       accuracy: 0,
+  //       altitude: undefined,
+  //       altitudeAccuracy: undefined,
+  //       heading: undefined,
+  //       latitude: 0,
+  //       longitude: 1,
+  //       speed: undefined
+  //     }, timestamp: 0
+  //   }
+  //   // spyOn(navigator.geolocation, 'getCurrentPosition').and.callFake((position) => p);
+  //   spyOn(navigator.geolocation,"getCurrentPosition").and.returnValue();
+  //   component.toggleCurrentLocation(new MatSlideToggleChange(null, true));
+  //   expect(component.usersLocation).toEqual(p);
+  // });
+
+  it('should search', () =>
+  {
+    const events: EventViewModel[] = [
+      {
+        Categories: [],
+        Description: "",
+        EndLocal: undefined,
+        EndUTC: undefined,
+        Id: "1",
+        IsOnline: false,
+        Name: "Test event",
+        Price: 0,
+        StartLocal: undefined,
+        StartUTC: undefined,
+        Thumbnail: undefined
+      }
+    ]
+    eventServiceMock.Search.and.returnValue(of(events));
+    component.search();
+    expect(component.loading).toBeFalse();
+    expect(component.events).toEqual(events);
+  });
+
+  it('should add category filters', () =>
+  {
+    component.selectedCategories = [
+      {Id: "1", Name: "Music"},
+      {Id: "2", Name: "Performance"}
+    ];
+    eventServiceMock.Search.and.returnValue(of(null));
+    component.search();
+    const filters: SearchFilter[] = [
+      {Key: SearchParam.Category, Value: "1"},
+      {Key: SearchParam.Category, Value: "2"}
+    ];
+    expect(eventServiceMock.Search).toHaveBeenCalledWith('', filters);
+  });
+
+  it('should add online filter', () =>
+  {
+    eventServiceMock.Search.and.returnValue(of(null));
+    component.isOnline = true;
+    component.search();
+    const filters: SearchFilter[] = [
+      {Key: SearchParam.IsOnline, Value: "true"}
+    ];
+    expect(eventServiceMock.Search).toHaveBeenCalledWith('', filters);
+  });
+
+  it('should add location filter', () =>
+  {
+    eventServiceMock.Search.and.returnValue(of(null));
+    component.usingCurrentLocation = true;
+    component.isOnline = false;
+    component.usersLocation = {
+      coords: {
+        accuracy: 0,
+        altitude: undefined,
+        altitudeAccuracy: undefined,
+        heading: undefined,
+        latitude: 0,
+        longitude: 1,
+        speed: undefined
+      }, timestamp: 0
+    };
+    component.distanceSelect = "1000";
+    component.search();
+    const filters: SearchFilter[] = [
+      {Key: SearchParam.Location, Value: "0,1,1000"}
+    ]
+    expect(eventServiceMock.Search).toHaveBeenCalledWith('', filters);
+  });
+
+  it('should add date filter', () =>
+  {
+    eventServiceMock.Search.and.returnValue(of(null));
+    component.date = new Date(0);
+    component.usingDate = true;
+    component.search();
+    const filters: SearchFilter[] = [
+      {Key: SearchParam.Date, Value: (new Date(0)).toDateString()}
+    ];
+    expect(eventServiceMock.Search).toHaveBeenCalledWith('', filters);
+  });
+
+  it('should get all categories', () =>
+  {
+    const categories: Category[] = [
+      {Id: "1", Name: "Music"},
+      {Id: "2", Name: "Performance"}
+    ]
+    eventServiceMock.GetAllCategories.and.returnValue(of(categories));
+    component.ngOnInit();
+    expect(component.categories).toEqual(categories);
+  });
+
+  it('should handle get all categories error', () =>
+  {
+    eventServiceMock.GetAllCategories.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error getting categories"}})));
+    component.ngOnInit();
+    expect(component.getCategoriesError).toEqual("Error getting categories");
   });
 });

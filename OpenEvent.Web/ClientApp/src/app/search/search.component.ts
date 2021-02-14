@@ -5,6 +5,7 @@ import {EventService} from "../_Services/event.service";
 import {EventViewModel, SearchFilter, SearchParam} from "../_models/Event";
 import {Category} from "../_models/Category";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-search',
@@ -22,7 +23,8 @@ export class SearchComponent implements OnInit
   public keyword: string = '';
   public categories: Category[] = [];
   public selectedCategories: Category[] = [];
-  private usersLocation: Position;
+  public getCategoriesError: string;
+  public usersLocation: Position;
   public minDate: Date = new Date;
   public usingCurrentLocation: boolean = false;
   public distanceSelect: string;
@@ -41,7 +43,7 @@ export class SearchComponent implements OnInit
       this.search();
     });
 
-    this.eventService.GetAllCategories().subscribe(c => this.categories = c);
+    this.eventService.GetAllCategories().subscribe(c => this.categories = c,(e: HttpErrorResponse) => this.getCategoriesError = e.error.Message);
   }
 
   public search (): void
@@ -72,20 +74,7 @@ export class SearchComponent implements OnInit
 
   public triggerSearchChange ()
   {
-    console.log('trigger');
     this.searchChanged.next();
-  }
-
-  public addCategory (category: Category)
-  {
-    this.selectedCategories.push(category);
-    this.categories = this.categories.filter(x => x.Id != category.Id);
-  }
-
-  public removeCategory (category: Category)
-  {
-    this.categories.push(category);
-    this.selectedCategories = this.selectedCategories.filter(x => x.Id != category.Id);
   }
 
   public toggleCurrentLocation (event: MatSlideToggleChange)

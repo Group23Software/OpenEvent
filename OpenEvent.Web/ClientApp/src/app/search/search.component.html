@@ -15,19 +15,7 @@
 
 
     <mat-card>
-      <mat-chip-list>
-        <mat-chip *ngFor="let category of selectedCategories">
-          {{category.Name}}
-          <mat-icon matChipRemove (click)="removeCategory(category)">clear</mat-icon>
-        </mat-chip>
-      </mat-chip-list>
-      <div class="my-3"></div>
-      <mat-chip-list>
-        <mat-chip *ngFor="let category of categories">
-          {{category.Name}}
-          <mat-icon matChipRemove (click)="addCategory(category)">add</mat-icon>
-        </mat-chip>
-      </mat-chip-list>
+      <category-list [categories]="categories" (categoryEvent)="selectedCategories = $event"></category-list>
     </mat-card>
 
     <div class="d-flex flex-row">

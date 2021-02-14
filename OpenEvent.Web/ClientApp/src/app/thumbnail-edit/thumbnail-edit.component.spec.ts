@@ -40,7 +40,7 @@ describe('ThumbnailEditComponent', () =>
 
   it('should open dialog', () =>
   {
-    dialogMock.open.and.returnValue({afterClosed: () => of(null)})
+    dialogMock.open.and.returnValue({afterClosed: () => of(null)});
     component.thumbnailUpload();
     expect(dialogMock.open).toHaveBeenCalledWith(ImageUploadComponent, {
       data: {

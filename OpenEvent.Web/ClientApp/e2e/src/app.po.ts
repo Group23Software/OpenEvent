@@ -8,4 +8,8 @@ export class AppPage {
   getMainHeading() {
     return element(by.css('app-root h1')).getText();
   }
+
+  getLoginComponent() {
+    return element(by.css('app-login'));
+  }
 }
