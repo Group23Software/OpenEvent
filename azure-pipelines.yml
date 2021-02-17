@@ -16,7 +16,7 @@ variables:
 
 stages: 
 
-  - stage:
+  - stage: Build
     displayName: "Build"
     jobs:
       - job: "Build"
@@ -89,8 +89,9 @@ stages:
               arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/dotnet'
               zipAfterPublish: True
 
-  - stage:  
+  - stage: Deploy
     displayName: "Deploy"
+    dependsOn: Build
     jobs:
       - job: "Deploy"
         steps:
@@ -105,4 +106,4 @@ stages:
               azureSubscription: 'Pay-As-You-Go(9089fb88-0825-4040-b4e2-8281ff2d7726)'
               appType: 'webAppLinux'
               WebAppName: 'OpenEvent'
-              packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+              packageForLinux: '$(Build.ArtifactStagingDirectory)/dotnet/**/*.zip'
