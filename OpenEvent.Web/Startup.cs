@@ -48,7 +48,7 @@ namespace OpenEvent.Web
 
             // Add Db context using connection string from app settings.
             services.AddDbContext<ApplicationContext>(options =>
-                options.UseMySql(appSettings.LocalConnectionString,
+                options.UseMySql(appSettings.ConnectionString,
                     new MySqlServerVersion(new Version(8, 0, 23)),
                     mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend)));
 
@@ -122,7 +122,10 @@ namespace OpenEvent.Web
 
             app.UseRouting();
 
-            app.UseCors("AllowOrigin");
+            if (env.IsDevelopment())
+            {
+                app.UseCors("AllowOrigin");
+            }
 
             app.UseAuthentication();
 

@@ -50,7 +50,6 @@ export class UserService
   constructor (private http: HttpClient, @Inject('BASE_URL') baseUrl: string, private cookieService: CookieService)
   {
     this.BaseUrl = baseUrl;
-    this.BaseUrl = 'http://localhost:5000/';
   }
 
   public GetUserAsync (): Observable<UserAccountModel | null>

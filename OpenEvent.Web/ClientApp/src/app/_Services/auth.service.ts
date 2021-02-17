@@ -26,7 +26,6 @@ export class AuthService
     private trigger: TriggerService
   ) {
     this.BaseUrl = baseUrl;
-    this.BaseUrl = 'http://localhost:5000/';
   }
 
   public Login (auth: AuthBody): Observable<UserViewModel>
