@@ -1,0 +1,40 @@
+<mat-card class="m-3">
+  <form (ngSubmit)="createToken()" [formGroup]="stripeTest">
+
+    <div class="d-flex flex-row" id="cardInputs">
+      <mat-form-field appearance="outline" class="w-100 mr-3">
+        <mat-label>Card Name</mat-label>
+        <input type="text" autocomplete="off" matInput formControlName="nickName" placeholder="Debit">
+      </mat-form-field>
+      <div id="cardAddButton">
+      <button type="submit" mat-fab color="primary" [disabled]="stripeTest.invalid || !cardComplete">
+        <mat-icon>add</mat-icon>
+      </button>
+      </div>
+    </div>
+
+    <mat-card class="mb-3">
+      <ngx-stripe-card (change)="onChange($event)" [options]="cardOptions" [elementsOptions]="elementsOptions"></ngx-stripe-card>
+    </mat-card>
+
+  </form>
+
+  <!--  <ngx-stripe-card-group [formGroup]="stripeTest" (ngSubmit)="createToken()">-->
+  <!--    <input formControlName="nickName" />-->
+  <!--    <ngx-stripe-card-number [options]="cardNumberOptions"></ngx-stripe-card-number>-->
+  <!--    <ngx-stripe-card-expiry [options]="cardOptions"></ngx-stripe-card-expiry>-->
+  <!--    <ngx-stripe-card-cvc [options]="cardOptions"></ngx-stripe-card-cvc>-->
+  <!--    <button type="submit" mat-flat-button color="primary" [disabled]="stripeTest.invalid || !cardComplete">-->
+  <!--      CREATE TOKEN-->
+  <!--    </button>-->
+  <!--  </ngx-stripe-card-group>-->
+
+  <mat-progress-bar mode="indeterminate" *ngIf="createCardTokenLoading"></mat-progress-bar>
+  <div>{{createCardTokenError}}</div>
+</mat-card>
+
+<mat-card class="m-3" *ngIf="User.PaymentMethods">
+  <div id="cardList">
+    <virtual-card *ngFor="let card of User.PaymentMethods" [Card]="card"></virtual-card>
+  </div>
+</mat-card>

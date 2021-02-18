@@ -21,7 +21,7 @@ namespace OpenEvent.Web.Models.Event
         public DateTime EndLocal { get; set; }
         public DateTime EndUTC { get; set; }
         public decimal Price { get; set; }
-        public Address Address { get; set; }
+        public Address.Address Address { get; set; }
         public bool IsOnline { get; set; }
         public List<TicketViewModel> Tickets { get; set; }
         public int TicketsLeft { get; set; }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -11,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
+using OpenEvent.Web.Models.Address;
+using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.User;
 
@@ -34,6 +37,8 @@ namespace OpenEvent.Web.Services
         Task<bool> PhoneExists(string phoneNumber);
         Task<bool> UpdateThemePreference(Guid id, bool isDarkMode);
         Task<bool> HostOwnsEvent(Guid eventId, Guid userId);
+
+        Task<Address> UpdateAddress(Guid id, Address address);
     }
 
     /// <summary>
@@ -173,7 +178,9 @@ namespace OpenEvent.Web.Services
                 UserName = x.UserName,
                 DateOfBirth = x.DateOfBirth,
                 IsDarkMode = x.IsDarkMode,
-            }).FirstOrDefaultAsync(x => x.Id == id);
+                Address = x.Address,
+                PaymentMethods = x.PaymentMethods != null ? x.PaymentMethods.Select(p => Mapper.Map<PaymentMethodViewModel>(p)).ToList() : new List<PaymentMethodViewModel>()
+            }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
             {
@@ -333,6 +340,31 @@ namespace OpenEvent.Web.Services
                 .FirstOrDefaultAsync(x => x.Id == eventId && x.Host.Id == userId)) != null;
             Logger.LogInformation("Checking if user owns event", e);
             return e;
+        }
+
+        public async Task<Address> UpdateAddress(Guid id, Address address)
+        {
+            var user = await User(id);
+
+            if (user == null)
+            {
+                Logger.LogInformation("User not found");
+                throw new UserNotFoundException();
+            }
+
+            user.Address = address;
+
+            try
+            {
+                await ApplicationContext.SaveChangesAsync();
+                Logger.LogInformation("User's address updated");
+                return address;
+            }
+            catch
+            {
+                Logger.LogWarning("User failed to save");
+                throw;
+            }
         }
     }
 }

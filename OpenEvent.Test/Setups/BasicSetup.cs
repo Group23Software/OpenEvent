@@ -8,8 +8,10 @@ using OpenEvent.Web.Models.User;
 using EntityFrameworkCoreMock;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
+using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Ticket;
 
 namespace OpenEvent.Test.Setups
@@ -41,7 +43,8 @@ namespace OpenEvent.Test.Setups
                     LastName = "already",
                     PhoneNumber = "0000000000",
                     Avatar = new Byte[] {1, 1, 1, 1},
-                    IsDarkMode = false
+                    IsDarkMode = false,
+                    PaymentMethods = new List<PaymentMethod>()
                 }
             };
 

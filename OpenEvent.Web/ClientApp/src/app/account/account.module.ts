@@ -5,12 +5,17 @@ import {AccountComponent} from "./account.component";
 import {SharedModule} from "../shared.module";
 import {UserModule} from "../user.module";
 import { AccountPreferencesComponent } from './account-preferences/account-preferences.component';
+import { PaymentMethodsComponent } from './payment-methods/payment-methods.component';
+import {NgxStripeModule} from "ngx-stripe";
+import { VirtualCardComponent } from './payment-methods/virtual-card/virtual-card.component';
 
 
 @NgModule({
   declarations: [
     AccountComponent,
     AccountPreferencesComponent,
+    PaymentMethodsComponent,
+    VirtualCardComponent,
   ],
   imports: [
     CommonModule,
@@ -19,6 +24,7 @@ import { AccountPreferencesComponent } from './account-preferences/account-prefe
     RouterModule.forChild([
       {path: '', component: AccountComponent, pathMatch: 'full'}
     ]),
+    NgxStripeModule,
   ]
 })
 export class AccountModule

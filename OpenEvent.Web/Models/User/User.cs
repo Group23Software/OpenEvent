@@ -38,6 +38,8 @@ namespace OpenEvent.Web.Models.User
         
         public List<BankAccount.BankAccount> BankAccounts { get; set; }
         
+        public Address.Address Address { get; set; }
+        
         [NotMapped] public string Token { get; set; }
     }
 }

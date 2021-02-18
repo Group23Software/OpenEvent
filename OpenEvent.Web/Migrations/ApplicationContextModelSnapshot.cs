@@ -130,19 +130,25 @@ namespace OpenEvent.Web.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("ExpiryMonth")
-                        .HasColumnType("int");
+                    b.Property<long>("ExpiryMonth")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("ExpiryYear")
-                        .HasColumnType("int");
+                    b.Property<long>("ExpiryYear")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Funding")
                         .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LastFour")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("NickName")
                         .HasColumnType("longtext");
 
                     b.Property<Guid?>("UserId")
@@ -291,7 +297,7 @@ namespace OpenEvent.Web.Migrations
                         .WithMany("HostedEvents")
                         .HasForeignKey("HostId");
 
-                    b.OwnsOne("OpenEvent.Web.Models.Event.Address", "Address", b1 =>
+                    b.OwnsOne("OpenEvent.Web.Models.Address.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("EventId")
                                 .HasColumnType("char(36)");
@@ -446,6 +452,48 @@ namespace OpenEvent.Web.Migrations
                     b.Navigation("Ticket");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.User.User", b =>
+                {
+                    b.OwnsOne("OpenEvent.Web.Models.Address.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("char(36)");
+
+                            b1.Property<string>("AddressLine1")
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("AddressLine2")
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("City")
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("CountryCode")
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("CountryName")
+                                .HasColumnType("longtext");
+
+                            b1.Property<double>("Lat")
+                                .HasColumnType("double");
+
+                            b1.Property<double>("Lon")
+                                .HasColumnType("double");
+
+                            b1.Property<string>("PostalCode")
+                                .HasColumnType("longtext");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("OpenEvent.Web.Models.Category.Category", b =>

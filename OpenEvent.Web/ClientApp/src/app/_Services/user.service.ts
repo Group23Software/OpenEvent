@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 import {
   NewUserInput,
   UpdateAvatarBody,
-  UpdateThemePreferenceBody,
+  UpdateThemePreferenceBody, UpdateUserAddressBody,
   UpdateUserNameBody,
   UserAccountModel,
   UserViewModel
@@ -10,9 +10,15 @@ import {
 import {Observable, of} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
-import {map} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
 import jwtDecode, {JwtPayload} from "jwt-decode";
-import {UserPaths} from "../_extensions/api.constants";
+import {PaymentPaths, UserPaths} from "../_extensions/api.constants";
+import {Address} from "../_models/Address";
+
+interface addressBody
+{
+  address: Address;
+}
 
 interface usernameBody
 {
@@ -146,6 +152,14 @@ export class UserService
     return this.http.post<themePreferenceBody>(this.BaseUrl + UserPaths.UpdateThemePreference, updateThemePreferenceBody).pipe(map(result =>
     {
       this.User.IsDarkMode = result.isDarkMode;
+      return result;
+    }));
+  }
+
+  public UpdateAddress (updateUserAddressBody: UpdateUserAddressBody): Observable<addressBody>
+  {
+    return this.http.post<addressBody>(this.BaseUrl + UserPaths.UpdateAddress,updateUserAddressBody).pipe(map(result => {
+      this.User.Address = result.address;
       return result;
     }));
   }

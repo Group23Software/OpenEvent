@@ -202,5 +202,23 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
+        
+        [HttpPost("updateAddress")]
+        public async Task<ActionResult<string>> UpdateAddress([FromBody] UpdateUserAddressBody updateUserAddressBody)
+        {
+            try
+            {
+                var result = await UserService.UpdateAddress(updateUserAddressBody.Id, updateUserAddressBody.Address);
+                return Ok(new
+                {
+                    address = result
+                });
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.ToString());
+                return BadRequest(e);
+            }
+        }
     }
 }

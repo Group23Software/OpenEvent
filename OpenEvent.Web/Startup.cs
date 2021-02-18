@@ -16,6 +16,8 @@ using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Services;
 using OpenEvent.Web.UserOwnsEvent;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Stripe;
+using EventService = OpenEvent.Web.Services.EventService;
 
 namespace OpenEvent.Web
 {
@@ -34,7 +36,7 @@ namespace OpenEvent.Web
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
-            
+
             // Add cors so angular dev server can make requests.
             services.AddCors(options =>
             {
@@ -80,6 +82,7 @@ namespace OpenEvent.Web
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEventService, EventService>();
             services.AddHttpClient<IEventService, EventService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
             services.AddScoped<UserOwnsEventFilter>();
 

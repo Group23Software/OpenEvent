@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Ticket;
 
 namespace OpenEvent.Web.Models.User
@@ -18,5 +19,7 @@ namespace OpenEvent.Web.Models.User
         public string PhoneNumber { get; set; }
         public DateTime DateOfBirth { get; set; }
         public bool IsDarkMode { get; set; }
+        public Address.Address Address { get; set; }
+        public List<PaymentMethodViewModel> PaymentMethods { get; set; }
     }
 }

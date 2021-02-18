@@ -1,0 +1,35 @@
+<!--<div class="virtualCard">-->
+<!--  <div id="cardBrand"></div>-->
+
+<!--  <div class="card-number">XXXX XXXX XXXX {{Card.LastFour}}</div>-->
+<!--  <div>{{Card.Name}}</div>-->
+<!--  <div>{{Card.ExpiryMonth}}/{{Card.ExpiryYear}}</div>-->
+
+<!--</div>-->
+
+<div fxLayout="column">
+  <div class="credit-card" fxLayout="column" fxLayoutAlign="space-between" fxFlex="0 0 auto" [ngClass]="Card.Funding">
+    <div fxLayout="row" fxLayoutAlign="space-between">
+<!--      <app-signal type="good-bad" [on]="card.isDefault" onLabel="default"></app-signal>-->
+      <mat-icon [svgIcon]="Card.Brand"></mat-icon>
+      <div>{{Card.NickName}}</div>
+    </div>
+    <div class="card-number">XXXX XXXX XXXX {{Card.LastFour}}</div>
+    <div fxLayout="row">
+      <div fxFlex="1 1 100%">
+        <div>
+          {{Card.ExpiryMonth | number:'2.0-0'}}/{{Card.ExpiryYear}}
+        </div>
+        <span>{{Card.Name}}</span>
+      </div>
+      <div fxFlex="auto" fxLayout="row" fxLayoutGap="6px">
+        <button mat-mini-fab color="warn" (click)="delete()">
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+        <button mat-mini-fab color="accent" [disabled]="Card.IsDefault" (click)="makeDefault()">
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

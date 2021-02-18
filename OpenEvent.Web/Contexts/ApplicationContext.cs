@@ -42,6 +42,8 @@ namespace OpenEvent.Web.Contexts
             modelBuilder.Entity<Event>().OwnsMany(x => x.SocialLinks);
             modelBuilder.Entity<Event>().OwnsOne(x => x.Address);
             modelBuilder.Entity<Event>().OwnsMany(x => x.Images);
+            
+            modelBuilder.Entity<User>().OwnsOne(x => x.Address);
 
             // Many to many event category
             modelBuilder.Entity<EventCategory>()

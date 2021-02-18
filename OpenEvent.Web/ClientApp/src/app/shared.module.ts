@@ -27,7 +27,7 @@ import {LoadingComponent} from "./loading/loading.component";
 import {MatChipsModule} from "@angular/material/chips";
 import {UserNavComponent} from "./navs/user-nav/user-nav.component";
 import {IvyCarouselModule} from "angular-responsive-carousel";
-import { SocialComponent } from './event/social/social.component';
+import {SocialComponent} from './event/social/social.component';
 import {SafePipeModule} from "safe-pipe";
 import {RouterModule} from "@angular/router";
 import {EventComponent} from "./event/event/event.component";
@@ -35,9 +35,11 @@ import {MatListModule} from "@angular/material/list";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {DomSanitizer} from "@angular/platform-browser";
 import {MatSelectModule} from "@angular/material/select";
-import { CategoryListComponent } from './category-list/category-list.component';
-import { ImageListComponent } from './image-list/image-list.component';
+import {CategoryListComponent} from './category-list/category-list.component';
+import {ImageListComponent} from './image-list/image-list.component';
 import {ThumbnailEditComponent} from "./thumbnail-edit/thumbnail-edit.component";
+import {AddressFormComponent} from './address-form/address-form.component';
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 
 @NgModule({
@@ -49,6 +51,7 @@ import {ThumbnailEditComponent} from "./thumbnail-edit/thumbnail-edit.component"
     CategoryListComponent,
     ImageListComponent,
     ThumbnailEditComponent,
+    AddressFormComponent,
   ],
   imports: [
     HttpClientModule,
@@ -86,6 +89,7 @@ import {ThumbnailEditComponent} from "./thumbnail-edit/thumbnail-edit.component"
     MatListModule,
     MatExpansionModule,
     MatSelectModule,
+    FlexLayoutModule
   ],
   exports: [
 
@@ -124,6 +128,7 @@ import {ThumbnailEditComponent} from "./thumbnail-edit/thumbnail-edit.component"
     MatListModule,
     MatExpansionModule,
     MatSelectModule,
+    FlexLayoutModule,
 
     LoadingComponent,
     SocialComponent,
@@ -131,7 +136,8 @@ import {ThumbnailEditComponent} from "./thumbnail-edit/thumbnail-edit.component"
     EventComponent,
     CategoryListComponent,
     ImageListComponent,
-    ThumbnailEditComponent
+    ThumbnailEditComponent,
+    AddressFormComponent
   ]
 })
 export class SharedModule
@@ -143,5 +149,9 @@ export class SharedModule
     iconRegistry.addSvgIcon('facebook', sanitizer.bypassSecurityTrustResourceUrl('../assets/facebook.svg'));
     iconRegistry.addSvgIcon('reddit', sanitizer.bypassSecurityTrustResourceUrl('../assets/reddit.svg'));
     iconRegistry.addSvgIcon('site', sanitizer.bypassSecurityTrustResourceUrl('../assets/site.svg'));
+
+    iconRegistry.addSvgIcon('Visa', sanitizer.bypassSecurityTrustResourceUrl('../assets/visa.svg'));
+    iconRegistry.addSvgIcon('MasterCard', sanitizer.bypassSecurityTrustResourceUrl('../assets/mastercard.svg'));
+    iconRegistry.addSvgIcon('American Express', sanitizer.bypassSecurityTrustResourceUrl('../assets/americanexpress.svg'));
   }
 }

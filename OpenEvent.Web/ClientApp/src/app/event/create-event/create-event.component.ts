@@ -41,7 +41,7 @@ export class CreateEventComponent implements OnInit
   public DateForm = new FormGroup({
     StartLocal: new FormControl('', [Validators.required]),
     EndLocal: new FormControl('', [Validators.required]),
-  })
+  });
 
   public IsOnline = new FormControl(false);
 
@@ -52,7 +52,7 @@ export class CreateEventComponent implements OnInit
     PostalCode: new FormControl('', [Validators.required, Validators.pattern('([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})')]),
     CountryCode: new FormControl('GB'),
     CountryName: new FormControl('United Kingdom'),
-  })
+  });
 
   public SocialLinks = new FormGroup({
     Site: new FormControl(''),
@@ -60,7 +60,7 @@ export class CreateEventComponent implements OnInit
     Twitter: new FormControl(''),
     Facebook: new FormControl(''),
     Reddit: new FormControl('')
-  })
+  });
   public isEditable: boolean = true;
   public eventImages: ImageViewModel[] = [
     {

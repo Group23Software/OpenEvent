@@ -12,6 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
 import {ImageViewModel} from "../../_models/Image";
+import {Address} from "../../_models/Address";
 
 @Component({
   selector: 'account-preferences',
@@ -161,6 +162,14 @@ export class AccountPreferencesComponent implements OnInit
         });
       }
 
+    });
+  }
+
+  public newAddress (address: Address)
+  {
+    this.userService.UpdateAddress({Id: this.user.Id, Address: address}).subscribe(x =>
+    {
+      console.log(this.user);
     });
   }
 }

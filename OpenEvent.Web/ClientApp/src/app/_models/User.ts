@@ -1,4 +1,6 @@
 import {TicketViewModel} from "./Ticket";
+import {PaymentMethodViewModel} from "./PaymentMethod";
+import {Address} from "./Address";
 
 export interface UserViewModel
 {
@@ -21,6 +23,8 @@ export interface UserAccountModel extends UserViewModel
   DateOfBirth?: Date;
   // IsDarkMode: boolean;
   Tickets?: TicketViewModel[];
+  PaymentMethods?: PaymentMethodViewModel[];
+  Address?: Address;
 }
 
 export interface AuthBody
@@ -65,4 +69,10 @@ export interface UpdateThemePreferenceBody
 {
   Id: string;
   IsDarkMode: boolean;
+}
+
+export interface UpdateUserAddressBody
+{
+  Id: string;
+  Address: Address;
 }

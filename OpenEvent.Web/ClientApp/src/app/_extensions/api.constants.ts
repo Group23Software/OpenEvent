@@ -22,6 +22,7 @@ let userPaths: ApiUserPaths =
     UpdateAvatar: null,
     UpdateUserName: null,
     UpdateThemePreference: null,
+    UpdateAddress: null
   }
 
 userPaths = {
@@ -32,7 +33,8 @@ userPaths = {
   UserNameExists: userPaths.BasePath + '/userNameExists',
   UpdateAvatar: userPaths.BasePath + '/updateAvatar',
   UpdateUserName: userPaths.BasePath + '/updateUserName',
-  UpdateThemePreference: userPaths.BasePath + '/updateThemePreference'
+  UpdateThemePreference: userPaths.BasePath + '/updateThemePreference',
+  UpdateAddress: userPaths.BasePath + '/updateAddress'
 }
 
 let eventPaths: ApiEventPaths = {
@@ -59,6 +61,16 @@ eventPaths = {
   Search: eventPaths.BasePath + '/search'
 }
 
+let paymentPaths: ApiPaymentPaths = {
+  BasePath: 'api/payment',
+  AddPaymentMethod: '',
+}
+
+paymentPaths = {
+  ...paymentPaths,
+  AddPaymentMethod: paymentPaths.BasePath + '/AddPaymentMethod'
+}
+
 interface ApiAuthPaths
 {
   readonly BasePath: string;
@@ -77,6 +89,7 @@ interface ApiUserPaths
   readonly UpdateUserName: string;
   readonly UpdateAvatar: string;
   readonly UpdateThemePreference: string;
+  readonly UpdateAddress: string;
 }
 
 interface ApiEventPaths
@@ -92,6 +105,13 @@ interface ApiEventPaths
   readonly Search: string;
 }
 
+interface ApiPaymentPaths
+{
+  readonly BasePath: string;
+  readonly AddPaymentMethod: string;
+}
+
 export const UserPaths: ApiUserPaths = userPaths;
 export const AuthPaths: ApiAuthPaths = authPaths;
 export const EventPaths: ApiEventPaths = eventPaths;
+export const PaymentPaths: ApiPaymentPaths = paymentPaths;

@@ -70,6 +70,11 @@
     </mat-card>
 
     <mat-card class="mb-3">
+      <mat-card-header><mat-card-title>Address</mat-card-title></mat-card-header>
+      <address-form (SubmitEvent)="newAddress($event)" [Address]="user.Address" [Disabled]="user.Address != null"></address-form>
+    </mat-card>
+
+    <mat-card class="mb-3">
       <mat-card-header>
         <mat-card-title>Password</mat-card-title>
         <mat-card-subtitle>Change password</mat-card-subtitle>
