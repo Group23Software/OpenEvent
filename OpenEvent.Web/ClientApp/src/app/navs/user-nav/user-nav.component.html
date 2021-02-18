@@ -10,6 +10,7 @@
     <a mat-button id="title" (click)="routeHome()">Open Event</a>
 
     <div class="navControls justify-content-end">
+      <mat-progress-spinner *ngIf="loading" [diameter]="40" class="mr-3" color="accent" mode="indeterminate"></mat-progress-spinner>
       <button mat-flat-button color="accent" class="mr-2" [routerLink]="['/host/create']" [routerLinkActive]="['activeLink']">Create Event</button>
       <img [src]="User.Avatar" id="avatar" [mat-menu-trigger-for]="menu">
       <mat-menu #menu="matMenu">

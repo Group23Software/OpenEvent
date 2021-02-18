@@ -1,0 +1,31 @@
+<mat-card *ngIf="!bankAccount" class="m-3">
+  <mat-card>
+    <ngx-stripe-iban [options]="options"></ngx-stripe-iban>
+  </mat-card>
+
+  <mat-card-actions>
+    <button mat-flat-button color="primary" (click)="addBankAccount()">Add Bank</button>
+  </mat-card-actions>
+
+  <mat-card-footer class="err" *ngIf="addBankAccountError">{{addBankAccountError}}</mat-card-footer>
+
+</mat-card>
+
+<mat-card *ngIf="bankAccount" class="m-3">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>account_balance</mat-icon>
+    <mat-card-title>{{bankAccount.Bank}}</mat-card-title>
+  </mat-card-header>
+
+  <div><span class="flag-icon" [ngClass]="'flag-icon-'+bankAccount.Country.toLowerCase()"></span> XX XXXX XXXXXX XXXX{{bankAccount.LastFour}}</div>
+
+
+  <mat-card-actions>
+    <button mat-fab (click)="removeBankAccount()">
+      <mat-icon>delete_forever</mat-icon>
+    </button>
+  </mat-card-actions>
+
+  <mat-card-footer class="err" *ngIf="removeBankAccountError">{{removeBankAccountError}}</mat-card-footer>
+
+</mat-card>

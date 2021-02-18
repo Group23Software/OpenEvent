@@ -7,9 +7,9 @@
         <input type="text" autocomplete="off" matInput formControlName="nickName" placeholder="Debit">
       </mat-form-field>
       <div id="cardAddButton">
-      <button type="submit" mat-fab color="primary" [disabled]="stripeTest.invalid || !cardComplete">
-        <mat-icon>add</mat-icon>
-      </button>
+        <button type="submit" mat-fab color="primary" [disabled]="stripeTest.invalid || !cardComplete">
+          <mat-icon>add</mat-icon>
+        </button>
       </div>
     </div>
 
@@ -29,8 +29,10 @@
   <!--    </button>-->
   <!--  </ngx-stripe-card-group>-->
 
-  <mat-progress-bar mode="indeterminate" *ngIf="createCardTokenLoading"></mat-progress-bar>
-  <div>{{createCardTokenError}}</div>
+  <mat-card-footer>
+    <mat-progress-bar mode="indeterminate" *ngIf="createCardTokenLoading"></mat-progress-bar>
+    <div>{{createCardTokenError}}</div>
+  </mat-card-footer>
 </mat-card>
 
 <mat-card class="m-3" *ngIf="User.PaymentMethods">

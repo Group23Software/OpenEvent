@@ -2,6 +2,7 @@ namespace OpenEvent.Web.Models.PaymentMethod
 {
     public class PaymentMethodViewModel
     {
+        public string StripeCardId { get; set; }
         public string Name { get; set; }
         public string Brand { get; set; }
         public string Funding { get; set; }

@@ -64,11 +64,27 @@ eventPaths = {
 let paymentPaths: ApiPaymentPaths = {
   BasePath: 'api/payment',
   AddPaymentMethod: '',
+  MakePaymentDefault: '',
+  RemovePaymentMethod: ''
 }
 
 paymentPaths = {
   ...paymentPaths,
-  AddPaymentMethod: paymentPaths.BasePath + '/AddPaymentMethod'
+  AddPaymentMethod: paymentPaths.BasePath + '/AddPaymentMethod',
+  RemovePaymentMethod: paymentPaths.BasePath + '/RemovePaymentMethod',
+  MakePaymentDefault: paymentPaths.BasePath + '/MakePaymentDefault'
+}
+
+let bankingPaths: ApiBankingPaths = {
+  BasePath: 'api/banking',
+  AddBankAccount: '',
+  RemoveBankAccount: '',
+}
+
+bankingPaths = {
+  ...bankingPaths,
+  AddBankAccount: bankingPaths.BasePath + '/AddBankAccount',
+  RemoveBankAccount: bankingPaths.BasePath + '/RemoveBankAccount'
 }
 
 interface ApiAuthPaths
@@ -109,9 +125,19 @@ interface ApiPaymentPaths
 {
   readonly BasePath: string;
   readonly AddPaymentMethod: string;
+  readonly RemovePaymentMethod: string;
+  readonly MakePaymentDefault: string;
+}
+
+interface ApiBankingPaths
+{
+  readonly BasePath: string;
+  readonly AddBankAccount: string;
+  readonly RemoveBankAccount: string;
 }
 
 export const UserPaths: ApiUserPaths = userPaths;
 export const AuthPaths: ApiAuthPaths = authPaths;
 export const EventPaths: ApiEventPaths = eventPaths;
 export const PaymentPaths: ApiPaymentPaths = paymentPaths;
+export const BankingPaths: ApiBankingPaths = bankingPaths;

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Address;
+using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.User;
@@ -179,7 +180,8 @@ namespace OpenEvent.Web.Services
                 DateOfBirth = x.DateOfBirth,
                 IsDarkMode = x.IsDarkMode,
                 Address = x.Address,
-                PaymentMethods = x.PaymentMethods != null ? x.PaymentMethods.Select(p => Mapper.Map<PaymentMethodViewModel>(p)).ToList() : new List<PaymentMethodViewModel>()
+                PaymentMethods = x.PaymentMethods != null ? x.PaymentMethods.Select(p => Mapper.Map<PaymentMethodViewModel>(p)).ToList() : new List<PaymentMethodViewModel>(),
+                BankAccounts = x.BankAccounts != null ? x.BankAccounts.Select(p => Mapper.Map<BankAccountViewModel>(p)).ToList() : new List<BankAccountViewModel>(),
             }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null)

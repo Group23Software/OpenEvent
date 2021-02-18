@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Components.DictionaryAdapter;
 using Microsoft.EntityFrameworkCore;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Models.User;
@@ -9,6 +10,7 @@ using EntityFrameworkCoreMock;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using OpenEvent.Web.Models.Address;
+using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.PaymentMethod;
@@ -44,7 +46,18 @@ namespace OpenEvent.Test.Setups
                     PhoneNumber = "0000000000",
                     Avatar = new Byte[] {1, 1, 1, 1},
                     IsDarkMode = false,
-                    PaymentMethods = new List<PaymentMethod>()
+                    PaymentMethods = new List<PaymentMethod>(),
+                    BankAccounts = new EditableList<BankAccount>(),
+                    Address = new Address()
+                    {
+                        AddressLine1 = "21 Wellsway",
+                        AddressLine2 = "",
+                        City = "Ipswich",
+                        CountryCode = "GB",
+                        CountryName = "United Kingdom",
+                        PostalCode = "IP14 6SL",
+                    },
+                    DateOfBirth = new DateTime(2000,07,24)
                 }
             };
 

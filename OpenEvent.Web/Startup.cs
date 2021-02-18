@@ -83,6 +83,7 @@ namespace OpenEvent.Web
             services.AddScoped<IEventService, EventService>();
             services.AddHttpClient<IEventService, EventService>();
             services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IBankingService, BankingService>();
 
             services.AddScoped<UserOwnsEventFilter>();
 

@@ -21,5 +21,6 @@ namespace OpenEvent.Web.Models.User
         public bool IsDarkMode { get; set; }
         public Address.Address Address { get; set; }
         public List<PaymentMethodViewModel> PaymentMethods { get; set; }
+        public List<BankAccount.BankAccountViewModel> BankAccounts { get; set; }
     }
 }

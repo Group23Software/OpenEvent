@@ -16,7 +16,7 @@ namespace OpenEvent.Test.Services.PaymentService
         public async Task Should_Create_Customer_If_Null()
         {
             Guid userId = new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C");
-            var result = PaymentService.AddPaymentMethod(new AddPaymentMethodModel()
+            var result = PaymentService.AddPaymentMethod(new AddPaymentMethodBody()
             {
                 UserId = userId,
                 CardToken = "tok_visa_debit"

@@ -1,6 +1,7 @@
 import {TicketViewModel} from "./Ticket";
 import {PaymentMethodViewModel} from "./PaymentMethod";
 import {Address} from "./Address";
+import {BankAccountViewModel} from "./BankAccount";
 
 export interface UserViewModel
 {
@@ -24,6 +25,7 @@ export interface UserAccountModel extends UserViewModel
   // IsDarkMode: boolean;
   Tickets?: TicketViewModel[];
   PaymentMethods?: PaymentMethodViewModel[];
+  BankAccounts?: BankAccountViewModel[];
   Address?: Address;
 }
 

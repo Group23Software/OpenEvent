@@ -8,6 +8,7 @@ import { AccountPreferencesComponent } from './account-preferences/account-prefe
 import { PaymentMethodsComponent } from './payment-methods/payment-methods.component';
 import {NgxStripeModule} from "ngx-stripe";
 import { VirtualCardComponent } from './payment-methods/virtual-card/virtual-card.component';
+import { BankAccountComponent } from './bank-account/bank-account.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { VirtualCardComponent } from './payment-methods/virtual-card/virtual-car
     AccountPreferencesComponent,
     PaymentMethodsComponent,
     VirtualCardComponent,
+    BankAccountComponent,
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,9 @@ namespace OpenEvent.Web.Services
 {
     public interface IPaymentService
     {
-        Task<PaymentMethodViewModel> AddPaymentMethod(AddPaymentMethodModel addPaymentMethodModel);
+        Task<PaymentMethodViewModel> AddPaymentMethod(AddPaymentMethodBody addPaymentMethodBody);
+        Task MakeDefault(MakeDefaultBody makeDefaultBody);
+        Task RemovePaymentMethod(RemovePaymentMethodBody removePaymentMethodBody);
     }
 
     public class PaymentService : IPaymentService
@@ -35,9 +38,9 @@ namespace OpenEvent.Web.Services
             StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
         }
 
-        public async Task<PaymentMethodViewModel> AddPaymentMethod(AddPaymentMethodModel addPaymentMethodModel)
+        public async Task<PaymentMethodViewModel> AddPaymentMethod(AddPaymentMethodBody addPaymentMethodBody)
         {
-            var user = await ApplicationContext.Users.Include(x => x.PaymentMethods).FirstOrDefaultAsync(x => x.Id == addPaymentMethodModel.UserId);
+            var user = await ApplicationContext.Users.Include(x => x.PaymentMethods).FirstOrDefaultAsync(x => x.Id == addPaymentMethodBody.UserId);
 
             if (user == null)
             {
@@ -53,7 +56,7 @@ namespace OpenEvent.Web.Services
 
             var options = new CardCreateOptions()
             {
-                Source = addPaymentMethodModel.CardToken
+                Source = addPaymentMethodBody.CardToken
             };
 
             var service = new CardService();
@@ -72,8 +75,8 @@ namespace OpenEvent.Web.Services
                     ExpiryMonth = card.ExpMonth,
                     ExpiryYear = card.ExpYear,
                     LastFour = card.Last4,
-                    NickName = addPaymentMethodModel.NickName,
-                    IsDefault = false
+                    NickName = addPaymentMethodBody.NickName,
+                    IsDefault = !user.PaymentMethods.Any()
                 };
 
                 try
@@ -87,6 +90,69 @@ namespace OpenEvent.Web.Services
                     Logger.LogWarning(e.Message);
                     throw;
                 }
+            }
+            catch (Exception e)
+            {
+                Logger.LogWarning(e.Message);
+                throw;
+            }
+        }
+
+        public async Task MakeDefault(MakeDefaultBody makeDefaultBody)
+        {
+            var userWithPayments =
+                await ApplicationContext.Users.Include(x => x.PaymentMethods).FirstOrDefaultAsync(x => x.Id == makeDefaultBody.UserId);
+
+            if (userWithPayments == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            try
+            {
+                userWithPayments.PaymentMethods.ForEach(p =>
+                {
+                    p.IsDefault = p.StripeCardId == makeDefaultBody.PaymentId;
+                });
+                await ApplicationContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Logger.LogWarning(e.Message);
+                throw;
+            }
+        }
+
+        public async Task RemovePaymentMethod(RemovePaymentMethodBody removePaymentMethodBody)
+        {
+            var userWithPayments =
+                await ApplicationContext.Users.Include(x => x.PaymentMethods).FirstOrDefaultAsync(x => x.Id == removePaymentMethodBody.UserId);
+
+            if (userWithPayments == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            var paymentMethod =
+                userWithPayments.PaymentMethods.FirstOrDefault(
+                    x => x.StripeCardId == removePaymentMethodBody.PaymentId);
+
+            if (paymentMethod == null)
+            {
+                // TODO Make custom
+                throw new Exception();
+            }
+
+            bool paymentWasDefault = paymentMethod.IsDefault;
+            
+            var service = new CardService();
+            service.Delete(userWithPayments.StripeCustomerId, paymentMethod.StripeCardId);
+            
+            try
+            {
+                ApplicationContext.PaymentMethods.Remove(paymentMethod);
+                if (paymentWasDefault) userWithPayments.PaymentMethods.First().IsDefault = true;
+                await ApplicationContext.SaveChangesAsync();
             }
             catch (Exception e)
             {

@@ -1,5 +1,6 @@
 using System.Text;
 using AutoMapper;
+using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.PaymentMethod;
@@ -42,6 +43,7 @@ namespace OpenEvent.Web
                 .ForMember(d => d.QRCode, m => m.MapFrom(x => Encoding.UTF8.GetString(x.QRCode, 0, x.QRCode.Length)));
 
             CreateMap<PaymentMethod, PaymentMethodViewModel>();
+            CreateMap<BankAccount, BankAccountViewModel>();
         }
     }
 }
