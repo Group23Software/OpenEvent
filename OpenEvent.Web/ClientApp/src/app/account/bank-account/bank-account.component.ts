@@ -14,7 +14,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class BankAccountComponent implements OnInit {
 
   @ViewChild(StripeIbanComponent) bank: StripeIbanComponent;
-  options: StripeIbanElementOptions = {
+  public options: StripeIbanElementOptions = {
     supportedCountries: ['SEPA'],
     placeholderCountry: 'GB'
   };
@@ -43,16 +43,18 @@ export class BankAccountComponent implements OnInit {
         this.bankingService.AddBankAccount({
           BankToken: result.token.id,
           UserId: this.userService.User.Id
-        }).subscribe(response => {
+        }).subscribe(() => {
           this.snackBar.open('Added bank account', 'close', {duration: 500});
         }, (e: HttpErrorResponse) => {
           this.addBankAccountError = e.error.Message;
-        })
+        });
+      } else if (result.error) {
+        this.addBankAccountError = result.error.message;
       }
     });
   }
 
-  removeBankAccount ()
+  public removeBankAccount ()
   {
     this.bankingService.RemoveBankAccount({
       BankId: this.bankAccount.StripeBankAccountId,

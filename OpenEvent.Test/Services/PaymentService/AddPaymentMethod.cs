@@ -23,6 +23,7 @@ namespace OpenEvent.Test.Services.PaymentService
             });
             result.Should().NotBeNull();
             var user = MockContext.Object.Users.First(x => x.Id == userId);
+            user.StripeCustomerId.Should().NotBeNull();
         }
     }
 }

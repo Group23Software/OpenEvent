@@ -4,6 +4,19 @@
   margin: 1rem;
 }
 
+.basicAndAddress-gt-md {
+  display: flex;
+  flex-direction: row;
+}
+
+.basicAndAddress-gt-md > mat-card {
+  flex: 1;
+}
+
+.basicAndAddress-gt-md > mat-card:first-child {
+  margin-right: 1rem;
+}
+
 #basicInfo {
   display: flex;
   flex-direction: column;

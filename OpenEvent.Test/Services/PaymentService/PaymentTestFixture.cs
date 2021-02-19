@@ -3,6 +3,7 @@ using AutoMapper;
 using EntityFrameworkCoreMock;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Moq;
 using NUnit.Framework;
 using OpenEvent.Test.Setups;
 using OpenEvent.Web;
@@ -14,8 +15,8 @@ namespace OpenEvent.Test.Services.PaymentService
     public class PaymentTestFixture
     {
         protected DbContextMock<ApplicationContext> MockContext;
-        protected IMapper Mapper;
-        protected IOptions<AppSettings> AppSettings;
+        private IMapper Mapper;
+        private IOptions<AppSettings> AppSettings;
         protected IPaymentService PaymentService;
 
         [SetUp]

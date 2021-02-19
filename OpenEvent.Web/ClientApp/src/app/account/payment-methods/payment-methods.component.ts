@@ -122,14 +122,6 @@ export class PaymentMethodsComponent implements OnInit
   createToken (): void
   {
     this.createCardTokenLoading = true;
-    console.log(this.card.state);
-
-    if (this.User.Address == null)
-    {
-      this.createCardTokenError = 'User must have address';
-      this.createCardTokenLoading = false;
-      return;
-    }
 
     this.stripeService.createToken(this.card.element, {
       name: this.User.FirstName + " " + this.User.LastName,
@@ -147,7 +139,7 @@ export class PaymentMethodsComponent implements OnInit
               CardToken: result.token.id,
               UserId: this.userService.User.Id,
               NickName: this.stripeTest.get('nickName').value
-            }).subscribe(response =>
+            }).subscribe(() =>
             {
               this.createCardTokenLoading = false;
               this.snackBar.open('Added payment method', 'close', {duration: 500});

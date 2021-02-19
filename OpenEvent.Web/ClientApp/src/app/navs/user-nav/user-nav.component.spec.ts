@@ -11,11 +11,10 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {themePreferenceBody, UserService} from "../../_Services/user.service";
 import {TriggerService} from "../../_Services/trigger.service";
-import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatSnackBar} from "@angular/material/snack-bar";
 import {UpdateThemePreferenceBody, UserAccountModel} from "../../_models/User";
-import {Observable, of, throwError} from "rxjs";
+import {Observable, of} from "rxjs";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {HttpErrorResponse} from "@angular/common/http";
 
 class UserServiceStub
 {
@@ -48,6 +47,7 @@ class UserServiceStub
 class TriggerServiceStub
 {
   public isDark: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public loading: EventEmitter<boolean> = new EventEmitter<boolean>();
 }
 
 describe('UserNavComponent', () =>

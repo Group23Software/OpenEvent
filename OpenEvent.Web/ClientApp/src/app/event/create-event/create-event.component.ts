@@ -198,7 +198,6 @@ export class CreateEventComponent implements OnInit
       console.log(response);
       this.loading = false;
       this.router.navigate(['/event',response.Id])
-      //TODO: Redirect to event page
     }, (error: HttpErrorResponse) =>
     {
       console.error(error);

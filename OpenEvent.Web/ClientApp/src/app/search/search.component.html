@@ -1,5 +1,6 @@
 <user-nav></user-nav>
 <mat-card id="controls" class="m-3">
+  <mat-card-content>
   <div class="d-flex flex-row">
     <mat-form-field appearance="outline" class="w-100 mr-3">
       <mat-label>Search</mat-label>
@@ -50,12 +51,15 @@
       </mat-card>
     </div>
   </mat-expansion-panel>
+  </mat-card-content>
+  <mat-card-footer>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading" class="mx-auto"></mat-progress-bar>
+  </mat-card-footer>
 </mat-card>
 
-<mat-card class="m-3">
+<mat-card class="m-3" *ngIf="events">
   <!--  Results-->
-  <div id="searchResults" *ngIf="!loading">
+  <div id="searchResults">
     <event-preview *ngFor="let event of events" [event]="event"></event-preview>
   </div>
-  <mat-progress-bar mode="indeterminate" *ngIf="loading" class="mx-auto"></mat-progress-bar>
 </mat-card>

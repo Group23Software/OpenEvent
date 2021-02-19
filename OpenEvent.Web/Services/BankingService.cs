@@ -25,7 +25,6 @@ namespace OpenEvent.Web.Services
     {
         private readonly ILogger<BankingService> Logger;
         private readonly ApplicationContext ApplicationContext;
-
         private readonly IMapper Mapper;
 
         public BankingService(ApplicationContext applicationContext, ILogger<BankingService> logger, IMapper mapper,
@@ -54,24 +53,17 @@ namespace OpenEvent.Web.Services
                 await ApplicationContext.SaveChangesAsync();
             }
 
-            // var bankAccountCreateOptions = new BankAccountCreateOptions()
-            // {
-            //     Source = addBankAccountBody.BankToken
-            // };
-
             var options = new ExternalAccountCreateOptions()
             {
                 ExternalAccount = addBankAccountBody.BankToken
             };
-
-            // var service = new BankAccountService();
+            
             var service = new ExternalAccountService();
 
             try
             {
                 var bank = (Stripe.BankAccount) service.Create(user.StripeAccountId, options);
-                
-                
+
                 var bankAccount = new BankAccount()
                 {
                     StripeBankAccountId = bank.Id,
@@ -108,8 +100,7 @@ namespace OpenEvent.Web.Services
 
             if (bankAccount == null)
             {
-                // TODO Make custom
-                throw new Exception();
+                throw new BankAccountNotFoundException();
             }
             
             var service = new AccountService();
