@@ -5,10 +5,10 @@
     <account-preferences *ngIf="userLoaded"></account-preferences>
   </mat-tab>
   <mat-tab label="Payment Methods">
-    <payment-methods></payment-methods>
+    <payment-methods *ngIf="userLoaded"></payment-methods>
   </mat-tab>
   <mat-tab label="Bank Account">
-    <bank-account></bank-account>
+    <bank-account *ngIf="userLoaded"></bank-account>
   </mat-tab>
   <mat-tab label="Transactions"></mat-tab>
 </mat-tab-group>

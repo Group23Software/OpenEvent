@@ -6,6 +6,10 @@ using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.User;
+using Stripe;
+using BankAccount = OpenEvent.Web.Models.BankAccount.BankAccount;
+using Event = OpenEvent.Web.Models.Event.Event;
+using PaymentMethod = OpenEvent.Web.Models.PaymentMethod.PaymentMethod;
 
 namespace OpenEvent.Web
 {
@@ -44,6 +48,7 @@ namespace OpenEvent.Web
 
             CreateMap<PaymentMethod, PaymentMethodViewModel>();
             CreateMap<BankAccount, BankAccountViewModel>();
+            CreateMap<Account, StripeAccountInfo>().ForMember(x => x.PersonId, m => m.MapFrom(x => x.Individual.Id));
         }
     }
 }

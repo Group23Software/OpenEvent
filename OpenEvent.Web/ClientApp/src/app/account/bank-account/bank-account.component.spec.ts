@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {BankAccountComponent} from './bank-account.component';
-import {NgxStripeModule, StripeElementsService, StripeIbanComponent, StripeService} from "ngx-stripe";
+import {StripeElementsService, StripeIbanComponent, StripeService} from "ngx-stripe";
 import {UserService} from "../../_Services/user.service";
 import {BankingService} from "../../_Services/banking.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
@@ -23,7 +23,8 @@ describe('BankAccountComponent', () =>
 
     snackBarMock = jasmine.createSpyObj('matSnackBar', ['open']);
     stripeServiceMock = jasmine.createSpyObj('StripeService', ['createToken']);
-    bankingServiceMock = jasmine.createSpyObj('BankingService', ['AddBankAccount','RemoveBankAccount']);
+    bankingServiceMock = jasmine.createSpyObj('BankingService', ['AddBankAccount','RemoveBankAccount','GetBalance']);
+    bankingServiceMock.GetBalance.and.returnValue(of(null));
     userServiceMock = jasmine.createSpyObj('UserService', ['User']);
 
     userServiceMock.User = {

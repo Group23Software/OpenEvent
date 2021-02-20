@@ -12,6 +12,15 @@ export interface UserViewModel
   IsDarkMode: boolean;
 }
 
+interface StripeAccountInfo
+{
+  PayoutsEnabled: boolean;
+  ChargesEnabled: boolean;
+  DefaultCurrency: boolean;
+  Requirements: any;
+  PersonId: string;
+}
+
 export interface UserAccountModel extends UserViewModel
 {
   // Id: string;
@@ -27,6 +36,9 @@ export interface UserAccountModel extends UserViewModel
   PaymentMethods?: PaymentMethodViewModel[];
   BankAccounts?: BankAccountViewModel[];
   Address?: Address;
+  StripeAccountId?: string;
+  StripeCustomerId?: string;
+  StripeAccountInfo?: StripeAccountInfo;
 }
 
 export interface AuthBody

@@ -20,7 +20,10 @@ export class AccountComponent implements OnInit
 
   ngOnInit ()
   {
-    this.userService.GetAccountUser(this.userService.User.Id).subscribe(() => this.userLoaded = true, (error: HttpErrorResponse) =>
+    this.userService.GetAccountUser(this.userService.User.Id).subscribe(user =>
+    {
+      this.userLoaded = true;
+    }, (error: HttpErrorResponse) =>
     {
       this.getUserError = error.error.Message;
     });

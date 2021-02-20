@@ -11,21 +11,77 @@
 
 </mat-card>
 
-<mat-card *ngIf="bankAccount" class="m-3">
-  <mat-card-header>
-    <mat-icon mat-card-avatar>account_balance</mat-icon>
-    <mat-card-title>{{bankAccount.Bank}}</mat-card-title>
-  </mat-card-header>
+<div *ngIf="bankAccount" class="m-3">
+  <mat-card class="mb-3">
+    <div class="d-flex flex-row align-items-center mb-3">
+      <div class="mr-3">Payments:
+        <signal [signal]="paymentStatus"></signal>
+      </div>
+      <div class="mr-3">Payouts:
+        <signal [signal]="payoutStatus"></signal>
+      </div>
+      <div class="mr-3">Available Balance: {{balance?.available[0].amount / 100 | currency:balance?.available[0].currency.toUpperCase()}}</div>
+      <div class="mr-3">Pending Balance: {{balance?.pending[0].amount / 100 | currency:balance?.pending[0].currency.toUpperCase()}}</div>
+    </div>
+    <div id="stripeErrors" *ngIf="stripeDisabledReason">
+      <div *ngFor="let req of stripeRequirements">{{req}}</div>
+      <div *ngIf="stripeDisabledReason">{{stripeDisabledReason}}</div>
+    </div>
+    <div id="stripeIdentificationInput">
+      <div>
+        <div>Identity document</div>
+        <input hidden #documentInput type="file" (change)="documentInputEvent($event)"/>
+        <button mat-stroked-button (click)="documentInput.click()">Choose</button>
+      </div>
+      <div>
+        <div>Additional identity document</div>
+        <input hidden #additionalDocumentInput type="file" (change)="additionalDocumentInputEvent($event)"/>
+        <button mat-stroked-button (click)="additionalDocumentInput.click()">Choose</button>
+      </div>
+      <!--      <button mat-flat-button color="primary" (click)="uploadDocuments()">Upload</button>-->
+    </div>
+<!--  </mat-card>-->
 
-  <div><span class="flag-icon" [ngClass]="'flag-icon-'+bankAccount.Country.toLowerCase()"></span> XX XXXX XXXXXX XXXX{{bankAccount.LastFour}}</div>
+<!--  <mat-card>-->
+<!--    <mat-card-header>-->
+<!--      <mat-icon mat-card-avatar>account_balance</mat-icon>-->
+<!--      <mat-card-title>{{bankAccount.Bank}}</mat-card-title>-->
+<!--    </mat-card-header>-->
+
+<!--    <div><span class="flag-icon" [ngClass]="'flag-icon-'+bankAccount.Country.toLowerCase()"></span> XX XXXX XXXXXX XXXX{{bankAccount.LastFour}}</div>-->
 
 
-  <mat-card-actions>
-    <button mat-fab (click)="removeBankAccount()">
-      <mat-icon>delete_forever</mat-icon>
-    </button>
-  </mat-card-actions>
+<!--    <mat-card-actions>-->
+<!--      <button mat-mini-fab color="warn" (click)="removeBankAccount()">-->
+<!--        <mat-icon>delete_forever</mat-icon>-->
+<!--      </button>-->
+<!--    </mat-card-actions>-->
 
-  <mat-card-footer class="err" *ngIf="removeBankAccountError">{{removeBankAccountError}}</mat-card-footer>
+<!--    <mat-card-footer class="err" *ngIf="removeBankAccountError">{{removeBankAccountError}}</mat-card-footer>-->
 
-</mat-card>
+    <div fxLayout="column">
+      <div class="bankAccount" fxLayout="column" fxLayoutAlign="space-between" fxFlex="0 0 auto">
+        <div fxLayout="row" fxLayoutAlign="space-between">
+<!--          <mat-icon [svgIcon]="Card.Brand"></mat-icon>-->
+<!--          <div>{{bankAccount..NickName}}</div>-->
+          <span class="flag-icon" [ngClass]="'flag-icon-'+bankAccount.Country.toLowerCase()"></span>
+        </div>
+        <div class="bankNumber">XX XXXX XXXXXX XXXX{{bankAccount.LastFour}}</div>
+        <div fxLayout="row">
+          <div fxFlex="1 1 100%">
+            <span>{{bankAccount.Name}}</span>
+          </div>
+          <div fxFlex="auto" fxLayout="row" fxLayoutGap="6px">
+            <button mat-mini-fab color="warn" (click)="removeBankAccount()">
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+<!--            <button mat-mini-fab color="accent" [disabled]="Card.IsDefault" (click)="makeDefault()">-->
+<!--              <mat-icon>check</mat-icon>-->
+<!--            </button>-->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </mat-card>
+</div>

@@ -10,7 +10,7 @@
 <div fxLayout="column">
   <div class="credit-card" fxLayout="column" fxLayoutAlign="space-between" fxFlex="0 0 auto" [ngClass]="Card.Funding">
     <div fxLayout="row" fxLayoutAlign="space-between">
-<!--      <app-signal type="good-bad" [on]="card.isDefault" onLabel="default"></app-signal>-->
+      <signal [signal]="'Default'" *ngIf="Card.IsDefault"></signal>
       <mat-icon [svgIcon]="Card.Brand"></mat-icon>
       <div>{{Card.NickName}}</div>
     </div>

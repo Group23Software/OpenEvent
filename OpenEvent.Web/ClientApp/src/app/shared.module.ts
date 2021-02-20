@@ -40,6 +40,7 @@ import {ImageListComponent} from './image-list/image-list.component';
 import {ThumbnailEditComponent} from "./thumbnail-edit/thumbnail-edit.component";
 import {AddressFormComponent} from './address-form/address-form.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
+import { SignalComponent } from './signal/signal.component';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     ImageListComponent,
     ThumbnailEditComponent,
     AddressFormComponent,
+    SignalComponent,
   ],
   imports: [
     HttpClientModule,
@@ -137,7 +139,8 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     CategoryListComponent,
     ImageListComponent,
     ThumbnailEditComponent,
-    AddressFormComponent
+    AddressFormComponent,
+    SignalComponent
   ]
 })
 export class SharedModule

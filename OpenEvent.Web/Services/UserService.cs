@@ -12,11 +12,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.User;
+using Stripe;
+using Address = OpenEvent.Web.Models.Address.Address;
 
 namespace OpenEvent.Web.Services
 {
@@ -60,12 +61,13 @@ namespace OpenEvent.Web.Services
         /// <param name="mapper"></param>
         /// <param name="authService"><see cref="IAuthService"/>></param>
         public UserService(ApplicationContext context, ILogger<UserService> logger, IMapper mapper,
-            IAuthService authService)
+            IAuthService authService,IOptions<AppSettings> appSettings)
         {
             Logger = logger;
             ApplicationContext = context;
             Mapper = mapper;
             AuthService = authService;
+            StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
         }
 
         /// <summary>
@@ -180,6 +182,8 @@ namespace OpenEvent.Web.Services
                 DateOfBirth = x.DateOfBirth,
                 IsDarkMode = x.IsDarkMode,
                 Address = x.Address,
+                StripeAccountId = x.StripeAccountId,
+                StripeCustomerId = x.StripeCustomerId,
                 PaymentMethods = x.PaymentMethods != null ? x.PaymentMethods.Select(p => Mapper.Map<PaymentMethodViewModel>(p)).ToList() : new List<PaymentMethodViewModel>(),
                 BankAccounts = x.BankAccounts != null ? x.BankAccounts.Select(p => Mapper.Map<BankAccountViewModel>(p)).ToList() : new List<BankAccountViewModel>(),
             }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
@@ -189,6 +193,17 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("User not found");
                 throw new UserNotFoundException();
             }
+
+            var service = new AccountService();
+            var stripeAccount = service.Get(user.StripeAccountId);
+
+            if (stripeAccount == null)
+            {
+                Logger.LogInformation("Stripe user not found");
+                throw new UserNotFoundException();
+            }
+
+            user.StripeAccountInfo = Mapper.Map<StripeAccountInfo>(stripeAccount);
 
             return user;
         }

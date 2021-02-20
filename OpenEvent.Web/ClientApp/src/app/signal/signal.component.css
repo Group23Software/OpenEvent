@@ -1,0 +1,24 @@
+.signal {
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.signal-Ok {
+  color: #fff;
+  background-color: #7cb342;
+}
+.signal-Bad {
+  color: #fff;
+  background-color: #f44336;
+}
+.signal-Enabled {
+  color: #0e6245;
+  background-color: #cbf4c9;
+}
+.signal-Disabled {
+  color: #a41c4e;
+  background-color: #fde2dd;
+}
+.signal-Pending {
+  color: #020202;
+  background-color: #ffeb3b;
+}

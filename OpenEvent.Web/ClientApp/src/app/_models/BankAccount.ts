@@ -19,3 +19,18 @@ export interface RemoveBankAccountBody
   UserId: string;
   BankId: string;
 }
+
+export interface Balance
+{
+  available: BalanceAmount[];
+  pending: BalanceAmount[];
+  livemode: boolean;
+  object: string;
+}
+
+export interface BalanceAmount
+{
+  amount: number;
+  currency: string;
+  source_types: any[];
+}

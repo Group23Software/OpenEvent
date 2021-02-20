@@ -42,6 +42,7 @@ export class AuthInterceptor implements HttpInterceptor
       if (event instanceof HttpResponse) this.trigger.loading.emit(false);
       if (event instanceof HttpErrorResponse)
       {
+        console.log("there was an error response");
         this.trigger.loading.emit(false);
         this.snackBar.open(event.error.Message, 'close', {
           duration: 500,
