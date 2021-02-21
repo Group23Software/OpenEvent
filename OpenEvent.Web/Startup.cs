@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using OpenEvent.Web.Contexts;
@@ -36,6 +37,11 @@ namespace OpenEvent.Web
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
+            
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddSeq();
+            });
 
             // Add cors so angular dev server can make requests.
             services.AddCors(options =>
@@ -77,13 +83,18 @@ namespace OpenEvent.Web
             // Add automapping configuration.
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddSingleton<IAnalyticsService, AnalyticsService>();
+            
             // Add services.
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEventService, EventService>();
-            services.AddHttpClient<IEventService, EventService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IBankingService, BankingService>();
+            
+            services.AddHttpClient<IEventService, EventService>();
+
+            
 
             services.AddScoped<UserOwnsEventFilter>();
 

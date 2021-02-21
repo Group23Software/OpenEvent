@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using OpenEvent.Web.Models.Analytic;
 
 namespace OpenEvent.Web.Models.User
 {
@@ -39,6 +40,9 @@ namespace OpenEvent.Web.Models.User
         public List<BankAccount.BankAccount> BankAccounts { get; set; }
         
         public Address.Address Address { get; set; }
+        
+        public List<PageViewEvent> PageViewEvents { get; set; }
+        public List<SearchEvent> SearchEvents { get; set; }
         
         [NotMapped] public string Token { get; set; }
     }

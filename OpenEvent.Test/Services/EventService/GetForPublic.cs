@@ -15,7 +15,7 @@ namespace OpenEvent.Test.Services.EventService
         [Test]
         public async Task ShouldGetForPublic()
         {
-            var result = await EventService.GetForPublic(RealEventId);
+            var result = await EventService.GetForPublic(RealEventId, new Guid());
             result.Should().NotBeNull();
             result.Should().BeOfType<EventDetailModel>();
         }
@@ -23,7 +23,7 @@ namespace OpenEvent.Test.Services.EventService
         [Test]
         public async Task ShouldNotFindEvent()
         {
-            FluentActions.Invoking(async () => await EventService.GetForPublic(new Guid()))
+            FluentActions.Invoking(async () => await EventService.GetForPublic(new Guid(), new Guid()))
                 .Should().Throw<EventNotFoundException>();
         }
     }

@@ -17,6 +17,11 @@ namespace OpenEvent.Web.UserOwnsEvent
             UserService = userService;
         }
 
+        /// <summary>
+        /// Intercepts incoming http request to determine if the user owns the event.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             Debug.WriteLine(context);

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
@@ -30,6 +31,9 @@ namespace OpenEvent.Web.Contexts
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
         public virtual DbSet<BankAccount> BankAccounts { get; set; }
+        
+        public virtual DbSet<PageViewEvent> PageViewEvents { get; set; }
+        public virtual DbSet<SearchEvent> SearchEvents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

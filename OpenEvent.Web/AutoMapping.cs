@@ -1,5 +1,6 @@
 using System.Text;
 using AutoMapper;
+using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
@@ -20,8 +21,9 @@ namespace OpenEvent.Web
             CreateMap<User, UserViewModel>()
                 .ForMember(d => d.Avatar, m => m.MapFrom(x => Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length)));
 
-            CreateMap<User, UserAccountModel>()
-                .ForMember(d => d.Avatar, m => m.MapFrom(x => Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length)));
+            // CreateMap<User, UserAccountModel>()
+                // .ForMember(d => d.Avatar, m => m.MapFrom(x => Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length)))
+                // .ForMember(d => d.StripeAccountInfo);
 
             CreateMap<Ticket, TicketViewModel>()
                 .ForMember(d => d.QRCode, m => m.MapFrom(x => Encoding.UTF8.GetString(x.QRCode, 0, x.QRCode.Length)));
@@ -49,6 +51,9 @@ namespace OpenEvent.Web
             CreateMap<PaymentMethod, PaymentMethodViewModel>();
             CreateMap<BankAccount, BankAccountViewModel>();
             CreateMap<Account, StripeAccountInfo>().ForMember(x => x.PersonId, m => m.MapFrom(x => x.Individual.Id));
+
+            CreateMap<SearchEvent, SearchEventViewModel>();
+            CreateMap<PageViewEvent, PageViewEventViewModel>();
         }
     }
 }

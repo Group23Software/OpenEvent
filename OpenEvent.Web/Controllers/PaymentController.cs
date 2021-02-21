@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Models.PaymentMethod;
@@ -8,6 +7,9 @@ using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
 {
+    /// <summary>
+    /// API controller for all payment related endpoints.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class PaymentController : ControllerBase
@@ -21,6 +23,11 @@ namespace OpenEvent.Web.Controllers
             Logger = logger;
         }
 
+        /// <summary>
+        /// Endpoint for adding a user's payment method.
+        /// </summary>
+        /// <param name="addPaymentMethodBody"></param>
+        /// <returns></returns>
         [HttpPost("AddPaymentMethod")]
         public async Task<ActionResult<PaymentMethodViewModel>> AddPaymentMethod(AddPaymentMethodBody addPaymentMethodBody)
         {
@@ -36,6 +43,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
         
+        /// <summary>
+        /// Endpoint for removing a user's payment method.
+        /// </summary>
+        /// <param name="removePaymentMethodBody"></param>
+        /// <returns></returns>
         [HttpPost("RemovePaymentMethod")]
         public async Task<ActionResult> RemovePaymentMethod(RemovePaymentMethodBody removePaymentMethodBody)
         {
@@ -51,6 +63,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
         
+        /// <summary>
+        /// Endpoint for setting the default payment method.
+        /// </summary>
+        /// <param name="makeDefaultBody"></param>
+        /// <returns></returns>
         [HttpPost("MakePaymentDefault")]
         public async Task<ActionResult> MakePaymentDefault(MakeDefaultBody makeDefaultBody)
         {

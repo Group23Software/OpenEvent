@@ -21,6 +21,9 @@ namespace OpenEvent.Web.Services
         Task RemoveBankAccount(RemoveBankAccountBody removeBankAccountBody);
     }
 
+    /// <summary>
+    /// Service providing all banking logic.
+    /// </summary>
     public class BankingService : IBankingService
     {
         private readonly ILogger<BankingService> Logger;
@@ -36,6 +39,14 @@ namespace OpenEvent.Web.Services
             StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
         }
 
+        /// <summary>
+        /// Creates a stripe account if one does not exist.
+        /// Adds bank token to the user's stripe account.
+        /// Adds bank account to the user entity.
+        /// </summary>
+        /// <param name="addBankAccountBody"></param>
+        /// <returns></returns>
+        /// <exception cref="UserNotFoundException"></exception>
         public async Task<BankAccountViewModel> AddBankAccount(AddBankAccountBody addBankAccountBody)
         {
             var user = await ApplicationContext.Users.Include(x => x.BankAccounts)
@@ -86,6 +97,13 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <summary>
+        /// Deletes the users stripe account.
+        /// </summary>
+        /// <param name="removeBankAccountBody"></param>
+        /// <returns></returns>
+        /// <exception cref="UserNotFoundException"></exception>
+        /// <exception cref="BankAccountNotFoundException"></exception>
         public async Task RemoveBankAccount(RemoveBankAccountBody removeBankAccountBody)
         {
             var user = await ApplicationContext.Users.Include(x => x.BankAccounts)

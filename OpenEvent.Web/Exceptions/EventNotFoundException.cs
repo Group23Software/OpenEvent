@@ -8,9 +8,7 @@ namespace OpenEvent.Web.Exceptions
     [Serializable]
     public class EventNotFoundException : Exception
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
+        /// <inheritdoc />
         public EventNotFoundException() : base("Event Not Found")
         {
         }

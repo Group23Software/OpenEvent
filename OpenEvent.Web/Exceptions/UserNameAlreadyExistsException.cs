@@ -8,9 +8,7 @@ namespace OpenEvent.Web.Exceptions
     [Serializable]
     public class UserNameAlreadyExistsException: Exception
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
+        /// <inheritdoc />
         public UserNameAlreadyExistsException() : base("Username already exists")
         {
         }

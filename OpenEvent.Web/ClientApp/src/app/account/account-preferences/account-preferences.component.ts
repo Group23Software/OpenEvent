@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {ImageManipulationService} from "../../_extensions/image-manipulation.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
-import {ImageCroppedEvent} from "ngx-image-cropper";
 import {UserService} from "../../_Services/user.service";
 import {UserValidatorsService} from "../../_Services/user-validators.service";
 import {MatDialog} from "@angular/material/dialog";
@@ -11,7 +10,6 @@ import {AuthService} from "../../_Services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
-import {ImageViewModel} from "../../_models/Image";
 import {Address} from "../../_models/Address";
 
 @Component({
@@ -56,12 +54,14 @@ export class AccountPreferencesComponent implements OnInit
   });
   public userName = new FormControl('', [Validators.required], [this.userValidators.usernameValidator()]);
 
-  constructor (private userService: UserService,
-               private userValidators: UserValidatorsService,
-               private dialog: MatDialog,
-               private router: Router,
-               private authService: AuthService,
-               private snackBar: MatSnackBar)
+  constructor (
+    private userService: UserService,
+    private userValidators: UserValidatorsService,
+    private dialog: MatDialog,
+    private router: Router,
+    private authService: AuthService,
+    private snackBar: MatSnackBar
+  )
   {
   }
 
@@ -131,7 +131,7 @@ export class AccountPreferencesComponent implements OnInit
     });
   }
 
-  avatarUpload ()
+  public avatarUpload ()
   {
     let ref = this.dialog.open(ImageUploadComponent, {
       data: {

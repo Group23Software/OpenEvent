@@ -113,7 +113,7 @@ export class BankingService
   {
     return this.http.get<Balance>('https://api.stripe.com/v1/balance', {
       headers: new HttpHeaders({
-        Authorization: environment.StripeAPIKey
+        Authorization: 'Bearer ' + environment.StripeAPIKey
       }).set('Stripe-Account', this.userService.User?.StripeAccountId)
     });
   }

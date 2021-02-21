@@ -21,7 +21,7 @@ namespace OpenEvent.Test.Controllers.EventController
         public async Task Setup()
         {
             // EventServiceMock.Setup(x => x.GetForHost(TestData.Id)).ReturnsAsync(TestData);
-            EventServiceMock.Setup(x => x.Search(null,null)).ThrowsAsync(new Exception("Error searching"));
+            EventServiceMock.Setup(x => x.Search(null,null,new Guid())).ThrowsAsync(new Exception("Error searching"));
             EventController = new Web.Controllers.EventController(EventServiceMock.Object,
                 new Mock<ILogger<Web.Controllers.EventController>>().Object);
         }
@@ -31,7 +31,7 @@ namespace OpenEvent.Test.Controllers.EventController
         {
             List<SearchFilter> searchFilters = new List<SearchFilter>();
 
-            var result = await EventController.Search("", searchFilters);
+            var result = await EventController.Search("", searchFilters,new Guid());
             result.Should().BeOfType<ActionResult<List<EventViewModel>>>();
         }
         
@@ -40,7 +40,7 @@ namespace OpenEvent.Test.Controllers.EventController
         {
             List<SearchFilter> searchFilters = new List<SearchFilter>();
 
-            var result = await EventController.Search(null, null);
+            var result = await EventController.Search(null, null,new Guid());
             result.Result.Should().BeOfType<BadRequestObjectResult>().Subject.Value.Should().BeOfType<Exception>();
         }
     }

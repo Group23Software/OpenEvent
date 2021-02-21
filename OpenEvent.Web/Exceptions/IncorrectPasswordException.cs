@@ -8,9 +8,7 @@ namespace OpenEvent.Web.Exceptions
     [Serializable]
     public class IncorrectPasswordException : Exception
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
+        /// <inheritdoc />
         public IncorrectPasswordException() : base("Incorrect Password")
         {
         }

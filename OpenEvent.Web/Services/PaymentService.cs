@@ -21,6 +21,9 @@ namespace OpenEvent.Web.Services
         Task RemovePaymentMethod(RemovePaymentMethodBody removePaymentMethodBody);
     }
 
+    /// <summary>
+    /// Service for all payment logic.
+    /// </summary>
     public class PaymentService : IPaymentService
     {
         private readonly ILogger<PaymentService> Logger;
@@ -36,6 +39,14 @@ namespace OpenEvent.Web.Services
             StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
         }
 
+        /// <summary>
+        /// Creates a stripe customer if null.
+        /// Adds card token to stripe customer.
+        /// Adds card to user.
+        /// </summary>
+        /// <param name="addPaymentMethodBody"></param>
+        /// <returns></returns>
+        /// <exception cref="UserNotFoundException"></exception>
         public async Task<PaymentMethodViewModel> AddPaymentMethod(AddPaymentMethodBody addPaymentMethodBody)
         {
             var user = await ApplicationContext.Users.Include(x => x.PaymentMethods)
@@ -89,6 +100,13 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <summary>
+        /// Sets card to default.
+        /// Updates stripe default.
+        /// </summary>
+        /// <param name="makeDefaultBody"></param>
+        /// <returns></returns>
+        /// <exception cref="UserNotFoundException"></exception>
         public async Task MakeDefault(MakeDefaultBody makeDefaultBody)
         {
             var userWithPayments =
@@ -114,7 +132,7 @@ namespace OpenEvent.Web.Services
 
                 var service = new CustomerService();
                 service.Update(userWithPayments.StripeCustomerId, options);
-                
+
                 await ApplicationContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -124,6 +142,14 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <summary>
+        /// Deletes card from stripe customer.
+        /// Removes card from user.
+        /// </summary>
+        /// <param name="removePaymentMethodBody"></param>
+        /// <returns></returns>
+        /// <exception cref="UserNotFoundException"></exception>
+        /// <exception cref="PaymentMethodNotFoundException"></exception>
         public async Task RemovePaymentMethod(RemovePaymentMethodBody removePaymentMethodBody)
         {
             var userWithPayments =

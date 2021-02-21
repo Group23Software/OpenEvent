@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Models.Category;
+using Serilog;
 
 namespace OpenEvent.Web
 {
@@ -13,6 +14,12 @@ namespace OpenEvent.Web
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Seq("http://localhost:80", apiKey: "UgrmhkMuEVCZxOX89WUm")
+                .CreateLogger();
+            
             var host = CreateHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
             {

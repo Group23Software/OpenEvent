@@ -14,6 +14,7 @@ import {map, tap} from "rxjs/operators";
 import jwtDecode, {JwtPayload} from "jwt-decode";
 import {PaymentPaths, UserPaths} from "../_extensions/api.constants";
 import {Address} from "../_models/Address";
+import {UsersAnalytics} from "../_models/Analytic";
 
 interface addressBody
 {
@@ -158,9 +159,15 @@ export class UserService
 
   public UpdateAddress (updateUserAddressBody: UpdateUserAddressBody): Observable<addressBody>
   {
-    return this.http.post<addressBody>(this.BaseUrl + UserPaths.UpdateAddress,updateUserAddressBody).pipe(map(result => {
+    return this.http.post<addressBody>(this.BaseUrl + UserPaths.UpdateAddress, updateUserAddressBody).pipe(map(result =>
+    {
       this.User.Address = result.address;
       return result;
     }));
+  }
+
+  public GetAnalytics (): Observable<UsersAnalytics>
+  {
+    return this.http.get<UsersAnalytics>(this.BaseUrl + UserPaths.GetUsersAnalytics, {params: new HttpParams().set('id', this.User.Id)});
   }
 }

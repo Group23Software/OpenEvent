@@ -15,7 +15,7 @@ namespace OpenEvent.Test.Controllers.EventController
     [TestFixture]
     public class GetForPublic
     {
-        private readonly Mock<Web.Services.IEventService> EventServiceMock = new();
+        private readonly Mock<IEventService> EventServiceMock = new();
 
         private readonly EventDetailModel TestEvent = new()
         {
@@ -27,8 +27,8 @@ namespace OpenEvent.Test.Controllers.EventController
         [SetUp]
         public async Task Setup()
         {
-            EventServiceMock.Setup(x => x.GetForPublic(TestEvent.Id)).ReturnsAsync(TestEvent);
-            EventServiceMock.Setup(x => x.GetForPublic(new Guid())).ThrowsAsync(new EventNotFoundException());
+            EventServiceMock.Setup(x => x.GetForPublic(TestEvent.Id,new Guid())).ReturnsAsync(TestEvent);
+            EventServiceMock.Setup(x => x.GetForPublic(new Guid(),new Guid())).ThrowsAsync(new EventNotFoundException());
             EventController = new Web.Controllers.EventController(EventServiceMock.Object,
                 new Mock<ILogger<Web.Controllers.EventController>>().Object);
         }
@@ -36,7 +36,7 @@ namespace OpenEvent.Test.Controllers.EventController
         [Test]
         public async Task ShouldReturnEventForPublic()
         {
-            var result = await EventController.GetForPublic(TestEvent.Id);
+            var result = await EventController.GetForPublic(TestEvent.Id,new Guid());
             result.Should().BeOfType<ActionResult<EventDetailModel>>();
             result.Value.Id.Should().Be(TestEvent.Id);
         }
@@ -44,7 +44,7 @@ namespace OpenEvent.Test.Controllers.EventController
         [Test]
         public async Task ShouldCatchException()
         {
-            var result = await EventController.GetForPublic(new Guid());
+            var result = await EventController.GetForPublic(new Guid(),new Guid());
             result.Result.Should()
                 .BeOfType<BadRequestObjectResult>()
                 .Subject.Value.Should().BeOfType<EventNotFoundException>();

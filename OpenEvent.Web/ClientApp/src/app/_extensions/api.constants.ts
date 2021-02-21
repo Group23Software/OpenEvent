@@ -22,7 +22,8 @@ let userPaths: ApiUserPaths =
     UpdateAvatar: null,
     UpdateUserName: null,
     UpdateThemePreference: null,
-    UpdateAddress: null
+    UpdateAddress: null,
+    GetUsersAnalytics: null
   }
 
 userPaths = {
@@ -34,7 +35,8 @@ userPaths = {
   UpdateAvatar: userPaths.BasePath + '/updateAvatar',
   UpdateUserName: userPaths.BasePath + '/updateUserName',
   UpdateThemePreference: userPaths.BasePath + '/updateThemePreference',
-  UpdateAddress: userPaths.BasePath + '/updateAddress'
+  UpdateAddress: userPaths.BasePath + '/updateAddress',
+  GetUsersAnalytics: userPaths.BasePath + '/GetUsersAnalytics'
 }
 
 let eventPaths: ApiEventPaths = {
@@ -106,6 +108,7 @@ interface ApiUserPaths
   readonly UpdateAvatar: string;
   readonly UpdateThemePreference: string;
   readonly UpdateAddress: string;
+  readonly GetUsersAnalytics: string;
 }
 
 interface ApiEventPaths

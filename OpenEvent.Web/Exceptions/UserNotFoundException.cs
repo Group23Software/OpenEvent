@@ -8,9 +8,7 @@ namespace OpenEvent.Web.Exceptions
     [Serializable]
     public class UserNotFoundException : Exception
     {
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
+        /// <inheritdoc />
         public UserNotFoundException() : base("User Not Found")
         {
         }
