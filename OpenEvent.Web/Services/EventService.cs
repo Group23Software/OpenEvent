@@ -48,9 +48,10 @@ namespace OpenEvent.Web.Services
         private readonly HttpClient HttpClient;
         private readonly AppSettings AppSettings;
         private readonly IAnalyticsService AnalyticsService;
+        private readonly IRecommendationService RecommendationService;
 
         public EventService(ApplicationContext context, ILogger<EventService> logger, IMapper mapper,
-            HttpClient httpClient, IOptions<AppSettings> appSettings, IAnalyticsService analyticsService)
+            HttpClient httpClient, IOptions<AppSettings> appSettings, IAnalyticsService analyticsService, IRecommendationService recommendationService)
         {
             Logger = logger;
             ApplicationContext = context;
@@ -58,6 +59,7 @@ namespace OpenEvent.Web.Services
             HttpClient = httpClient;
             AppSettings = appSettings.Value;
             AnalyticsService = analyticsService;
+            RecommendationService = recommendationService;
         }
 
         /// <summary>
@@ -282,6 +284,7 @@ namespace OpenEvent.Web.Services
             }
 
             AnalyticsService.CapturePageView(e.Id,userId);
+            RecommendationService.Influence(userId,e.Id,Influence.PageView);
 
             return e;
         }
@@ -352,6 +355,7 @@ namespace OpenEvent.Web.Services
             }
             
             AnalyticsService.CaptureSearch(keyword,String.Join(",",filters),userId);
+            RecommendationService.Influence(userId,keyword,filters);
 
             return events.Select(e => Mapper.Map<EventViewModel>(e)).Take(50).ToList();
         }

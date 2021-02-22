@@ -30,6 +30,7 @@ namespace OpenEvent.Test.Services.EventService
         protected Mock<HttpMessageHandler> HttpMessageHandlerMock;
         protected HttpClient HttpClientMock;
         protected Mock<IAnalyticsService> AnalyticsServiceMock;
+        protected Mock<IRecommendationService> RecommendationServiceMock;
 
         [SetUp]
         public async Task Setup()
@@ -50,6 +51,8 @@ namespace OpenEvent.Test.Services.EventService
             AnalyticsServiceMock = new Mock<IAnalyticsService>();
             AnalyticsServiceMock.Setup(x => x.CaptureSearch(null, null, new Guid()));
             AnalyticsServiceMock.Setup(x => x.CapturePageView(new Guid(),new Guid()));
+
+            RecommendationServiceMock = new Mock<IRecommendationService>();
 
             var addressResponse = new SearchAddressResponse()
             {
@@ -76,7 +79,7 @@ namespace OpenEvent.Test.Services.EventService
 
             EventService = new Web.Services.EventService(MockContext.Object,
                 new Mock<ILogger<Web.Services.EventService>>().Object, Mapper, HttpClientMock, AppSettings,
-                AnalyticsServiceMock.Object);
+                AnalyticsServiceMock.Object, RecommendationServiceMock.Object);
         }
     }
 }

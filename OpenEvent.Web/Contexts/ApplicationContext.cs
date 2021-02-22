@@ -4,6 +4,7 @@ using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.PaymentMethod;
+using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.Transaction;
 using OpenEvent.Web.Models.User;
@@ -34,6 +35,7 @@ namespace OpenEvent.Web.Contexts
         
         public virtual DbSet<PageViewEvent> PageViewEvents { get; set; }
         public virtual DbSet<SearchEvent> SearchEvents { get; set; }
+        public virtual DbSet<RecommendationScore> RecommendationScores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

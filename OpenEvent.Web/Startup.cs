@@ -84,6 +84,7 @@ namespace OpenEvent.Web
             services.AddAutoMapper(typeof(Startup));
 
             services.AddSingleton<IAnalyticsService, AnalyticsService>();
+            services.AddSingleton<IRecommendationService, RecommendationService>();
             
             // Add services.
             services.AddScoped<IUserService, UserService>();
