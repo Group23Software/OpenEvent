@@ -3,6 +3,7 @@ import {Address} from "./Address";
 import {SocialLinkViewModel} from "./SocialLink";
 import {ImageViewModel} from "./Image";
 import {TicketViewModel} from "./Ticket";
+import {PageViewEvent} from "./Analytic";
 
 export interface EventDetailModel extends EventViewModel
 {
@@ -19,6 +20,7 @@ export interface EventHostModel extends EventViewModel
   Address: Address;
   TicketsLeft: number;
   Tickets: TicketViewModel[];
+  PageViewEvents?: PageViewEvent[];
 
   //TODO: transactions
 }

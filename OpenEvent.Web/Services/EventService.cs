@@ -200,8 +200,11 @@ namespace OpenEvent.Web.Services
         /// <returns></returns>
         public async Task<List<EventHostModel>> GetAllHosts(Guid hostId)
         {
-            var events = ApplicationContext.Events.Include(x => x.EventCategories).ThenInclude(x => x.Category)
-                .Include(x => x.Tickets).Include(x => x.Host)
+            var events = ApplicationContext.Events
+                .Include(x => x.EventCategories).ThenInclude(x => x.Category)
+                .Include(x => x.Tickets)
+                .Include(x => x.Host)
+                .Include(x => x.PageViewEvents)
                 .AsSplitQuery().AsNoTracking().AsEnumerable();
 
             events = events.Where(x => x.Host.Id == hostId && !x.isCanceled);
@@ -232,7 +235,8 @@ namespace OpenEvent.Web.Services
                     StartLocal = x.StartLocal,
                     TicketsLeft = x.Tickets.Count,
                     EndUTC = x.EndUTC,
-                    StartUTC = x.StartUTC
+                    StartUTC = x.StartUTC,
+                    PageViewEvents = x.PageViewEvents.Any() ? x.PageViewEvents.Select(p => Mapper.Map<PageViewEventViewModel>(p)).ToList() : new List<PageViewEventViewModel>()
                 }).ToList();
         }
 
@@ -382,7 +386,7 @@ namespace OpenEvent.Web.Services
         /// <exception cref="EventNotFoundException"></exception>
         public async Task<ActionResult<EventHostModel>> GetForHost(Guid id)
         {
-            var e = await ApplicationContext.Events.Include(x => x.Tickets).Select(
+            var e = await ApplicationContext.Events.Include(x => x.PageViewEvents).Include(x => x.Tickets).Select(
                 x => new EventHostModel
                 {
                     Id = x.Id,
@@ -400,7 +404,8 @@ namespace OpenEvent.Web.Services
                     StartLocal = x.StartLocal,
                     TicketsLeft = x.Tickets.Count,
                     EndUTC = x.EndUTC,
-                    StartUTC = x.StartUTC
+                    StartUTC = x.StartUTC,
+                    PageViewEvents = x.PageViewEvents.Select(p => Mapper.Map<PageViewEventViewModel>(p)).ToList()
                 }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (e == null)

@@ -1,11 +1,12 @@
 <user-nav></user-nav>
 
+<div ngClass.gt-lg="dashboard-lg" class="dashboard">
 <mat-drawer-container id="eventListAndPreview">
   <mat-drawer #eventList mode="side" opened>
     <div mat-subheader>Events</div>
     <mat-selection-list [multiple]="false">
       <mat-list-option *ngIf="!Events || Events.length < 1">You have no events!</mat-list-option>
-      <mat-list-option *ngFor="let event of Events" (click)="togglePreview(event)" [disableRipple]="true">
+      <mat-list-option *ngFor="let event of Events" (click)="togglePreview(event)" [selected]="event == eventPreview" [disableRipple]="true">
         <img *ngIf="event.Thumbnail" [src]="event.Thumbnail.Source" mat-list-avatar>
         <div mat-line>{{event.Name}}</div>
         <div mat-line>{{event.StartLocal | date: 'medium'}}</div>
@@ -39,6 +40,6 @@
 </mat-drawer-container>
 
 <mat-card id="analyticsArea">
-  <div>Analytics Area</div>
 </mat-card>
 
+</div>

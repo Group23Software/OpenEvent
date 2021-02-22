@@ -1,7 +1,9 @@
 <user-nav></user-nav>
 <mat-tab-group color="primary" class="overflow-auto">
   <mat-tab label="Event">
-    <mat-card class="m-3" *ngIf="loading"><mat-progress-bar mode="indeterminate"></mat-progress-bar></mat-card>
+    <mat-card class="m-3" *ngIf="loading">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </mat-card>
     <div *ngIf="event" class="m-3">
       <mat-card class="d-flex flex-row justify-content-between">
         <button mat-flat-button color="primary" (click)="updateEvent()" id="save">Save</button>
@@ -158,4 +160,21 @@
     </div>
   </mat-tab>
   <mat-tab label="Promos"></mat-tab>
+  <mat-tab label="Analytics">
+    <div class="counters">
+      <div class="counter shadow-sm">
+        <img src="assets/pageview.svg">
+        <div>{{event.PageViewEvents?.length}}</div>
+      </div>
+      <div class="counter"></div>
+      <div class="counter"></div>
+      <div class="counter"></div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Raw Data">
+    <mat-card>
+      <mat-card-title>Page views</mat-card-title>
+      <div *ngFor="let pageView of event.PageViewEvents">At {{pageView.Created | date: 'full'}}</div>
+    </mat-card>
+  </mat-tab>
 </mat-tab-group>
