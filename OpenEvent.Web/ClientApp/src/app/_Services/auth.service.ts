@@ -74,7 +74,7 @@ export class AuthService
           }
           return of(true);
         }
-      ))
+      ));
   }
 
   public GetToken (): string

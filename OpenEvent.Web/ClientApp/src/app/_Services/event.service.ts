@@ -126,6 +126,6 @@ export class EventService
 
   public Search (keyword: string, filters: SearchFilter[]): Observable<EventViewModel[]>
   {
-    return this.http.post<EventViewModel[]>(this.BaseUrl + EventPaths.Search, filters, {params: new HttpParams().set('keyword', keyword).set('userId', this.userService.User.Id)})
+    return this.http.post<EventViewModel[]>(this.BaseUrl + EventPaths.Search, filters, {params: new HttpParams().set('keyword', keyword).set('userId', this.userService.User.Id)});
   }
 }

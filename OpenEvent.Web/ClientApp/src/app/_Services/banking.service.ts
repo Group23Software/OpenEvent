@@ -24,7 +24,6 @@ export class BankingService
   constructor (backend: HttpBackend, @Inject('BASE_URL') baseUrl: string, private userService: UserService)
   {
     this.BaseUrl = baseUrl;
-    this.BaseUrl = 'http://localhost:5000/';
     this.http = new HttpClient(backend);
   }
 

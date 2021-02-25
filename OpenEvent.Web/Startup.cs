@@ -25,12 +25,14 @@ namespace OpenEvent.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Environment = env;
         }
 
         private IConfiguration Configuration { get; }
+        private IWebHostEnvironment Environment { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -38,11 +40,13 @@ namespace OpenEvent.Web
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
-            
-            services.AddLogging(loggingBuilder =>
+
+            if (Environment.IsDevelopment())
             {
-                loggingBuilder.AddSeq();
-            });
+                appSettings.ConnectionString = appSettings.LocalConnectionString;
+            }
+
+            services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
 
             // Add cors so angular dev server can make requests.
             services.AddCors(options =>
@@ -86,17 +90,16 @@ namespace OpenEvent.Web
 
             services.AddSingleton<IAnalyticsService, AnalyticsService>();
             services.AddSingleton<IRecommendationService, RecommendationService>();
-            
+
             // Add services.
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IBankingService, BankingService>();
-            
+
             services.AddHttpClient<IEventService, EventService>();
 
-            
 
             services.AddScoped<UserOwnsEventFilter>();
 
@@ -156,7 +159,7 @@ namespace OpenEvent.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
-                
+
                 endpoints.MapMetrics();
             });
 

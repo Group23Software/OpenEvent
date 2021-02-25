@@ -21,7 +21,6 @@ export class PaymentService
   constructor (private http: HttpClient, @Inject('BASE_URL') baseUrl: string, private userService: UserService)
   {
     this.BaseUrl = baseUrl;
-    this.BaseUrl = 'http://localhost:5000/';
   }
 
   public AddPaymentMethod (addPaymentMethodBody: AddPaymentMethodBody): Observable<PaymentMethodViewModel>
