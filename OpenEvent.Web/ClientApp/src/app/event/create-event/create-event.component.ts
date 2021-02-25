@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ImageViewModel} from "../../_models/Image";
 import {MatDialog} from "@angular/material/dialog";
-import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
 import {testImg} from "./TestImage";
 import {CreateEventBody, EventDetailModel} from "../../_models/Event";
 import {UserService} from "../../_Services/user.service";
@@ -20,6 +19,10 @@ import {Router} from "@angular/router";
 })
 export class CreateEventComponent implements OnInit
 {
+
+  get UserHasBank() {
+    return this.userService.User?.BankAccounts?.length > 0
+  }
 
   public categories: Category[] = [];
   public thumbnail: ImageViewModel;
@@ -41,7 +44,7 @@ export class CreateEventComponent implements OnInit
   public DateForm = new FormGroup({
     StartLocal: new FormControl('', [Validators.required]),
     EndLocal: new FormControl('', [Validators.required]),
-  })
+  });
 
   public IsOnline = new FormControl(false);
 
@@ -52,7 +55,7 @@ export class CreateEventComponent implements OnInit
     PostalCode: new FormControl('', [Validators.required, Validators.pattern('([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})')]),
     CountryCode: new FormControl('GB'),
     CountryName: new FormControl('United Kingdom'),
-  })
+  });
 
   public SocialLinks = new FormGroup({
     Site: new FormControl(''),
@@ -60,7 +63,7 @@ export class CreateEventComponent implements OnInit
     Twitter: new FormControl(''),
     Facebook: new FormControl(''),
     Reddit: new FormControl('')
-  })
+  });
   public isEditable: boolean = true;
   public eventImages: ImageViewModel[] = [
     {
@@ -198,7 +201,6 @@ export class CreateEventComponent implements OnInit
       console.log(response);
       this.loading = false;
       this.router.navigate(['/event',response.Id])
-      //TODO: Redirect to event page
     }, (error: HttpErrorResponse) =>
     {
       console.error(error);

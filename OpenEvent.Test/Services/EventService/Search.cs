@@ -16,7 +16,7 @@ namespace OpenEvent.Test.Services.EventService
         public async Task Should_Search_By_Keyword()
         {
             // await MockContext.Object.Events.AddAsync(TestData.TestEventData.FakeEvent.Generate(10));
-            var result = await EventService.Search("Test", new List<SearchFilter>());
+            var result = await EventService.Search("Test", new List<SearchFilter>(), new Guid());
             result.Count().Should().BeGreaterThan(0);
             result.ForEach(r => r.Name.Should().Contain("Test"));
         }
@@ -32,14 +32,14 @@ namespace OpenEvent.Test.Services.EventService
                     Value = "534DE110-2D1D-4AE8-9293-68FC8037DB5A" // Music category
                 }
             };
-            var result = await EventService.Search("Test", searchFilters);
+            var result = await EventService.Search("Test", searchFilters, new Guid());
             result.Count().Should().Be(1);
         }
 
         [Test]
         public async Task Null_Keyword_Should_Return_All()
         {
-            var result = await EventService.Search(null, new List<SearchFilter>());
+            var result = await EventService.Search(null, new List<SearchFilter>(), new Guid());
             result.Should().NotBeNull();
             result.Count().Should().BeGreaterThan(0);
         }
@@ -49,7 +49,7 @@ namespace OpenEvent.Test.Services.EventService
         {
             await MockContext.Object.Events.AddRangeAsync(TestData.TestEventData.FakeEvent.Generate(100).ToList());
             await MockContext.Object.SaveChangesAsync();
-            var result = await EventService.Search("", new List<SearchFilter>());
+            var result = await EventService.Search("", new List<SearchFilter>(), new Guid());
             result.Should().NotBeNull();
             result.Count().Should().Be(50);
         }
@@ -58,7 +58,7 @@ namespace OpenEvent.Test.Services.EventService
         public async Task Should_Only_Return_Online_Events()
         {
             var result = await EventService.Search("Test",
-                new List<SearchFilter>() {new() {Key = SearchParam.IsOnline, Value = "true"}});
+                new List<SearchFilter>() {new() {Key = SearchParam.IsOnline, Value = "true"}}, new Guid());
             result.Count.Should().BePositive();
             result.ForEach(e => e.IsOnline.Should().BeTrue());
         }
@@ -72,7 +72,7 @@ namespace OpenEvent.Test.Services.EventService
             await MockContext.Object.Events.AddAsync(e);
             await MockContext.Object.SaveChangesAsync();
             var result = await EventService.Search("",
-                new List<SearchFilter> {new() {Key = SearchParam.Location, Value = "51.47338,-0.08375,1000"}});
+                new List<SearchFilter> {new() {Key = SearchParam.Location, Value = "51.47338,-0.08375,1000"}}, new Guid());
             result.Should().NotBeNull();
             result.ForEach(x => x.IsOnline.Should().BeFalse());
         }
@@ -85,7 +85,7 @@ namespace OpenEvent.Test.Services.EventService
             await MockContext.Object.Events.AddAsync(e);
             await MockContext.Object.SaveChangesAsync();
             var result = await EventService.Search("",
-                new List<SearchFilter> {new() {Key = SearchParam.Date, Value = new DateTime(0).ToString()}});
+                new List<SearchFilter> {new() {Key = SearchParam.Date, Value = new DateTime(0).ToString()}}, new Guid());
             result.Should().NotBeNull();
             result.First().StartLocal.Should().Equals(new DateTime(0));
         }

@@ -22,6 +22,8 @@ let userPaths: ApiUserPaths =
     UpdateAvatar: null,
     UpdateUserName: null,
     UpdateThemePreference: null,
+    UpdateAddress: null,
+    GetUsersAnalytics: null
   }
 
 userPaths = {
@@ -32,7 +34,9 @@ userPaths = {
   UserNameExists: userPaths.BasePath + '/userNameExists',
   UpdateAvatar: userPaths.BasePath + '/updateAvatar',
   UpdateUserName: userPaths.BasePath + '/updateUserName',
-  UpdateThemePreference: userPaths.BasePath + '/updateThemePreference'
+  UpdateThemePreference: userPaths.BasePath + '/updateThemePreference',
+  UpdateAddress: userPaths.BasePath + '/updateAddress',
+  GetUsersAnalytics: userPaths.BasePath + '/GetUsersAnalytics'
 }
 
 let eventPaths: ApiEventPaths = {
@@ -59,6 +63,32 @@ eventPaths = {
   Search: eventPaths.BasePath + '/search'
 }
 
+let paymentPaths: ApiPaymentPaths = {
+  BasePath: 'api/payment',
+  AddPaymentMethod: '',
+  MakePaymentDefault: '',
+  RemovePaymentMethod: ''
+}
+
+paymentPaths = {
+  ...paymentPaths,
+  AddPaymentMethod: paymentPaths.BasePath + '/AddPaymentMethod',
+  RemovePaymentMethod: paymentPaths.BasePath + '/RemovePaymentMethod',
+  MakePaymentDefault: paymentPaths.BasePath + '/MakePaymentDefault'
+}
+
+let bankingPaths: ApiBankingPaths = {
+  BasePath: 'api/banking',
+  AddBankAccount: '',
+  RemoveBankAccount: '',
+}
+
+bankingPaths = {
+  ...bankingPaths,
+  AddBankAccount: bankingPaths.BasePath + '/AddBankAccount',
+  RemoveBankAccount: bankingPaths.BasePath + '/RemoveBankAccount'
+}
+
 interface ApiAuthPaths
 {
   readonly BasePath: string;
@@ -77,6 +107,8 @@ interface ApiUserPaths
   readonly UpdateUserName: string;
   readonly UpdateAvatar: string;
   readonly UpdateThemePreference: string;
+  readonly UpdateAddress: string;
+  readonly GetUsersAnalytics: string;
 }
 
 interface ApiEventPaths
@@ -92,6 +124,23 @@ interface ApiEventPaths
   readonly Search: string;
 }
 
+interface ApiPaymentPaths
+{
+  readonly BasePath: string;
+  readonly AddPaymentMethod: string;
+  readonly RemovePaymentMethod: string;
+  readonly MakePaymentDefault: string;
+}
+
+interface ApiBankingPaths
+{
+  readonly BasePath: string;
+  readonly AddBankAccount: string;
+  readonly RemoveBankAccount: string;
+}
+
 export const UserPaths: ApiUserPaths = userPaths;
 export const AuthPaths: ApiAuthPaths = authPaths;
 export const EventPaths: ApiEventPaths = eventPaths;
+export const PaymentPaths: ApiPaymentPaths = paymentPaths;
+export const BankingPaths: ApiBankingPaths = bankingPaths;

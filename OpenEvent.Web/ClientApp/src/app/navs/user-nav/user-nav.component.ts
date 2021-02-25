@@ -13,9 +13,16 @@ import {Location} from "@angular/common";
 })
 export class UserNavComponent
 {
+  public loading: boolean;
 
-  constructor (private userService: UserService, private router: Router, private trigger: TriggerService, private snackBar: MatSnackBar, private location: Location)
+  constructor (
+    private userService: UserService,
+    private router: Router,
+    private trigger: TriggerService,
+    private snackBar: MatSnackBar,
+    private location: Location)
   {
+    trigger.loading.subscribe(loading => this.loading = loading);
   }
 
   get User ()
@@ -40,10 +47,12 @@ export class UserNavComponent
     this.userService.UpdateThemePreference({
       Id: this.User.Id,
       IsDarkMode: !isDark
-    }).subscribe(response => {
+    }).subscribe(response =>
+    {
       this.snackBar.open('Updated theme preference', 'close', {duration: 500});
-    }, (error: HttpErrorResponse) => {
-      this.snackBar.open(error.error.Message,'close',{duration: 1000})
+    }, (error: HttpErrorResponse) =>
+    {
+      this.snackBar.open(error.error.Message, 'close', {duration: 1000})
     });
   }
 

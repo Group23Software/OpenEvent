@@ -1,0 +1,55 @@
+<div class="overlay" *ngIf="!User.Address">
+  <mat-card class="m-auto"><div class="mat-headline warn-color">You need an address!</div></mat-card>
+</div>
+
+<mat-card class="m-3">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>payment</mat-icon>
+    <mat-card-title>Add Card</mat-card-title>
+    <mat-card-subtitle>You wont be able to pay without</mat-card-subtitle>
+  </mat-card-header>
+
+  <form (ngSubmit)="createToken()" [formGroup]="stripeTest">
+    <div class="d-flex flex-row" id="cardInputs">
+      <mat-form-field appearance="outline" class="w-100 mr-3">
+        <mat-label>Card Name</mat-label>
+        <input type="text" autocomplete="off" matInput formControlName="nickName" placeholder="Debit">
+      </mat-form-field>
+      <div id="cardAddButton">
+        <button type="submit" mat-fab color="primary" [disabled]="stripeTest.invalid || !cardComplete">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <mat-card class="mb-3">
+      <ngx-stripe-card class="mat-body" (change)="onChange($event)" [options]="cardOptions" [elementsOptions]="elementsOptions"></ngx-stripe-card>
+    </mat-card>
+  </form>
+
+  <!--  <ngx-stripe-card-group [formGroup]="stripeTest" (ngSubmit)="createToken()">-->
+  <!--    <input formControlName="nickName" />-->
+  <!--    <ngx-stripe-card-number [options]="cardNumberOptions"></ngx-stripe-card-number>-->
+  <!--    <ngx-stripe-card-expiry [options]="cardOptions"></ngx-stripe-card-expiry>-->
+  <!--    <ngx-stripe-card-cvc [options]="cardOptions"></ngx-stripe-card-cvc>-->
+  <!--    <button type="submit" mat-flat-button color="primary" [disabled]="stripeTest.invalid || !cardComplete">-->
+  <!--      CREATE TOKEN-->
+  <!--    </button>-->
+  <!--  </ngx-stripe-card-group>-->
+
+  <mat-card-footer>
+    <mat-progress-bar mode="indeterminate" *ngIf="createCardTokenLoading"></mat-progress-bar>
+    <div>{{createCardTokenError}}</div>
+  </mat-card-footer>
+</mat-card>
+
+<mat-card class="m-3" *ngIf="User.PaymentMethods">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>payments</mat-icon>
+    <mat-card-title>Your Cards</mat-card-title>
+  </mat-card-header>
+  <div *ngIf="User.PaymentMethods.length == 0" class="mat-title">You have no cards!</div>
+  <div id="cardList">
+    <virtual-card *ngFor="let card of User.PaymentMethods" [Card]="card"></virtual-card>
+  </div>
+</mat-card>

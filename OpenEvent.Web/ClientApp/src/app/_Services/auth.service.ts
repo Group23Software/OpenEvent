@@ -24,7 +24,8 @@ export class AuthService
     private cookieService: CookieService,
     private userService: UserService,
     private trigger: TriggerService
-  ) {
+  )
+  {
     this.BaseUrl = baseUrl;
   }
 
@@ -36,8 +37,8 @@ export class AuthService
         console.log(user);
         this.Token = user.Token;
         let payload: JwtPayload = jwtDecode(this.Token);
-        this.cookieService.set('token', this.Token, new Date(payload.exp * 1000));
-        this.cookieService.set('id', user.Id, new Date(payload.exp * 1000));
+        this.cookieService.set('token', this.Token, new Date(payload.exp * 1000), '/', 'localhost');
+        this.cookieService.set('id', user.Id, new Date(payload.exp * 1000), '/', 'localhost');
         this.userService.User = user;
         return user;
       })
@@ -66,7 +67,7 @@ export class AuthService
             let id = this.cookieService.get('id');
             if (this.cookieService.check('id'))
             {
-              console.log("Client has token saved, getting user");
+              console.log("Client has token saved, getting user", id);
               return this.Authenticate(id).pipe(map(x => !!x));
             }
             return of(false);

@@ -1,38 +1,43 @@
 <user-nav *ngIf="!EventPreview"></user-nav>
-<mat-card class="m-3" *ngIf="!Event"><mat-progress-bar mode="indeterminate"></mat-progress-bar></mat-card>
+
+<mat-card class="m-3" *ngIf="!Event">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</mat-card>
+
 <div class="container" *ngIf="Event">
-  <div id="eventHeader">
-    <div id="eventName" class="display-4">{{Event.Name}}</div>
-    <div id="ticketsAndPrice">
-      <div class="mr-3">{{Event.TicketsLeft}} ticket(s) left!</div>
-      <button mat-flat-button color="primary">£{{Event.Price}}</button>
+  <div id="eventHeader" ngClass.lt-sm="flex-column">
+    <div class="mr-3 flex-grow-1">
+      <div style="width: 100%; height: 80%;">
+        <div fittext>{{Event.Name}}</div>
+      </div>
     </div>
   </div>
-  <mat-card id="mediaSpace">
-    <carousel [objectFit]="'cover'" [cellWidth]="'100%'" [height]="300" [borderRadius]="10" style="z-index: 100" [autoplay]="true" [dots]="true" [loop]="true">
-      <div class="carousel-cell" *ngFor="let image of Event.Images">
-        <img [src]="image.Source" [alt]="image.Label" style="object-fit: cover">
-      </div>
-    </carousel>
-  </mat-card>
+
+  <gallery id="imageGallery" *ngIf="eventImages" [items]="eventImages" [thumb]="false" imageSize="cover" loadingStrategy="lazy"></gallery>
   <div id="eventInfo">
-
-
-    <mat-card>
+    <div class="d-flex flex-row" ngClass.lt-sm="flex-column">
+    <mat-card class="flex-grow-1 mr-3">
       <div>Starts at <span class="dateTime">{{Event.StartLocal | date:'medium'}}</span> and finishes <span class="dateTime">{{Event.EndLocal | date:'medium'}}</span></div>
     </mat-card>
-    <div class="d-flex flex-row">
-      <mat-card id="info">
-        <mat-card-content>
-          <div class="mb-3">
-            <mat-chip-list>
-              <mat-chip *ngFor="let category of Event.Categories">{{category.Name}}</mat-chip>
-            </mat-chip-list>
-          </div>
-          <div>{{Event.Description}}</div>
-        </mat-card-content>
-      </mat-card>
 
+    <mat-card id="ticketsAndPrice">
+      <div class="mr-3">{{Event.TicketsLeft}} ticket(s) left!</div>
+      <button mat-flat-button color="accent">£{{Event.Price}}</button>
+    </mat-card>
+    </div>
+    <div class="d-flex flex-row">
+
+      <div class="d-flex flex-column w-100">
+        <mat-card class="mr-3">
+          <mat-chip-list>
+            <mat-chip *ngFor="let category of Event.Categories">{{category.Name}}</mat-chip>
+          </mat-chip-list>
+        </mat-card>
+
+        <mat-card id="info">
+          <div>{{Event.Description}}</div>
+        </mat-card>
+      </div>
 
       <div>
         <mat-card id="location">
@@ -43,11 +48,13 @@
           <mat-card-content>
             <div *ngIf="Event.IsOnline">Online event</div>
             <div *ngIf="!Event.IsOnline">
-              <div>{{Event.Address.AddressLine1}}</div>
-              <div>{{Event.Address.AddressLine2}}</div>
-              <div>{{Event.Address.City}}</div>
-              <div>{{Event.Address.CountryName}}</div>
-              <div>{{Event.Address.PostalCode.toUpperCase()}}</div>
+              <div id="address">
+                <div>{{Event.Address.AddressLine1}}</div>
+                <div>{{Event.Address.AddressLine2}}</div>
+                <div>{{Event.Address.City}}</div>
+                <div>{{Event.Address.CountryName}}</div>
+                <div>{{Event.Address.PostalCode.toUpperCase()}}</div>
+              </div>
               <div id="map" *ngIf="mapLink">
                 <div class="mapouter">
                   <div class="gmap_canvas">

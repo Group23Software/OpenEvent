@@ -9,8 +9,9 @@ import { EventEmitter } from '@angular/core';
 })
 export class CategoryListComponent implements OnInit
 {
+  @Input() public inset: boolean = true;
   @Input() public categories: Category[] = [];
-  public selectedCategories: Category[] = [];
+  @Input() public selectedCategories: Category[] = [];
   @Output() categoryEvent = new EventEmitter<Category[]>();
 
   constructor ()

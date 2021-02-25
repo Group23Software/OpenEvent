@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using OpenEvent.Web.Exceptions;
+using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 

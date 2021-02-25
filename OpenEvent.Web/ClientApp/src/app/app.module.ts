@@ -17,6 +17,7 @@ import {SharedModule} from "./shared.module";
 import {EventComponent} from "./event/event/event.component";
 import {SearchComponent} from "./search/search.component";
 import {EventPreviewComponent} from "./event/event-preview/event-preview.component";
+import {NgxStripeModule} from "ngx-stripe";
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import {EventPreviewComponent} from "./event/event-preview/event-preview.compone
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
     BrowserAnimationsModule,
     SharedModule,
+    NgxStripeModule.forRoot('pk_test_51ILW9dK2ugLXrgQXdjbh4TSUPcp3TxQeB51iiecfFZMv7ZRW2durBaN1H8KFfIIyQEEmGfeYRaRvr6KS170oOuOA00Ledf7YEh'),
     RouterModule.forRoot([
       {path: '', redirectTo: 'login', pathMatch: 'full'},
       // {

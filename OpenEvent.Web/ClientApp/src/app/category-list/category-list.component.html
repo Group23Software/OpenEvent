@@ -5,7 +5,7 @@
   </mat-chip>
 </mat-chip-list>
 <div class="my-3" *ngIf="selectedCategories.length > 0">
-  <mat-divider></mat-divider>
+  <mat-divider [inset]="inset"></mat-divider>
 </div>
 <mat-chip-list>
   <mat-chip *ngFor="let category of categories">

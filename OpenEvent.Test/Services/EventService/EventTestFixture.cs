@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -28,6 +29,8 @@ namespace OpenEvent.Test.Services.EventService
         protected IEventService EventService;
         protected Mock<HttpMessageHandler> HttpMessageHandlerMock;
         protected HttpClient HttpClientMock;
+        protected Mock<IAnalyticsService> AnalyticsServiceMock;
+        protected Mock<IRecommendationService> RecommendationServiceMock;
 
         [SetUp]
         public async Task Setup()
@@ -45,11 +48,17 @@ namespace OpenEvent.Test.Services.EventService
 
             // JsonSerializer serializer = new JsonSerializer();
 
+            AnalyticsServiceMock = new Mock<IAnalyticsService>();
+            AnalyticsServiceMock.Setup(x => x.CaptureSearch(null, null, new Guid()));
+            AnalyticsServiceMock.Setup(x => x.CapturePageView(new Guid(),new Guid()));
+
+            RecommendationServiceMock = new Mock<IRecommendationService>();
+
             var addressResponse = new SearchAddressResponse()
             {
                 Results = new SearchAddressResult[]
                 {
-                    new SearchAddressResult() {Position = new CoordinateAbbreviated() {Lat = 0, Lon = 0}}
+                    new() {Position = new CoordinateAbbreviated() {Lat = 0, Lon = 0}}
                 }
             };
 
@@ -60,15 +69,17 @@ namespace OpenEvent.Test.Services.EventService
             };
             mapResponse.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
+
             HttpMessageHandlerMock = new Mock<HttpMessageHandler>();
             HttpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync",
                 ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>()).ReturnsAsync(mapResponse);
-            
+
             HttpClientMock = new HttpClient(HttpMessageHandlerMock.Object);
 
             EventService = new Web.Services.EventService(MockContext.Object,
-                new Mock<ILogger<Web.Services.EventService>>().Object, Mapper, HttpClientMock, AppSettings);
+                new Mock<ILogger<Web.Services.EventService>>().Object, Mapper, HttpClientMock, AppSettings,
+                AnalyticsServiceMock.Object, RecommendationServiceMock.Object);
         }
     }
 }

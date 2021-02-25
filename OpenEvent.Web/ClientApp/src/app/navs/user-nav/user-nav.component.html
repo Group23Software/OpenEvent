@@ -1,27 +1,74 @@
-<header>
+<header fxHide.gt-xs>
   <mat-toolbar color="primary" *ngIf="User">
+    <button mat-icon-button (click)="back()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <button class="mr-2" mat-flat-button color="accent" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>
+    <button class="mr-2" mat-flat-button color="accent" [routerLink]="['/search']" [routerLinkActive]="['/search']">Search</button>
+    <div class="flex-grow-1"></div>
+    <mat-progress-spinner *ngIf="loading" [diameter]="40" class="mr-2" color="accent" mode="indeterminate"></mat-progress-spinner>
+    <img [src]="User.Avatar" class="avatar" [mat-menu-trigger-for]="menu">
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item [routerLink]="['/host/create']" [routerLinkActive]="['activeLink']">
+        <mat-icon>create</mat-icon>
+        <span>Create Event</span>
+      </button>
+      <button mat-menu-item [routerLink]="['/user/account']" [routerLinkActive]="['activeLink']">
+        <mat-icon>settings</mat-icon>
+        <span>User Settings</span></button>
+      <button mat-menu-item [routerLink]="['/user/tickets']" [routerLinkActive]="['activeLink']">
+        <mat-icon>local_activity</mat-icon>
+        <span>Your Tickets</span></button>
+      <button mat-menu-item [routerLink]="['/host/dashboard']" [routerLinkActive]="['activeLink']">
+        <mat-icon>festival</mat-icon>
+        <span>Your Events</span></button>
+      <button mat-menu-item>
+        <mat-icon>dark_mode</mat-icon>
+        <mat-slide-toggle labelPosition="before" #themeToggle [checked]="User.IsDarkMode" (click)="$event.stopPropagation();toggleTheme(themeToggle.checked)">Dark Mode</mat-slide-toggle>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Log Out</span></button>
+    </mat-menu>
+  </mat-toolbar>
+</header>
+
+<header fxHide.lt-sm>
+  <mat-toolbar class="toolbar" ngClass.gt-xs="toolbar" color="primary" *ngIf="User">
 
     <div class="navControls">
-      <button mat-icon-button (click)="back()"><mat-icon>arrow_back</mat-icon></button>
-      <button mat-stroked-button  class="mr-2" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>
+      <button mat-icon-button (click)="back()" fxHide.lt-sm>
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <button mat-stroked-button class="mr-2" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>
       <button mat-flat-button color="accent" [routerLink]="['/search']" [routerLinkActive]="['/search']">Search</button>
     </div>
 
-    <a mat-button id="title" (click)="routeHome()">Open Event</a>
+    <a mat-button id="title" (click)="routeHome()" fxHide.lt-sm>Open Event</a>
 
     <div class="navControls justify-content-end">
+      <mat-progress-spinner *ngIf="loading" [diameter]="40" class="mr-3" color="accent" mode="indeterminate"></mat-progress-spinner>
       <button mat-flat-button color="accent" class="mr-2" [routerLink]="['/host/create']" [routerLinkActive]="['activeLink']">Create Event</button>
-      <img [src]="User.Avatar" id="avatar" [mat-menu-trigger-for]="menu">
+      <img [src]="User.Avatar" class="avatar" [mat-menu-trigger-for]="menu">
       <mat-menu #menu="matMenu">
-        <button mat-menu-item [routerLink]="['/user/account']" [routerLinkActive]="['activeLink']"><mat-icon>settings</mat-icon><span>User Settings</span></button>
-        <button mat-menu-item [routerLink]="['/user/tickets']" [routerLinkActive]="['activeLink']"><mat-icon>local_activity</mat-icon><span>Your Tickets</span></button>
-        <button mat-menu-item [routerLink]="['/host/dashboard']" [routerLinkActive]="['activeLink']"><mat-icon>festival</mat-icon><span>Your Events</span></button>
-        <button mat-menu-item><mat-icon>dark_mode</mat-icon>
+        <button mat-menu-item [routerLink]="['/user/account']" [routerLinkActive]="['activeLink']">
+          <mat-icon>settings</mat-icon>
+          <span>User Settings</span></button>
+        <button mat-menu-item [routerLink]="['/user/tickets']" [routerLinkActive]="['activeLink']">
+          <mat-icon>local_activity</mat-icon>
+          <span>Your Tickets</span></button>
+        <button mat-menu-item [routerLink]="['/host/dashboard']" [routerLinkActive]="['activeLink']">
+          <mat-icon>festival</mat-icon>
+          <span>Your Events</span></button>
+        <button mat-menu-item>
+          <mat-icon>dark_mode</mat-icon>
           <mat-slide-toggle labelPosition="before" #themeToggle [checked]="User.IsDarkMode" (click)="$event.stopPropagation();toggleTheme(themeToggle.checked)">Dark Mode</mat-slide-toggle>
         </button>
-        <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon><span>Log Out</span></button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Log Out</span></button>
       </mat-menu>
     </div>
-
+    <!--    </div>-->
   </mat-toolbar>
 </header>

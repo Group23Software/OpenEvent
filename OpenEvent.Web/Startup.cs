@@ -10,12 +10,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Services;
 using OpenEvent.Web.UserOwnsEvent;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Prometheus;
+using Stripe;
+using EventService = OpenEvent.Web.Services.EventService;
 
 namespace OpenEvent.Web
 {
@@ -35,6 +39,11 @@ namespace OpenEvent.Web
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
             
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddSeq();
+            });
+
             // Add cors so angular dev server can make requests.
             services.AddCors(options =>
             {
@@ -75,11 +84,19 @@ namespace OpenEvent.Web
             // Add automapping configuration.
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddSingleton<IAnalyticsService, AnalyticsService>();
+            services.AddSingleton<IRecommendationService, RecommendationService>();
+            
             // Add services.
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IBankingService, BankingService>();
+            
             services.AddHttpClient<IEventService, EventService>();
+
+            
 
             services.AddScoped<UserOwnsEventFilter>();
 
@@ -121,6 +138,7 @@ namespace OpenEvent.Web
             }
 
             app.UseRouting();
+            app.UseHttpMetrics();
 
             if (env.IsDevelopment())
             {
@@ -138,6 +156,8 @@ namespace OpenEvent.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                
+                endpoints.MapMetrics();
             });
 
             app.UseSpa(spa =>

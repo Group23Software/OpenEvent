@@ -9,9 +9,8 @@ namespace OpenEvent.Web.Models.Ticket
     {
         public Guid Id { get; set; }
         public byte[] QRCode { get; set; }
-        
         public Event.Event Event { get; set; }
         public User.User User { get; set; }
-        // TODO: Transaction
+        public Transaction.Transaction Transaction { get; set; }
     }
 }

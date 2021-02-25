@@ -7,6 +7,7 @@ export class TriggerService
 {
 
   public isDark: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public loading: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor ()
   {

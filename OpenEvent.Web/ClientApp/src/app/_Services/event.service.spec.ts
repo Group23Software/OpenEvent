@@ -1,9 +1,16 @@
 import {TestBed} from '@angular/core/testing';
 import {EventService} from './event.service';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpResponse} from "@angular/common/http";
 import {of} from "rxjs";
 import {Category} from "../_models/Category";
-import {CreateEventBody, EventDetailModel, EventHostModel, EventViewModel} from "../_models/Event";
+import {
+  CreateEventBody,
+  EventDetailModel,
+  EventHostModel,
+  EventViewModel,
+  SearchParam,
+  UpdateEventBody
+} from "../_models/Event";
 import {UserService} from "./user.service";
 import {UserAccountModel} from "../_models/User";
 import {SocialMedia} from "../_models/SocialMedia";
@@ -46,11 +53,11 @@ describe('EventService', () =>
     Name: "",
     Price: 0,
     SocialLinks: [
-      {SocialMedia: SocialMedia.Site,Link: "Link"},
-      {SocialMedia: SocialMedia.Instagram,Link: "Link"},
-      {SocialMedia: SocialMedia.Twitter,Link: "Link"},
-      {SocialMedia: SocialMedia.Facebook,Link: "Link"},
-      {SocialMedia: SocialMedia.Reddit,Link: "Link"}
+      {SocialMedia: SocialMedia.Site, Link: "Link"},
+      {SocialMedia: SocialMedia.Instagram, Link: "Link"},
+      {SocialMedia: SocialMedia.Twitter, Link: "Link"},
+      {SocialMedia: SocialMedia.Facebook, Link: "Link"},
+      {SocialMedia: SocialMedia.Reddit, Link: "Link"}
     ],
     StartLocal: undefined,
     StartUTC: undefined,
@@ -107,6 +114,21 @@ describe('EventService', () =>
     TicketsLeft: 0
   }
 
+  const mockUpdateEventBody: UpdateEventBody = {
+    Address: undefined,
+    Categories: [],
+    Description: "",
+    EndLocal: undefined,
+    Id: "Id",
+    Images: [],
+    IsOnline: false,
+    Name: "",
+    Price: 0,
+    SocialLinks: [],
+    StartLocal: undefined,
+    Thumbnail: undefined
+  }
+
   beforeEach(() =>
   {
 
@@ -155,7 +177,8 @@ describe('EventService', () =>
     service.GetForPublic(mockPublicEvent.Id).subscribe(e =>
     {
       expect(e).not.toBeNull();
-      e.SocialLinks.forEach(s => {
+      e.SocialLinks.forEach(s =>
+      {
         expect(s.SocialMedia).not.toBeNull();
       });
     })
@@ -191,6 +214,33 @@ describe('EventService', () =>
     {
       expect(e).not.toBeNull();
       expect(e.Name).toEqual(mockEventHostModel.Name);
+    });
+  });
+
+  it('should update event', () =>
+  {
+    httpClientMock.post.and.returnValue(of(new HttpResponse({status: 200})));
+    service.Update(mockUpdateEventBody).subscribe(r =>
+    {
+      expect(r).toEqual(new HttpResponse({status: 200}));
+    });
+  });
+
+  it('should cancel event', () =>
+  {
+    httpClientMock.post.and.returnValue(of(new HttpResponse({status: 200})));
+    service.Cancel("Id").subscribe(r =>
+    {
+      expect(r).toEqual(new HttpResponse({status: 200}));
+    });
+  });
+
+  it('should search for events', () =>
+  {
+    httpClientMock.post.and.returnValue(of([mockEventViewModel,mockEventViewModel,mockEventViewModel]));
+    service.Search("",[{Key:SearchParam.IsOnline,Value: "true"}]).subscribe(r =>
+    {
+      expect(r).toEqual([mockEventViewModel,mockEventViewModel,mockEventViewModel]);
     });
   });
 

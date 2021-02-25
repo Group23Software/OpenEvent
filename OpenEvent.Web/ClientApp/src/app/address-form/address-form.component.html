@@ -1,0 +1,30 @@
+<form [formGroup]="addressForm" (ngSubmit)="submit()">
+  <div class="d-flex flex-column">
+    <mat-form-field appearance="outline">
+      <mat-label>Address line 1</mat-label>
+      <input matInput type="text" formControlName="AddressLine1" placeholder="21 Main Street">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Address line 2</mat-label>
+      <input matInput type="text" formControlName="AddressLine2" placeholder="Apt 1">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>City</mat-label>
+      <input matInput type="text" formControlName="City" placeholder="London">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Postcode</mat-label>
+      <input matInput type="text" formControlName="PostalCode" placeholder="AA1 1AA">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Country</mat-label>
+      <input matInput type="text" disabled [value]="addressForm.controls.CountryName.value">
+    </mat-form-field>
+
+    <button [disabled]="Disabled" mat-flat-button color="accent" type="submit" style="width: fit-content">Submit</button>
+  </div>
+</form>

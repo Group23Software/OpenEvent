@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -15,10 +14,10 @@ using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Helpers;
 using OpenEvent.Web.Models.Address;
+using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.Ticket;
-using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Services
 {
@@ -30,14 +29,17 @@ namespace OpenEvent.Web.Services
         Task<List<EventHostModel>> GetAllHosts(Guid hostId);
 
         //public methods
-        Task<EventDetailModel> GetForPublic(Guid id);
-        Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters);
+        Task<EventDetailModel> GetForPublic(Guid id, Guid? userId);
+        Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters, Guid userId);
 
         Task<List<Category>> GetAllCategories();
         Task<ActionResult<EventHostModel>> GetForHost(Guid id);
         Task Update(UpdateEventBody updateEventBody);
     }
 
+    /// <summary>
+    /// Service providing all event logic.
+    /// </summary>
     public class EventService : IEventService
     {
         private readonly ILogger<EventService> Logger;
@@ -45,17 +47,28 @@ namespace OpenEvent.Web.Services
         private readonly IMapper Mapper;
         private readonly HttpClient HttpClient;
         private readonly AppSettings AppSettings;
+        private readonly IAnalyticsService AnalyticsService;
+        private readonly IRecommendationService RecommendationService;
 
         public EventService(ApplicationContext context, ILogger<EventService> logger, IMapper mapper,
-            HttpClient httpClient, IOptions<AppSettings> appSettings)
+            HttpClient httpClient, IOptions<AppSettings> appSettings, IAnalyticsService analyticsService, IRecommendationService recommendationService)
         {
             Logger = logger;
             ApplicationContext = context;
             Mapper = mapper;
             HttpClient = httpClient;
             AppSettings = appSettings.Value;
+            AnalyticsService = analyticsService;
+            RecommendationService = recommendationService;
         }
 
+        /// <summary>
+        /// Creates a new event.
+        /// Gets event location from azure maps API.
+        /// </summary>
+        /// <param name="createEventBody"></param>
+        /// <returns></returns>
+        /// <exception cref="UserNotFoundException"></exception>
         public async Task<EventViewModel> Create(CreateEventBody createEventBody)
         {
             var host = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == createEventBody.HostId);
@@ -147,6 +160,12 @@ namespace OpenEvent.Web.Services
             throw new AddressNotFoundException();
         }
 
+        /// <summary>
+        /// Sets IsCanceled true.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="EventNotFoundException"></exception>
         public async Task Cancel(Guid id)
         {
             var e = await GetEvent(id);
@@ -176,14 +195,21 @@ namespace OpenEvent.Web.Services
             return await ApplicationContext.Events.FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        /// <summary>
+        /// Gets all of the users hosted events.
+        /// </summary>
+        /// <param name="hostId"></param>
+        /// <returns></returns>
         public async Task<List<EventHostModel>> GetAllHosts(Guid hostId)
         {
-            var events = ApplicationContext.Events.Include(x => x.EventCategories).ThenInclude(x => x.Category).Include(x => x.Tickets).Include(x => x.Host)
+            var events = ApplicationContext.Events
+                .Include(x => x.EventCategories).ThenInclude(x => x.Category)
+                .Include(x => x.Tickets)
+                .Include(x => x.Host)
+                .Include(x => x.PageViewEvents)
                 .AsSplitQuery().AsNoTracking().AsEnumerable();
 
             events = events.Where(x => x.Host.Id == hostId && !x.isCanceled);
-
-            // var fullEvents = events.ToList();
             
             return events.Select(
                 x => new EventHostModel
@@ -192,7 +218,9 @@ namespace OpenEvent.Web.Services
                     Name = x.Name,
                     Description = x.Description,
                     Address = x.Address,
-                    Categories = x.EventCategories.Any() ? x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList() : new List<CategoryViewModel>(),
+                    Categories = x.EventCategories.Any()
+                        ? x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList()
+                        : new List<CategoryViewModel>(),
                     Price = x.Price,
                     Thumbnail = x.Thumbnail.Source != null ? Mapper.Map<ImageViewModel>(x.Thumbnail) : null,
                     Images = x.Images.Any()
@@ -209,11 +237,19 @@ namespace OpenEvent.Web.Services
                     StartLocal = x.StartLocal,
                     TicketsLeft = x.Tickets.Count,
                     EndUTC = x.EndUTC,
-                    StartUTC = x.StartUTC
+                    StartUTC = x.StartUTC,
+                    PageViewEvents = x.PageViewEvents.Any() ? x.PageViewEvents.Select(p => Mapper.Map<PageViewEventViewModel>(p)).ToList() : new List<PageViewEventViewModel>()
                 }).ToList();
         }
 
-        public async Task<EventDetailModel> GetForPublic(Guid id)
+        /// <summary>
+        /// Gets all public facing data for an event.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="EventNotFoundException"></exception>
+        public async Task<EventDetailModel> GetForPublic(Guid id, Guid? userId)
         {
             var e = await ApplicationContext.Events
                 .Include(x => x.Address)
@@ -247,10 +283,20 @@ namespace OpenEvent.Web.Services
                 throw new EventNotFoundException();
             }
 
+            AnalyticsService.CapturePageView(e.Id,userId);
+            RecommendationService.Influence(userId,e.Id,Influence.PageView);
+
             return e;
         }
 
-        public async Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters)
+        /// <summary>
+        /// Searches events.
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="filters"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters, Guid userId)
         {
             List<Guid> searchCategories = filters.Where(x => x.Key == SearchParam.Category)
                 .Select(x => Guid.Parse(x.Value)).ToList();
@@ -307,6 +353,9 @@ namespace OpenEvent.Web.Services
                         realDate.Year,
                         realDate.Month, realDate.Day)));
             }
+            
+            AnalyticsService.CaptureSearch(keyword,String.Join(",",filters),userId);
+            RecommendationService.Influence(userId,keyword,filters);
 
             return events.Select(e => Mapper.Map<EventViewModel>(e)).Take(50).ToList();
         }
@@ -324,14 +373,24 @@ namespace OpenEvent.Web.Services
             }) < cords[2];
         }
 
+        /// <summary>
+        /// Gets all event categories.
+        /// </summary>
+        /// <returns></returns>
         public Task<List<Category>> GetAllCategories()
         {
             return ApplicationContext.Categories.ToListAsync();
         }
 
+        /// <summary>
+        /// Gets all data for event.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="EventNotFoundException"></exception>
         public async Task<ActionResult<EventHostModel>> GetForHost(Guid id)
         {
-            var e = await ApplicationContext.Events.Include(x => x.Tickets).Select(
+            var e = await ApplicationContext.Events.Include(x => x.PageViewEvents).Include(x => x.Tickets).Select(
                 x => new EventHostModel
                 {
                     Id = x.Id,
@@ -349,7 +408,8 @@ namespace OpenEvent.Web.Services
                     StartLocal = x.StartLocal,
                     TicketsLeft = x.Tickets.Count,
                     EndUTC = x.EndUTC,
-                    StartUTC = x.StartUTC
+                    StartUTC = x.StartUTC,
+                    PageViewEvents = x.PageViewEvents.Select(p => Mapper.Map<PageViewEventViewModel>(p)).ToList()
                 }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (e == null)
@@ -361,6 +421,12 @@ namespace OpenEvent.Web.Services
             return e;
         }
 
+        /// <summary>
+        /// Updates the event.
+        /// </summary>
+        /// <param name="updateEventBody"></param>
+        /// <returns></returns>
+        /// <exception cref="EventNotFoundException"></exception>
         public async Task Update(UpdateEventBody updateEventBody)
         {
             var e = await ApplicationContext.Events.Include(x => x.EventCategories)

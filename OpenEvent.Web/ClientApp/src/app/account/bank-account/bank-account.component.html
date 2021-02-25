@@ -1,0 +1,104 @@
+<div class="overlay" *ngIf="!User.Address">
+  <mat-card class="m-auto">
+    <div class="mat-headline warn-color">You need an address!</div>
+  </mat-card>
+</div>
+
+<mat-card *ngIf="!bankAccount" class="m-3">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>account_balance</mat-icon>
+    <mat-card-title>Add Bank</mat-card-title>
+    <mat-card-subtitle>If you want to accept payments you need a bank account</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="d-flex flex-row">
+      <mat-card class="flex-grow-1 mr-3">
+        <ngx-stripe-iban (change)="onChange($event)" [options]="options"></ngx-stripe-iban>
+      </mat-card>
+      <button type="submit" mat-fab color="primary" (click)="addBankAccount()" [disabled]="!bankComplete">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </mat-card-content>
+
+  <mat-card-footer>
+    <mat-progress-bar mode="indeterminate" *ngIf="addBankAccountLoading"></mat-progress-bar>
+    <div class="warn-color">{{addBankAccountError}}</div>
+  </mat-card-footer>
+</mat-card>
+
+<div *ngIf="bankAccount" class="m-3">
+  <mat-card class="mb-3">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>account_balance_wallet</mat-icon>
+      <mat-card-title>Your Bank</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <div class="d-flex flex-row align-items-center mb-3 mat-body">
+        <div class="mr-3">Payments:
+          <signal [signal]="paymentStatus"></signal>
+        </div>
+        <div class="mr-3">Payouts:
+          <signal [signal]="payoutStatus"></signal>
+        </div>
+        <div class="mr-3">Available Balance: {{balance?.available[0].amount / 100 | currency:balance?.available[0].currency.toUpperCase()}}</div>
+        <div class="mr-3">Pending Balance: {{balance?.pending[0].amount / 100 | currency:balance?.pending[0].currency.toUpperCase()}}</div>
+      </div>
+      <div id="stripeErrors" *ngIf="stripeDisabledReason">
+        <div *ngFor="let req of stripeRequirements">{{req}}</div>
+        <div *ngIf="stripeDisabledReason">{{stripeDisabledReason}}</div>
+      </div>
+
+      <mat-list class="mb-3" *ngIf="stripeDisabledReason != null">
+        <mat-list-item [disabled]="!stripeRequirements?.includes('individual.verification.document')">
+          <div class="mat-body mr-1">Identity document</div>
+          <input hidden #documentInput type="file" (change)="documentInputEvent($event)"/>
+          <button mat-icon-button (click)="documentInput.click()">
+            <mat-icon>file_upload</mat-icon>
+          </button>
+        </mat-list-item>
+        <mat-divider [inset]="true"></mat-divider>
+        <mat-list-item [disabled]="!stripeRequirements?.includes('individual.verification.additional_document')">
+          <div class="mat-body mr-1">Additional identity document</div>
+          <input hidden #additionalDocumentInput type="file" (change)="additionalDocumentInputEvent($event)"/>
+          <button mat-icon-button (click)="additionalDocumentInput.click()">
+            <mat-icon>file_upload</mat-icon>
+          </button>
+        </mat-list-item>
+        <mat-divider [inset]="true"></mat-divider>
+        <div class="warn-color">{{documentError}}</div>
+        <mat-progress-bar *ngIf="documentLoading" mode="indeterminate"></mat-progress-bar>
+      </mat-list>
+
+      <div fxLayout="column">
+        <mat-card class="bankAccount" fxLayout="column" fxLayoutAlign="space-between" fxFlex="0 0 auto">
+          <div fxLayout="row" fxLayoutAlign="space-between">
+            <!--          <mat-icon [svgIcon]="Card.Brand"></mat-icon>-->
+            <!--          <div>{{bankAccount..NickName}}</div>-->
+            <span class="flag-icon" [ngClass]="'flag-icon-'+bankAccount.Country.toLowerCase()"></span>
+          </div>
+          <div class="bankNumber ">XX XXXX XXXXXX XXXX{{bankAccount.LastFour}}</div>
+          <div fxLayout="row">
+            <div fxFlex="1 1 100%">
+              <span>{{bankAccount.Name}}</span>
+            </div>
+            <div fxFlex="auto" fxLayout="row" fxLayoutGap="6px">
+              <button mat-mini-fab color="warn" (click)="removeBankAccount()">
+                <mat-icon>delete_forever</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+    </mat-card-content>
+
+    <mat-card-footer>
+      <mat-progress-bar mode="indeterminate" *ngIf="removeBankAccountLoading"></mat-progress-bar>
+      <div class="warn-color">{{removeBankAccountError}}</div>
+    </mat-card-footer>
+
+  </mat-card>
+</div>

@@ -5,7 +5,27 @@
 }
 
 
-
 mat-card {
   margin: 1rem;
+}
+
+.counters {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin: 1rem;
+}
+
+.counter {
+  width: 200px;
+  height: 200px;
+  background-color: aquamarine;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.counter > div {
+  flex: 1;
+  font-size: xx-large;
 }

@@ -1,5 +1,6 @@
 import {EventHostModel} from "../_models/Event";
 import {SocialMedia} from "../_models/SocialMedia";
+import {Address} from "../_models/Address";
 
 export const FakeEventHostModel: EventHostModel = {
   Address: {AddressLine1: "", AddressLine2: "", City: "", CountryCode: "", CountryName: "", PostalCode: ""},
@@ -26,7 +27,16 @@ export const FakeEventHostModel: EventHostModel = {
   ],
   StartLocal: new Date(0),
   StartUTC: new Date(0),
-  Thumbnail: {Label: "thumbnail",Source: "THUMBNAIL"},
+  Thumbnail: {Label: "thumbnail", Source: "THUMBNAIL"},
   Tickets: [],
   TicketsLeft: 0
+}
+
+export const FakeAddress: Address = {
+  AddressLine1: "Goldsmiths, University of London",
+  AddressLine2: "",
+  City: "London",
+  CountryCode: "GB",
+  CountryName: "United Kingdom",
+  PostalCode: "SE14 6NW"
 }

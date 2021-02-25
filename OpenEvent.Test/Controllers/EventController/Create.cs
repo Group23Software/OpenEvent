@@ -14,10 +14,10 @@ namespace OpenEvent.Test.Controllers.EventController
     {
         private readonly Mock<Web.Services.IEventService> EventServiceMock = new();
 
-        private readonly CreateEventBody CreateEventBody = new CreateEventBody();
-        private readonly EventViewModel EventViewModel = new EventViewModel();
+        private readonly CreateEventBody CreateEventBody = new();
+        private readonly EventViewModel EventViewModel = new();
 
-        private readonly CreateEventBody SaveErrorBody = new CreateEventBody()
+        private readonly CreateEventBody SaveErrorBody = new()
         {
             Name = "Should throw db save error"
         };

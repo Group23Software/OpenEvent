@@ -30,7 +30,9 @@ namespace OpenEvent.Test.Services.UserService
 
             AppSettings = Options.Create(new AppSettings()
             {
-                Secret = "this is a secret"
+                Secret = "this is a secret",
+                StripeApiKey =
+                    "sk_test_51ILW9dK2ugLXrgQXeYfqg8i0QGAgLXndihLXovHgu47adBimPAedvIwzfr95uffR9TiyleGFAPY7hfSI9mhdmYBF00hkxlAQMv"
             });
 
             AuthService = new Web.Services.AuthService(MockContext.Object,
@@ -38,7 +40,7 @@ namespace OpenEvent.Test.Services.UserService
 
             UserService = new Web.Services.UserService(MockContext.Object,
                 new Logger<Web.Services.UserService>(new LoggerFactory()),
-                Mapper, AuthService);
+                Mapper, AuthService, AppSettings);
         }
 
         [TearDown]

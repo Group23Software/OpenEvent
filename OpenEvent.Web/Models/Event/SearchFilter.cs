@@ -4,6 +4,11 @@ namespace OpenEvent.Web.Models.Event
     {
         public SearchParam Key { get; set; }
         public string Value { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Key}:{Value}";
+        }
     }
 
     public enum SearchParam

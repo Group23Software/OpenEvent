@@ -18,5 +18,7 @@ namespace OpenEvent.Web
         /// </summary>
         public string LocalConnectionString { get; set; }
         public string AzureMapsKey { get; set; }
+        
+        public string StripeApiKey { get; set; }
     }
 }

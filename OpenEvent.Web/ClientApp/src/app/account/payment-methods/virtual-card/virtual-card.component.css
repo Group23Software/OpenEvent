@@ -1,0 +1,38 @@
+/*.virtualCard*/
+/*{*/
+/*  border-radius: 10px;*/
+/*  width: 300px;*/
+/*  height: 175px;*/
+/*  padding: 10px;*/
+
+/*  background-color: palevioletred;*/
+/*}*/
+
+/*#cardBrand {*/
+/*  background-color: yellow;*/
+/*  width: 60px;*/
+/*  height: 35px;*/
+/*  border-radius: 10px;*/
+/*}*/
+
+.credit-card
+{
+  border-radius: 10px;
+  width: 300px;
+  height: 175px;
+  padding: 10px;
+  background-color: #efefef;
+}
+.card-number
+{
+  text-align: center;
+  text-effect: emboss;
+  font-size: 22px;
+}
+
+.credit {
+  background:linear-gradient( to bottom, #c39738, #deb761, #c39738);
+}
+.debit {
+  background:linear-gradient( to bottom, #bcc6cc, #eee, #bcc6cc);
+}

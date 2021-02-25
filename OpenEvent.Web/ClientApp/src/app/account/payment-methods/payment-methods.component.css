@@ -1,0 +1,25 @@
+#cardList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#cardList > virtual-card {
+  margin: 0.5rem;
+}
+
+#cardInputs {
+  display: flex;
+  flex-direction: row;
+}
+
+#cardInputs mat-form-field {
+  width: 100%;
+  margin-right: 1rem;
+}
+
+#cardAddButton {
+  height: fit-content;
+  margin: .25em 0;
+  padding-bottom: 1.34375em;
+}

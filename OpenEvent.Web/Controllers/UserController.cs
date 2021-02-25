@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Migrations;
+using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.User;
 using OpenEvent.Web.Services;
 
@@ -186,6 +187,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint for updating a users theme preference.
+        /// </summary>
+        /// <param name="updateThemePreferenceBody"></param>
+        /// <returns></returns>
         [HttpPost("updateThemePreference")]
         public async Task<ActionResult<bool>> UpdateThemePreference(
             [FromBody] UpdateThemePreferenceBody updateThemePreferenceBody)
@@ -195,6 +201,49 @@ namespace OpenEvent.Web.Controllers
                 await UserService.UpdateThemePreference(updateThemePreferenceBody.Id,
                     updateThemePreferenceBody.IsDarkMode);
                 return Ok(new {isDarkMode = updateThemePreferenceBody.IsDarkMode});
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.ToString());
+                return BadRequest(e);
+            }
+        }
+        
+        /// <summary>
+        /// Endpoint for updating a users address.
+        /// </summary>
+        /// <param name="updateUserAddressBody"></param>
+        /// <returns></returns>
+        [HttpPost("updateAddress")]
+        public async Task<ActionResult<string>> UpdateAddress([FromBody] UpdateUserAddressBody updateUserAddressBody)
+        {
+            try
+            {
+                var result = await UserService.UpdateAddress(updateUserAddressBody.Id, updateUserAddressBody.Address);
+                return Ok(new
+                {
+                    address = result
+                });
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.ToString());
+                return BadRequest(e);
+            }
+        }
+
+        /// <summary>
+        /// Endpoint for getting all analytics associated with the user.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("GetUsersAnalytics")]
+        public async Task<ActionResult<UsersAnalytics>> GetUsersAnalytics(Guid id)
+        {
+            try
+            {
+                var result = await UserService.GetUsersAnalytics(id);
+                return result;
             }
             catch (Exception e)
             {

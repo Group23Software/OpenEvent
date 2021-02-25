@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using OpenEvent.Web.Exceptions;
+using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Event;
 
 namespace OpenEvent.Test.Controllers.EventController

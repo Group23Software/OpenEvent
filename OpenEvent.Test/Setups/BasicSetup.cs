@@ -2,14 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Castle.Components.DictionaryAdapter;
 using Microsoft.EntityFrameworkCore;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Models.User;
 using EntityFrameworkCoreMock;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using OpenEvent.Web.Models.Address;
+using OpenEvent.Web.Models.Analytic;
+using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
+using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Ticket;
 
 namespace OpenEvent.Test.Setups
@@ -41,7 +46,19 @@ namespace OpenEvent.Test.Setups
                     LastName = "already",
                     PhoneNumber = "0000000000",
                     Avatar = new Byte[] {1, 1, 1, 1},
-                    IsDarkMode = false
+                    IsDarkMode = false,
+                    PaymentMethods = new List<PaymentMethod>(),
+                    BankAccounts = new EditableList<BankAccount>(),
+                    Address = new Address()
+                    {
+                        AddressLine1 = "21 Wellsway",
+                        AddressLine2 = "",
+                        City = "Ipswich",
+                        CountryCode = "GB",
+                        CountryName = "United Kingdom",
+                        PostalCode = "IP14 6SL",
+                    },
+                    DateOfBirth = new DateTime(2000,07,24)
                 }
             };
 
@@ -99,7 +116,8 @@ namespace OpenEvent.Test.Setups
                             CategoryId = new Guid("534DE110-2D1D-4AE8-9293-68FC8037DB5A"),
                             EventId = new Guid("74831876-FC2E-4D03-99D8-B3872BDEFD5C")
                         }
-                    }
+                    },
+                    PageViewEvents = new List<PageViewEvent>()
                 },
                 new()
                 {
@@ -128,7 +146,8 @@ namespace OpenEvent.Test.Setups
                             CategoryId = new Guid("08CC5B09-70E2-4215-9B35-1E6A067A0204"),
                             EventId = new Guid("5F35AA8F-4CC5-4E1A-AB73-6875D5769715")
                         }
-                    }
+                    },
+                    PageViewEvents = new List<PageViewEvent>()
                 }
             }.AsQueryable();
 

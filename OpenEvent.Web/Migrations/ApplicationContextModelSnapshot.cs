@@ -17,6 +17,85 @@ namespace OpenEvent.Web.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.2");
 
+            modelBuilder.Entity("OpenEvent.Web.Models.Analytic.PageViewEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("EventId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PageViewEvents");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.Analytic.SearchEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Params")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Search")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SearchEvents");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.BankAccount.BankAccount", b =>
+                {
+                    b.Property<string>("StripeBankAccountId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Bank")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("LastFour")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("StripeBankAccountId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BankAccounts");
+                });
+
             modelBuilder.Entity("OpenEvent.Web.Models.Category.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -89,6 +168,72 @@ namespace OpenEvent.Web.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("OpenEvent.Web.Models.PaymentMethod.PaymentMethod", b =>
+                {
+                    b.Property<string>("StripeCardId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Brand")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("ExpiryMonth")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ExpiryYear")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Funding")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("LastFour")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("NickName")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("StripeCardId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PaymentMethods");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.Recommendation.RecommendationScore", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<double>("Weight")
+                        .HasColumnType("double");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RecommendationScores");
+                });
+
             modelBuilder.Entity("OpenEvent.Web.Models.Ticket.Ticket", b =>
                 {
                     b.Property<Guid>("Id")
@@ -111,6 +256,40 @@ namespace OpenEvent.Web.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Tickets");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.Transaction.Transaction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<bool>("Paid")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("StripeChargeId")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("TimeOfTransaction")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("OpenEvent.Web.Models.User.User", b =>
@@ -143,12 +322,51 @@ namespace OpenEvent.Web.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("StripeAccountId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("StripeCustomerId")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("UserName")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.Analytic.PageViewEvent", b =>
+                {
+                    b.HasOne("OpenEvent.Web.Models.Event.Event", "Event")
+                        .WithMany("PageViewEvents")
+                        .HasForeignKey("EventId");
+
+                    b.HasOne("OpenEvent.Web.Models.User.User", "User")
+                        .WithMany("PageViewEvents")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Event");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.Analytic.SearchEvent", b =>
+                {
+                    b.HasOne("OpenEvent.Web.Models.User.User", "User")
+                        .WithMany("SearchEvents")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.BankAccount.BankAccount", b =>
+                {
+                    b.HasOne("OpenEvent.Web.Models.User.User", "User")
+                        .WithMany("BankAccounts")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("OpenEvent.Web.Models.Category.EventCategory", b =>
@@ -176,7 +394,7 @@ namespace OpenEvent.Web.Migrations
                         .WithMany("HostedEvents")
                         .HasForeignKey("HostId");
 
-                    b.OwnsOne("OpenEvent.Web.Models.Event.Address", "Address", b1 =>
+                    b.OwnsOne("OpenEvent.Web.Models.Address.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("EventId")
                                 .HasColumnType("char(36)");
@@ -292,6 +510,30 @@ namespace OpenEvent.Web.Migrations
                     b.Navigation("Thumbnail");
                 });
 
+            modelBuilder.Entity("OpenEvent.Web.Models.PaymentMethod.PaymentMethod", b =>
+                {
+                    b.HasOne("OpenEvent.Web.Models.User.User", "User")
+                        .WithMany("PaymentMethods")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.Recommendation.RecommendationScore", b =>
+                {
+                    b.HasOne("OpenEvent.Web.Models.Category.Category", "Category")
+                        .WithMany("Scores")
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("OpenEvent.Web.Models.User.User", "User")
+                        .WithMany("RecommendationScores")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("OpenEvent.Web.Models.Ticket.Ticket", b =>
                 {
                     b.HasOne("OpenEvent.Web.Models.Event.Event", "Event")
@@ -307,23 +549,103 @@ namespace OpenEvent.Web.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("OpenEvent.Web.Models.Transaction.Transaction", b =>
+                {
+                    b.HasOne("OpenEvent.Web.Models.Ticket.Ticket", "Ticket")
+                        .WithOne("Transaction")
+                        .HasForeignKey("OpenEvent.Web.Models.Transaction.Transaction", "TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OpenEvent.Web.Models.User.User", "User")
+                        .WithMany("Transactions")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Ticket");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.User.User", b =>
+                {
+                    b.OwnsOne("OpenEvent.Web.Models.Address.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("char(36)");
+
+                            b1.Property<string>("AddressLine1")
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("AddressLine2")
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("City")
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("CountryCode")
+                                .HasColumnType("longtext");
+
+                            b1.Property<string>("CountryName")
+                                .HasColumnType("longtext");
+
+                            b1.Property<double>("Lat")
+                                .HasColumnType("double");
+
+                            b1.Property<double>("Lon")
+                                .HasColumnType("double");
+
+                            b1.Property<string>("PostalCode")
+                                .HasColumnType("longtext");
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("Address");
+                });
+
             modelBuilder.Entity("OpenEvent.Web.Models.Category.Category", b =>
                 {
                     b.Navigation("Events");
+
+                    b.Navigation("Scores");
                 });
 
             modelBuilder.Entity("OpenEvent.Web.Models.Event.Event", b =>
                 {
                     b.Navigation("EventCategories");
 
+                    b.Navigation("PageViewEvents");
+
                     b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("OpenEvent.Web.Models.Ticket.Ticket", b =>
+                {
+                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("OpenEvent.Web.Models.User.User", b =>
                 {
+                    b.Navigation("BankAccounts");
+
                     b.Navigation("HostedEvents");
 
+                    b.Navigation("PageViewEvents");
+
+                    b.Navigation("PaymentMethods");
+
+                    b.Navigation("RecommendationScores");
+
+                    b.Navigation("SearchEvents");
+
                     b.Navigation("Tickets");
+
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

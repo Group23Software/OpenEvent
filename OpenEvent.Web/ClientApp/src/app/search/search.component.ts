@@ -24,6 +24,7 @@ export class SearchComponent implements OnInit
   public categories: Category[] = [];
   public selectedCategories: Category[] = [];
   public getCategoriesError: string;
+  public searchError: string;
   public usersLocation: Position;
   public minDate: Date = new Date;
   public usingCurrentLocation: boolean = false;
@@ -69,6 +70,9 @@ export class SearchComponent implements OnInit
     {
       this.events = events;
       this.loading = false;
+    }, (e: HttpErrorResponse) => {
+      this.loading = false;
+      this.searchError = e.error.Message;
     });
   }
 

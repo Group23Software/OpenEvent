@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 import {
   NewUserInput,
   UpdateAvatarBody,
-  UpdateThemePreferenceBody,
+  UpdateThemePreferenceBody, UpdateUserAddressBody,
   UpdateUserNameBody,
   UserAccountModel,
   UserViewModel
@@ -10,9 +10,16 @@ import {
 import {Observable, of} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
-import {map} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
 import jwtDecode, {JwtPayload} from "jwt-decode";
-import {UserPaths} from "../_extensions/api.constants";
+import {PaymentPaths, UserPaths} from "../_extensions/api.constants";
+import {Address} from "../_models/Address";
+import {UsersAnalytics} from "../_models/Analytic";
+
+interface addressBody
+{
+  address: Address;
+}
 
 interface usernameBody
 {
@@ -147,5 +154,19 @@ export class UserService
       this.User.IsDarkMode = result.isDarkMode;
       return result;
     }));
+  }
+
+  public UpdateAddress (updateUserAddressBody: UpdateUserAddressBody): Observable<addressBody>
+  {
+    return this.http.post<addressBody>(this.BaseUrl + UserPaths.UpdateAddress, updateUserAddressBody).pipe(map(result =>
+    {
+      this.User.Address = result.address;
+      return result;
+    }));
+  }
+
+  public GetAnalytics (): Observable<UsersAnalytics>
+  {
+    return this.http.get<UsersAnalytics>(this.BaseUrl + UserPaths.GetUsersAnalytics, {params: new HttpParams().set('id', this.User.Id)});
   }
 }

@@ -11,6 +11,9 @@ using OpenEvent.Web.UserOwnsEvent;
 
 namespace OpenEvent.Web.Controllers
 {
+    /// <summary>
+    /// API controller for all event related endpoints.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class EventController : ControllerBase
@@ -24,6 +27,11 @@ namespace OpenEvent.Web.Controllers
             Logger = logger;
         }
 
+        /// <summary>
+        /// Endpoint for creating an event.
+        /// </summary>
+        /// <param name="createEventBody"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<EventViewModel>> Create([FromBody] CreateEventBody createEventBody)
         {
@@ -39,6 +47,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint to cancel an event with user owns filter.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [UserOwnsEvent]
         [HttpPost("cancel")]
         public async Task<ActionResult> Cancel(Guid id)
@@ -55,12 +68,18 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint to get all data needed to display an event to the public.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpGet("public")]
-        public async Task<ActionResult<EventDetailModel>> GetForPublic(Guid id)
+        public async Task<ActionResult<EventDetailModel>> GetForPublic(Guid id, Guid? userId)
         {
             try
             {
-                var result = await EventService.GetForPublic(id);
+                var result = await EventService.GetForPublic(id, userId);
                 return result;
             }
             catch (Exception e)
@@ -70,6 +89,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint to get all the events a user is hosting.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("host")]
         public async Task<ActionResult<List<EventHostModel>>> GetAllHosts(Guid id)
         {
@@ -77,6 +101,11 @@ namespace OpenEvent.Web.Controllers
             return result;
         }
 
+        /// <summary>
+        /// Endpoint to get all the data needed when configuring an event with user owns filter.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [UserOwnsEvent]
         [HttpGet("forHost")]
         public async Task<ActionResult<EventHostModel>> GetForHost(Guid id)
@@ -93,6 +122,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint for updating an event with user owns filter.
+        /// </summary>
+        /// <param name="updateEventBody"></param>
+        /// <returns></returns>
         [UserOwnsEvent]
         [HttpPost("update")]
         public async Task<ActionResult> Update(UpdateEventBody updateEventBody)
@@ -109,18 +143,29 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint to get all the available event categories.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("categories")]
         public async Task<ActionResult<List<Category>>> GetAllCategories()
         {
             return await EventService.GetAllCategories();
         }
 
+        /// <summary>
+        /// Endpoint for searching events with keywords and defined filters.
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="filters"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         [HttpPost("search")]
-        public async Task<ActionResult<List<EventViewModel>>> Search(string keyword, List<SearchFilter> filters)
+        public async Task<ActionResult<List<EventViewModel>>> Search(string keyword, List<SearchFilter> filters, Guid userId)
         {
             try
             {
-                var results = await EventService.Search(keyword, filters);
+                var results = await EventService.Search(keyword, filters, userId);
                 return results;
             }
             catch (Exception e)

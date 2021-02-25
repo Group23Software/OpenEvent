@@ -1,0 +1,30 @@
+<mat-card *ngIf="!analytics" class="m-3">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</mat-card>
+<mat-card *ngIf="analytics" class="m-3">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>analytics</mat-icon>
+    <mat-card-title>All data we have on you</mat-card-title>
+    <mat-card-subtitle>This is all the data that we have collected on you</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card class="m-3">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>pageview</mat-icon>
+      <mat-card-title>Page views</mat-card-title>
+      <mat-card-subtitle>All the event pages you have visited</mat-card-subtitle>
+    </mat-card-header>
+    <div *ngFor="let pageView of analytics.PageViewEvents">At <span class="italicAndBold">{{pageView.Created | date: 'full'}} </span> you viewed <span class="italicAndBold">{{pageView.EventId}} </span></div>
+  </mat-card>
+
+  <mat-card class="m-3">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>search</mat-icon>
+      <mat-card-title>Searches</mat-card-title>
+      <mat-card-subtitle>All the searches you have made</mat-card-subtitle>
+    </mat-card-header>
+    <div *ngFor="let search of analytics.SearchEvents">
+      At <span class="italicAndBold">{{search.Created | date:'full'}} </span> you searched <span class="italicAndBold">"{{search.Search}}" </span> with the filters <span class="italicAndBold">{{search.Params}} </span>
+    </div>
+  </mat-card>
+</mat-card>

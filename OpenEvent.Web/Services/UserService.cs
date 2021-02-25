@@ -1,7 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -11,8 +10,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Ticket;
+using OpenEvent.Web.Models.Analytic;
+using OpenEvent.Web.Models.BankAccount;
+using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.User;
+using Stripe;
+using Address = OpenEvent.Web.Models.Address.Address;
 
 namespace OpenEvent.Web.Services
 {
@@ -23,8 +26,9 @@ namespace OpenEvent.Web.Services
     {
         Task<UserViewModel> Create(NewUserInput userInput);
         Task Destroy(Guid id);
-
         Task<UserAccountModel> Get(Guid id);
+
+        Task<UsersAnalytics> GetUsersAnalytics(Guid id);
 
         // Task<User> UpdateBasicInfo(UserAccountModel user);
         Task<string> UpdateAvatar(Guid id, byte[] avatar);
@@ -34,6 +38,8 @@ namespace OpenEvent.Web.Services
         Task<bool> PhoneExists(string phoneNumber);
         Task<bool> UpdateThemePreference(Guid id, bool isDarkMode);
         Task<bool> HostOwnsEvent(Guid eventId, Guid userId);
+
+        Task<Address> UpdateAddress(Guid id, Address address);
     }
 
     /// <summary>
@@ -54,12 +60,13 @@ namespace OpenEvent.Web.Services
         /// <param name="mapper"></param>
         /// <param name="authService"><see cref="IAuthService"/>></param>
         public UserService(ApplicationContext context, ILogger<UserService> logger, IMapper mapper,
-            IAuthService authService)
+            IAuthService authService, IOptions<AppSettings> appSettings)
         {
             Logger = logger;
             ApplicationContext = context;
             Mapper = mapper;
             AuthService = authService;
+            StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
         }
 
         /// <summary>
@@ -162,26 +169,63 @@ namespace OpenEvent.Web.Services
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         public async Task<UserAccountModel> Get(Guid id)
         {
-            var user = await ApplicationContext.Users.Select(x => new UserAccountModel
-            {
-                Id = x.Id,
-                Avatar = Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length),
-                Email = x.Email,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                PhoneNumber = x.PhoneNumber,
-                UserName = x.UserName,
-                DateOfBirth = x.DateOfBirth,
-                IsDarkMode = x.IsDarkMode,
-            }).FirstOrDefaultAsync(x => x.Id == id);
+            var userRaw = ApplicationContext.Users.Include(x => x.BankAccounts).Include(x => x.PaymentMethods).AsSplitQuery().AsNoTracking().FirstOrDefault(x => x.Id == id);
 
-            if (user == null)
+            if (userRaw == null)
             {
                 Logger.LogInformation("User not found");
                 throw new UserNotFoundException();
             }
 
+            var user = new UserAccountModel
+            {
+                Id = userRaw.Id,
+                Avatar = Encoding.UTF8.GetString(userRaw.Avatar, 0, userRaw.Avatar.Length),
+                Email = userRaw.Email,
+                FirstName = userRaw.FirstName,
+                LastName = userRaw.LastName,
+                PhoneNumber = userRaw.PhoneNumber,
+                UserName = userRaw.UserName,
+                DateOfBirth = userRaw.DateOfBirth,
+                IsDarkMode = userRaw.IsDarkMode,
+                Address = userRaw.Address,
+                StripeAccountId = userRaw.StripeAccountId,
+                StripeCustomerId = userRaw.StripeCustomerId,
+                PaymentMethods = userRaw.PaymentMethods != null
+                    ? userRaw.PaymentMethods.Select(p => Mapper.Map<PaymentMethodViewModel>(p)).ToList()
+                    : new List<PaymentMethodViewModel>(),
+                BankAccounts = userRaw.BankAccounts != null
+                    ? userRaw.BankAccounts.Select(p => Mapper.Map<BankAccountViewModel>(p)).ToList()
+                    : new List<BankAccountViewModel>(),
+            };
+
+            if (user.StripeAccountId != null)
+            {
+                var service = new AccountService();
+                var stripeAccount = service.Get(user.StripeAccountId);
+
+                if (stripeAccount == null)
+                {
+                    Logger.LogInformation("Stripe user not found");
+                    throw new UserNotFoundException();
+                }
+                
+                user.StripeAccountInfo = Mapper.Map<StripeAccountInfo>(stripeAccount);
+            }
+
             return user;
+        }
+
+        public async Task<UsersAnalytics> GetUsersAnalytics(Guid id)
+        {
+            var pageViewEvents = await ApplicationContext.PageViewEvents.Include(x => x.Event).AsSplitQuery().Where(x => x.User.Id == id).ToListAsync();
+            var searchEvents = await ApplicationContext.SearchEvents.Where(x => x.User.Id == id).ToListAsync();
+
+            return new UsersAnalytics()
+            {
+                SearchEvents = searchEvents.Select(x => Mapper.Map<SearchEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
+                PageViewEvents = pageViewEvents.Select(x => Mapper.Map<PageViewEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
+            };
         }
 
         /// <summary>
@@ -302,6 +346,13 @@ namespace OpenEvent.Web.Services
             return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber) != null;
         }
 
+        /// <summary>
+        /// Updates users theme preference.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isDarkMode"></param>
+        /// <returns></returns>
+        /// <exception cref="UserNotFoundException"></exception>
         public async Task<bool> UpdateThemePreference(Guid id, bool isDarkMode)
         {
             var user = await User(id);
@@ -311,7 +362,7 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("User not found");
                 throw new UserNotFoundException();
             }
-            
+
             user.IsDarkMode = isDarkMode;
 
             try
@@ -327,12 +378,50 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <summary>
+        /// Determines if the user owns the event supplied.
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<bool> HostOwnsEvent(Guid eventId, Guid userId)
         {
             var e = (await ApplicationContext.Events.Include(x => x.Host)
                 .FirstOrDefaultAsync(x => x.Id == eventId && x.Host.Id == userId)) != null;
             Logger.LogInformation("Checking if user owns event", e);
             return e;
+        }
+
+        /// <summary>
+        /// Updates users address.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        /// <exception cref="UserNotFoundException"></exception>
+        public async Task<Address> UpdateAddress(Guid id, Address address)
+        {
+            var user = await User(id);
+
+            if (user == null)
+            {
+                Logger.LogInformation("User not found");
+                throw new UserNotFoundException();
+            }
+
+            user.Address = address;
+
+            try
+            {
+                await ApplicationContext.SaveChangesAsync();
+                Logger.LogInformation("User's address updated");
+                return address;
+            }
+            catch
+            {
+                Logger.LogWarning("User failed to save");
+                throw;
+            }
         }
     }
 }

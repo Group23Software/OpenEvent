@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace OpenEvent.Web.Models.Event
+namespace OpenEvent.Web.Models.Address
 {
     /// <summary>
     /// Address of event.

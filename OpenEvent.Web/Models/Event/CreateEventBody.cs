@@ -14,7 +14,7 @@ namespace OpenEvent.Web.Models.Event
         public DateTime EndLocal { get; set; }
         public decimal Price { get; set; }
         public Guid HostId { get; set; }
-        public Address Address { get; set; }
+        public Address.Address Address { get; set; }
         public bool IsOnline { get; set; }
         public int NumberOfTickets { get; set; }
         public List<Category.Category> Categories { get; set; }
