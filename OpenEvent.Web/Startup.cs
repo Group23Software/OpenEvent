@@ -17,6 +17,7 @@ using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Services;
 using OpenEvent.Web.UserOwnsEvent;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Prometheus;
 using Stripe;
 using EventService = OpenEvent.Web.Services.EventService;
 
@@ -137,6 +138,7 @@ namespace OpenEvent.Web
             }
 
             app.UseRouting();
+            app.UseHttpMetrics();
 
             app.UseCors("AllowOrigin");
 
@@ -151,6 +153,8 @@ namespace OpenEvent.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                
+                endpoints.MapMetrics();
             });
 
             app.UseSpa(spa =>

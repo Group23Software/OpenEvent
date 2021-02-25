@@ -32,4 +32,8 @@
     <ProjectReference Include="..\OpenEvent.Web\OpenEvent.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\RecommendationService" />
+  </ItemGroup>
+
 </Project>

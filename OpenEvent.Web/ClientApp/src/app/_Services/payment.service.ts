@@ -46,8 +46,9 @@ export class PaymentService
   {
     return this.http.post<any>(this.BaseUrl + PaymentPaths.MakePaymentDefault, makeDefaultBody).pipe(map(x =>
     {
-      this.userService.User.PaymentMethods.map(p => p.IsDefault = false);
-      this.userService.User.PaymentMethods.find(p => p.StripeCardId == makeDefaultBody.PaymentId).IsDefault = true;
+      this.userService.User.PaymentMethods?.map(p => p.IsDefault = false);
+      let p = this.userService.User.PaymentMethods.find(p => p.StripeCardId == makeDefaultBody.PaymentId)
+      if (p) p.IsDefault = true;
       return x;
     }));
   }

@@ -1,6 +1,12 @@
-#basicAccountPanel {
+.basicAccountPanel {
   display: flex;
   flex-direction: row;
+  margin: 1rem;
+}
+
+.basicAccountPanel-lt-md {
+  display: flex;
+  flex-direction: column;
   margin: 1rem;
 }
 
@@ -80,4 +86,13 @@ mat-form-field {
 
 #avatarCard {
   height: fit-content;
+}
+
+.avatarCard-lt-md {
+  margin: 0 1rem 1rem;
+}
+
+#avatarContainer {
+  position: relative;
+  width: fit-content;
 }

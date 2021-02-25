@@ -1,6 +1,15 @@
-<mat-card class="m-3">
-  <form (ngSubmit)="createToken()" [formGroup]="stripeTest">
+<div class="overlay" *ngIf="!User.Address">
+  <mat-card class="m-auto"><div class="mat-headline warn-color">You need an address!</div></mat-card>
+</div>
 
+<mat-card class="m-3">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>payment</mat-icon>
+    <mat-card-title>Add Card</mat-card-title>
+    <mat-card-subtitle>You wont be able to pay without</mat-card-subtitle>
+  </mat-card-header>
+
+  <form (ngSubmit)="createToken()" [formGroup]="stripeTest">
     <div class="d-flex flex-row" id="cardInputs">
       <mat-form-field appearance="outline" class="w-100 mr-3">
         <mat-label>Card Name</mat-label>
@@ -14,9 +23,8 @@
     </div>
 
     <mat-card class="mb-3">
-      <ngx-stripe-card (change)="onChange($event)" [options]="cardOptions" [elementsOptions]="elementsOptions"></ngx-stripe-card>
+      <ngx-stripe-card class="mat-body" (change)="onChange($event)" [options]="cardOptions" [elementsOptions]="elementsOptions"></ngx-stripe-card>
     </mat-card>
-
   </form>
 
   <!--  <ngx-stripe-card-group [formGroup]="stripeTest" (ngSubmit)="createToken()">-->
@@ -36,6 +44,11 @@
 </mat-card>
 
 <mat-card class="m-3" *ngIf="User.PaymentMethods">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>payments</mat-icon>
+    <mat-card-title>Your Cards</mat-card-title>
+  </mat-card-header>
+  <div *ngIf="User.PaymentMethods.length == 0" class="mat-title">You have no cards!</div>
   <div id="cardList">
     <virtual-card *ngFor="let card of User.PaymentMethods" [Card]="card"></virtual-card>
   </div>

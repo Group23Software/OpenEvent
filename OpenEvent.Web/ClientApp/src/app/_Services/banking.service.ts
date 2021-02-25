@@ -7,15 +7,10 @@ import {BankingPaths} from "../_extensions/api.constants";
 import {map} from "rxjs/operators";
 import {environment} from "../../environments/environment";
 
-@Injectable()
-class Service
+export enum StripeFilePurpose
 {
-
-
-  constructor ()
-  {
-
-  }
+  IdentityDocument = 'identity_document',
+  AdditionalVerification = 'additional_verification',
 }
 
 @Injectable({
@@ -51,10 +46,10 @@ export class BankingService
     }));
   }
 
-  public UploadIdentityDocument (fileContent): Observable<any>
+  public UploadIdentityDocument (fileContent, purpose: StripeFilePurpose): Observable<any>
   {
     const formData = new FormData();
-    formData.append('purpose', 'additional_verification');
+    formData.append('purpose', purpose);
     formData.append('file', fileContent);
 
     return this.http.post<any>('https://files.stripe.com/v1/files', formData, {
@@ -85,29 +80,6 @@ export class BankingService
         })
       });
   }
-
-
-  // readFileContent (file: File): Promise<string>
-  // {
-  //   return new Promise<string>((resolve, reject) =>
-  //   {
-  //     if (!file)
-  //     {
-  //       resolve('');
-  //     }
-  //
-  //     const reader = new FileReader();
-  //
-  //     reader.onload = (e) =>
-  //     {
-  //       const text = reader.result.toString();
-  //       resolve(text);
-  //
-  //     };
-  //
-  //     reader.readAsText(file);
-  //   });
-  // }
 
   public GetBalance (): Observable<Balance>
   {

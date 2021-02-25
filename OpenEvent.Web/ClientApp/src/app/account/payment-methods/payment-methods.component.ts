@@ -33,13 +33,13 @@ export class PaymentMethodsComponent implements OnInit
   cardOptions: StripeCardElementOptions = {
     style: {
       base: {
-        iconColor: '#666EE8',
-        color: '#31325F',
-        fontWeight: '300',
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        iconColor: '#8966e8',
+        color: '#41315f',
+        // fontWeight: '300',
+        fontFamily: '"Open Sans", serif',
         fontSize: '18px',
         '::placeholder': {
-          color: '#CFD7E0'
+          color: '#676775'
         }
       }
     },

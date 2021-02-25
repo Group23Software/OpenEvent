@@ -4,9 +4,10 @@ import {CreateEventComponent} from './event/create-event/create-event.component'
 import {RouterModule} from "@angular/router";
 import {SharedModule} from "./shared.module";
 import {ImageUploadComponent} from "./_extensions/image-upload/image-upload.component";
-import { DashboardComponent } from './host/dashboard/dashboard.component';
+import {DashboardComponent} from './host/dashboard/dashboard.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {EventConfigComponent} from "./host/event-config/event-config.component";
+import {AuthGuard} from "./_guards/auth.guard";
 
 
 @NgModule({

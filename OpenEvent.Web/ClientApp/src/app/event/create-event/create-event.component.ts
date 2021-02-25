@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ImageViewModel} from "../../_models/Image";
 import {MatDialog} from "@angular/material/dialog";
-import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
 import {testImg} from "./TestImage";
 import {CreateEventBody, EventDetailModel} from "../../_models/Event";
 import {UserService} from "../../_Services/user.service";
@@ -20,6 +19,10 @@ import {Router} from "@angular/router";
 })
 export class CreateEventComponent implements OnInit
 {
+
+  get UserHasBank() {
+    return this.userService.User?.BankAccounts?.length > 0
+  }
 
   public categories: Category[] = [];
   public thumbnail: ImageViewModel;

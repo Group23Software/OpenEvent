@@ -34,6 +34,7 @@ export class AccountPreferencesComponent implements OnInit
   public deleteAccountError: string;
   public newUserNameError: string;
   public newAvatarError: string;
+  public newAddressError: string;
 
   public imageChangedEvent: any = '';
   public croppedImage: any = '';
@@ -169,7 +170,10 @@ export class AccountPreferencesComponent implements OnInit
   {
     this.userService.UpdateAddress({Id: this.user.Id, Address: address}).subscribe(x =>
     {
-      console.log(this.user);
+      this.snackBar.open('Updated Address', 'close', {duration: 500})
+    }, (e: HttpErrorResponse) => {
+      console.error(e);
+      this.newAddressError = e.error.Message;
     });
   }
 }

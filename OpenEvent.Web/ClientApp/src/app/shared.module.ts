@@ -33,7 +33,7 @@ import {RouterModule} from "@angular/router";
 import {EventComponent} from "./event/event/event.component";
 import {MatListModule} from "@angular/material/list";
 import {MatExpansionModule} from "@angular/material/expansion";
-import {DomSanitizer} from "@angular/platform-browser";
+import {DomSanitizer, platformBrowser} from "@angular/platform-browser";
 import {MatSelectModule} from "@angular/material/select";
 import {CategoryListComponent} from './category-list/category-list.component';
 import {ImageListComponent} from './image-list/image-list.component';
@@ -41,6 +41,9 @@ import {ThumbnailEditComponent} from "./thumbnail-edit/thumbnail-edit.component"
 import {AddressFormComponent} from './address-form/address-form.component';
 import {FlexLayoutModule} from "@angular/flex-layout";
 import { SignalComponent } from './signal/signal.component';
+import {MatCarouselModule} from "@ngbmodule/material-carousel";
+import {GalleryModule} from "ng-gallery";
+import {AngularFittextModule} from "angular-fittext";
 
 
 @NgModule({
@@ -91,7 +94,10 @@ import { SignalComponent } from './signal/signal.component';
     MatListModule,
     MatExpansionModule,
     MatSelectModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatCarouselModule,
+    GalleryModule,
+    AngularFittextModule
   ],
   exports: [
 
@@ -140,7 +146,9 @@ import { SignalComponent } from './signal/signal.component';
     ImageListComponent,
     ThumbnailEditComponent,
     AddressFormComponent,
-    SignalComponent
+    SignalComponent,
+    GalleryModule,
+    AngularFittextModule
   ]
 })
 export class SharedModule

@@ -169,7 +169,7 @@ namespace OpenEvent.Web.Services
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         public async Task<UserAccountModel> Get(Guid id)
         {
-            var userRaw = ApplicationContext.Users.AsSplitQuery().AsNoTracking().FirstOrDefault(x => x.Id == id);
+            var userRaw = ApplicationContext.Users.Include(x => x.BankAccounts).Include(x => x.PaymentMethods).AsSplitQuery().AsNoTracking().FirstOrDefault(x => x.Id == id);
 
             if (userRaw == null)
             {
@@ -199,37 +199,32 @@ namespace OpenEvent.Web.Services
                     : new List<BankAccountViewModel>(),
             };
 
-            var service = new AccountService();
-            var stripeAccount = service.Get(user.StripeAccountId);
-
-            if (stripeAccount == null)
+            if (user.StripeAccountId != null)
             {
-                Logger.LogInformation("Stripe user not found");
-                throw new UserNotFoundException();
-            }
+                var service = new AccountService();
+                var stripeAccount = service.Get(user.StripeAccountId);
 
-            user.StripeAccountInfo = Mapper.Map<StripeAccountInfo>(stripeAccount);
+                if (stripeAccount == null)
+                {
+                    Logger.LogInformation("Stripe user not found");
+                    throw new UserNotFoundException();
+                }
+                
+                user.StripeAccountInfo = Mapper.Map<StripeAccountInfo>(stripeAccount);
+            }
 
             return user;
         }
 
         public async Task<UsersAnalytics> GetUsersAnalytics(Guid id)
         {
-            var user = await ApplicationContext.Users
-                .Include(x => x.PageViewEvents).ThenInclude(x => x.Event)
-                .Include(x => x.SearchEvents)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (user == null)
-            {
-                Logger.LogInformation("User not found");
-                throw new UserNotFoundException();
-            }
+            var pageViewEvents = await ApplicationContext.PageViewEvents.Include(x => x.Event).AsSplitQuery().Where(x => x.User.Id == id).ToListAsync();
+            var searchEvents = await ApplicationContext.SearchEvents.Where(x => x.User.Id == id).ToListAsync();
 
             return new UsersAnalytics()
             {
-                SearchEvents = user.SearchEvents.Select(x => Mapper.Map<SearchEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
-                PageViewEvents = user.PageViewEvents.Select(x => Mapper.Map<PageViewEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
+                SearchEvents = searchEvents.Select(x => Mapper.Map<SearchEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
+                PageViewEvents = pageViewEvents.Select(x => Mapper.Map<PageViewEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
             };
         }
 

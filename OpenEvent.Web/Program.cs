@@ -1,19 +1,34 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Models.Category;
+using Prometheus;
 using Serilog;
 
 namespace OpenEvent.Web
 {
     public class Program
     {
+        private static readonly Counter TickTock =
+            Metrics.CreateCounter("openEvent_ticks_total", "Just keeps on ticking");
+        
         public static void Main(string[] args)
         {
+            // var server = new MetricServer(hostname: "localhost", port: 1234);
+            // server.Start();
+            //
+            // while (true)
+            // {
+            //     TickTock.Inc();
+            //     Thread.Sleep(TimeSpan.FromSeconds(1));
+            // }
+            
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .WriteTo.Console()

@@ -90,9 +90,9 @@ namespace OpenEvent.Web.Services
                 await ApplicationContext.SaveChangesAsync();
                 return Mapper.Map<BankAccountViewModel>(user.BankAccounts[0]);
             }
-            catch (Exception e)
+            catch
             {
-                Logger.LogWarning(e.Message);
+                Logger.LogWarning("Failed to save bank account");
                 throw;
             }
         }

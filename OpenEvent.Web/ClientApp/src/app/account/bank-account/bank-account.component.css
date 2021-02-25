@@ -12,16 +12,15 @@
   margin-bottom: 1rem;
 }
 
-.bankAccount
-{
-  border-radius: 10px;
+.bankAccount {
+  /*border-radius: 10px;*/
   width: 300px;
   height: 175px;
   padding: 10px;
-  background-color: #efefef;
+  background-color: rgba(239, 239, 239, 0.18);
 }
-.bankNumber
-{
+
+.bankNumber {
   text-align: center;
   text-effect: emboss;
   font-size: 20px;

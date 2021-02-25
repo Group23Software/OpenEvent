@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, tick} from '@angular/core/testing';
 
 import {BankAccountComponent} from './bank-account.component';
 import {StripeElementsService, StripeIbanComponent, StripeService} from "ngx-stripe";
@@ -23,7 +23,7 @@ describe('BankAccountComponent', () =>
 
     snackBarMock = jasmine.createSpyObj('matSnackBar', ['open']);
     stripeServiceMock = jasmine.createSpyObj('StripeService', ['createToken']);
-    bankingServiceMock = jasmine.createSpyObj('BankingService', ['AddBankAccount','RemoveBankAccount','GetBalance']);
+    bankingServiceMock = jasmine.createSpyObj('BankingService', ['AddBankAccount','RemoveBankAccount','GetBalance','UploadIdentityDocument','AttachFrontFile','AttachAdditionalFile']);
     bankingServiceMock.GetBalance.and.returnValue(of(null));
     userServiceMock = jasmine.createSpyObj('UserService', ['User']);
 
@@ -105,5 +105,64 @@ describe('BankAccountComponent', () =>
     bankingServiceMock.RemoveBankAccount.and.returnValue(throwError({error: {Message: "Error removing bank account"}} as HttpErrorResponse));
     component.removeBankAccount();
     expect(component.removeBankAccountError).toEqual("Error removing bank account");
+  });
+
+  it('should set bank complete when complete', () =>
+  {
+    expect(component.bankComplete).toBeFalse();
+    component.onChange({bankName: "TestBank", complete: true, country: "", elementType: "iban", empty: false, error: undefined});
+    expect(component.bankComplete).toBeTrue();
+  });
+
+  it('should input document', () =>
+  {
+    bankingServiceMock.UploadIdentityDocument.and.returnValue(of(true));
+    bankingServiceMock.AttachFrontFile.and.returnValue(of(true));
+    component.documentInputEvent({target:{files:[null]}});
+    expect(snackBarMock.open).toHaveBeenCalledWith('Uploaded Identity Document ', 'close', {duration: 500});
+    expect(component.documentLoading).toBeFalse();
+  });
+
+  it('should handle input document error', () =>
+  {
+    bankingServiceMock.UploadIdentityDocument.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error uploading"}})));
+    component.documentInputEvent({target:{files:[null]}});
+    expect(component.documentError).toEqual("Error uploading");
+    expect(component.documentLoading).toBeFalse();
+  });
+
+  it('should handle attach document error', () =>
+  {
+    bankingServiceMock.UploadIdentityDocument.and.returnValue(of(true));
+    bankingServiceMock.AttachFrontFile.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error attaching"}})));
+    component.documentInputEvent({target:{files:[null]}});
+    expect(component.documentError).toEqual("Error attaching");
+    expect(component.documentLoading).toBeFalse();
+  });
+
+  it('should input additional document', () =>
+  {
+    bankingServiceMock.UploadIdentityDocument.and.returnValue(of(true));
+    bankingServiceMock.AttachAdditionalFile.and.returnValue(of(true));
+    component.additionalDocumentInputEvent({target:{files:[null]}});
+    expect(snackBarMock.open).toHaveBeenCalledWith('Uploaded Additional Identity Document ', 'close', {duration: 500});
+    expect(component.documentLoading).toBeFalse();
+  });
+
+  it('should handle input additional document error', () =>
+  {
+    bankingServiceMock.UploadIdentityDocument.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error uploading"}})));
+    component.additionalDocumentInputEvent({target:{files:[null]}});
+    expect(component.documentError).toEqual("Error uploading");
+    expect(component.documentLoading).toBeFalse();
+  });
+
+  it('should handle attach additional document error', () =>
+  {
+    bankingServiceMock.UploadIdentityDocument.and.returnValue(of(true));
+    bankingServiceMock.AttachAdditionalFile.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error attaching"}})));
+    component.additionalDocumentInputEvent({target:{files:[null]}});
+    expect(component.documentError).toEqual("Error attaching");
+    expect(component.documentLoading).toBeFalse();
   });
 });
