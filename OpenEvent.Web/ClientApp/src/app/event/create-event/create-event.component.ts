@@ -11,11 +11,13 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {Category} from "../../_models/Category";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {Router} from "@angular/router";
+import {InOutAnimation} from "../../_extensions/animations";
 
 @Component({
   selector: 'app-create-event',
   templateUrl: './create-event.component.html',
-  styleUrls: ['./create-event.component.css']
+  styleUrls: ['./create-event.component.css'],
+  animations: InOutAnimation
 })
 export class CreateEventComponent implements OnInit
 {

@@ -14,9 +14,9 @@
     </mat-selection-list>
   </mat-drawer>
 
-  <mat-card class="m-3" *ngIf="loading"><mat-progress-bar mode="indeterminate"></mat-progress-bar></mat-card>
+  <mat-card class="m-3" *ngIf="loading" [@inOutAnimation]><mat-progress-bar mode="indeterminate"></mat-progress-bar></mat-card>
 
-  <div id="eventPreview" *ngIf="Events">
+  <div id="eventPreview" *ngIf="Events" [@inOutAnimation]>
     <mat-toolbar>
       <button mat-icon-button (click)="eventList.toggle()">
         <mat-icon>menu</mat-icon>
@@ -33,7 +33,7 @@
     </mat-toolbar>
 
     <mat-card class="m-3">
-      <event *ngIf="eventPreview" [EventPreview]="eventPreview"></event>
+      <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>
     </mat-card>
   </div>
 

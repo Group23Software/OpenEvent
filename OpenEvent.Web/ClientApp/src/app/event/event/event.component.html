@@ -7,7 +7,7 @@
 <div class="container" *ngIf="Event">
   <div id="eventHeader" ngClass.lt-sm="flex-column">
     <div class="mr-3 flex-grow-1">
-      <div style="width: 100%; height: 80%;">
+      <div style="width: 80%; height: 80%;">
         <div fittext>{{Event.Name}}</div>
       </div>
     </div>
@@ -28,7 +28,7 @@
     <div class="d-flex flex-row">
 
       <div class="d-flex flex-column w-100">
-        <mat-card class="mr-3">
+        <mat-card class="mr-3" *ngIf="Event.Categories?.length > 0">
           <mat-chip-list>
             <mat-chip *ngFor="let category of Event.Categories">{{category.Name}}</mat-chip>
           </mat-chip-list>
@@ -65,7 +65,7 @@
             </div>
           </mat-card-content>
         </mat-card>
-        <mat-card>
+        <mat-card *ngIf="Event.SocialLinks?.length > 0">
           <div id="socialIcons">
             <div class="mx-auto" *ngFor="let socialMedia of Event.SocialLinks">
               <social *ngIf="socialMedia.Link" [socialLink]="socialMedia"></social>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using OpenEvent.Web.Models.Recommendation;
 
 namespace OpenEvent.Web.Models.Category
@@ -11,7 +12,7 @@ namespace OpenEvent.Web.Models.Category
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<EventCategory> Events { get; set; }
-        public List<RecommendationScore> Scores { get; set; }
+        [JsonIgnore] public List<EventCategory> Events { get; set; }
+        [JsonIgnore] public List<RecommendationScore> Scores { get; set; }
     }
 }

@@ -6,11 +6,13 @@ import {MatDrawerContainer} from "@angular/material/sidenav";
 import {Router} from "@angular/router";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {InOutAnimation} from "../../_extensions/animations";
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  animations: InOutAnimation
 })
 export class DashboardComponent implements OnInit, AfterViewChecked
 {

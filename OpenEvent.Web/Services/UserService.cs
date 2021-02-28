@@ -218,8 +218,8 @@ namespace OpenEvent.Web.Services
 
         public async Task<UsersAnalytics> GetUsersAnalytics(Guid id)
         {
-            var pageViewEvents = await ApplicationContext.PageViewEvents.Include(x => x.Event).AsSplitQuery().Where(x => x.User.Id == id).ToListAsync();
-            var searchEvents = await ApplicationContext.SearchEvents.Where(x => x.User.Id == id).ToListAsync();
+            var pageViewEvents = await ApplicationContext.PageViewEvents.Include(x => x.Event).AsSplitQuery().AsNoTracking().Where(x => x.User.Id == id).ToListAsync();
+            var searchEvents = await ApplicationContext.SearchEvents.Where(x => x.User.Id == id).AsNoTracking().ToListAsync();
 
             return new UsersAnalytics()
             {

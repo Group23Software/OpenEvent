@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,6 +46,11 @@ namespace OpenEvent.Web
             {
                 appSettings.ConnectionString = appSettings.LocalConnectionString;
             }
+            
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<GzipCompressionProvider>();
+            });
 
             services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
 
@@ -60,7 +66,7 @@ namespace OpenEvent.Web
             });
 
             // Add Db context using connection string from app settings.
-            services.AddDbContext<ApplicationContext>(options =>
+            services.AddDbContextPool<ApplicationContext>(options =>
                 options.UseMySql(appSettings.ConnectionString,
                     new MySqlServerVersion(new Version(8, 0, 23)),
                     mySqlOptions => mySqlOptions.CharSetBehavior(CharSetBehavior.NeverAppend)));
@@ -100,7 +106,6 @@ namespace OpenEvent.Web
 
             services.AddHttpClient<IEventService, EventService>();
 
-
             services.AddScoped<UserOwnsEventFilter>();
 
             services.AddLogging();
@@ -112,6 +117,11 @@ namespace OpenEvent.Web
                     options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                 }
             );
+
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "localhost:6379";
+            });
 
             services.AddSwaggerGen();
 
@@ -140,6 +150,7 @@ namespace OpenEvent.Web
                 app.UseSpaStaticFiles();
             }
 
+            app.UseResponseCompression();
             app.UseRouting();
             app.UseHttpMetrics();
 
@@ -147,7 +158,7 @@ namespace OpenEvent.Web
             {
                 app.UseCors("AllowOrigin");
             }
-
+            
             app.UseAuthentication();
 
             app.UseSwagger();

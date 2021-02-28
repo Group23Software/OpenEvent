@@ -89,21 +89,21 @@ stages:
               arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)/dotnet'
               zipAfterPublish: True
 
-  - stage: Deploy
-    displayName: "Deploy"
-    dependsOn: Build
-    jobs:
-      - job: "Deploy"
-        steps:
-          - task: AzureAppServiceManage@0
-            inputs:
-              azureSubscription: 'Pay-As-You-Go(9089fb88-0825-4040-b4e2-8281ff2d7726)'
-              Action: 'Stop Azure App Service'
-              WebAppName: 'OpenEvent'
-          - task: AzureRmWebAppDeployment@4
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Pay-As-You-Go(9089fb88-0825-4040-b4e2-8281ff2d7726)'
-              appType: 'webAppLinux'
-              WebAppName: 'OpenEvent'
-              packageForLinux: '$(Build.ArtifactStagingDirectory)/dotnet/**/*.zip'
+  # - stage: Deploy
+  #   displayName: "Deploy"
+  #   dependsOn: Build
+  #   jobs:
+  #     - job: "Deploy"
+  #       steps:
+  #         - task: AzureAppServiceManage@0
+  #           inputs:
+  #             azureSubscription: 'Pay-As-You-Go(9089fb88-0825-4040-b4e2-8281ff2d7726)'
+  #             Action: 'Stop Azure App Service'
+  #             WebAppName: 'OpenEvent'
+  #         - task: AzureRmWebAppDeployment@4
+  #           inputs:
+  #             ConnectionType: 'AzureRM'
+  #             azureSubscription: 'Pay-As-You-Go(9089fb88-0825-4040-b4e2-8281ff2d7726)'
+  #             appType: 'webAppLinux'
+  #             WebAppName: 'OpenEvent'
+  #             packageForLinux: '$(Build.ArtifactStagingDirectory)/dotnet/**/*.zip'

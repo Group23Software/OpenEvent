@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace OpenEvent.Web.Models.Ticket
 {
@@ -9,8 +10,8 @@ namespace OpenEvent.Web.Models.Ticket
     {
         public Guid Id { get; set; }
         public byte[] QRCode { get; set; }
-        public Event.Event Event { get; set; }
-        public User.User User { get; set; }
+        [JsonIgnore] public Event.Event Event { get; set; }
+        [JsonIgnore] public User.User User { get; set; }
         public Transaction.Transaction Transaction { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace OpenEvent.Web.Models.Analytic
 {
@@ -6,8 +7,8 @@ namespace OpenEvent.Web.Models.Analytic
     {
         public override Guid Id { get; set; }
         public override DateTime Created { get; set; }
-        public Event.Event Event { get; set; }
-        public User.User User { get; set; }
+        [JsonIgnore] public Event.Event Event { get; set; }
+        [JsonIgnore] public User.User User { get; set; }
     }
 
     public class PageViewEventViewModel : AnalyticEvent

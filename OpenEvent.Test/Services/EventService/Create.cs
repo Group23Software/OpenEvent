@@ -56,21 +56,15 @@ namespace OpenEvent.Test.Services.EventService
         [Test]
         public async Task ShouldCreateEmptyTickets()
         {
-            // ValidCreateEventBody.Address = new Address()
-            // {
-            //     AddressLine1 = "31 Peckham Road",
-            //     City = "London",
-            //     CountryName = "United Kingdom",
-            //     PostalCode = "se58ub"
-            // };
-            
             var result = await EventService.Create(ValidCreateEventBody);
             result.Should().NotBeNull();
 
-            var check = MockContext.Object.Events.FirstOrDefault(x => x.Name == ValidCreateEventBody.Name);
-            check.Should().NotBeNull();
-            check.Tickets.Count.Should().Be(ValidCreateEventBody.NumberOfTickets);
-            check.TicketsLeft.Should().Be(ValidCreateEventBody.NumberOfTickets);
+            // var check = MockContext.Object.Events.FirstOrDefault(x => x.Name == ValidCreateEventBody.Name);
+            // check.Should().NotBeNull();
+            // check.Tickets.Count.Should().Be(ValidCreateEventBody.NumberOfTickets);
+            // check.TicketsLeft.Should().Be(ValidCreateEventBody.NumberOfTickets);
+            var tickets = await MockContext.Object.Tickets.Where(x => x.Event.Name == ValidCreateEventBody.Name).ToListAsync();
+            tickets.Count().Should().Be(ValidCreateEventBody.NumberOfTickets);
         }
 
         [Test]

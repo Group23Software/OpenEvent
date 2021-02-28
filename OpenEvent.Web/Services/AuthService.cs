@@ -64,7 +64,7 @@ namespace OpenEvent.Web.Services
         /// <exception cref="IncorrectPasswordException">Thrown when the password is incorrect.</exception>
         public async Task<UserViewModel> Login(string email, string password, bool remember)
         {
-            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email);
+            var user = await ApplicationContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == email);
 
             if (user == null)
             {

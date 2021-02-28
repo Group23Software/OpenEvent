@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 
 namespace OpenEvent.Web.Models.Category
 {
@@ -10,6 +11,6 @@ namespace OpenEvent.Web.Models.Category
         public Guid CategoryId { get; set; }
         public Category Category { get; set; }
         public Guid EventId { get; set; }
-        public Event.Event Event { get; set; }
+        [JsonIgnore] public Event.Event Event { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {RouterModule} from '@angular/router';
+import {RouteReuseStrategy, RouterModule} from '@angular/router';
 
 import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
@@ -18,6 +18,8 @@ import {EventComponent} from "./event/event/event.component";
 import {SearchComponent} from "./search/search.component";
 import {EventPreviewComponent} from "./event/event-preview/event-preview.component";
 import {NgxStripeModule} from "ngx-stripe";
+import {RouteReuse} from "./_extensions/RouteReuse";
+import {ReuseRouteReuseStrategy} from "./_extensions/ReuseRouteReuseStrategy";
 
 
 @NgModule({
@@ -45,7 +47,10 @@ import {NgxStripeModule} from "ngx-stripe";
       //   canActivate: [AuthGuard]
       // },
       {
-        path: 'search', component: SearchComponent, canActivate: [AuthGuard]
+        path: 'search', component: SearchComponent, canActivate: [AuthGuard],
+        // data: {
+        //   reuseRoute: true
+        // }
       },
       {path: 'login', component: LoginComponent},
       {
@@ -65,7 +70,11 @@ import {NgxStripeModule} from "ngx-stripe";
       },
     ]),
   ],
-  providers: [CookieService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  providers: [
+    CookieService,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: RouteReuseStrategy, useClass: ReuseRouteReuseStrategy}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule

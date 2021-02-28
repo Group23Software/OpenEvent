@@ -1,11 +1,13 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
 import {Category} from "../_models/Category";
-import { EventEmitter } from '@angular/core';
+import {EventEmitter} from '@angular/core';
+import {InOutAnimation} from "../_extensions/animations";
 
 @Component({
   selector: 'category-list',
   templateUrl: './category-list.component.html',
-  styleUrls: ['./category-list.component.css']
+  styleUrls: ['./category-list.component.css'],
+  animations: InOutAnimation
 })
 export class CategoryListComponent implements OnInit
 {

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using EntityFrameworkCoreMock;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -31,6 +32,7 @@ namespace OpenEvent.Test.Services.EventService
         protected HttpClient HttpClientMock;
         protected Mock<IAnalyticsService> AnalyticsServiceMock;
         protected Mock<IRecommendationService> RecommendationServiceMock;
+        protected Mock<IDistributedCache> DistributedCacheMock;
 
         [SetUp]
         public async Task Setup()
@@ -46,7 +48,8 @@ namespace OpenEvent.Test.Services.EventService
                 Secret = "this is a secret"
             });
 
-            // JsonSerializer serializer = new JsonSerializer();
+
+            DistributedCacheMock = new Mock<IDistributedCache>();
 
             AnalyticsServiceMock = new Mock<IAnalyticsService>();
             AnalyticsServiceMock.Setup(x => x.CaptureSearch(null, null, new Guid()));
@@ -79,7 +82,7 @@ namespace OpenEvent.Test.Services.EventService
 
             EventService = new Web.Services.EventService(MockContext.Object,
                 new Mock<ILogger<Web.Services.EventService>>().Object, Mapper, HttpClientMock, AppSettings,
-                AnalyticsServiceMock.Object, RecommendationServiceMock.Object);
+                AnalyticsServiceMock.Object, RecommendationServiceMock.Object, DistributedCacheMock.Object);
         }
     }
 }

@@ -19,7 +19,10 @@ export class UserDataComponent implements OnInit
 
   ngOnInit (): void
   {
-    this.userService.GetAnalytics().subscribe(analytics => this.analytics = analytics, (e: HttpErrorResponse) =>
+    this.userService.GetAnalytics().subscribe(analytics =>
+    {
+      this.analytics = analytics;
+    }, (e: HttpErrorResponse) =>
     {
       console.error(e);
     })

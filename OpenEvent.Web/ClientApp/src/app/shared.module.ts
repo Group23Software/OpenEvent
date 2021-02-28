@@ -44,6 +44,7 @@ import { SignalComponent } from './signal/signal.component';
 import {MatCarouselModule} from "@ngbmodule/material-carousel";
 import {GalleryModule} from "ng-gallery";
 import {AngularFittextModule} from "angular-fittext";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import {AngularFittextModule} from "angular-fittext";
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    // BrowserAnimationsModule,
 
     CommonModule,
     RouterModule,
@@ -106,6 +108,7 @@ import {AngularFittextModule} from "angular-fittext";
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    // BrowserAnimationsModule,
 
     MatInputModule,
     MatFormFieldModule,

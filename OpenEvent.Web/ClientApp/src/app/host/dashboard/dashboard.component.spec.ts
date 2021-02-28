@@ -9,6 +9,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {EventHostModel} from "../../_models/Event";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
 import {HttpErrorResponse} from "@angular/common/http";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('DashboardComponent', () =>
 {
@@ -65,7 +66,10 @@ describe('DashboardComponent', () =>
     eventServiceMock.GetAllHosts.and.returnValue(of());
 
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [
+        RouterTestingModule,
+        BrowserAnimationsModule
+      ],
       declarations: [DashboardComponent],
       providers: [
         {provide: EventService, useValue: eventServiceMock},
@@ -146,7 +150,7 @@ describe('DashboardComponent', () =>
 
   it('should get all hosts events', () =>
   {
-    spyOnProperty(component, 'Events','get').and.returnValue(events);
+    spyOnProperty(component, 'Events', 'get').and.returnValue(events);
     eventServiceMock.GetAllHosts.and.returnValue(of(true));
     component.ngOnInit();
     expect(component.loading).toBeFalse();
@@ -155,7 +159,7 @@ describe('DashboardComponent', () =>
 
   it('should handle get all hosts events error', () =>
   {
-    eventServiceMock.GetAllHosts.and.returnValue(throwError(new HttpErrorResponse({error:{Message: "Error getting all hosts events"}})));
+    eventServiceMock.GetAllHosts.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error getting all hosts events"}})));
     component.ngOnInit();
     expect(component.gettingEventsError).toEqual("Error getting all hosts events");
   });

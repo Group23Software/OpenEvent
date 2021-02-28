@@ -1,7 +1,7 @@
 <user-nav></user-nav>
 
 <mat-card class="m-3 flex-grow-1">
-  <div class="overlay" *ngIf="!UserHasBank">
+  <div class="overlay" [@inOutAnimation] *ngIf="!UserHasBank">
     <mat-card class="m-auto">
       <div class="mat-headline warn-color">You need to add a bank account!</div>
     </mat-card>
@@ -56,7 +56,7 @@
           </mat-form-field>
         </div>
 
-        <category-list [categories]="categoryStore" (categoryEvent)="categories = $event" [inset]="false"></category-list>
+        <category-list [categories]="categoryStore" (categoryEvent)="categories = $event" [inset]="true"></category-list>
       </form>
     </mat-step>
     <mat-step [stepControl]="addressForm" [editable]="isEditable">
@@ -138,11 +138,11 @@
         </mat-card>
         <mat-card>
           <mat-card-content>
-            <event *ngIf="eventPreview" [EventPreview]="eventPreview"></event>
+            <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>
           </mat-card-content>
         </mat-card>
       </div>
     </mat-step>
   </mat-horizontal-stepper>
 </mat-card>
-<loading *ngIf="loading"></loading>
+<loading *ngIf="loading" [@inOutAnimation]></loading>

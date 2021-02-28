@@ -3,12 +3,10 @@ import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing'
 import {CategoryListComponent} from './category-list.component';
 import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {HarnessLoader} from "@angular/cdk/testing";
-import {MatIconHarness} from "@angular/material/icon/testing";
-import {MatIcon} from "@angular/material/icon";
 import {By} from "@angular/platform-browser";
-import {MatChipHarness, MatChipListHarness} from "@angular/material/chips/testing";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
-describe('CategoryComponent', () =>
+describe('CategoryListent', () =>
 {
   let component: CategoryListComponent;
   let fixture: ComponentFixture<CategoryListComponent>;
@@ -17,7 +15,8 @@ describe('CategoryComponent', () =>
   beforeEach(async () =>
   {
     await TestBed.configureTestingModule({
-      declarations: [CategoryListComponent]
+      declarations: [CategoryListComponent],
+      imports: [BrowserAnimationsModule]
     }).compileComponents();
   });
 

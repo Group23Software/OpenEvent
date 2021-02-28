@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -49,9 +50,11 @@ namespace OpenEvent.Web.Services
         private readonly AppSettings AppSettings;
         private readonly IAnalyticsService AnalyticsService;
         private readonly IRecommendationService RecommendationService;
+        private readonly IDistributedCache DistributedCache;
 
         public EventService(ApplicationContext context, ILogger<EventService> logger, IMapper mapper,
-            HttpClient httpClient, IOptions<AppSettings> appSettings, IAnalyticsService analyticsService, IRecommendationService recommendationService)
+            HttpClient httpClient, IOptions<AppSettings> appSettings, IAnalyticsService analyticsService,
+            IRecommendationService recommendationService, IDistributedCache distributedCache)
         {
             Logger = logger;
             ApplicationContext = context;
@@ -60,6 +63,7 @@ namespace OpenEvent.Web.Services
             AppSettings = appSettings.Value;
             AnalyticsService = analyticsService;
             RecommendationService = recommendationService;
+            DistributedCache = distributedCache;
         }
 
         /// <summary>
@@ -85,6 +89,7 @@ namespace OpenEvent.Web.Services
 
             Event newEvent = new Event()
             {
+                Id = Guid.NewGuid(),
                 Name = createEventBody.Name,
                 Description = createEventBody.Description,
                 Address = createEventBody.Address,
@@ -106,13 +111,24 @@ namespace OpenEvent.Web.Services
                 SocialLinks = createEventBody.SocialLinks != null
                     ? createEventBody.SocialLinks.Select(x => Mapper.Map<SocialLink>(x)).ToList()
                     : new List<SocialLink>(),
-                Tickets = Enumerable.Repeat(new Ticket(), createEventBody.NumberOfTickets).ToList()
             };
+
+            List<Ticket> tickets = new List<Ticket>();
+            for (int i = 0; i < createEventBody.NumberOfTickets; i++)
+            {
+                tickets.Add(new Ticket()
+                {
+                    Id = Guid.NewGuid(),
+                    Event = newEvent,
+                    User = host
+                });
+            }
 
             try
             {
                 // Saving user to Db.
                 await ApplicationContext.Events.AddAsync(newEvent);
+                await ApplicationContext.Tickets.AddRangeAsync(tickets);
                 await ApplicationContext.SaveChangesAsync();
                 return Mapper.Map<EventViewModel>(newEvent);
             }
@@ -210,7 +226,7 @@ namespace OpenEvent.Web.Services
                 .AsSplitQuery().AsNoTracking().AsEnumerable();
 
             events = events.Where(x => x.Host.Id == hostId && !x.isCanceled);
-            
+
             return events.Select(
                 x => new EventHostModel
                 {
@@ -238,7 +254,9 @@ namespace OpenEvent.Web.Services
                     TicketsLeft = x.Tickets.Count,
                     EndUTC = x.EndUTC,
                     StartUTC = x.StartUTC,
-                    PageViewEvents = x.PageViewEvents.Any() ? x.PageViewEvents.Select(p => Mapper.Map<PageViewEventViewModel>(p)).ToList() : new List<PageViewEventViewModel>()
+                    PageViewEvents = x.PageViewEvents.Any()
+                        ? x.PageViewEvents.Select(p => Mapper.Map<PageViewEventViewModel>(p)).ToList()
+                        : new List<PageViewEventViewModel>()
                 }).ToList();
         }
 
@@ -251,42 +269,54 @@ namespace OpenEvent.Web.Services
         /// <exception cref="EventNotFoundException"></exception>
         public async Task<EventDetailModel> GetForPublic(Guid id, Guid? userId)
         {
-            var e = await ApplicationContext.Events
-                .Include(x => x.Address)
-                .Include(x => x.EventCategories)
-                .Include(x => x.Images)
-                .Include(x => x.Thumbnail)
-                .Include(x => x.SocialLinks)
-                .Include(x => x.Tickets).Select(x =>
-                    new EventDetailModel()
-                    {
-                        Id = x.Id,
-                        Address = x.Address,
-                        Name = x.Name,
-                        Description = x.Description,
-                        Categories = x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList(),
-                        Images = x.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList(),
-                        Price = x.Price,
-                        Thumbnail = Mapper.Map<ImageViewModel>(x.Thumbnail),
-                        EndLocal = x.EndLocal,
-                        IsOnline = x.IsOnline,
-                        SocialLinks = x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
-                        StartLocal = x.StartLocal,
-                        TicketsLeft = x.Tickets.Count,
-                        EndUTC = x.EndUTC,
-                        StartUTC = x.StartUTC
-                    }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var e = await CacheHelpers.Get<Event>(DistributedCache, id.ToString(), "PublicEvent");
 
             if (e == null)
             {
-                Logger.LogInformation("Event not fond");
-                throw new EventNotFoundException();
+                e = await ApplicationContext.Events
+                    .Include(x => x.Address)
+                    .Include(x => x.EventCategories).ThenInclude(x => x.Category)
+                    .Include(x => x.Images)
+                    .Include(x => x.Thumbnail)
+                    .Include(x => x.SocialLinks)
+                    .Include(x => x.Tickets).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+
+                if (e == null)
+                {
+                    Logger.LogInformation("Event not fond");
+                    throw new EventNotFoundException();
+                }
+
+                Logger.LogInformation("Caching event");
+
+                await CacheHelpers.Set<Event>(DistributedCache, id.ToString(), "PublicEvent", e);
+            }
+            else
+            {
+                Logger.LogInformation("Found event in cache");
             }
 
-            AnalyticsService.CapturePageView(e.Id,userId);
-            RecommendationService.Influence(userId,e.Id,Influence.PageView);
+            AnalyticsService.CapturePageView(e.Id, userId);
+            RecommendationService.Influence(userId, e.Id, Influence.PageView);
 
-            return e;
+            return new EventDetailModel
+            {
+                Id = e.Id,
+                Address = e.Address,
+                Name = e.Name,
+                Description = e.Description,
+                Categories = e.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList(),
+                Images = e.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList(),
+                Price = e.Price,
+                Thumbnail = Mapper.Map<ImageViewModel>(e.Thumbnail),
+                EndLocal = e.EndLocal,
+                IsOnline = e.IsOnline,
+                SocialLinks = e.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
+                StartLocal = e.StartLocal,
+                TicketsLeft = e.Tickets.Count,
+                EndUTC = e.EndUTC,
+                StartUTC = e.StartUTC
+            };
         }
 
         /// <summary>
@@ -300,64 +330,67 @@ namespace OpenEvent.Web.Services
         {
             List<Guid> searchCategories = filters.Where(x => x.Key == SearchParam.Category)
                 .Select(x => Guid.Parse(x.Value)).ToList();
+
             var isOnline = filters.Find(x => x.Key == SearchParam.IsOnline) != null;
+
             var cords = filters.Find(x => x.Key == SearchParam.Location)?.Value.Split(",").Select(double.Parse)
                 .ToArray();
+
             var date = filters.Find(x => x.Key == SearchParam.Date)?.Value;
-            // var date = isDate != null ? DateTime.Parse(isDate): (DateTime?) null;
 
             // TODO: this search is not explicit does it want to be?
             // TODO: order of the result?
-            // var events = await ApplicationContext.Events.Where(
-            //     x => (
-            //              (searchCategories.Any() ? x.EventCategories.Any(c => searchCategories.Contains(c.CategoryId)) : true)) 
-            //          && (keyword != null ? x.Name.Contains(keyword) : true) && (isOnline ? x.IsOnline : true) 
-            //          // && (EventDistance(x,cords))
-            //          // && (cords != null && x.IsOnline ? false : true)
-            //          && !x.isCanceled
-            //          ).Take(50).ToListAsync();
 
-            // var events = ApplicationContext.Events.AsEnumerable().Where(x =>
-            // {
-            //     var containsKeyword = keyword != null ? x.Name.Contains(keyword) : true;
-            //     var hasCategory = searchCategories.Any() ? x.EventCategories.Any(c => searchCategories.Contains(c.CategoryId)) : true;
-            //     // var isClose = cords != null ? EventDistance(x.Address.Lat, x.Address.Lon, cords) : true;
-            //     var isClose = true;
-            //     var online = (isOnline ? x.IsOnline : true);
-            //     return isClose && containsKeyword && hasCategory && online && !x.isCanceled;
-            // }).Take(50);
+            IEnumerable<Event> events;
 
-            IEnumerable<Event> events = ApplicationContext.Events.Include(x => x.EventCategories).AsSplitQuery()
-                .AsEnumerable();
+            String searchKey = keyword + String.Concat(filters.Select(x => x.Key + x.Value.ToString()));
 
-            if (isOnline)
+            events = await CacheHelpers.Get<List<Event>>(DistributedCache, searchKey, "Search");
+
+            if (events == null)
             {
-                events = events.Where(x => x.IsOnline);
+                events = ApplicationContext.Events.Include(x => x.EventCategories).AsSplitQuery()
+                    .AsEnumerable();
+
+                if (isOnline)
+                {
+                    events = events.Where(x => x.IsOnline);
+                }
+
+                if (searchCategories.Any())
+                {
+                    events = events.Where(x => x.EventCategories.Any(c => searchCategories.Contains(c.CategoryId)));
+                }
+
+                if (cords != null)
+                {
+                    events = events.Where(x => !x.IsOnline && EventDistance(x.Address.Lat, x.Address.Lon, cords));
+                }
+
+                if (date != null)
+                {
+                    var realDate = DateTime.Parse(date);
+                    events = events.Where(x =>
+                        new DateTime(x.StartLocal.Year, x.StartLocal.Month, x.StartLocal.Day).Equals(new DateTime(
+                            realDate.Year,
+                            realDate.Month, realDate.Day)));
+                }
+
+                events = events.Take(50);
+
+                Logger.LogInformation("Caching search");
+
+                await CacheHelpers.Set<List<Event>>(DistributedCache, searchKey, "Search", events.ToList());
+            }
+            else
+            {
+                Logger.LogInformation("Found search in cache");
             }
 
-            if (searchCategories.Any())
-            {
-                events = events.Where(x => x.EventCategories.Any(c => searchCategories.Contains(c.CategoryId)));
-            }
+            AnalyticsService.CaptureSearch(keyword, String.Join(",", filters), userId);
+            RecommendationService.Influence(userId, keyword, filters);
 
-            if (cords != null)
-            {
-                events = events.Where(x => !x.IsOnline && EventDistance(x.Address.Lat, x.Address.Lon, cords));
-            }
-
-            if (date != null)
-            {
-                var realDate = DateTime.Parse(date);
-                events = events.Where(x =>
-                    new DateTime(x.StartLocal.Year, x.StartLocal.Month, x.StartLocal.Day).Equals(new DateTime(
-                        realDate.Year,
-                        realDate.Month, realDate.Day)));
-            }
-            
-            AnalyticsService.CaptureSearch(keyword,String.Join(",",filters),userId);
-            RecommendationService.Influence(userId,keyword,filters);
-
-            return events.Select(e => Mapper.Map<EventViewModel>(e)).Take(50).ToList();
+            return events.Select(e => Mapper.Map<EventViewModel>(e)).ToList();
         }
 
         private static bool EventDistance(double lat, double lon, double[] cords)

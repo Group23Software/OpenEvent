@@ -13,6 +13,7 @@ import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {EventDetailModel} from "../../_models/Event";
 import {Router} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('CreateEventComponent', () =>
 {
@@ -41,7 +42,8 @@ describe('CreateEventComponent', () =>
       imports: [
         BrowserDynamicTestingModule,
         RouterTestingModule,
-        MatDialogModule
+        MatDialogModule,
+        BrowserAnimationsModule
       ],
       providers: [
         // {provide: MatDialog, useValue: dialogMock},
