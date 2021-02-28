@@ -47,8 +47,23 @@ namespace OpenEvent.Test.Setups
                     PhoneNumber = "0000000000",
                     Avatar = new Byte[] {1, 1, 1, 1},
                     IsDarkMode = false,
-                    PaymentMethods = new List<PaymentMethod>(),
-                    BankAccounts = new EditableList<BankAccount>(),
+                    StripeAccountId = "acct_1IPw2x2cYsy6zvuI",
+                    StripeCustomerId = "cus_J203DWUmiDnfRB",
+                    PaymentMethods = new List<PaymentMethod>()
+                    {
+                        new()
+                        {
+                            StripeCardId = "card_1IPw30K2ugLXrgQX4NDVSrfJ",
+                            IsDefault = true
+                        }
+                    },
+                    BankAccounts = new EditableList<BankAccount>()
+                    {
+                        new()
+                        {
+                            StripeBankAccountId = "ba_1IPycn2cYsy6zvuIWycwMVYN"
+                        }
+                    },
                     Address = new Address()
                     {
                         AddressLine1 = "21 Wellsway",
