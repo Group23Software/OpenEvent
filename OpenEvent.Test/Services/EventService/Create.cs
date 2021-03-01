@@ -27,7 +27,7 @@ namespace OpenEvent.Test.Services.EventService
             Address = new Address() { },
             Categories = new List<Category>(),
             Images = new List<ImageViewModel>(),
-            Price = new decimal(10.10),
+            Price = 1010,
             Thumbnail = new ImageViewModel(),
             EndLocal = new DateTime(),
             HostId = new Guid(),

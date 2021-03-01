@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -35,5 +36,19 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        [HttpGet("users")]
+        public async Task<ActionResult<List<TicketViewModel>>> GetAllUsersTickets(Guid id)
+        {
+            try
+            {
+                var result = await TicketService.GetAllUsersTickets(id);
+                return result;
+            }
+            catch (Exception e)
+            {
+                Logger.LogInformation(e.ToString());
+                return BadRequest(e);
+            }
+        }
     }
 }

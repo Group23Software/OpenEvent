@@ -9,5 +9,10 @@ namespace OpenEvent.Web.Models.Ticket
     {
         public Guid Id { get; set; }
         public string QRCode { get; set; }
+        
+        public Guid EventId { get; set; }
+        public string EventName { get; set; }
+        public DateTime EventStart { get; set; }
+        public DateTime EventEnd { get; set; }
     }
 }

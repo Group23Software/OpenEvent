@@ -46,11 +46,8 @@ namespace OpenEvent.Web
             {
                 appSettings.ConnectionString = appSettings.LocalConnectionString;
             }
-            
-            services.AddResponseCompression(options =>
-            {
-                options.Providers.Add<GzipCompressionProvider>();
-            });
+
+            services.AddResponseCompression(options => { options.Providers.Add<GzipCompressionProvider>(); });
 
             services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
 
@@ -104,6 +101,7 @@ namespace OpenEvent.Web
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IBankingService, BankingService>();
             services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<ITicketService, TicketService>();
 
             services.AddHttpClient<IEventService, EventService>();
 
@@ -159,7 +157,7 @@ namespace OpenEvent.Web
             {
                 app.UseCors("AllowOrigin");
             }
-            
+
             app.UseAuthentication();
 
             app.UseSwagger();

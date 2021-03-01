@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +14,7 @@ namespace OpenEvent.Web.Services
     public interface ITicketService
     {
         Task BuyTicket();
-        Task<TicketViewModel> GetAllUsersTickets(Guid id);
+        Task<List<TicketViewModel>> GetAllUsersTickets(Guid id);
         Task VerifyTicket(Guid id);
 
         Task<TicketDetailModel> Get(Guid id);
@@ -36,9 +38,13 @@ namespace OpenEvent.Web.Services
             throw new NotImplementedException();
         }
 
-        public Task<TicketViewModel> GetAllUsersTickets(Guid id)
+        public async Task<List<TicketViewModel>> GetAllUsersTickets(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await ApplicationContext.Users.Include(x => x.Tickets).ThenInclude(x => x.Event).AsSplitQuery().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+
+            if (user == null) throw new UserNotFoundException();
+
+            return user.Tickets.Select(x => Mapper.Map<TicketViewModel>(x)).ToList();
         }
 
         public Task VerifyTicket(Guid id)

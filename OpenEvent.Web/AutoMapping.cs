@@ -23,11 +23,15 @@ namespace OpenEvent.Web
                 .ForMember(d => d.Avatar, m => m.MapFrom(x => Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length)));
 
             // CreateMap<User, UserAccountModel>()
-                // .ForMember(d => d.Avatar, m => m.MapFrom(x => Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length)))
-                // .ForMember(d => d.StripeAccountInfo);
+            // .ForMember(d => d.Avatar, m => m.MapFrom(x => Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length)))
+            // .ForMember(d => d.StripeAccountInfo);
 
             CreateMap<Ticket, TicketViewModel>()
-                .ForMember(d => d.QRCode, m => m.MapFrom(x => Encoding.UTF8.GetString(x.QRCode, 0, x.QRCode.Length)));
+                .ForMember(d => d.QRCode, m => m.MapFrom(x => Encoding.UTF8.GetString(x.QRCode, 0, x.QRCode.Length)))
+                .ForMember(x => x.EventName, m => m.MapFrom(x => x.Event.Name))
+                .ForMember(x => x.EventStart, m => m.MapFrom(x => x.Event.StartLocal))
+                .ForMember(x => x.EventEnd, m => m.MapFrom(x => x.Event.EndLocal))
+                .ForMember(x => x.EventId, m => m.MapFrom(x => x.Event.Id));
 
             CreateMap<Image, ImageViewModel>()
                 .ForMember(d => d.Source, m => m.MapFrom(x => Encoding.UTF8.GetString(x.Source, 0, x.Source.Length)));
