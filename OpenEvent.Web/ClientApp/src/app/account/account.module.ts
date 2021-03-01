@@ -13,23 +13,22 @@ import { UserDataComponent } from './user-data/user-data.component';
 
 
 @NgModule({
-  declarations: [
-    AccountComponent,
-    AccountPreferencesComponent,
-    PaymentMethodsComponent,
-    VirtualCardComponent,
-    BankAccountComponent,
-    UserDataComponent,
-  ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    UserModule,
-    RouterModule.forChild([
-      {path: '', component: AccountComponent, pathMatch: 'full'}
-    ]),
-    NgxStripeModule,
-  ]
+    declarations: [
+        AccountComponent,
+        AccountPreferencesComponent,
+        PaymentMethodsComponent,
+        BankAccountComponent,
+        UserDataComponent,
+    ],
+    imports: [
+        CommonModule,
+        SharedModule,
+        UserModule,
+        RouterModule.forChild([
+            {path: '', component: AccountComponent, pathMatch: 'full'}
+        ]),
+        NgxStripeModule,
+    ]
 })
 export class AccountModule
 {

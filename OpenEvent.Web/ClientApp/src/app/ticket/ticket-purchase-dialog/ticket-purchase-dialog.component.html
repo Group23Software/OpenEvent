@@ -1,0 +1,21 @@
+<mat-progress-bar mode="indeterminate" *ngIf="loadingData" id="loadingBar"></mat-progress-bar>
+<div class="mat-warn">{{createIntentError}}</div>
+<div *ngIf="Event && !loadingData && !createIntentError">
+  <div class="mat-dialog-title">Purchase Ticket</div>
+  <div>
+    <mat-card id="receipt">
+      <div>{{Event.Name}}</div>
+      <div>{{Event.Price / 100 |currency:'GBP'}}</div>
+    </mat-card>
+    <mat-card id="cardSelect">
+      <virtual-card [ShowActions]="false" *ngIf="currentCard" [Card]="currentCard"></virtual-card>
+    </mat-card>
+    <div class="mat-warn">{{confirmIntentError}}</div>
+  </div>
+  <mat-card *ngIf="confirmingTicket">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </mat-card>
+  <mat-dialog-actions *ngIf="!confirmingTicket" align="end">
+    <button (click)="confirm()" mat-flat-button color="accent">Confirm</button>
+  </mat-dialog-actions>
+</div>

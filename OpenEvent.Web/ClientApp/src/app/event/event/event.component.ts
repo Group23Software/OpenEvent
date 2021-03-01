@@ -5,6 +5,12 @@ import {EventService} from "../../_Services/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Location} from '@angular/common';
 import {GalleryItem, ImageItem} from "ng-gallery";
+import {CreateAccountComponent} from "../../login/create-account/create-account.component";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  TicketPurchaseDialogComponent,
+  TicketPurchaseDialogData
+} from "../../ticket/ticket-purchase-dialog/ticket-purchase-dialog.component";
 
 @Component({
   selector: 'event',
@@ -30,7 +36,7 @@ export class EventComponent implements OnInit, OnChanges
     return this.event;
   }
 
-  constructor (private route: ActivatedRoute, private eventService: EventService, private location: Location)
+  constructor (private route: ActivatedRoute, private eventService: EventService, private location: Location, private dialog: MatDialog)
   {
   }
 
@@ -80,6 +86,19 @@ export class EventComponent implements OnInit, OnChanges
   ngOnChanges (changes: SimpleChanges): void
   {
     this.ngOnInit();
+  }
+
+  public purchase ()
+  {
+    let dialog = this.dialog.open(TicketPurchaseDialogComponent, {
+      maxWidth: "80vw",
+      data: {
+        Event: this.event
+      } as TicketPurchaseDialogData
+    });
+
+    // TODO: Go to ticket
+    dialog.afterClosed().subscribe(() => dialog = null);
   }
 }
 

@@ -12,7 +12,7 @@ namespace OpenEvent.Web.Models.Event
         public List<SocialLinkViewModel> SocialLinks { get; set; }
         public DateTime StartLocal { get; set; }
         public DateTime EndLocal { get; set; }
-        public decimal Price { get; set; }
+        public long Price { get; set; }
         public Guid HostId { get; set; }
         public Address.Address Address { get; set; }
         public bool IsOnline { get; set; }

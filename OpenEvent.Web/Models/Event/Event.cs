@@ -23,15 +23,15 @@ namespace OpenEvent.Web.Models.Event
         public DateTime StartUTC { get; set; }
         public DateTime EndLocal { get; set; }
         public DateTime EndUTC { get; set; }
-        public decimal Price { get; set; }
+        public long Price { get; set; }
         [JsonIgnore] public User.User Host { get; set; }
         public Address.Address Address { get; set; }
         public bool IsOnline { get; set; }
         public List<Ticket.Ticket> Tickets { get; set; }
-        [JsonIgnore] [NotMapped] public int TicketsLeft => Tickets.Select(x => x == null).Count();
+        public int TicketsLeft { get; set; }
         public List<EventCategory> EventCategories { get; set; }
         public bool isCanceled { get; set; }
-        
+
         public List<PageViewEvent> PageViewEvents { get; set; }
     }
 }

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenEvent.Web.Contexts;
 
 namespace OpenEvent.Web.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210301160039_decimalToLong")]
+    partial class decimalToLong
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -158,9 +160,6 @@ namespace OpenEvent.Web.Migrations
                     b.Property<DateTime>("StartUTC")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("TicketsLeft")
-                        .HasColumnType("int");
-
                     b.Property<bool>("isCanceled")
                         .HasColumnType("tinyint(1)");
 
@@ -242,9 +241,6 @@ namespace OpenEvent.Web.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
-
-                    b.Property<bool>("Available")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<Guid?>("EventId")
                         .HasColumnType("char(36)");

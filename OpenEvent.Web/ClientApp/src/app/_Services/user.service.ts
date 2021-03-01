@@ -51,6 +51,20 @@ export class UserService
     return this._User;
   }
 
+  get AccountUser (): UserAccountModel
+  {
+    if (this._User.Email == null)
+    {
+      this.GetAccountUser(this._User.Id).subscribe(() =>
+      {
+        return this._User;
+      });
+    } else
+    {
+      return this._User;
+    }
+  }
+
   private _User: UserAccountModel;
   private readonly BaseUrl: string;
 
@@ -81,6 +95,11 @@ export class UserService
         return user;
       })
     );
+  }
+
+  public NeedAccountUser(): Observable<UserAccountModel>
+  {
+    return this._User.Email == null ? this.GetAccountUser(this._User.Id) : of(null);
   }
 
   public GetAccountUser (id: string): Observable<UserAccountModel>

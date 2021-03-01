@@ -18,7 +18,6 @@ import {EventComponent} from "./event/event/event.component";
 import {SearchComponent} from "./search/search.component";
 import {EventPreviewComponent} from "./event/event-preview/event-preview.component";
 import {NgxStripeModule} from "ngx-stripe";
-import {RouteReuse} from "./_extensions/RouteReuse";
 import {ReuseRouteReuseStrategy} from "./_extensions/ReuseRouteReuseStrategy";
 
 

@@ -13,6 +13,7 @@ import {ConfirmDialogComponent} from "../../../_extensions/confirm-dialog/confir
 })
 export class VirtualCardComponent implements OnInit {
 
+  @Input() ShowActions: boolean = true;
   @Input() Card: PaymentMethodViewModel;
   public loading: boolean = false;
 

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Models.Intent;
 using OpenEvent.Web.Models.Transaction;
 using OpenEvent.Web.Services;
+using Stripe;
 
 namespace OpenEvent.Web.Controllers
 {

@@ -89,6 +89,18 @@ bankingPaths = {
   RemoveBankAccount: bankingPaths.BasePath + '/RemoveBankAccount'
 }
 
+let transactionPaths: ApiTransactionPaths = {
+  BasePath: 'api/transaction',
+  ConfirmIntent: '',
+  CreateIntent: ''
+}
+
+transactionPaths = {
+  ...transactionPaths,
+  CreateIntent: transactionPaths.BasePath + '/CreateIntent',
+  ConfirmIntent: transactionPaths.BasePath + '/ConfirmIntent'
+}
+
 interface ApiAuthPaths
 {
   readonly BasePath: string;
@@ -139,8 +151,16 @@ interface ApiBankingPaths
   readonly RemoveBankAccount: string;
 }
 
+interface ApiTransactionPaths
+{
+  readonly BasePath: string;
+  readonly CreateIntent: string;
+  readonly ConfirmIntent: string;
+}
+
 export const UserPaths: ApiUserPaths = userPaths;
 export const AuthPaths: ApiAuthPaths = authPaths;
 export const EventPaths: ApiEventPaths = eventPaths;
 export const PaymentPaths: ApiPaymentPaths = paymentPaths;
 export const BankingPaths: ApiBankingPaths = bankingPaths;
+export const TransactionPaths: ApiTransactionPaths = transactionPaths;

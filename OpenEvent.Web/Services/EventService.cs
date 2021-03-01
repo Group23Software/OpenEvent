@@ -111,6 +111,7 @@ namespace OpenEvent.Web.Services
                 SocialLinks = createEventBody.SocialLinks != null
                     ? createEventBody.SocialLinks.Select(x => Mapper.Map<SocialLink>(x)).ToList()
                     : new List<SocialLink>(),
+                TicketsLeft = createEventBody.NumberOfTickets
             };
 
             List<Ticket> tickets = new List<Ticket>();
@@ -120,6 +121,7 @@ namespace OpenEvent.Web.Services
                 {
                     Id = Guid.NewGuid(),
                     Event = newEvent,
+                    Available = true
                 });
             }
 
@@ -277,8 +279,7 @@ namespace OpenEvent.Web.Services
                     .Include(x => x.EventCategories).ThenInclude(x => x.Category)
                     .Include(x => x.Images)
                     .Include(x => x.Thumbnail)
-                    .Include(x => x.SocialLinks)
-                    .Include(x => x.Tickets).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+                    .Include(x => x.SocialLinks).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
                 if (e == null)
                 {
@@ -312,7 +313,7 @@ namespace OpenEvent.Web.Services
                 IsOnline = e.IsOnline,
                 SocialLinks = e.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
                 StartLocal = e.StartLocal,
-                TicketsLeft = e.Tickets.Count,
+                TicketsLeft = e.TicketsLeft,
                 EndUTC = e.EndUTC,
                 StartUTC = e.StartUTC
             };

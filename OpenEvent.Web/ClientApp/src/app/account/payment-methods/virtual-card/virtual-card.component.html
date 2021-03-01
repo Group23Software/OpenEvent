@@ -22,7 +22,7 @@
         </div>
         <span>{{Card.Name}}</span>
       </div>
-      <div fxFlex="auto" fxLayout="row" fxLayoutGap="6px">
+      <div fxFlex="auto" fxLayout="row" fxLayoutGap="6px" *ngIf="ShowActions">
         <button mat-mini-fab color="warn" (click)="delete()">
           <mat-icon>delete_forever</mat-icon>
         </button>

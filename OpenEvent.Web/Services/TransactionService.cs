@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenEvent.Web.Contexts;
@@ -27,15 +28,16 @@ namespace OpenEvent.Web.Services
         private readonly ILogger<TransactionService> Logger;
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
+        private readonly IServiceScopeFactory ScopeFactory;
 
         public TransactionService(ApplicationContext applicationContext, ILogger<TransactionService> logger,
-            IMapper mapper,
-            IOptions<AppSettings> appSettings)
+            IMapper mapper, IOptions<AppSettings> appSettings, IServiceScopeFactory serviceScopeFactory)
         {
             Logger = logger;
             ApplicationContext = applicationContext;
             Mapper = mapper;
             StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
+            ScopeFactory = serviceScopeFactory;
         }
 
         public async Task<TransactionViewModel> CreateIntent(CreateIntentBody createIntentBody)
@@ -80,6 +82,10 @@ namespace OpenEvent.Web.Services
                 PaymentMethodTypes = new List<string>
                 {
                     "card"
+                },
+                Metadata = new Dictionary<string, string>()
+                {
+                    {"EventId", e.Id.ToString()}
                 }
             };
 
@@ -89,7 +95,14 @@ namespace OpenEvent.Web.Services
             {
                 var intent = service.Create(options);
 
-                var ticket = e.Tickets.First(x => x.Transaction == null && x.User == null);
+                var ticket = e.Tickets.FirstOrDefault(x => x.Available);
+
+                if (ticket == null) throw new Exception("Out of tickets");
+
+                e.TicketsLeft = e.Tickets.Count(x => x.Available) - 1;
+
+                ticket.User = user;
+                ticket.Available = false;
 
                 Transaction transaction = new Transaction()
                 {
@@ -101,11 +114,12 @@ namespace OpenEvent.Web.Services
                     Updated = DateTime.Now,
                     Status = Enum.Parse<PaymentStatus>(intent.Status, true),
                     Ticket = ticket,
-                    TicketId = ticket.Id,
                 };
 
                 await ApplicationContext.Transactions.AddAsync(transaction);
                 await ApplicationContext.SaveChangesAsync();
+
+                CheckOnIntent(transaction.StripeIntentId, ticket.Id, e.Id);
 
                 return Mapper.Map<TransactionViewModel>(transaction);
             }
@@ -116,15 +130,71 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        private void CheckOnIntent(string id, Guid ticketId, Guid eventId)
+        {
+            Task.Run(async () =>
+            {
+                Logger.LogInformation("Checking intent");
+                // waits x amount of time for intent timeout
+                await Task.Delay(10000);
+                Logger.LogInformation("The intent has timed out! Destroying!");
+
+                using var scope = ScopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+
+                var transaction = await context.Transactions.FirstOrDefaultAsync(x => x.StripeIntentId == id);
+
+                var ticket = await context.Tickets.FirstOrDefaultAsync(x => x.Id == ticketId);
+
+                var @event = await context.Events.FirstOrDefaultAsync(x => x.Id == eventId);
+
+                if (@event == null) return;
+
+                if (transaction == null) return;
+
+                if (ticket == null) return;
+
+                transaction.End = DateTime.Now;
+                transaction.Status = PaymentStatus.canceled;
+                transaction.Ticket = null;
+                transaction.Updated = DateTime.Now;
+
+                ticket.User = null;
+                ticket.Available = true;
+                ticket.Transaction = null;
+
+                @event.TicketsLeft++;
+
+                var service = new PaymentIntentService();
+
+                try
+                {
+                    Logger.LogInformation("Canceling the intent");
+                    service.Cancel(id);
+
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogWarning(e.Message);
+                }
+                finally
+                {
+                    Logger.LogInformation("Checked on intent");
+                    context = default;
+                }
+            });
+        }
+
         public async Task<TransactionViewModel> InjectPaymentMethod(InjectPaymentMethodBody injectPaymentMethodBody)
         {
             var user = await ApplicationContext.Users
                 .Include(x => x.PaymentMethods)
                 .FirstOrDefaultAsync(x => x.Id == injectPaymentMethodBody.UserId);
+
             var transaction =
                 await ApplicationContext.Transactions.FirstOrDefaultAsync(x =>
                     x.StripeIntentId == injectPaymentMethodBody.IntentId);
-
             if (user == null)
             {
                 Logger.LogInformation("User was not found");
@@ -133,12 +203,11 @@ namespace OpenEvent.Web.Services
 
             if (user.PaymentMethods.All(x => x.StripeCardId != injectPaymentMethodBody.CardId))
                 throw new Exception("User doesn't own card");
-
             if (transaction == null) throw new Exception("Transaction not found");
 
             var service = new PaymentIntentService();
-
             try
+
             {
                 var intent = service.Confirm(injectPaymentMethodBody.IntentId,
                     new PaymentIntentConfirmOptions()

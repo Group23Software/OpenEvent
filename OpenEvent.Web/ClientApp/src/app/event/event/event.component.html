@@ -22,7 +22,7 @@
 
     <mat-card id="ticketsAndPrice">
       <div class="mr-3">{{Event.TicketsLeft}} ticket(s) left!</div>
-      <button mat-flat-button color="accent">£{{Event.Price}}</button>
+      <button mat-flat-button color="accent" [disabled]="Event.TicketsLeft == 0" (click)="purchase()">{{Event.Price / 100 |currency:'GBP'}}</button>
     </mat-card>
     </div>
     <div class="d-flex flex-row">
