@@ -73,7 +73,7 @@ namespace OpenEvent.Test.Setups
                         CountryName = "United Kingdom",
                         PostalCode = "IP14 6SL",
                     },
-                    DateOfBirth = new DateTime(2000,07,24)
+                    DateOfBirth = new DateTime(2000, 07, 24)
                 }
             };
 
@@ -108,7 +108,7 @@ namespace OpenEvent.Test.Setups
                         Lon = -0.08375
                     },
                     Description = "This is a test event",
-                    Host = new User() {Id = new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C")},
+                    Host = seedUserList[0],
                     Images = new List<Image>()
                     {
                         new() {Label = "Image", Source = new Byte[] {1, 1, 1, 1}}
@@ -123,7 +123,20 @@ namespace OpenEvent.Test.Setups
                     StartUTC = new DateTime(),
                     IsOnline = false,
                     SocialLinks = new List<SocialLink> {new() {Link = "custom.co.uk", SocialMedia = SocialMedia.Site}},
-                    Tickets = new List<Ticket>(),
+                    Tickets = new List<Ticket>()
+                    {
+                        new()
+                        {
+                            Id = new Guid("892C6AE2-0F9A-4125-9E95-FAC401A4EF60"),
+                            User = seedUserList[0],
+                            QRCode = new Byte[] {0, 0, 0, 0}
+                        },
+                        new()
+                        {
+                            Id = new Guid("420BF325-27C1-43F7-BC4A-80F459D67356"),
+                            QRCode = new Byte[] {0, 0, 0, 0}
+                        }
+                    },
                     EventCategories = new List<EventCategory>
                     {
                         new()
@@ -168,13 +181,6 @@ namespace OpenEvent.Test.Setups
 
             IQueryable<Ticket> seedTickets = new List<Ticket>()
             {
-                new()
-                {
-                    Id = new Guid("892C6AE2-0F9A-4125-9E95-FAC401A4EF60"),
-                    Event = new Event() {Id = new Guid("74831876-FC2E-4D03-99D8-B3872BDEFD5C")},
-                    User = new User() {Id = new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C")},
-                    QRCode = new Byte[] {0, 0, 0, 0}
-                }
             }.AsQueryable();
 
             seedUserList[0].Password = hasher.HashPassword(seedUserList[0], "Password");

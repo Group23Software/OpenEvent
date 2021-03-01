@@ -6,6 +6,7 @@ using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Ticket;
+using OpenEvent.Web.Models.Transaction;
 using OpenEvent.Web.Models.User;
 using Stripe;
 using BankAccount = OpenEvent.Web.Models.BankAccount.BankAccount;
@@ -54,6 +55,7 @@ namespace OpenEvent.Web
 
             CreateMap<SearchEvent, SearchEventViewModel>();
             CreateMap<PageViewEvent, PageViewEventViewModel>();
+            CreateMap<Transaction, TransactionViewModel>();
         }
     }
 }

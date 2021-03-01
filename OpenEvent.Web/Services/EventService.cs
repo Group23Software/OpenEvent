@@ -120,7 +120,6 @@ namespace OpenEvent.Web.Services
                 {
                     Id = Guid.NewGuid(),
                     Event = newEvent,
-                    User = host
                 });
             }
 

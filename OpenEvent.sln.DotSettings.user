@@ -7,6 +7,7 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d3c0559c_002D0294_002D4387_002D8177_002D53c3fa5932f9/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Should_Create" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::net5.0::OpenEvent.Test.Services.TransactionService.CreateIntent.Should_Create&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::450B8014-AC5A-4CB7-9763-F6747869C372::net5.0::OpenEvent.Test.Services.TransactionService.InjectPaymentMethod.Should_Inject&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String>
 	
