@@ -1,8 +1,8 @@
 import {Inject, Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
 import {UserService} from "./user.service";
 import {Observable} from "rxjs";
-import {TicketDetailModel, TicketViewModel} from "../_models/Ticket";
+import {TicketDetailModel, TicketViewModel, VerifyTicketBody} from "../_models/Ticket";
 import {TicketPaths} from "../_extensions/api.constants";
 
 @Injectable({
@@ -22,8 +22,13 @@ export class TicketService
     return this.http.get<TicketViewModel[]>(this.BaseUrl + TicketPaths.GetAllUsersTickets, {params: new HttpParams().set('id', this.userService.User.Id)});
   }
 
-  public Get(id: string): Observable<TicketDetailModel>
+  public Get (id: string): Observable<TicketDetailModel>
   {
-    return this.http.get<TicketDetailModel>(this.BaseUrl + TicketPaths.BasePath, {params: new HttpParams().set('id',id)});
+    return this.http.get<TicketDetailModel>(this.BaseUrl + TicketPaths.BasePath, {params: new HttpParams().set('id', id)});
+  }
+
+  public Verify (verifyTicketBody: VerifyTicketBody): Observable<any>
+  {
+    return this.http.post<any>(this.BaseUrl + TicketPaths.Verify, verifyTicketBody);
   }
 }

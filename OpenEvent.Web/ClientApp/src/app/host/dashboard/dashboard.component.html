@@ -22,6 +22,10 @@
         <mat-icon>menu</mat-icon>
       </button>
       <span class="spacer"></span>
+      <button mat-button (click)="navigateToVerify()">
+        <mat-icon inline="true">confirmation_number</mat-icon>
+        Verify Tickets
+      </button>
       <button mat-button color="warn" (click)="cancelEvent(eventPreview.Id)">
         <mat-icon inline="true">cancel</mat-icon>
         Cancel

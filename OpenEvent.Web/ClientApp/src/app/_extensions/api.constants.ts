@@ -106,11 +106,13 @@ transactionPaths = {
 let ticketPaths: ApiTicketPaths = {
   BasePath: 'api/ticket',
   GetAllUsersTickets: '',
+  Verify: ''
 }
 
 ticketPaths = {
   ...ticketPaths,
-  GetAllUsersTickets: ticketPaths.BasePath + '/users'
+  GetAllUsersTickets: ticketPaths.BasePath + '/users',
+  Verify: ticketPaths.BasePath + '/verify'
 }
 
 interface ApiAuthPaths
@@ -174,6 +176,7 @@ interface ApiTicketPaths
 {
   readonly BasePath: string;
   readonly GetAllUsersTickets: string;
+  readonly Verify: string;
 }
 
 export const UserPaths: ApiUserPaths = userPaths;

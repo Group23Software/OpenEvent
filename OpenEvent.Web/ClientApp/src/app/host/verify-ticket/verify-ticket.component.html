@@ -1,0 +1,16 @@
+<user-nav></user-nav>
+
+<mat-card class="m-3">
+  <div class="d-flex flex-row">
+    <mat-form-field appearance="outline" class="w-100 mr-3">
+      <mat-label>Id</mat-label>
+      <input matInput type="text" [formControl]="Id" placeholder="Event Id" autocomplete="off">
+    </mat-form-field>
+    <button mat-fab (click)="verifyId()">
+      <mat-icon>check</mat-icon>
+    </button>
+  </div>
+</mat-card>
+<mat-card class="m-3">
+  <zxing-scanner [formats]="allowedFormats" (scanError)="scanError($event)" (scanFailure)="scanFailure($event)" (scanSuccess)="scanSuccess($event)"></zxing-scanner>
+</mat-card>

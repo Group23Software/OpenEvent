@@ -73,7 +73,20 @@ namespace OpenEvent.Test.Setups
                         CountryName = "United Kingdom",
                         PostalCode = "IP14 6SL",
                     },
-                    DateOfBirth = new DateTime(2000, 07, 24)
+                    DateOfBirth = new DateTime(2000, 07, 24),
+                    Tickets = new List<Ticket>()
+                    {
+                        new()
+                        {
+                            Id = Guid.NewGuid(),
+                            QRCode = new Byte[] {0, 0, 0, 0},
+                        },
+                        new()
+                        {
+                            Id = Guid.NewGuid(),
+                            QRCode = new Byte[] {0, 0, 0, 0},
+                        }
+                    }
                 }
             };
 

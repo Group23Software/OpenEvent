@@ -70,7 +70,7 @@ export class DashboardComponent implements OnInit, AfterViewChecked
     this.router.navigate(['/host/config/', event.Id], {state: event});
   }
 
-  cancelEvent (id: string)
+  public cancelEvent (id: string)
   {
     let cancelEvent = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -94,5 +94,10 @@ export class DashboardComponent implements OnInit, AfterViewChecked
         });
       }
     });
+  }
+
+  public navigateToVerify ()
+  {
+    this.router.navigate(['/host/verify',this.eventPreview.Id]);
   }
 }

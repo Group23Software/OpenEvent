@@ -16,3 +16,9 @@ export interface TicketDetailModel
   QRCode: string;
   Event: EventViewModel;
 }
+
+export interface VerifyTicketBody
+{
+  Id: string;
+  EventId: string;
+}

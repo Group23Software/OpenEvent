@@ -59,7 +59,7 @@ import {ReuseRouteReuseStrategy} from "./_extensions/ReuseRouteReuseStrategy";
       },
       {
         path: 'host',
-        loadChildren: () => import('./host.module').then(m => m.HostModule),
+        loadChildren: () => import('./host/host.module').then(m => m.HostModule),
         canActivate: [AuthGuard]
       },
       {

@@ -62,7 +62,7 @@ namespace OpenEvent.Web.Controllers
             catch (Exception e)
             {
                 Logger.LogInformation(e.ToString());
-                return BadRequest(e);
+                return Unauthorized(e);
             }
         }
     }

@@ -7,9 +7,9 @@ import {
   HttpResponse
 } from "@angular/common/http";
 import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
+import {Observable, throwError} from "rxjs";
 import {AuthService} from "../_Services/auth.service";
-import {map} from "rxjs/operators";
+import {catchError, map} from "rxjs/operators";
 import {TriggerService} from "../_Services/trigger.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -37,20 +37,24 @@ export class AuthInterceptor implements HttpInterceptor
         }
       });
     }
-    return next.handle(req).pipe(map((event: HttpEvent<any>) =>
-    {
-      if (event instanceof HttpResponse) this.trigger.loading.emit(false);
-      if (event instanceof HttpErrorResponse)
+
+    return next.handle(req).pipe(
+      map((event: HttpEvent<any>) =>
+      {
+        console.log("there was an http event", event);
+        if (event instanceof HttpResponse) this.trigger.loading.emit(false);
+        return event;
+      }),
+      catchError((error: HttpErrorResponse) =>
       {
         console.log("there was an error response");
         this.trigger.loading.emit(false);
-        this.snackBar.open(event.error.Message, 'close', {
-          duration: 500,
+        this.snackBar.open(error.error.Message, 'close', {
+          duration: 1500,
           horizontalPosition: 'right',
           verticalPosition: 'top'
         });
-      }
-      return event;
-    }));
+        return throwError(error);
+      }));
   }
 }
