@@ -174,5 +174,19 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
+
+        [HttpGet("explore")]
+        public async Task<ActionResult<List<EventViewModel>>> Explore(Guid id)
+        {
+            try
+            {
+                return await EventService.GetRecommended(id);
+            }
+            catch (Exception e)
+            {
+                Logger.LogInformation(e.ToString());
+                return BadRequest(e);
+            }
+        }
     }
 }

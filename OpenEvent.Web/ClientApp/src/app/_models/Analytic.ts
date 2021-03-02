@@ -8,6 +8,16 @@ export interface UsersAnalytics
 {
   PageViewEvents: PageViewEvent[];
   SearchEvents: SearchEvent[];
+  RecommendationScores: RecommendationScore[];
+  TicketVerificationEvents: TicketVerificationEvent[];
+}
+
+export interface MappedUsersAnalytics
+{
+  PageViewEvents: PageViewByDate[];
+  SearchEvents: SearchEventByDate[];
+  RecommendationScores: RecommendationScore[];
+  TicketVerificationEvents: TicketVerificationEvent[];
 }
 
 export interface AnalyticEvent
@@ -25,4 +35,30 @@ export interface SearchEvent extends AnalyticEvent
 {
   Search: string;
   Params: string;
+}
+
+export interface TicketVerificationEvent extends AnalyticEvent
+{
+  UserId: string;
+  TicketId: string;
+  EventId: string;
+}
+
+export interface RecommendationScore
+{
+  Id: string;
+  CategoryName: string;
+  Weight: number;
+}
+
+export interface PageViewByDate
+{
+  Date: Date;
+  PageViews: PageViewEvent[];
+}
+
+export interface SearchEventByDate
+{
+  Date: Date;
+  Searches: SearchEvent[];
 }

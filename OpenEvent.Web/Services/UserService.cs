@@ -13,6 +13,7 @@ using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.PaymentMethod;
+using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.User;
 using Stripe;
 using Address = OpenEvent.Web.Models.Address.Address;
@@ -220,11 +221,17 @@ namespace OpenEvent.Web.Services
         {
             var pageViewEvents = await ApplicationContext.PageViewEvents.Include(x => x.Event).AsSplitQuery().AsNoTracking().Where(x => x.User.Id == id).ToListAsync();
             var searchEvents = await ApplicationContext.SearchEvents.Where(x => x.User.Id == id).AsNoTracking().ToListAsync();
+            var recommendationScores = await ApplicationContext.RecommendationScores.Include(x => x.Category).Where(x => x.User.Id == id)
+                .AsNoTracking().ToListAsync();
+            var ticketVerificationEvents = await ApplicationContext.VerificationEvents.Include(x => x.Ticket).Include(x => x.Event).Where(x => x.User.Id == id)
+                .AsNoTracking().ToListAsync();
 
-            return new UsersAnalytics()
+            return new UsersAnalytics
             {
                 SearchEvents = searchEvents.Select(x => Mapper.Map<SearchEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
                 PageViewEvents = pageViewEvents.Select(x => Mapper.Map<PageViewEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
+                RecommendationScores = recommendationScores.Select(x => Mapper.Map<RecommendationScoreViewModel>(x)).ToList(),
+                TicketVerificationEvents = ticketVerificationEvents.Select(x => Mapper.Map<TicketVerificationEventViewModel>(x)).OrderByDescending(x => x.Created).ToList()
             };
         }
 

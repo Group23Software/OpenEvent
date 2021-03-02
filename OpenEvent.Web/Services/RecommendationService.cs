@@ -14,10 +14,10 @@ namespace OpenEvent.Web.Services
 {
     public enum Influence
     {
-        PageView = 1,
-        Search = 0,
-        Purchase = 1,
-        Verify = 1
+        PageView = 200,
+        Search = 100,
+        Purchase = 500,
+        Verify = 400
     }
 
     public interface IRecommendationService
@@ -36,6 +36,14 @@ namespace OpenEvent.Web.Services
         {
             Logger = logger;
             ScopeFactory = serviceScopeFactory;
+        }
+
+        private double CalculateWeight(double weight, Influence influence)
+        {
+            double multiplier = ((double) influence / 1000) + 1;
+            weight *= multiplier;
+            Logger.LogInformation($"Updated weight {weight}, {multiplier}");
+            return weight;
         }
 
         public void Influence(Guid userId, Guid categoryId, Influence influence)
@@ -60,13 +68,13 @@ namespace OpenEvent.Web.Services
                     {
                         Category = category,
                         User = user,
-                        Weight = 1
+                        Weight = 0.1
                     };
                     user.RecommendationScores.Add(recommendationScore);
                 }
                 else
                 {
-                    recommendationScore.Weight *= (int) influence;
+                    recommendationScore.Weight = CalculateWeight(recommendationScore.Weight, influence);
                 }
 
                 try
@@ -114,9 +122,9 @@ namespace OpenEvent.Web.Services
                     .Select(x => Guid.Parse(x.Value)).ToList();
 
                 if (!searchCategories.Any()) return;
-                
+
                 var categories = await context.Categories.Where(x => searchCategories.Contains(x.Id)).ToListAsync();
-                
+
                 if (user.RecommendationScores == null) user.RecommendationScores = new List<RecommendationScore>();
                 categories.ForEach(c =>
                 {
@@ -134,7 +142,8 @@ namespace OpenEvent.Web.Services
                     }
                     else
                     {
-                        recommendationScore.Weight *= (int) Services.Influence.Search;
+                        recommendationScore.Weight =
+                            CalculateWeight(recommendationScore.Weight, Services.Influence.Search);
                     }
                 });
 
@@ -190,7 +199,7 @@ namespace OpenEvent.Web.Services
                     }
                     else
                     {
-                        recommendationScore.Weight *= (int) influence;
+                        recommendationScore.Weight = CalculateWeight(recommendationScore.Weight, influence);
                     }
                 });
 

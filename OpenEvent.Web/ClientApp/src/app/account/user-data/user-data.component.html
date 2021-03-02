@@ -14,7 +14,14 @@
       <mat-card-title>Page views</mat-card-title>
       <mat-card-subtitle>All the event pages you have visited</mat-card-subtitle>
     </mat-card-header>
-    <div *ngFor="let pageView of analytics.PageViewEvents">At <span class="italicAndBold">{{pageView.Created | date: 'full'}} </span> you viewed <span class="italicAndBold">{{pageView.EventId}} </span></div>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let date of analytics.PageViewEvents">
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{date.Date | date: 'fullDate'}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div *ngFor="let pageView of date.PageViews">At <span class="italicAndBold">{{pageView.Created | date: 'full'}} </span> you viewed <span class="italicAndBold">{{pageView.EventId}} </span></div>
+      </mat-expansion-panel>
+    </mat-accordion>
   </mat-card>
 
   <mat-card class="m-3">
@@ -23,8 +30,56 @@
       <mat-card-title>Searches</mat-card-title>
       <mat-card-subtitle>All the searches you have made</mat-card-subtitle>
     </mat-card-header>
-    <div *ngFor="let search of analytics.SearchEvents">
-      At <span class="italicAndBold">{{search.Created | date:'full'}} </span> you searched <span class="italicAndBold">"{{search.Search}}" </span> with the filters <span class="italicAndBold">{{search.Params}} </span>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let date of analytics.SearchEvents">
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{date.Date | date: 'fullDate'}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div *ngFor="let search of date.Searches">At <span class="italicAndBold">{{search.Created | date:'full'}} </span> you searched <span class="italicAndBold">"{{search.Search}}" </span> with the filters <span class="italicAndBold">{{search.Params}} </span></div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card>
+
+  <mat-card class="m-3">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>verified</mat-icon>
+      <mat-card-title>Ticket Verifications</mat-card-title>
+      <mat-card-subtitle>All the times you've verified a ticket</mat-card-subtitle>
+    </mat-card-header>
+    <div *ngFor="let verify of analytics.TicketVerificationEvents">
+      At <span class="italicAndBold">{{verify.Created | date:'full'}} </span> you verified <span class="italicAndBold">"{{verify.TicketId}}" </span> for <span class="italicAndBold">"{{verify.EventId}}" </span>
     </div>
   </mat-card>
+
+  <mat-card class="m-3">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>recommend</mat-icon>
+      <mat-card-title>Recommendation Scores</mat-card-title>
+      <mat-card-subtitle>Our representation of your preferences based on data by category</mat-card-subtitle>
+    </mat-card-header>
+    <table mat-table [dataSource]="analytics.RecommendationScores" class="mat-elevation-z2">
+
+      <!--      &lt;!&ndash; Position Column &ndash;&gt;-->
+      <!--      <ng-container matColumnDef="position">-->
+      <!--        <th mat-header-cell *matHeaderCellDef> No. </th>-->
+      <!--        <td mat-cell *matCellDef="let element"> {{element.position}} </td>-->
+      <!--      </ng-container>-->
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Category</th>
+        <td mat-cell *matCellDef="let element"> {{element.CategoryName}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="weight">
+        <th mat-header-cell *matHeaderCellDef> Weight</th>
+        <td mat-cell *matCellDef="let element"> {{element.Weight}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="recommendationColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: recommendationColumns;"></tr>
+    </table>
+  </mat-card>
+
 </mat-card>

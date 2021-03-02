@@ -36,6 +36,7 @@ namespace OpenEvent.Web.Services
         Task<List<Category>> GetAllCategories();
         Task<ActionResult<EventHostModel>> GetForHost(Guid id);
         Task Update(UpdateEventBody updateEventBody);
+        Task<List<EventViewModel>> GetRecommended(Guid id);
     }
 
     /// <summary>
@@ -503,6 +504,41 @@ namespace OpenEvent.Web.Services
                 Logger.LogWarning("User failed to save");
                 throw;
             }
+        }
+
+        public async Task<List<EventViewModel>> GetRecommended(Guid id)
+        {
+            var recommendationScores = await ApplicationContext.RecommendationScores.AsSplitQuery().Include(x => x.Category).Where(x => x.User.Id == id).ToListAsync();
+
+            if (recommendationScores == null)
+            {
+                Logger.LogInformation("The user has no recommendation scores");
+                return await Search("",new List<SearchFilter>(),id);
+            }
+
+            Dictionary<string, double> recommendationDictionary =
+                recommendationScores.ToDictionary(x => x.Category.Name, x => x.Weight);
+
+            var recommendedEvents = ApplicationContext.Events.AsSplitQuery().Include(x => x.EventCategories).ThenInclude(x => x.Category).AsEnumerable();
+
+            recommendedEvents = recommendedEvents.Where(x => ShouldRecommend(x, recommendationDictionary)).ToList();
+
+            return recommendedEvents.Select(e => Mapper.Map<EventViewModel>(e)).ToList();;
+        }   
+
+        private bool ShouldRecommend(Event e, Dictionary<string, double> scores)
+        {
+            List<double> eScores = new List<double>();
+            if (e.EventCategories.Any())
+            {
+                e.EventCategories.ForEach(categoryEvent =>
+                {
+                    eScores.Add(scores[categoryEvent.Category.Name]);
+                });
+                double averageScore = eScores.Average();
+                if (averageScore > 0.5) return true;
+            }
+            return false;
         }
     }
 }

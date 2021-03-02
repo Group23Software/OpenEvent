@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../_Services/user.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {UsersAnalytics} from "../../_models/Analytic";
+import {MappedUsersAnalytics} from "../../_models/Analytic";
 
 @Component({
   selector: 'user-data',
@@ -11,7 +11,8 @@ import {UsersAnalytics} from "../../_models/Analytic";
 export class UserDataComponent implements OnInit
 {
 
-  public analytics: UsersAnalytics
+  public analytics: MappedUsersAnalytics
+  recommendationColumns = ['name','weight'];
 
   constructor (private userService: UserService)
   {

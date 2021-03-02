@@ -1,3 +1,5 @@
+using System;
+
 namespace OpenEvent.Web.Models.Category
 {
     /// <summary>
@@ -5,6 +7,7 @@ namespace OpenEvent.Web.Models.Category
     /// </summary>
     public class CategoryViewModel
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
     }
 }

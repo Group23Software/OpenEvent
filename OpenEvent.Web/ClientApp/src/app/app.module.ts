@@ -38,13 +38,14 @@ import {ReuseRouteReuseStrategy} from "./_extensions/ReuseRouteReuseStrategy";
     SharedModule,
     NgxStripeModule.forRoot('pk_test_51ILW9dK2ugLXrgQXdjbh4TSUPcp3TxQeB51iiecfFZMv7ZRW2durBaN1H8KFfIIyQEEmGfeYRaRvr6KS170oOuOA00Ledf7YEh'),
     RouterModule.forRoot([
-      {path: '', redirectTo: 'login', pathMatch: 'full'},
+      {path: '', redirectTo: 'explore', pathMatch: 'full'},
       // {
       //   path: 'main',
       //   loadChildren: () => import('./main.module').then(m => m.MainModule),
       //   pathMatch: 'full',
       //   canActivate: [AuthGuard]
       // },
+      {path: 'explore', component: ExploreComponent, canActivate: [AuthGuard]},
       {
         path: 'search', component: SearchComponent, canActivate: [AuthGuard],
         // data: {

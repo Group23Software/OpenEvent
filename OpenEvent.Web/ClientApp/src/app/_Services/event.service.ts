@@ -46,7 +46,7 @@ export class EventService
 
   public GetForPublic (id: string): Observable<EventDetailModel>
   {
-    return this.http.get<EventDetailModel>(this.BaseUrl + EventPaths.GetForPublic, {params: new HttpParams().set('id', id).set('userId',this.userService.User.Id)}).pipe(map(e =>
+    return this.http.get<EventDetailModel>(this.BaseUrl + EventPaths.GetForPublic, {params: new HttpParams().set('id', id).set('userId', this.userService.User.Id)}).pipe(map(e =>
     {
       let socialLinks = e.SocialLinks;
       socialLinks.map(s =>
@@ -127,5 +127,10 @@ export class EventService
   public Search (keyword: string, filters: SearchFilter[]): Observable<EventViewModel[]>
   {
     return this.http.post<EventViewModel[]>(this.BaseUrl + EventPaths.Search, filters, {params: new HttpParams().set('keyword', keyword).set('userId', this.userService.User.Id)});
+  }
+
+  public Explore (): Observable<EventViewModel[]>
+  {
+    return this.http.get<EventViewModel[]>(this.BaseUrl + EventPaths.Explore, {params: new HttpParams().set('id', this.userService.User.Id)});
   }
 }

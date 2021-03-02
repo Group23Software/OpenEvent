@@ -49,7 +49,7 @@ export class AuthInterceptor implements HttpInterceptor
       {
         console.log("there was an error response");
         this.trigger.loading.emit(false);
-        this.snackBar.open(error.error.Message, 'close', {
+        this.snackBar.open(error.message, 'close', {
           duration: 1500,
           horizontalPosition: 'right',
           verticalPosition: 'top'

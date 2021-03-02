@@ -9,6 +9,7 @@ import {PaymentMethodsComponent} from './payment-methods/payment-methods.compone
 import {NgxStripeModule} from "ngx-stripe";
 import {BankAccountComponent} from './bank-account/bank-account.component';
 import {UserDataComponent} from './user-data/user-data.component';
+import {MatTableModule} from "@angular/material/table";
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import {UserDataComponent} from './user-data/user-data.component';
     CommonModule,
     SharedModule,
     UserModule,
+    MatTableModule,
     RouterModule.forChild([
       {path: '', component: AccountComponent, pathMatch: 'full'},
     ]),

@@ -242,6 +242,7 @@ namespace OpenEvent.Web.Services
 
         public Task CaptureIntentHook()
         {
+            // TODO: When successful influence recommendation.
             throw new System.NotImplementedException();
         }
     }

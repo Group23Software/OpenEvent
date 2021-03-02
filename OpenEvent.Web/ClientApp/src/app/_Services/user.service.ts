@@ -14,7 +14,7 @@ import {map, tap} from "rxjs/operators";
 import jwtDecode, {JwtPayload} from "jwt-decode";
 import {PaymentPaths, UserPaths} from "../_extensions/api.constants";
 import {Address} from "../_models/Address";
-import {UsersAnalytics} from "../_models/Analytic";
+import {MappedUsersAnalytics, PageViewEvent, SearchEvent, UsersAnalytics} from "../_models/Analytic";
 
 interface addressBody
 {
@@ -97,7 +97,7 @@ export class UserService
     );
   }
 
-  public NeedAccountUser(): Observable<UserAccountModel>
+  public NeedAccountUser (): Observable<UserAccountModel>
   {
     return this._User.Email == null ? this.GetAccountUser(this._User.Id) : of(null);
   }
@@ -184,8 +184,49 @@ export class UserService
     }));
   }
 
-  public GetAnalytics (): Observable<UsersAnalytics>
+  public GetAnalytics (): Observable<MappedUsersAnalytics>
   {
-    return this.http.get<UsersAnalytics>(this.BaseUrl + UserPaths.GetUsersAnalytics, {params: new HttpParams().set('id', this.User.Id)});
+    return this.http.get<UsersAnalytics>(this.BaseUrl + UserPaths.GetUsersAnalytics, {params: new HttpParams().set('id', this.User.Id)}).pipe(map(a =>
+    {
+      let pageViews: Map<string, PageViewEvent[]> = new Map<string, PageViewEvent[]>();
+      a.PageViewEvents.forEach(x =>
+      {
+        let created = new Date(x.Created);
+        let fullDate: string = (new Date(created.getFullYear(), created.getMonth(), created.getDay())).toDateString();
+        if (!pageViews.has(fullDate))
+        {
+          pageViews.set(fullDate, [x]);
+        } else
+        {
+          pageViews.set(fullDate, [...pageViews.get(fullDate), x]);
+        }
+      });
+
+      let searchEvents: Map<string, SearchEvent[]> = new Map<string, SearchEvent[]>();
+      a.SearchEvents.forEach(x =>
+      {
+        let created = new Date(x.Created);
+        let fullDate: string = (new Date(created.getFullYear(), created.getMonth(), created.getDay())).toDateString();
+        if (!searchEvents.has(fullDate))
+        {
+          searchEvents.set(fullDate, [x]);
+        } else
+        {
+          searchEvents.set(fullDate, [...searchEvents.get(fullDate), x]);
+        }
+      });
+
+
+      let mapped: MappedUsersAnalytics = {
+        PageViewEvents: Array.from(pageViews, ([key, value]) => ({Date: new Date(key), PageViews: value})),
+        RecommendationScores: a.RecommendationScores,
+        SearchEvents: Array.from(searchEvents, ([key, value]) => ({Date: new Date(key), Searches: value})) ,
+        TicketVerificationEvents: a.TicketVerificationEvents
+      }
+
+      console.log(mapped);
+
+      return mapped;
+    }));
   }
 }

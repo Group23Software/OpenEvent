@@ -44,9 +44,9 @@ import { SignalComponent } from './signal/signal.component';
 import {MatCarouselModule} from "@ngbmodule/material-carousel";
 import {GalleryModule} from "ng-gallery";
 import {AngularFittextModule} from "angular-fittext";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { TicketPurchaseDialogComponent } from './ticket/ticket-purchase-dialog/ticket-purchase-dialog.component';
 import {VirtualCardComponent} from "./account/payment-methods/virtual-card/virtual-card.component";
+import {MatTableModule} from "@angular/material/table";
 
 
 @NgModule({
@@ -103,7 +103,8 @@ import {VirtualCardComponent} from "./account/payment-methods/virtual-card/virtu
     FlexLayoutModule,
     MatCarouselModule,
     GalleryModule,
-    AngularFittextModule
+    AngularFittextModule,
+    // MatTableModule
   ],
   exports: [
 
@@ -156,7 +157,8 @@ import {VirtualCardComponent} from "./account/payment-methods/virtual-card/virtu
     SignalComponent,
     GalleryModule,
     AngularFittextModule,
-    VirtualCardComponent
+    VirtualCardComponent,
+    // MatTableModule
   ]
 })
 export class SharedModule
