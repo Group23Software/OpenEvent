@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Ticket;
+using QRCoder;
 
 namespace OpenEvent.Web.Services
 {
@@ -40,7 +45,8 @@ namespace OpenEvent.Web.Services
 
         public async Task<List<TicketViewModel>> GetAllUsersTickets(Guid id)
         {
-            var user = await ApplicationContext.Users.Include(x => x.Tickets).ThenInclude(x => x.Event).AsSplitQuery().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var user = await ApplicationContext.Users.Include(x => x.Tickets).ThenInclude(x => x.Event).AsSplitQuery()
+                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null) throw new UserNotFoundException();
 
@@ -54,7 +60,7 @@ namespace OpenEvent.Web.Services
 
         public async Task<TicketDetailModel> Get(Guid id)
         {
-            var ticket = await ApplicationContext.Tickets.FirstOrDefaultAsync(x => x.Id == id);
+            var ticket = await ApplicationContext.Tickets.Include(x => x.Event).FirstOrDefaultAsync(x => x.Id == id);
 
             if (ticket == null)
             {
@@ -62,7 +68,26 @@ namespace OpenEvent.Web.Services
                 throw new TicketNotFoundException();
             }
 
+            if (ticket.QRCode == null)
+            {
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(ticket.Id.ToString(), QRCodeGenerator.ECCLevel.Q);
+                QRCode qrCode = new QRCode(qrCodeData);
+                Bitmap qrCodeImage = qrCode.GetGraphic(20, Color.Black, Color.White, false);
+                ticket.QRCode = Encoding.UTF8.GetBytes($"data:image/png;base64,{Convert.ToBase64String(BitmapToBytes(qrCodeImage))}");
+                await ApplicationContext.SaveChangesAsync();
+            }
+
             return Mapper.Map<TicketDetailModel>(ticket);
+        }
+
+        private static Byte[] BitmapToBytes(Bitmap img)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                return stream.ToArray();
+            }
         }
     }
 }

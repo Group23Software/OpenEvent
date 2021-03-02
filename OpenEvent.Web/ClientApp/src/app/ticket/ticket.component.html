@@ -1,0 +1,19 @@
+<user-nav></user-nav>
+
+<mat-card *ngIf="getTicketError || loading" class="m-3">
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <div class="mat-warn">{{getTicketError}}</div>
+</mat-card>
+
+<div id="ticket" *ngIf="Ticket && !getTicketError && !loading" class="m-3">
+  <mat-card>
+    <div class="mat-headline">Ticket for "{{Ticket.Event?.Name}}"</div>
+  </mat-card>
+  <mat-card><img class="img-fluid" [src]="Ticket.QRCode"></mat-card>
+  <mat-card>
+    <button mat-flat-button color="accent">Recipt</button>
+    <div>{{Ticket.Id}}</div>
+    <div>{{Ticket.Event.StartLocal | date:'medium'}}</div>
+    <div>{{Ticket.Event.EndLocal | date:'medium'}}</div>
+  </mat-card>
+</div>

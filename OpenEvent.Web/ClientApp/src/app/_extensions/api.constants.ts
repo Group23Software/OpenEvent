@@ -1,3 +1,5 @@
+import {tick} from "@angular/core/testing";
+
 let authPaths: ApiAuthPaths = {
   BasePath: 'api/auth',
   Authenticate: '',
@@ -101,6 +103,16 @@ transactionPaths = {
   ConfirmIntent: transactionPaths.BasePath + '/ConfirmIntent'
 }
 
+let ticketPaths: ApiTicketPaths = {
+  BasePath: 'api/ticket',
+  GetAllUsersTickets: '',
+}
+
+ticketPaths = {
+  ...ticketPaths,
+  GetAllUsersTickets: ticketPaths.BasePath + '/users'
+}
+
 interface ApiAuthPaths
 {
   readonly BasePath: string;
@@ -158,9 +170,16 @@ interface ApiTransactionPaths
   readonly ConfirmIntent: string;
 }
 
+interface ApiTicketPaths
+{
+  readonly BasePath: string;
+  readonly GetAllUsersTickets: string;
+}
+
 export const UserPaths: ApiUserPaths = userPaths;
 export const AuthPaths: ApiAuthPaths = authPaths;
 export const EventPaths: ApiEventPaths = eventPaths;
 export const PaymentPaths: ApiPaymentPaths = paymentPaths;
 export const BankingPaths: ApiBankingPaths = bankingPaths;
 export const TransactionPaths: ApiTransactionPaths = transactionPaths;
+export const TicketPaths: ApiTicketPaths = ticketPaths;

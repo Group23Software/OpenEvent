@@ -1,0 +1,18 @@
+<user-nav></user-nav>
+
+<mat-card *ngIf="loading || gettingTicketsError" class="m-3">
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <div class="mat-warn">{{gettingTicketsError}}</div>
+</mat-card>
+
+<mat-card class="m-3" *ngIf="Tickets" id="tickets">
+<!--  <mat-list>-->
+
+      <mat-card *ngFor="let ticket of Tickets" class="ticket" (click)="openTicket(ticket)">
+        <div class="mat-headline">{{ticket.EventName}}</div>
+        <div>{{ticket.EventStart | date: 'medium'}}</div>
+        <div>{{ticket.EventEnd | date: 'medium'}}</div>
+      </mat-card>
+
+<!--  </mat-list>-->
+</mat-card>

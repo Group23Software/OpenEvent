@@ -1,0 +1,13 @@
+#ticket{
+  display: flex;
+  flex-direction: column;
+}
+
+#ticket > mat-card {
+  margin: 1rem;
+}
+
+:host {
+  height: 100%;
+  overflow: auto;
+}

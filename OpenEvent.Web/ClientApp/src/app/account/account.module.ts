@@ -7,7 +7,6 @@ import {UserModule} from "../user.module";
 import { AccountPreferencesComponent } from './account-preferences/account-preferences.component';
 import { PaymentMethodsComponent } from './payment-methods/payment-methods.component';
 import {NgxStripeModule} from "ngx-stripe";
-import { VirtualCardComponent } from './payment-methods/virtual-card/virtual-card.component';
 import { BankAccountComponent } from './bank-account/bank-account.component';
 import { UserDataComponent } from './user-data/user-data.component';
 
@@ -25,7 +24,7 @@ import { UserDataComponent } from './user-data/user-data.component';
         SharedModule,
         UserModule,
         RouterModule.forChild([
-            {path: '', component: AccountComponent, pathMatch: 'full'}
+            {path: '', component: AccountComponent, pathMatch: 'full'},
         ]),
         NgxStripeModule,
     ]

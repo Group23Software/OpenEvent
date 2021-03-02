@@ -1,0 +1,7 @@
+.ticket {
+  margin: 1rem 0;
+}
+
+.ticket:hover {
+  background-color: aquamarine;
+}
