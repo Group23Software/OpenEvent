@@ -20,7 +20,7 @@ namespace OpenEvent.Web.Services
     {
         Task BuyTicket();
         Task<List<TicketViewModel>> GetAllUsersTickets(Guid id);
-        Task VerifyTicket(Guid id);
+        Task VerifyTicket(TicketVerifyBody ticketVerifyBody);
 
         Task<TicketDetailModel> Get(Guid id);
     }
@@ -53,9 +53,27 @@ namespace OpenEvent.Web.Services
             return user.Tickets.Select(x => Mapper.Map<TicketViewModel>(x)).ToList();
         }
 
-        public Task VerifyTicket(Guid id)
+        public async Task VerifyTicket(TicketVerifyBody ticketVerifyBody)
         {
-            throw new NotImplementedException();
+            var ticket = await ApplicationContext.Tickets.Include(x => x.Event)
+                .FirstOrDefaultAsync(x => x.Id == ticketVerifyBody.Id && x.Event.Id == ticketVerifyBody.EventId);
+
+            if (ticket == null)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            ticket.Uses++;
+
+            try
+            {
+                await ApplicationContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Logger.LogInformation(e.ToString());
+                throw;
+            }
         }
 
         public async Task<TicketDetailModel> Get(Guid id)
@@ -74,7 +92,9 @@ namespace OpenEvent.Web.Services
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(ticket.Id.ToString(), QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
                 Bitmap qrCodeImage = qrCode.GetGraphic(20, Color.Black, Color.White, false);
-                ticket.QRCode = Encoding.UTF8.GetBytes($"data:image/png;base64,{Convert.ToBase64String(BitmapToBytes(qrCodeImage))}");
+                ticket.QRCode =
+                    Encoding.UTF8.GetBytes(
+                        $"data:image/png;base64,{Convert.ToBase64String(BitmapToBytes(qrCodeImage))}");
                 await ApplicationContext.SaveChangesAsync();
             }
 

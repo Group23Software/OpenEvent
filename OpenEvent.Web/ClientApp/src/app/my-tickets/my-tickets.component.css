@@ -5,3 +5,7 @@
 .ticket:hover {
   background-color: aquamarine;
 }
+:host {
+  height: 100%;
+  overflow: auto;
+}

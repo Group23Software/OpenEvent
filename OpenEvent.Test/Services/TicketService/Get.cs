@@ -13,7 +13,7 @@ namespace OpenEvent.Test.Services.TicketService
         [Test]
         public async Task ShouldGetTicket()
         {
-            var result = await TicketService.Get(new Guid("892C6AE2-0F9A-4125-9E95-FAC401A4EF60"));
+            var result = await TicketService.Get(new Guid("853F592D-D454-4FA1-BC9B-12991C13D835"));
             result.Should().NotBeNull();
             result.Should().BeOfType<TicketDetailModel>();
         }

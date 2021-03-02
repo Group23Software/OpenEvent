@@ -50,5 +50,20 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
+
+        [HttpPost("Verify")]
+        public async Task<ActionResult> Verify(TicketVerifyBody ticketVerifyBody)
+        {
+            try
+            {
+                await TicketService.VerifyTicket(ticketVerifyBody);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Logger.LogInformation(e.ToString());
+                return BadRequest(e);
+            }
+        }
     }
 }

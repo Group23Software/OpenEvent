@@ -91,7 +91,7 @@ namespace OpenEvent.Test.Setups
                 }
             }.AsQueryable();
 
-            IQueryable<Event> seedEvents = new List<Event>
+            List<Event> seedEvents = new List<Event>
             {
                 new()
                 {
@@ -177,10 +177,17 @@ namespace OpenEvent.Test.Setups
                     },
                     PageViewEvents = new List<PageViewEvent>()
                 }
-            }.AsQueryable();
+            };
 
             IQueryable<Ticket> seedTickets = new List<Ticket>()
             {
+                new()
+                {
+                    Id = new Guid("853F592D-D454-4FA1-BC9B-12991C13D835"),
+                    User = seedUserList[0],
+                    QRCode = new Byte[] {0, 0, 0, 0},
+                    Event = seedEvents[0]
+                }
             }.AsQueryable();
 
             seedUserList[0].Password = hasher.HashPassword(seedUserList[0], "Password");
@@ -191,7 +198,7 @@ namespace OpenEvent.Test.Setups
 
             var mockContext = new DbContextMock<ApplicationContext>(dbContextOptions);
             var userDbSetMock = mockContext.CreateDbSetMock(x => x.Users, seedUsers);
-            var eventDbSetMock = mockContext.CreateDbSetMock(x => x.Events, seedEvents);
+            var eventDbSetMock = mockContext.CreateDbSetMock(x => x.Events, seedEvents.AsQueryable());
             var categoryDbSetMock = mockContext.CreateDbSetMock(x => x.Categories, seedCategories);
             var ticketDbSetMock = mockContext.CreateDbSetMock(x => x.Tickets, seedTickets);
 

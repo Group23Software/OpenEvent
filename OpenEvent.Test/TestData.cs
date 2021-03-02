@@ -39,14 +39,14 @@ namespace OpenEvent.Test
                 .RuleFor(x => x.SocialLinks, () => FakeSocialLink.Generate(1).ToList())
                 .RuleFor(x => x.StartLocal, f => f.Date.Soon())
                 .RuleFor(x => x.EndLocal, f => f.Date.Future())
-                .RuleFor(x => x.Price, f => f.Finance.Amount());
+                .RuleFor(x => x.Price, f => f.Random.Int(0));
         }
-        
+
         public static Faker<Image> FakeImage = new Faker<Image>()
-            .RuleFor(x => x.Id, f => f.Random.Guid())   
+            .RuleFor(x => x.Id, f => f.Random.Guid())
             .RuleFor(x => x.Label, f => f.Lorem.Slug())
             .RuleFor(x => x.Source, f => f.Random.Bytes(1000));
-        
+
         public static Faker<ImageViewModel> FakeImageViewModel = new Faker<ImageViewModel>()
             .RuleFor(x => x.Label, f => f.Lorem.Slug())
             .RuleFor(x => x.Source, f => f.Image.LoremPixelUrl());
@@ -60,10 +60,10 @@ namespace OpenEvent.Test
             .RuleFor(x => x.PostalCode, f => f.Address.ZipCode("??## #??"));
 
         public static Faker<SocialLink> FakeSocialLink = new Faker<SocialLink>()
-            .RuleFor(x => x.Id, f => f.Random.Guid())   
+            .RuleFor(x => x.Id, f => f.Random.Guid())
             .RuleFor(x => x.Link, f => f.Internet.Url())
             .RuleFor(x => x.SocialMedia, f => f.PickRandom<SocialMedia>());
-        
+
         public static Faker<SocialLinkViewModel> FakeSocialLinkViewModel = new Faker<SocialLinkViewModel>()
             .RuleFor(x => x.Link, f => f.Internet.Url())
             .RuleFor(x => x.SocialMedia, f => f.PickRandom<SocialMedia>());
@@ -75,9 +75,9 @@ namespace OpenEvent.Test
         public static Faker<CreateEventBody> FakeCreateEventBody = new Faker<CreateEventBody>()
             .RuleFor(x => x.Name, f => f.Company.CompanyName())
             .RuleFor(x => x.Description, f => f.Lorem.Paragraph())
-            .RuleFor(x => x.Price, f => f.Finance.Amount())
+            .RuleFor(x => x.Price, f => f.Random.Int(0))
             .RuleFor(x => x.IsOnline, f => f.Random.Bool())
-            .RuleFor(x => x.NumberOfTickets, f => f.Random.Int(0,1000))
+            .RuleFor(x => x.NumberOfTickets, f => f.Random.Int(0, 1000))
             .RuleFor(x => x.StartLocal, f => f.Date.Soon())
             .RuleFor(x => x.EndLocal, f => f.Date.Future())
             .RuleFor(x => x.HostId, () => new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"))

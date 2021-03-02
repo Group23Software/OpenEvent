@@ -14,5 +14,12 @@ namespace OpenEvent.Web.Models.Ticket
         [JsonIgnore] public User.User User { get; set; }
         public Transaction.Transaction Transaction { get; set; }
         public bool Available { get; set; }
+        public int Uses { get; set; }
+    }
+
+    public class TicketVerifyBody
+    {
+        public Guid Id { get; set; }
+        public Guid EventId { get; set; }
     }
 }
