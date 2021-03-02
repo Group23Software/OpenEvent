@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using OpenEvent.Web.Models.Analytic;
 
 namespace OpenEvent.Web.Models.Ticket
 {
@@ -15,6 +17,7 @@ namespace OpenEvent.Web.Models.Ticket
         public Transaction.Transaction Transaction { get; set; }
         public bool Available { get; set; }
         public int Uses { get; set; }
+        public List<TicketVerificationEvent> VerificationEvents { get; set; }
     }
 
     public class TicketVerifyBody

@@ -35,6 +35,7 @@ namespace OpenEvent.Web.Contexts
         
         public virtual DbSet<PageViewEvent> PageViewEvents { get; set; }
         public virtual DbSet<SearchEvent> SearchEvents { get; set; }
+        public virtual DbSet<TicketVerificationEvent> VerificationEvents { get; set; }  
         public virtual DbSet<RecommendationScore> RecommendationScores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

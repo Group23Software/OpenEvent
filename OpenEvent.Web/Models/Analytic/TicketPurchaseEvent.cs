@@ -7,5 +7,6 @@ namespace OpenEvent.Web.Models.Analytic
         public override Guid Id { get; set; }
         public override DateTime Created { get; set; }
         // TODO : create members
+
     }
 }

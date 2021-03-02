@@ -13,6 +13,7 @@ namespace OpenEvent.Web.Services
     {
         void CaptureSearch(string keyword, string searchParams, Guid userId);
         void CapturePageView(Guid eventId, Guid? userId);
+        void CaptureTicketVerify(Guid ticketId, Guid eventId);
     }
 
     /// <summary>
@@ -22,13 +23,15 @@ namespace OpenEvent.Web.Services
     {
         private readonly ILogger<AnalyticsService> Logger;
         private readonly IServiceScopeFactory ScopeFactory;
-
+        private readonly IRecommendationService RecommendationService;
+        
         private Queue<AnalyticEvent> AnalyticEvents;
 
-        public AnalyticsService(ILogger<AnalyticsService> logger, IServiceScopeFactory serviceScopeFactory)
+        public AnalyticsService(ILogger<AnalyticsService> logger, IServiceScopeFactory serviceScopeFactory,IRecommendationService recommendationService)
         {
             Logger = logger;
             ScopeFactory = serviceScopeFactory;
+            RecommendationService = recommendationService;
         }
 
         /// <summary>
@@ -99,6 +102,79 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("Analytic has been processed");
             });
         }
+
+        public void CaptureTicketVerify(Guid ticketId, Guid eventId)
+        {
+            Logger.LogInformation("Capturing ticket verify analytic");
+            Task.Run(async () =>
+            {
+                using var scope = ScopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+
+                var ticket = await context.Tickets.Include(x => x.User).FirstOrDefaultAsync(x => x.Id == ticketId);
+                var e = await context.Events.FirstOrDefaultAsync(x => x.Id == eventId);
+
+                if (ticket == null)
+                {
+                    Logger.LogInformation("Ticket was not found when capturing event");
+                    return;
+                }
+
+                if (e == null)
+                {
+                    Logger.LogInformation("Event was not found when capturing event");
+                    return;
+                }
+
+                TicketVerificationEvent ticketVerificationEvent = new TicketVerificationEvent
+                {
+                    Created = DateTime.Now,
+                    Event = e,
+                    Ticket = ticket,
+                    User = ticket.User
+                };
+
+                await Save(context, ticketVerificationEvent);
+                Logger.LogInformation("Analytic has been processed");
+                
+                RecommendationService.Influence(ticket.User.Id,e.Id,Influence.Verify);
+            });
+        }
+
+        // public void CapturePurchase(string transactionId, Guid userId)
+        // {
+        //     Logger.LogInformation("Capturing purchase analytic");
+        //     Task.Run(async () =>
+        //     {
+        //         using var scope = ScopeFactory.CreateScope();
+        //         var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+        //
+        //         var transaction =
+        //             await context.Transactions.FirstOrDefaultAsync(x => x.StripeIntentId == transactionId);
+        //         
+        //         var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+        //
+        //         if (transaction == null)
+        //         {
+        //             Logger.LogInformation("Transaction was not found when capturing event");
+        //             return;
+        //         }
+        //         
+        //         if (user == null)
+        //         {
+        //             Logger.LogInformation("User was not found when capturing event");
+        //             return;
+        //         }
+        //
+        //         TicketPurchaseEvent ticketPurchaseEvent = new TicketPurchaseEvent
+        //         {
+        //             Created = DateTime.Now,
+        //             User = user,
+        //             Event = 
+        //         };
+        //
+        //     });
+        // }
 
         private async Task Save(ApplicationContext context, AnalyticEvent analyticEvent)
         {

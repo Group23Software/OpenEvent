@@ -33,5 +33,6 @@ namespace OpenEvent.Web.Models.Event
         public bool isCanceled { get; set; }
 
         public List<PageViewEvent> PageViewEvents { get; set; }
+        public List<TicketVerificationEvent> VerificationEvents { get; set; }
     }
 }

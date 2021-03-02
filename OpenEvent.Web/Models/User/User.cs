@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.Recommendation;
 
@@ -44,6 +45,7 @@ namespace OpenEvent.Web.Models.User
         
         public List<PageViewEvent> PageViewEvents { get; set; }
         public List<SearchEvent> SearchEvents { get; set; }
+        public List<TicketVerificationEvent> VerificationEvents { get; set; }
         
         public List<RecommendationScore> RecommendationScores { get; set; }
         

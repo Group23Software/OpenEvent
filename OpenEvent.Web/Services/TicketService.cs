@@ -30,12 +30,16 @@ namespace OpenEvent.Web.Services
         private readonly ILogger<TicketService> Logger;
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
+        private readonly IAnalyticsService AnalyticsService;
+        
 
-        public TicketService(ApplicationContext context, ILogger<TicketService> logger, IMapper mapper)
+        public TicketService(ApplicationContext context, ILogger<TicketService> logger, IMapper mapper,
+            IAnalyticsService analyticsService)
         {
             Logger = logger;
             Mapper = mapper;
             ApplicationContext = context;
+            AnalyticsService = analyticsService;
         }
 
         public Task BuyTicket()
@@ -67,6 +71,8 @@ namespace OpenEvent.Web.Services
 
             try
             {
+                AnalyticsService.CaptureTicketVerify(ticket.Id,ticketVerifyBody.EventId);
+                // RecommendationService.Influence(ticket.Id,ticketVerifyBody.EventId);
                 await ApplicationContext.SaveChangesAsync();
             }
             catch (Exception e)

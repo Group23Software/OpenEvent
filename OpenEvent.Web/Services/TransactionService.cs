@@ -29,15 +29,21 @@ namespace OpenEvent.Web.Services
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
         private readonly IServiceScopeFactory ScopeFactory;
+        private readonly IAnalyticsService AnalyticsService;
+        private readonly IRecommendationService RecommendationService;
 
         public TransactionService(ApplicationContext applicationContext, ILogger<TransactionService> logger,
-            IMapper mapper, IOptions<AppSettings> appSettings, IServiceScopeFactory serviceScopeFactory)
+            IMapper mapper, IOptions<AppSettings> appSettings, IServiceScopeFactory serviceScopeFactory,
+            IAnalyticsService analyticsService,
+            IRecommendationService recommendationService)
         {
             Logger = logger;
             ApplicationContext = applicationContext;
             Mapper = mapper;
             StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
             ScopeFactory = serviceScopeFactory;
+            AnalyticsService = analyticsService;
+            RecommendationService = recommendationService;
         }
 
         public async Task<TransactionViewModel> CreateIntent(CreateIntentBody createIntentBody)

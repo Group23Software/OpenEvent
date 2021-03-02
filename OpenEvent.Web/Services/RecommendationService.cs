@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.Recommendation;
+using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Services
 {
@@ -22,6 +23,7 @@ namespace OpenEvent.Web.Services
     public interface IRecommendationService
     {
         void Influence(Guid? userId, Guid eventId, Influence influence);
+        void Influence(User user, Event e, Influence influence);
         void Influence(Guid? userId, string keyword, List<SearchFilter> searchFilters);
     }
 
@@ -82,6 +84,11 @@ namespace OpenEvent.Web.Services
 
                 Logger.LogInformation("Influenced");
             });
+        }
+
+        public void Influence(User user, Event e, Influence influence)
+        {
+            throw new NotImplementedException();
         }
 
         public void Influence(Guid? userId, string keyword, List<SearchFilter> searchFilters)
