@@ -519,14 +519,16 @@ namespace OpenEvent.Web.Services
             Dictionary<string, double> recommendationDictionary =
                 recommendationScores.ToDictionary(x => x.Category.Name, x => x.Weight);
 
+            var averageScore = recommendationScores.Select(x => x.Weight).Average();
+            
             var recommendedEvents = ApplicationContext.Events.AsSplitQuery().Include(x => x.EventCategories).ThenInclude(x => x.Category).AsEnumerable();
 
-            recommendedEvents = recommendedEvents.Where(x => ShouldRecommend(x, recommendationDictionary)).ToList();
+            recommendedEvents = recommendedEvents.Where(x => ShouldRecommend(x, recommendationDictionary, averageScore)).ToList();
 
             return recommendedEvents.Select(e => Mapper.Map<EventViewModel>(e)).ToList();;
         }   
 
-        private bool ShouldRecommend(Event e, Dictionary<string, double> scores)
+        private bool ShouldRecommend(Event e, Dictionary<string, double> scores, double averageScore)
         {
             List<double> eScores = new List<double>();
             if (e.EventCategories.Any())
@@ -535,8 +537,7 @@ namespace OpenEvent.Web.Services
                 {
                     eScores.Add(scores[categoryEvent.Category.Name]);
                 });
-                double averageScore = eScores.Average();
-                if (averageScore > 0.5) return true;
+                if (eScores.Average() >= averageScore) return true;
             }
             return false;
         }

@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {EventService} from "../_Services/event.service";
 import {CategoryViewModel} from "../_models/Category";
 import {InOutAnimation} from "../_extensions/animations";
-import {map, tap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {EventViewModel, SearchParam} from "../_models/Event";
 import {forkJoin} from "rxjs";
 import {UserService} from "../_Services/user.service";
-import {MatChip, MatChipListChange, MatChipSelectionChange} from "@angular/material/chips";
+import {MatChip, MatChipList} from "@angular/material/chips";
 import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
@@ -17,6 +17,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 })
 export class ExploreComponent implements OnInit
 {
+  @ViewChild(MatChipList) categoryList: MatChipList;
+  @ViewChildren(MatChip) chips: QueryList<MatChip>;
 
   public Categories: CategoryViewModel[];
   public SelectedCategories: CategoryViewModel[] = [];
@@ -47,6 +49,9 @@ export class ExploreComponent implements OnInit
   public explore ()
   {
     this.eventService.Explore().subscribe(events => this.Events = events);
+    this.SelectedCategories = [];
+    console.log(this.chips);
+    this.chips.forEach(chip => chip.deselect())
   }
 
   public categoriesSelectionChange (chip: MatChip, category: CategoryViewModel)

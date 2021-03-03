@@ -1,18 +1,18 @@
 <user-nav></user-nav>
 
-<mat-tab-group color="primary" #tabGroup [selectedIndex]="">
+<mat-tab-group color="primary" #tabGroup (selectedIndexChange)="changeTab($event)">
   <mat-tab label="Account">
     <account-preferences *ngIf="userLoaded"></account-preferences>
   </mat-tab>
   <mat-tab label="Payment Methods">
-    <payment-methods *ngIf="tabGroup.selectedIndex == 1"></payment-methods>
+    <payment-methods *ngIf="currentTab == 1"></payment-methods>
   </mat-tab>
   <mat-tab label="Bank Account">
-    <bank-account *ngIf="tabGroup.selectedIndex == 2"></bank-account>
+    <bank-account *ngIf="currentTab == 2"></bank-account>
   </mat-tab>
   <mat-tab label="Transactions"></mat-tab>
   <mat-tab label="User Data">
-    <user-data *ngIf="tabGroup.selectedIndex == 4"></user-data>
+    <user-data *ngIf="currentTab == 4"></user-data>
   </mat-tab>
 </mat-tab-group>
 

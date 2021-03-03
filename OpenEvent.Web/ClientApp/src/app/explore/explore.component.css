@@ -61,3 +61,8 @@ mat-chip > mat-icon {
   font-size: 20px;
   margin-right: 5px;
 }
+
+#events {
+  display: flex;
+  flex-direction: row;
+}

@@ -114,6 +114,10 @@ namespace OpenEvent.Web.Services
             // Hash user's password.
             newUser.Password = hasher.HashPassword(newUser, userInput.Password);
 
+            var categories = await ApplicationContext.Categories.ToListAsync();
+            newUser.RecommendationScores =
+                categories.Select(x => new RecommendationScore() {Category = x, Weight = 0}).ToList();
+
             try
             {
                 // Saving user to Db.

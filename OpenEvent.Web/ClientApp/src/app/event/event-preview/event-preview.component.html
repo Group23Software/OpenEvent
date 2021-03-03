@@ -1,4 +1,10 @@
-<mat-card (click)="navigateToEvent()" *ngIf="event">
-  <div>{{event.Name}}</div>
-  <div>{{event.StartLocal | date:'medium'}}</div>
+<mat-card (click)="navigateToEvent()" *ngIf="event" id="event">
+<!--  <mat-card-header></mat-card-header>-->
+<!--  <div>{{event.Name}}</div>-->
+<!--  <div>{{event.StartLocal | date:'medium'}}</div>-->
+  <img mat-card-image [src]="event?.Thumbnail.Source">
+  <mat-card-content>
+    <div class="mat-caption mat-accent">{{event.StartLocal | date:'short'}}</div>
+    <div class="mat-title">{{event.Name}}</div>
+  </mat-card-content>
 </mat-card>

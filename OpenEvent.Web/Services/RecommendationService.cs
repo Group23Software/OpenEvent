@@ -68,7 +68,7 @@ namespace OpenEvent.Web.Services
                     {
                         Category = category,
                         User = user,
-                        Weight = 0.1
+                        Weight = 0
                     };
                     user.RecommendationScores.Add(recommendationScore);
                 }
@@ -136,7 +136,7 @@ namespace OpenEvent.Web.Services
                         {
                             User = user,
                             Category = c,
-                            Weight = 1
+                            Weight = 0
                         };
                         context.RecommendationScores.Add(recommendationScore);
                     }
@@ -193,7 +193,7 @@ namespace OpenEvent.Web.Services
                         {
                             User = user,
                             Category = c,
-                            Weight = 1
+                            Weight = 0
                         };
                         context.RecommendationScores.Add(recommendationScore);
                     }

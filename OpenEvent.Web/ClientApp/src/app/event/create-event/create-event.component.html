@@ -1,6 +1,6 @@
 <user-nav></user-nav>
 
-<mat-card class="m-3 flex-grow-1">
+<mat-card class="m-3 flex-grow-1" *ngIf="!loading">
   <div class="overlay" [@inOutAnimation] *ngIf="!UserHasBank">
     <mat-card class="m-auto">
       <div class="mat-headline warn-color">You need to add a bank account!</div>

@@ -19,7 +19,7 @@
         <mat-expansion-panel-header>
           <mat-panel-title>{{date.Date | date: 'fullDate'}}</mat-panel-title>
         </mat-expansion-panel-header>
-        <div *ngFor="let pageView of date.PageViews">At <span class="italicAndBold">{{pageView.Created | date: 'full'}} </span> you viewed <span class="italicAndBold">{{pageView.EventId}} </span></div>
+        <div *ngFor="let pageView of date.PageViews">At <span class="italicAndBold">{{pageView.Created | date: 'fullTime'}} </span> you viewed <span class="italicAndBold">{{pageView.EventId}} </span></div>
       </mat-expansion-panel>
     </mat-accordion>
   </mat-card>
@@ -35,7 +35,7 @@
         <mat-expansion-panel-header>
           <mat-panel-title>{{date.Date | date: 'fullDate'}}</mat-panel-title>
         </mat-expansion-panel-header>
-        <div *ngFor="let search of date.Searches">At <span class="italicAndBold">{{search.Created | date:'full'}} </span> you searched <span class="italicAndBold">"{{search.Search}}" </span> with the filters <span class="italicAndBold">{{search.Params}} </span></div>
+        <div *ngFor="let search of date.Searches">At <span class="italicAndBold">{{search.Created | date:'fullTime'}} </span> you searched <span class="italicAndBold">"{{search.Search}}" </span> with the filters <span class="italicAndBold">{{search.Params}} </span></div>
       </mat-expansion-panel>
     </mat-accordion>
   </mat-card>

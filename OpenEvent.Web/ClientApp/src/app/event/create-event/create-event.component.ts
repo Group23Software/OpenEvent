@@ -12,6 +12,8 @@ import {Category} from "../../_models/Category";
 import {StepperSelectionEvent} from "@angular/cdk/stepper";
 import {Router} from "@angular/router";
 import {InOutAnimation} from "../../_extensions/animations";
+import {map} from "rxjs/operators";
+import {forkJoin} from "rxjs";
 
 @Component({
   selector: 'app-create-event',
@@ -22,7 +24,8 @@ import {InOutAnimation} from "../../_extensions/animations";
 export class CreateEventComponent implements OnInit
 {
 
-  get UserHasBank() {
+  get UserHasBank ()
+  {
     return this.userService.User?.BankAccounts?.length > 0
   }
 
@@ -34,7 +37,7 @@ export class CreateEventComponent implements OnInit
   public loading: boolean = false;
   public categoryStore: Category[] = [];
   public eventPreview: EventDetailModel = null;
-  public gettingCategoriesError: string;
+  public getError: string;
 
   public createEventForm = new FormGroup({
     Name: new FormControl('', [Validators.required]),
@@ -99,11 +102,9 @@ export class CreateEventComponent implements OnInit
 
   ngOnInit ()
   {
-    this.eventService.GetAllCategories().subscribe(x => this.categoryStore = x, error =>
-    {
-      this.gettingCategoriesError = error.error.Message;
-      console.error(error);
-    });
+    this.loading = true;
+    let subs = [this.userService.NeedAccountUser(),this.eventService.GetAllCategories().pipe(map(x => this.categoryStore = x))];
+    forkJoin(subs).subscribe(value => {}, (e: HttpErrorResponse) => this.getError = e.message, () => this.loading = false);
   }
 
   loadEventDate (event: StepperSelectionEvent)
@@ -202,7 +203,7 @@ export class CreateEventComponent implements OnInit
     {
       console.log(response);
       this.loading = false;
-      this.router.navigate(['/event',response.Id])
+      this.router.navigate(['/event', response.Id])
     }, (error: HttpErrorResponse) =>
     {
       console.error(error);

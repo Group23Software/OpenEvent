@@ -12,6 +12,7 @@ export class AccountComponent implements OnInit
 {
   public getUserError: string;
   public userLoaded: boolean = false;
+  public currentTab: number = 0;
 
   constructor (
     private userService: UserService)
@@ -27,5 +28,10 @@ export class AccountComponent implements OnInit
     {
       this.getUserError = error.error.Message;
     });
+  }
+
+  public changeTab (tab: number)
+  {
+    this.currentTab = tab;
   }
 }
