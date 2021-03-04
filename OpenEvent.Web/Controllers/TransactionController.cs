@@ -38,7 +38,22 @@ namespace OpenEvent.Web.Controllers
         }
 
         [HttpPost("ConfirmIntent")]
-        public async Task<ActionResult<TransactionViewModel>> ConfirmIntent(InjectPaymentMethodBody injectPaymentMethodBody)
+        public async Task<ActionResult<TransactionViewModel>> ConfirmIntent(ConfirmIntentBody confirmIntentBody)
+        {
+            try
+            {
+                var result = await TransactionService.ConfirmIntent(confirmIntentBody);
+                return result;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.ToString());
+                return BadRequest(e);
+            }
+        }
+        
+        [HttpPost("InjectPaymentMethod")]
+        public async Task<ActionResult<TransactionViewModel>> InjectPaymentMethod(InjectPaymentMethodBody injectPaymentMethodBody)
         {
             try
             {
@@ -52,5 +67,20 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        [HttpPost("CancelIntent")]
+        public async Task<ActionResult> CancelIntent(CancelIntentBody cancelIntentBody)
+        {
+            try
+            {
+                await TransactionService.CancelIntent(cancelIntentBody);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.ToString());
+                return BadRequest(e);
+            }
+        }
+        
     }
 }

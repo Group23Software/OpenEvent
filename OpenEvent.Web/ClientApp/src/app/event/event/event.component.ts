@@ -11,6 +11,7 @@ import {
   TicketPurchaseDialogComponent,
   TicketPurchaseDialogData
 } from "../../ticket/ticket-purchase-dialog/ticket-purchase-dialog.component";
+import {TransactionService} from "../../_Services/transaction.service";
 
 @Component({
   selector: 'event',
@@ -36,7 +37,7 @@ export class EventComponent implements OnInit, OnChanges
     return this.event;
   }
 
-  constructor (private route: ActivatedRoute, private eventService: EventService, private location: Location, private dialog: MatDialog)
+  constructor (private route: ActivatedRoute, private eventService: EventService, private location: Location, private dialog: MatDialog, private transactionService: TransactionService)
   {
   }
 
@@ -98,7 +99,10 @@ export class EventComponent implements OnInit, OnChanges
     });
 
     // TODO: Go to ticket
-    dialog.afterClosed().subscribe(() => dialog = null);
+    dialog.afterClosed().subscribe(result => {
+      if (result == undefined) this.transactionService.CancelIntent(this.Event.Id).subscribe();
+      dialog = null;
+    });
   }
 }
 

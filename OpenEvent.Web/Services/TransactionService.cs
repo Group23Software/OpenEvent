@@ -10,9 +10,11 @@ using Microsoft.Extensions.Options;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Intent;
+using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.Transaction;
 using Serilog;
 using Stripe;
+using Event = OpenEvent.Web.Models.Event.Event;
 
 namespace OpenEvent.Web.Services
 {
@@ -20,7 +22,9 @@ namespace OpenEvent.Web.Services
     {
         Task<TransactionViewModel> CreateIntent(CreateIntentBody createIntentBody);
         Task<TransactionViewModel> InjectPaymentMethod(InjectPaymentMethodBody injectPaymentMethodBody);
+        Task<TransactionViewModel> ConfirmIntent(ConfirmIntentBody confirmIntentBody);
         Task CaptureIntentHook(); // Called by payment intent webhook
+        Task CancelIntent(CancelIntentBody cancelIntentBody);
     }
 
     public class TransactionService : ITransactionService
@@ -142,54 +146,57 @@ namespace OpenEvent.Web.Services
             {
                 Logger.LogInformation("Checking intent");
                 // waits x amount of time for intent timeout
-                await Task.Delay(10000);
+                await Task.Delay(TimeSpan.FromMinutes(20));
                 Logger.LogInformation("The intent has timed out! Destroying!");
 
                 using var scope = ScopeFactory.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 
-                var transaction = await context.Transactions.FirstOrDefaultAsync(x => x.StripeIntentId == id);
+                await Cancel(context, id, eventId, ticketId);
 
-                var ticket = await context.Tickets.FirstOrDefaultAsync(x => x.Id == ticketId);
-
-                var @event = await context.Events.FirstOrDefaultAsync(x => x.Id == eventId);
-
-                if (@event == null) return;
-
-                if (transaction == null) return;
-
-                if (ticket == null) return;
-
-                transaction.End = DateTime.Now;
-                transaction.Status = PaymentStatus.canceled;
-                transaction.Ticket = null;
-                transaction.Updated = DateTime.Now;
-
-                ticket.User = null;
-                ticket.Available = true;
-                ticket.Transaction = null;
-
-                @event.TicketsLeft++;
-
-                var service = new PaymentIntentService();
-
-                try
-                {
-                    Logger.LogInformation("Canceling the intent");
-                    service.Cancel(id);
-
-                    await context.SaveChangesAsync();
-                }
-                catch (Exception e)
-                {
-                    Logger.LogWarning(e.Message);
-                }
-                finally
-                {
-                    Logger.LogInformation("Checked on intent");
-                    context = default;
-                }
+                Logger.LogInformation("Checked on intent");
+                context = default;
             });
+        }
+
+        private async Task Cancel(ApplicationContext context, string id, Guid eventId, Guid ticketId)
+        {
+            var transaction = await context.Transactions.FirstOrDefaultAsync(x => x.StripeIntentId == id);
+
+            var ticket = await context.Tickets.FirstOrDefaultAsync(x => x.Id == ticketId);
+
+            var @event = await context.Events.FirstOrDefaultAsync(x => x.Id == eventId);
+
+            if (@event == null) return;
+
+            if (transaction == null) return;
+
+            if (ticket == null) return;
+
+            transaction.End = DateTime.Now;
+            transaction.Status = PaymentStatus.canceled;
+            transaction.Ticket = null;
+            transaction.Updated = DateTime.Now;
+
+            ticket.User = null;
+            ticket.Available = true;
+            ticket.Transaction = null;
+
+            @event.TicketsLeft++;
+
+            var service = new PaymentIntentService();
+
+            try
+            {
+                Logger.LogInformation("Canceling the intent");
+                service.Cancel(transaction.StripeIntentId);
+
+                await context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Logger.LogWarning(e.Message);
+            }
         }
 
         public async Task<TransactionViewModel> InjectPaymentMethod(InjectPaymentMethodBody injectPaymentMethodBody)
@@ -201,6 +208,7 @@ namespace OpenEvent.Web.Services
             var transaction =
                 await ApplicationContext.Transactions.FirstOrDefaultAsync(x =>
                     x.StripeIntentId == injectPaymentMethodBody.IntentId);
+
             if (user == null)
             {
                 Logger.LogInformation("User was not found");
@@ -209,17 +217,53 @@ namespace OpenEvent.Web.Services
 
             if (user.PaymentMethods.All(x => x.StripeCardId != injectPaymentMethodBody.CardId))
                 throw new Exception("User doesn't own card");
+
             if (transaction == null) throw new Exception("Transaction not found");
 
             var service = new PaymentIntentService();
+
             try
 
             {
-                var intent = service.Confirm(injectPaymentMethodBody.IntentId,
-                    new PaymentIntentConfirmOptions()
+                var intent = service.Update(injectPaymentMethodBody.IntentId,
+                    new PaymentIntentUpdateOptions()
                     {
                         PaymentMethod = injectPaymentMethodBody.CardId
                     });
+
+                transaction.Updated = DateTime.Now;
+                transaction.Status = Enum.Parse<PaymentStatus>(intent.Status, true);
+                if (transaction.Status == PaymentStatus.succeeded)
+                {
+                    transaction.Paid = true;
+                    transaction.End = DateTime.Now;
+                }
+
+                await ApplicationContext.SaveChangesAsync();
+
+                return Mapper.Map<TransactionViewModel>(transaction);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public async Task<TransactionViewModel> ConfirmIntent(ConfirmIntentBody confirmIntentBody)
+        {
+            var transaction =
+                await ApplicationContext.Transactions.FirstOrDefaultAsync(x =>
+                    x.StripeIntentId == confirmIntentBody.IntentId);
+
+            if (transaction == null) throw new Exception("Transaction not found");
+
+            var service = new PaymentIntentService();
+
+            try
+
+            {
+                var intent = service.Confirm(confirmIntentBody.IntentId);
 
                 transaction.Updated = DateTime.Now;
                 transaction.Status = Enum.Parse<PaymentStatus>(intent.Status, true);
@@ -244,6 +288,20 @@ namespace OpenEvent.Web.Services
         {
             // TODO: When successful influence recommendation.
             throw new System.NotImplementedException();
+        }
+
+        public async Task CancelIntent(CancelIntentBody cancelIntentBody)
+        {
+            try
+            {
+                await Cancel(ApplicationContext, cancelIntentBody.Id, cancelIntentBody.EventId,
+                    cancelIntentBody.TicketId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

@@ -37,10 +37,10 @@
   <mat-toolbar class="toolbar" ngClass.gt-xs="toolbar" color="primary" *ngIf="User">
 
     <div class="navControls">
-      <button mat-icon-button (click)="back()" fxHide.lt-sm>
+      <button mat-icon-button (click)="back()" class="mr-2" fxHide.lt-sm>
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <button mat-stroked-button class="mr-2" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>
+      <button mat-flat-button color="accent" class="mr-2" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>
       <button mat-flat-button color="accent" [routerLink]="['/search']" [routerLinkActive]="['/search']">Search</button>
     </div>
 

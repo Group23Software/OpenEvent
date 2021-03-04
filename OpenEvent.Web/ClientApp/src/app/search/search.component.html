@@ -14,7 +14,6 @@
   <mat-expansion-panel>
     <mat-expansion-panel-header>Filter</mat-expansion-panel-header>
 
-
     <mat-card>
       <category-list [categories]="categories" (categoryEvent)="selectedCategories = $event"></category-list>
     </mat-card>
@@ -57,9 +56,9 @@
   </mat-card-footer>
 </mat-card>
 
-<mat-card class="m-3" *ngIf="events">
+<!--<mat-card class="m-3" *ngIf="events">-->
   <!--  Results-->
-  <div id="searchResults">
+  <div id="searchResults" class="m-3" *ngIf="events">
     <event-preview *ngFor="let event of events" [event]="event"></event-preview>
   </div>
-</mat-card>
+<!--</mat-card>-->

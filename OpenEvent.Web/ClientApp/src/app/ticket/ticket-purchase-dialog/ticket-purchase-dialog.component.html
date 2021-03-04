@@ -2,20 +2,51 @@
 <div class="mat-warn">{{createIntentError}}</div>
 <div *ngIf="Event && !loadingData && !createIntentError">
   <div class="mat-dialog-title">Purchase Ticket</div>
-  <div>
-    <mat-card id="receipt">
-      <div>{{Event.Name}}</div>
-      <div>{{Event.Price / 100 |currency:'GBP'}}</div>
-    </mat-card>
-    <mat-card id="cardSelect">
-      <virtual-card [ShowActions]="false" *ngIf="currentCard" [Card]="currentCard"></virtual-card>
-    </mat-card>
-    <div class="mat-warn">{{confirmIntentError}}</div>
-  </div>
-  <mat-card *ngIf="confirmingTicket">
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-  </mat-card>
-  <mat-dialog-actions *ngIf="!confirmingTicket" align="end">
-    <button (click)="confirm()" mat-flat-button color="accent">Confirm</button>
-  </mat-dialog-actions>
+
+  <mat-horizontal-stepper [linear]="true">
+    <mat-step [completed]="false">
+      <ng-template matStepLabel>Payment Method</ng-template>
+
+      <mat-card>
+        <virtual-card [ShowActions]="false" *ngIf="currentCard" [Card]="currentCard"></virtual-card>
+      </mat-card>
+
+      <button mat-flat-button color="accent" *ngIf="!injectingPaymentMethod" (click)="inject()">Use this card</button>
+
+      <mat-card *ngIf="injectingPaymentMethod">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </mat-card>
+
+      <mat-error>{{injectPaymentMethodError}}</mat-error>
+
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Confirm</ng-template>
+
+      <div>Recipt</div>
+
+      <button mat-flat-button color="accent" *ngIf="!confirmingTicket" (click)="confirm()">Confirm</button>
+
+      <mat-card *ngIf="confirmingTicket">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </mat-card>
+
+      <mat-error>{{confirmIntentError}}</mat-error>
+
+    </mat-step>
+  </mat-horizontal-stepper>
+
+<!--  <div>-->
+<!--    <mat-card id="receipt">-->
+<!--      <div>{{Event.Name}}</div>-->
+<!--      <div>{{Event.Price / 100 |currency:'GBP'}}</div>-->
+<!--    </mat-card>-->
+<!--    <mat-card id="cardSelect">-->
+<!--      <virtual-card [ShowActions]="false" *ngIf="currentCard" [Card]="currentCard"></virtual-card>-->
+<!--    </mat-card>-->
+<!--    <div class="mat-warn">{{confirmIntentError}}</div>-->
+<!--  </div>-->
+<!--  <mat-dialog-actions *ngIf="!confirmingTicket" align="end">-->
+<!--    <button (click)="confirm()" mat-flat-button color="accent">Confirm</button>-->
+<!--  </mat-dialog-actions>-->
 </div>

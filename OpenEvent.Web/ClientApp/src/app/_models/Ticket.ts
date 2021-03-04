@@ -3,7 +3,7 @@ import {EventViewModel} from "./Event";
 export interface TicketViewModel
 {
   Id: string;
-  Avatar: string;
+  QRCode: string;
   EventId: string;
   EventName: string;
   EventStart: Date;

@@ -13,3 +13,9 @@ mat-chip {
 #controls mat-card {
   margin: 1rem;
 }
+
+#searchResults {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

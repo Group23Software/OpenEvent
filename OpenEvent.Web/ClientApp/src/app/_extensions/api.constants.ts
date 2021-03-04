@@ -96,13 +96,17 @@ bankingPaths = {
 let transactionPaths: ApiTransactionPaths = {
   BasePath: 'api/transaction',
   ConfirmIntent: '',
-  CreateIntent: ''
+  CreateIntent: '',
+  InjectPaymentMethod: '',
+  CancelIntent: ''
 }
 
 transactionPaths = {
   ...transactionPaths,
   CreateIntent: transactionPaths.BasePath + '/CreateIntent',
-  ConfirmIntent: transactionPaths.BasePath + '/ConfirmIntent'
+  ConfirmIntent: transactionPaths.BasePath + '/ConfirmIntent',
+  InjectPaymentMethod: transactionPaths.BasePath + '/InjectPaymentMethod',
+  CancelIntent: transactionPaths.BasePath + '/CancelIntent'
 }
 
 let ticketPaths: ApiTicketPaths = {
@@ -173,6 +177,8 @@ interface ApiTransactionPaths
   readonly BasePath: string;
   readonly CreateIntent: string;
   readonly ConfirmIntent: string;
+  readonly InjectPaymentMethod: string;
+  readonly CancelIntent: string;
 }
 
 interface ApiTicketPaths

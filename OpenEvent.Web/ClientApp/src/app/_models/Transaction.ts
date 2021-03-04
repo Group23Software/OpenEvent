@@ -24,3 +24,15 @@ export interface InjectPaymentMethodBody
   IntentId: string;
   CardId: string;
 }
+
+export interface ConfirmIntentBody
+{
+  UserId: string;
+  IntentId: string;
+}
+
+export interface CancelIntentBody {
+  Id: string;
+  EventId: string;
+  TicketId: string;
+}

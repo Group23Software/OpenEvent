@@ -1,28 +1,5 @@
 <div *ngIf="user" class="basicAccountPanel" ngClass.lt-md="basicAccountPanel-lt-md">
-  <mat-card id="avatarCard" ngClass.lt-md="avatarCard-lt-md">
-    <mat-card-header>
-      <mat-icon mat-card-avatar>account_box</mat-icon>
-      <mat-card-title>Avatar</mat-card-title>
-      <mat-card-subtitle>Upload an image</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <div id="avatarContainer">
-        <img id="avatarPreview" *ngIf="user.Avatar" [src]="user.Avatar" alt="user's avatar">
-        <button mat-mini-fab id="avatarEditButton" (click)="avatarUpload()">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
-    </mat-card-content>
-    <mat-card-footer style="padding: 0 0.5rem 0 0.5rem;">
-      <div>{{avatarFileName}}</div>
-      <mat-error>{{newAvatarError}}</mat-error>
-      <div class="mb-3 mx-3">
-        <mat-progress-bar mode="indeterminate" *ngIf="updateAvatarLoading"></mat-progress-bar>
-      </div>
-    </mat-card-footer>
-  </mat-card>
-
-  <div id="basicInfo">
+  <div id="basicInfo" ngClass.lt-md="m-0">
     <div ngClass.gt-md="basicAndAddress-gt-md">
       <mat-card class="mb-3">
         <mat-card-header>
@@ -110,6 +87,31 @@
       </mat-card-content>
       <mat-card-footer class="mb-3 mx-3">
         <mat-progress-bar mode="indeterminate" *ngIf="updatePasswordLoading"></mat-progress-bar>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+
+  <div>
+    <mat-card id="avatarCard" ngClass.lt-md="avatarCard-lt-md">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>account_box</mat-icon>
+        <mat-card-title>Avatar</mat-card-title>
+        <mat-card-subtitle>Upload an image</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div id="avatarContainer">
+          <img id="avatarPreview" *ngIf="user.Avatar" [src]="user.Avatar" alt="user's avatar">
+          <button mat-mini-fab id="avatarEditButton" (click)="avatarUpload()">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+      <mat-card-footer style="padding: 0 0.5rem 0 0.5rem;">
+        <div>{{avatarFileName}}</div>
+        <mat-error>{{newAvatarError}}</mat-error>
+        <div class="mb-3 mx-3">
+          <mat-progress-bar mode="indeterminate" *ngIf="updateAvatarLoading"></mat-progress-bar>
+        </div>
       </mat-card-footer>
     </mat-card>
 
