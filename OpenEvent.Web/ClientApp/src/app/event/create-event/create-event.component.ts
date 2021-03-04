@@ -104,7 +104,7 @@ export class CreateEventComponent implements OnInit
   {
     this.loading = true;
     let subs = [this.userService.NeedAccountUser(),this.eventService.GetAllCategories().pipe(map(x => this.categoryStore = x))];
-    forkJoin(subs).subscribe(value => {}, (e: HttpErrorResponse) => this.getError = e.message, () => this.loading = false);
+    forkJoin(subs).subscribe(value => {}, (e: HttpErrorResponse) => this.getError = e.error.Message, () => this.loading = false);
   }
 
   loadEventDate (event: StepperSelectionEvent)

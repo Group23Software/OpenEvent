@@ -25,8 +25,6 @@ export interface EventHostModel extends EventViewModel
   // VerificationEvents?: TicketVerificationEvent[];
 
   Transactions: TransactionViewModel[];
-
-  //TODO: transactions
 }
 
 export interface EventViewModel

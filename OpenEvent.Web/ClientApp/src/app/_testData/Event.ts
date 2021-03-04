@@ -3,6 +3,7 @@ import {SocialMedia} from "../_models/SocialMedia";
 import {Address} from "../_models/Address";
 
 export const FakeEventHostModel: EventHostModel = {
+  Transactions: [],
   Address: {AddressLine1: "", AddressLine2: "", City: "", CountryCode: "", CountryName: "", PostalCode: ""},
   Categories: [
     {Name: "Music"},
@@ -17,7 +18,7 @@ export const FakeEventHostModel: EventHostModel = {
   ],
   IsOnline: false,
   Name: "tests host event",
-  Price: 0,
+  Price: 1010,
   SocialLinks: [
     {SocialMedia: SocialMedia.Site, Link: "http://www.example.com"},
     {SocialMedia: SocialMedia.Instagram, Link: "http://www.example.com"},
@@ -38,5 +39,7 @@ export const FakeAddress: Address = {
   City: "London",
   CountryCode: "GB",
   CountryName: "United Kingdom",
-  PostalCode: "SE14 6NW"
+  PostalCode: "SE14 6NW",
+  Lat: 1,
+  Lon: 1
 }

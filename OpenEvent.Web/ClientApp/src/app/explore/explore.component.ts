@@ -1,6 +1,6 @@
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {EventService} from "../_Services/event.service";
-import {CategoryViewModel} from "../_models/Category";
+import {Category, CategoryViewModel} from "../_models/Category";
 import {InOutAnimation} from "../_extensions/animations";
 import {map} from "rxjs/operators";
 import {EventViewModel, SearchParam} from "../_models/Event";
@@ -20,8 +20,8 @@ export class ExploreComponent implements OnInit
   @ViewChild(MatChipList) categoryList: MatChipList;
   @ViewChildren(MatChip) chips: QueryList<MatChip>;
 
-  public Categories: CategoryViewModel[];
-  public SelectedCategories: CategoryViewModel[] = [];
+  public Categories: Category[];
+  public SelectedCategories: Category[] = [];
   public Events: EventViewModel[];
   public Error: string;
   private DisplayingExplore: boolean = true;
@@ -54,7 +54,7 @@ export class ExploreComponent implements OnInit
     this.chips.forEach(chip => chip.deselect())
   }
 
-  public categoriesSelectionChange (chip: MatChip, category: CategoryViewModel)
+  public categoriesSelectionChange (chip: MatChip, category: Category)
   {
     chip.toggleSelected();
     if (chip.selected)

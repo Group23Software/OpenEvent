@@ -81,9 +81,7 @@ export class TicketPurchaseDialogComponent implements OnInit
       UserId: this.userService.User.Id
     }).subscribe(i =>
     {
-      console.log(i);
       this.confirmingTicket = false;
-      // this.dialog.close('Success');
       this.dialog.disableClose = true;
       this.ticketPurchased = true;
       this.stepper.next();

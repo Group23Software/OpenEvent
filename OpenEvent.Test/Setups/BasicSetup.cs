@@ -16,6 +16,7 @@ using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Ticket;
+using OpenEvent.Web.Models.Transaction;
 
 namespace OpenEvent.Test.Setups
 {
@@ -158,7 +159,9 @@ namespace OpenEvent.Test.Setups
                             EventId = new Guid("74831876-FC2E-4D03-99D8-B3872BDEFD5C")
                         }
                     },
-                    PageViewEvents = new List<PageViewEvent>()
+                    PageViewEvents = new List<PageViewEvent>(),
+                    Transactions = new List<Transaction>(),
+                    VerificationEvents = new List<TicketVerificationEvent>()
                 },
                 new()
                 {
@@ -188,7 +191,9 @@ namespace OpenEvent.Test.Setups
                             EventId = new Guid("5F35AA8F-4CC5-4E1A-AB73-6875D5769715")
                         }
                     },
-                    PageViewEvents = new List<PageViewEvent>()
+                    PageViewEvents = new List<PageViewEvent>(),
+                    Transactions = new List<Transaction>(),
+                    VerificationEvents = new List<TicketVerificationEvent>()
                 }
             };
 
@@ -203,6 +208,8 @@ namespace OpenEvent.Test.Setups
                 }
             }.AsQueryable();
 
+            IQueryable<Transaction> seedTransactions = new List<Transaction>().AsQueryable();
+
             seedUserList[0].Password = hasher.HashPassword(seedUserList[0], "Password");
 
 
@@ -214,6 +221,7 @@ namespace OpenEvent.Test.Setups
             var eventDbSetMock = mockContext.CreateDbSetMock(x => x.Events, seedEvents.AsQueryable());
             var categoryDbSetMock = mockContext.CreateDbSetMock(x => x.Categories, seedCategories);
             var ticketDbSetMock = mockContext.CreateDbSetMock(x => x.Tickets, seedTickets);
+            var transactionDbSetMock = mockContext.CreateDbSetMock(x => x.Transactions, seedTransactions);
 
             return mockContext;
         }

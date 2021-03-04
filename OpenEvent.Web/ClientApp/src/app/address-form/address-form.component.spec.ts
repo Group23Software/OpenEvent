@@ -4,7 +4,6 @@ import { AddressFormComponent } from './address-form.component';
 import {FakeAddress} from "../_testData/Event";
 import {EventEmitter} from "@angular/core";
 import {Address} from "../_models/Address";
-import {TriggerService} from "../_Services/trigger.service";
 
 class triggerServiceStub {
   public loading: EventEmitter<Address> = new EventEmitter<Address>();

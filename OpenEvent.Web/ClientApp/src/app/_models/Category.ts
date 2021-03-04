@@ -5,6 +5,6 @@ export interface Category {
 
 export class CategoryViewModel
 {
-  Id: string;
+  // Id: string;
   Name: string;
 }

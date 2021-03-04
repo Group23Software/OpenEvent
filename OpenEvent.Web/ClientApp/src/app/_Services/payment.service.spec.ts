@@ -59,7 +59,7 @@ describe('PaymentService', () =>
   beforeEach(() =>
   {
 
-    httpClientMock = jasmine.createSpyObj('HttpClient', ['post'])
+    httpClientMock = jasmine.createSpyObj('HttpClient', ['post']);
 
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],

@@ -52,7 +52,9 @@ export class AddressFormComponent implements OnInit
       City: this.addressForm.controls.City.value,
       CountryCode: this.addressForm.controls.CountryCode.value,
       CountryName: this.addressForm.controls.CountryName.value,
-      PostalCode: this.addressForm.controls.PostalCode.value
+      PostalCode: this.addressForm.controls.PostalCode.value,
+      Lon: this.addressForm.controls.Lon.value,
+      Lat: this.addressForm.controls.Lat.value
     } as Address)
   }
 }

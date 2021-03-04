@@ -1,21 +1,24 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {EventComponent} from './event.component';
-import {ActivatedRoute} from "@angular/router";
 import {EventService} from "../../_Services/event.service";
 import {Location} from "@angular/common";
 import {of, throwError} from "rxjs";
 import {RouterTestingModule} from "@angular/router/testing";
 import {EventDetailModel} from "../../_models/Event";
 import {HttpErrorResponse} from "@angular/common/http";
+import {MatDialog} from "@angular/material/dialog";
+import {TransactionService} from "../../_Services/transaction.service";
+import {ActivatedRoute, convertToParamMap} from "@angular/router";
 
 describe('EventComponent', () =>
 {
   let component: EventComponent;
   let fixture: ComponentFixture<EventComponent>;
-  let activatedRouteMock;
   let eventServiceMock;
   let locationMock;
+  let dialogMock;
+  let transactionServiceMock;
 
   const mockEvent: EventDetailModel = {
     Address: {
@@ -45,8 +48,9 @@ describe('EventComponent', () =>
 
   beforeEach(async () =>
   {
+    transactionServiceMock = jasmine.createSpyObj('TransactionService', ['CancelIntent']);
 
-    activatedRouteMock = jasmine.createSpyObj('activatedRoute', ['route']);
+    dialogMock = jasmine.createSpyObj('matDialog', ['open']);
 
     eventServiceMock = jasmine.createSpyObj('eventService', ['GetForPublic']);
     eventServiceMock.GetForPublic.and.returnValue(of(null));
@@ -60,11 +64,17 @@ describe('EventComponent', () =>
         RouterTestingModule.withRoutes([])
       ],
       providers: [
-        // {
-        //   provide: ActivatedRoute, useValue: {params: of({id: 123})}
-        // },
         {provide: EventService, useValue: eventServiceMock},
-        {provide: Location, useValue: locationMock}
+        {provide: Location, useValue: locationMock},
+        {provide: MatDialog, useValue: dialogMock},
+        {provide: TransactionService, useValue: transactionServiceMock},
+        {
+          provide: ActivatedRoute, useValue: {
+            snapshot: {
+              paramMap: convertToParamMap({id: "1"})
+            }
+          }
+        }
       ]
     }).compileComponents();
   });
@@ -104,7 +114,7 @@ describe('EventComponent', () =>
 
   it('should handle get for public error', () =>
   {
-    eventServiceMock.GetForPublic.and.returnValue(throwError(new HttpErrorResponse({error:{Message: "Error getting for public"}})));
+    eventServiceMock.GetForPublic.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error getting for public"}})));
     component.ngOnInit();
     expect(locationMock.back).toHaveBeenCalled();
   });

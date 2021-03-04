@@ -32,7 +32,9 @@ describe('CreateEventComponent', () =>
 
     dialogMock = jasmine.createSpyObj('matDialog', ['open', 'afterClosed']);
 
-    userServiceMock = jasmine.createSpyObj('UserService', ['User']);
+    userServiceMock = jasmine.createSpyObj('UserService', ['User','NeedAccountUser']);
+    userServiceMock.NeedAccountUser.and.returnValue(of(null));
+
     eventServiceMock = jasmine.createSpyObj('EventService', ['GetAllCategories', 'Create']);
     eventServiceMock.GetAllCategories.and.returnValue(of());
     eventServiceMock.Create.and.returnValue(of());
@@ -102,7 +104,7 @@ describe('CreateEventComponent', () =>
   {
     eventServiceMock.GetAllCategories.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error getting categories"}})));
     component.ngOnInit();
-    expect(component.gettingCategoriesError).toEqual("Error getting categories");
+    expect(component.getError).toEqual("Error getting categories");
   });
 
   it('should load event data', () =>

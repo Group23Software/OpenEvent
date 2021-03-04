@@ -96,6 +96,7 @@ describe('EventService', () =>
   }
 
   const mockEventHostModel: EventHostModel = {
+    Transactions: [],
     Address: undefined,
     Categories: [],
     Description: "",

@@ -227,8 +227,6 @@ namespace OpenEvent.Web.Services
                 .Include(x => x.Tickets)
                 .Include(x => x.Transactions)
                 .Include(x => x.Host)
-                .Include(x => x.PageViewEvents)
-                .Include(x => x.VerificationEvents).ThenInclude(x => x.Ticket)
                 .AsSplitQuery().AsNoTracking().AsEnumerable();
 
             events = events.Where(x => x.Host.Id == hostId && !x.isCanceled);
@@ -260,7 +258,9 @@ namespace OpenEvent.Web.Services
                     TicketsLeft = x.Tickets.Count(ticket => ticket.Available),
                     EndUTC = x.EndUTC,
                     StartUTC = x.StartUTC,
-                    Transactions = x.Transactions.Select(transaction  => Mapper.Map<TransactionViewModel>(transaction)).ToList()
+                    Transactions = x.Transactions.Any()
+                        ? x.Transactions.Select(transaction => Mapper.Map<TransactionViewModel>(transaction)).ToList()
+                        : new List<TransactionViewModel>()
                 }).ToList();
         }
 
@@ -445,7 +445,9 @@ namespace OpenEvent.Web.Services
                     TicketsLeft = x.Tickets.Count,
                     EndUTC = x.EndUTC,
                     StartUTC = x.StartUTC,
-                    Transactions = x.Transactions.Select(transaction  => Mapper.Map<TransactionViewModel>(transaction)).ToList()
+                    Transactions = x.Transactions.Any()
+                        ? x.Transactions.Select(transaction => Mapper.Map<TransactionViewModel>(transaction)).ToList()
+                        : new List<TransactionViewModel>()
                 }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (e == null)

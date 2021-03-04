@@ -1,25 +1,45 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { TicketComponent } from './ticket.component';
+import {TicketComponent} from './ticket.component';
+import {ActivatedRoute, convertToParamMap} from "@angular/router";
+import {TicketService} from "../_Services/ticket.service";
+import {of} from "rxjs";
 
-describe('TicketComponent', () => {
+describe('TicketComponent', () =>
+{
   let component: TicketComponent;
   let fixture: ComponentFixture<TicketComponent>;
+  let ticketServiceMock;
 
-  beforeEach(async () => {
+  beforeEach(async () =>
+  {
+    ticketServiceMock = jasmine.createSpyObj('TicketService', ['Get'])
+    ticketServiceMock.Get.and.returnValue(of(null));
+
     await TestBed.configureTestingModule({
-      declarations: [ TicketComponent ]
-    })
-    .compileComponents();
+      declarations: [TicketComponent],
+      providers: [
+        {
+          provide: ActivatedRoute, useValue: {
+            snapshot: {
+              paramMap: convertToParamMap({id: "1"})
+            }
+          }
+        },
+        {provide: TicketService, useValue: ticketServiceMock}
+      ]
+    }).compileComponents();
   });
 
-  beforeEach(() => {
+  beforeEach(() =>
+  {
     fixture = TestBed.createComponent(TicketComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', () =>
+  {
     expect(component).toBeTruthy();
   });
 });

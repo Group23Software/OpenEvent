@@ -29,7 +29,8 @@ describe('EventConfigComponent', () =>
 
     dialogMock = jasmine.createSpyObj('matDialog', ['open']);
 
-    eventServiceMock = jasmine.createSpyObj('eventService', ['GetAllCategories', 'GetForHost', 'Update'], {'HostsEvents': null});
+    eventServiceMock = jasmine.createSpyObj('eventService', ['GetAllCategories', 'GetForHost', 'Update','GetAnalytics'], {'HostsEvents': null});
+    eventServiceMock.GetAnalytics.and.returnValue(of(null));
     eventServiceMock.GetAllCategories.and.returnValue({
       subscribe: () =>
       {
