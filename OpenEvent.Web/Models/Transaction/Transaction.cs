@@ -21,6 +21,7 @@ namespace OpenEvent.Web.Models.Transaction
         
         public Guid TicketId { get; set; }
         public Ticket.Ticket Ticket { get; set; }
+        public Event.Event Event { get; set; }
     }
 
     public class TransactionViewModel

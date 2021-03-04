@@ -14,10 +14,11 @@
   </div>
 
   <gallery id="imageGallery" *ngIf="eventImages" [items]="eventImages" [thumb]="false" imageSize="cover" loadingStrategy="lazy"></gallery>
+
   <div id="eventInfo">
     <div class="d-flex flex-row" ngClass.lt-sm="flex-column">
-    <mat-card class="flex-grow-1 mr-3">
-      <div>Starts at <span class="dateTime">{{Event.StartLocal | date:'medium'}}</span> and finishes <span class="dateTime">{{Event.EndLocal | date:'medium'}}</span></div>
+    <mat-card class="flex-grow-1 mr-3 d-flex">
+      <div class="m-auto">Starts at <span class="dateTime">{{Event.StartLocal | date:'medium'}}</span> and finishes <span class="dateTime">{{Event.EndLocal | date:'medium'}}</span></div>
     </mat-card>
 
     <mat-card id="ticketsAndPrice">

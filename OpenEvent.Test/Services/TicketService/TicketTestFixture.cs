@@ -18,6 +18,7 @@ namespace OpenEvent.Test.Services.TicketService
         protected IMapper Mapper;
         protected IOptions<AppSettings> AppSettings;
         protected ITicketService TicketService;
+        protected Mock<IAnalyticsService> AnalyticsServiceMock;
 
         [SetUp]
         public async Task Setup()
@@ -33,7 +34,10 @@ namespace OpenEvent.Test.Services.TicketService
                 Secret = "this is a secret"
             });
 
-            TicketService = new Web.Services.TicketService(MockContext.Object,new Mock<ILogger<Web.Services.TicketService>>().Object,Mapper);
+            AnalyticsServiceMock = new Mock<IAnalyticsService>();
+
+            TicketService = new Web.Services.TicketService(MockContext.Object,
+                new Mock<ILogger<Web.Services.TicketService>>().Object, Mapper, AnalyticsServiceMock.Object);
         }
     }
 }

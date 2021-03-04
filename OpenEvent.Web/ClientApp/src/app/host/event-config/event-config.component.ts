@@ -7,6 +7,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {Category} from "../../_models/Category";
 import {SocialMedia} from "../../_models/SocialMedia";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {EventAnalytics} from "../../_models/Analytic";
 
 @Component({
   selector: 'app-event-config',
@@ -17,6 +18,7 @@ export class EventConfigComponent implements OnInit
 {
 
   public event: EventHostModel = null;
+  public analytics: EventAnalytics;
   public categoryStore: Category[] = [];
   public categories: Category[] = [];
 
@@ -49,6 +51,7 @@ export class EventConfigComponent implements OnInit
   public minDate: Date;
   public loading: boolean = true;
 
+
   constructor (private route: ActivatedRoute, private eventService: EventService, private snackBar: MatSnackBar)
   {
     this.minDate = new Date();
@@ -60,9 +63,11 @@ export class EventConfigComponent implements OnInit
     {
       this.categoryStore = x;
       const id = this.route.snapshot.paramMap.get('id');
+      this.eventService.GetAnalytics(id).subscribe(analytics => this.analytics = analytics)
       if (this.eventService.HostsEvents)
       {
         this.event = this.eventService.HostsEvents.find(x => x.Id == id);
+        console.log(this.event);
         this.loadFormData();
       }
       console.log(this.event);

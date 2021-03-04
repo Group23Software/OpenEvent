@@ -1,49 +1,58 @@
 <user-nav></user-nav>
 
 <div ngClass.gt-lg="dashboard-lg" class="dashboard">
-<mat-drawer-container id="eventListAndPreview">
-  <mat-drawer #eventList mode="side" opened>
-    <div mat-subheader>Events</div>
-    <mat-selection-list [multiple]="false">
-      <mat-list-option *ngIf="!Events || Events.length < 1">You have no events!</mat-list-option>
-      <mat-list-option *ngFor="let event of Events" (click)="togglePreview(event)" [selected]="event == eventPreview" [disableRipple]="true">
-        <img *ngIf="event.Thumbnail" [src]="event.Thumbnail.Source" mat-list-avatar>
-        <div mat-line>{{event.Name}}</div>
-        <div mat-line>{{event.StartLocal | date: 'medium'}}</div>
-      </mat-list-option>
-    </mat-selection-list>
-  </mat-drawer>
+  <mat-tab-group id="eventTabs">
+    <mat-tab label="Events">
+      <mat-drawer-container id="eventListAndPreview">
+        <mat-drawer #eventList mode="side" opened>
+          <div mat-subheader>Events</div>
+          <mat-selection-list [multiple]="false">
+            <mat-list-option *ngIf="!Events || Events.length < 1">You have no events!</mat-list-option>
+            <mat-list-option *ngFor="let event of Events" (click)="togglePreview(event)" [selected]="event == eventPreview" [disableRipple]="true">
+              <img *ngIf="event.Thumbnail" [src]="event.Thumbnail.Source" mat-list-avatar>
+              <div mat-line>{{event.Name}}</div>
+              <div mat-line>{{event.StartLocal | date: 'medium'}}</div>
+            </mat-list-option>
+          </mat-selection-list>
+        </mat-drawer>
 
-  <mat-card class="m-3" *ngIf="loading" [@inOutAnimation]><mat-progress-bar mode="indeterminate"></mat-progress-bar></mat-card>
+        <mat-card class="m-3" *ngIf="loading" [@inOutAnimation]>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-card>
 
-  <div id="eventPreview" *ngIf="Events" [@inOutAnimation]>
-    <mat-toolbar>
-      <button mat-icon-button (click)="eventList.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span class="spacer"></span>
-      <button mat-button (click)="navigateToVerify()">
-        <mat-icon inline="true">confirmation_number</mat-icon>
-        Verify Tickets
-      </button>
-      <button mat-button color="warn" (click)="cancelEvent(eventPreview.Id)">
-        <mat-icon inline="true">cancel</mat-icon>
-        Cancel
-      </button>
-      <button mat-button (click)="navigateToConfig()">
-        <mat-icon inline="true">settings</mat-icon>
-        Settings
-      </button>
-    </mat-toolbar>
+        <div id="eventPreview" *ngIf="Events" [@inOutAnimation]>
+          <mat-toolbar>
+            <button mat-icon-button (click)="eventList.toggle()">
+              <mat-icon>menu</mat-icon>
+            </button>
+            <span class="spacer"></span>
+            <button mat-button (click)="navigateToVerify()">
+              <mat-icon inline="true">confirmation_number</mat-icon>
+              Verify Tickets
+            </button>
+            <button mat-button color="warn" (click)="cancelEvent(eventPreview.Id)">
+              <mat-icon inline="true">cancel</mat-icon>
+              Cancel
+            </button>
+            <button mat-button (click)="navigateToConfig()">
+              <mat-icon inline="true">settings</mat-icon>
+              Settings
+            </button>
+          </mat-toolbar>
 
-    <mat-card class="m-3">
-      <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>
-    </mat-card>
-  </div>
+          <mat-card class="m-3">
+            <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>
+          </mat-card>
+        </div>
+      </mat-drawer-container>
+    </mat-tab>
 
-</mat-drawer-container>
-
-<mat-card id="analyticsArea">
-</mat-card>
-
+    <mat-tab label="Analytics">
+      <div id="eventAnalytics">
+        <mat-card></mat-card>
+        <mat-card></mat-card>
+        <mat-card></mat-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

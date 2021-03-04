@@ -76,3 +76,7 @@ mat-icon.mat-card-avatar {
 mat-card {
   transition: height linear 200ms;
 }
+.mat-tab-body-wrapper{
+  flex-grow: 1;
+}
+

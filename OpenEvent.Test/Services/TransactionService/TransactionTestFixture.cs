@@ -21,6 +21,8 @@ namespace OpenEvent.Test.Services.TransactionService
         private IOptions<AppSettings> AppSettings;
         protected ITransactionService TransactionService;
         protected Mock<IServiceScopeFactory> ServiceScopeFactoryMock;
+        protected Mock<IRecommendationService> RecommendationServiceMock;
+        protected Mock<IEmailService> EmailServiceMock;
 
         [SetUp]
         public async Task Setup()
@@ -34,21 +36,31 @@ namespace OpenEvent.Test.Services.TransactionService
             AppSettings = Options.Create(new AppSettings()
             {
                 Secret = "this is a secret",
-                StripeApiKey = "sk_test_51ILW9dK2ugLXrgQXeYfqg8i0QGAgLXndihLXovHgu47adBimPAedvIwzfr95uffR9TiyleGFAPY7hfSI9mhdmYBF00hkxlAQMv"
+                StripeApiKey =
+                    "sk_test_51ILW9dK2ugLXrgQXeYfqg8i0QGAgLXndihLXovHgu47adBimPAedvIwzfr95uffR9TiyleGFAPY7hfSI9mhdmYBF00hkxlAQMv"
             });
-            
+
             Mock<IServiceProvider> serviceProvider = new Mock<IServiceProvider>();
             serviceProvider.Setup(x => x.GetService(typeof(ApplicationContext))).Returns(MockContext.Object);
-            
+
             Mock<IServiceScope> serviceScopeMock = new Mock<IServiceScope>();
             serviceScopeMock.Setup(x => x.ServiceProvider).Returns(() => serviceProvider.Object);
 
             ServiceScopeFactoryMock = new Mock<IServiceScopeFactory>();
             ServiceScopeFactoryMock.Setup(x => x.CreateScope()).Returns(() => serviceScopeMock.Object);
 
-            TransactionService = new Web.Services.TransactionService(MockContext.Object,
+            RecommendationServiceMock = new Mock<IRecommendationService>();
+            EmailServiceMock = new Mock<IEmailService>();
+
+            TransactionService = new Web.Services.TransactionService(
+                MockContext.Object,
                 new Logger<Web.Services.TransactionService>(new LoggerFactory()),
-                Mapper, AppSettings,ServiceScopeFactoryMock.Object);
+                Mapper,
+                AppSettings,
+                ServiceScopeFactoryMock.Object,
+                RecommendationServiceMock.Object,
+                EmailServiceMock.Object
+            );
         }
     }
 }

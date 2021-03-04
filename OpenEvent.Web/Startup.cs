@@ -94,6 +94,8 @@ namespace OpenEvent.Web
             services.AddSingleton<IAnalyticsService, AnalyticsService>();
             services.AddSingleton<IRecommendationService, RecommendationService>();
 
+            services.AddSingleton<IEmailService, EmailService>();
+
             // Add services.
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();

@@ -23,7 +23,7 @@ namespace OpenEvent.Web.Services
         Task<TransactionViewModel> CreateIntent(CreateIntentBody createIntentBody);
         Task<TransactionViewModel> InjectPaymentMethod(InjectPaymentMethodBody injectPaymentMethodBody);
         Task<TransactionViewModel> ConfirmIntent(ConfirmIntentBody confirmIntentBody);
-        Task CaptureIntentHook(); // Called by payment intent webhook
+        Task CaptureIntentHook(Stripe.Event @event); // Called by payment intent webhook
         Task CancelIntent(CancelIntentBody cancelIntentBody);
     }
 
@@ -33,21 +33,25 @@ namespace OpenEvent.Web.Services
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
         private readonly IServiceScopeFactory ScopeFactory;
-        private readonly IAnalyticsService AnalyticsService;
         private readonly IRecommendationService RecommendationService;
+        private readonly IEmailService EmailService;
 
-        public TransactionService(ApplicationContext applicationContext, ILogger<TransactionService> logger,
-            IMapper mapper, IOptions<AppSettings> appSettings, IServiceScopeFactory serviceScopeFactory,
-            IAnalyticsService analyticsService,
-            IRecommendationService recommendationService)
+        public TransactionService(
+            ApplicationContext applicationContext,
+            ILogger<TransactionService> logger,
+            IMapper mapper,
+            IOptions<AppSettings> appSettings,
+            IServiceScopeFactory serviceScopeFactory,
+            IRecommendationService recommendationService,
+            IEmailService emailService)
         {
             Logger = logger;
             ApplicationContext = applicationContext;
             Mapper = mapper;
             StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
             ScopeFactory = serviceScopeFactory;
-            AnalyticsService = analyticsService;
             RecommendationService = recommendationService;
+            EmailService = emailService;
         }
 
         public async Task<TransactionViewModel> CreateIntent(CreateIntentBody createIntentBody)
@@ -55,9 +59,11 @@ namespace OpenEvent.Web.Services
             var user = await ApplicationContext.Users
                 .Include(x => x.PaymentMethods)
                 .FirstOrDefaultAsync(x => x.Id == createIntentBody.UserId);
+
             var e = await ApplicationContext.Events.AsSplitQuery()
                 .Include(x => x.Host)
                 .Include(x => x.Tickets)
+                .Include(x => x.Transactions)
                 .FirstOrDefaultAsync(x => x.Id == createIntentBody.EventId);
 
             if (user == null)
@@ -124,6 +130,7 @@ namespace OpenEvent.Web.Services
                     Updated = DateTime.Now,
                     Status = Enum.Parse<PaymentStatus>(intent.Status, true),
                     Ticket = ticket,
+                    Event = e
                 };
 
                 await ApplicationContext.Transactions.AddAsync(transaction);
@@ -284,10 +291,74 @@ namespace OpenEvent.Web.Services
             }
         }
 
-        public Task CaptureIntentHook()
+        public async Task CaptureIntentHook(Stripe.Event stripeEvent)
         {
-            // TODO: When successful influence recommendation.
-            throw new System.NotImplementedException();
+            try
+            {
+                if (stripeEvent.Type == Events.PaymentIntentSucceeded)
+                {
+                    Logger.LogInformation("Payment intent succeeded");
+                    
+                    var stripeCharge = stripeEvent.Data.Object as PaymentIntent;
+
+                    var transaction =
+                        await ApplicationContext.Transactions.Include(x => x.User).AsSplitQuery().FirstOrDefaultAsync(x => x.StripeIntentId == stripeCharge.Id);
+
+                    if (transaction != null)
+                    {
+                        transaction.Updated = DateTime.Now;
+                        transaction.Status = PaymentStatus.succeeded;
+                        transaction.Paid = true;
+                        transaction.End = DateTime.Now;
+
+                        await ApplicationContext.SaveChangesAsync();
+
+                        await EmailService.SendAsync(transaction.User.Email, "OpenEvent",
+                            "<h1>Ticket Purchased</h1><p>You have successfully purchased a ticket</p>",
+                            "Ticket Purchased");
+
+                        Logger.LogInformation("A successful payment was processed");
+                    }
+                    else
+                    {
+                        Logger.LogInformation("Transaction not found");
+                    }
+                }
+                else if (stripeEvent.Type == Events.PaymentIntentPaymentFailed)
+                {
+                    Logger.LogInformation("Payment intent failed");
+                    
+                    var intent = stripeEvent.Data.Object as PaymentIntent;
+
+                    var transaction = await ApplicationContext.Transactions.FirstOrDefaultAsync(x =>
+                        x.StripeIntentId == intent.Id);
+
+                    if (transaction != null)
+                    {
+                        transaction.Updated = DateTime.Now;
+                        transaction.End = DateTime.Now;
+                        transaction.Paid = false;
+                        transaction.Status = PaymentStatus.canceled;
+                        transaction.Ticket = null;
+
+                        await ApplicationContext.SaveChangesAsync();
+
+                        await EmailService.SendAsync(transaction.User.Email, "OpenEvent",
+                            "<h1>Payment Failure</h1><p>You tried to purchase a ticket but the payment failed</p>",
+                            "Payment Failure");
+
+                        Logger.LogInformation("A payment was not successful");
+                    }
+                    else
+                    {
+                        Logger.LogInformation("Transaction not found");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogInformation(e.Message);
+            }
         }
 
         public async Task CancelIntent(CancelIntentBody cancelIntentBody)

@@ -21,6 +21,7 @@ namespace OpenEvent.Test.Services.AnalyticsService
         protected IOptions<AppSettings> AppSettings;
         protected IAnalyticsService AnalyticsService;
         protected Mock<IServiceScopeFactory> ServiceScopeFactoryMock;
+        protected Mock<IRecommendationService> RecommendationServiceMock;
 
         [SetUp]
         public async Task Setup()
@@ -38,15 +39,19 @@ namespace OpenEvent.Test.Services.AnalyticsService
 
             Mock<IServiceProvider> serviceProvider = new Mock<IServiceProvider>();
             serviceProvider.Setup(x => x.GetService(typeof(ApplicationContext))).Returns(MockContext.Object);
-            
+
             Mock<IServiceScope> serviceScopeMock = new Mock<IServiceScope>();
             serviceScopeMock.Setup(x => x.ServiceProvider).Returns(() => serviceProvider.Object);
 
             ServiceScopeFactoryMock = new Mock<IServiceScopeFactory>();
             ServiceScopeFactoryMock.Setup(x => x.CreateScope()).Returns(() => serviceScopeMock.Object);
+            
+            RecommendationServiceMock = new Mock<IRecommendationService>();
 
             AnalyticsService = new Web.Services.AnalyticsService(
-                new Logger<Web.Services.AnalyticsService>(new LoggerFactory()), ServiceScopeFactoryMock.Object);
+                new Logger<Web.Services.AnalyticsService>(new LoggerFactory()),
+                ServiceScopeFactoryMock.Object,
+                RecommendationServiceMock.Object);
         }
     }
 }

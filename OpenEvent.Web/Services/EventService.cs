@@ -19,6 +19,7 @@ using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.Ticket;
+using OpenEvent.Web.Models.Transaction;
 
 namespace OpenEvent.Web.Services
 {
@@ -37,6 +38,7 @@ namespace OpenEvent.Web.Services
         Task<ActionResult<EventHostModel>> GetForHost(Guid id);
         Task Update(UpdateEventBody updateEventBody);
         Task<List<EventViewModel>> GetRecommended(Guid id);
+        Task<EventAnalytics> GetAnalytics(Guid id);
     }
 
     /// <summary>
@@ -223,8 +225,10 @@ namespace OpenEvent.Web.Services
             var events = ApplicationContext.Events
                 .Include(x => x.EventCategories).ThenInclude(x => x.Category)
                 .Include(x => x.Tickets)
+                .Include(x => x.Transactions)
                 .Include(x => x.Host)
                 .Include(x => x.PageViewEvents)
+                .Include(x => x.VerificationEvents).ThenInclude(x => x.Ticket)
                 .AsSplitQuery().AsNoTracking().AsEnumerable();
 
             events = events.Where(x => x.Host.Id == hostId && !x.isCanceled);
@@ -253,12 +257,10 @@ namespace OpenEvent.Web.Services
                         ? x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList()
                         : new List<SocialLinkViewModel>(),
                     StartLocal = x.StartLocal,
-                    TicketsLeft = x.Tickets.Count,
+                    TicketsLeft = x.Tickets.Count(ticket => ticket.Available),
                     EndUTC = x.EndUTC,
                     StartUTC = x.StartUTC,
-                    PageViewEvents = x.PageViewEvents.Any()
-                        ? x.PageViewEvents.Select(p => Mapper.Map<PageViewEventViewModel>(p)).ToList()
-                        : new List<PageViewEventViewModel>()
+                    Transactions = x.Transactions.Select(transaction  => Mapper.Map<TransactionViewModel>(transaction)).ToList()
                 }).ToList();
         }
 
@@ -443,7 +445,7 @@ namespace OpenEvent.Web.Services
                     TicketsLeft = x.Tickets.Count,
                     EndUTC = x.EndUTC,
                     StartUTC = x.StartUTC,
-                    PageViewEvents = x.PageViewEvents.Select(p => Mapper.Map<PageViewEventViewModel>(p)).ToList()
+                    Transactions = x.Transactions.Select(transaction  => Mapper.Map<TransactionViewModel>(transaction)).ToList()
                 }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (e == null)
@@ -508,37 +510,60 @@ namespace OpenEvent.Web.Services
 
         public async Task<List<EventViewModel>> GetRecommended(Guid id)
         {
-            var recommendationScores = await ApplicationContext.RecommendationScores.AsSplitQuery().Include(x => x.Category).Where(x => x.User.Id == id).ToListAsync();
+            var recommendationScores = await ApplicationContext.RecommendationScores.AsSplitQuery()
+                .Include(x => x.Category).Where(x => x.User.Id == id).ToListAsync();
 
             if (recommendationScores == null)
             {
                 Logger.LogInformation("The user has no recommendation scores");
-                return await Search("",new List<SearchFilter>(),id);
+                return await Search("", new List<SearchFilter>(), id);
             }
 
             Dictionary<string, double> recommendationDictionary =
                 recommendationScores.ToDictionary(x => x.Category.Name, x => x.Weight);
 
             var averageScore = recommendationScores.Select(x => x.Weight).Average();
-            
-            var recommendedEvents = ApplicationContext.Events.AsSplitQuery().Include(x => x.EventCategories).ThenInclude(x => x.Category).AsEnumerable();
 
-            recommendedEvents = recommendedEvents.Where(x => ShouldRecommend(x, recommendationDictionary, averageScore)).ToList();
+            var recommendedEvents = ApplicationContext.Events.AsSplitQuery().Include(x => x.EventCategories)
+                .ThenInclude(x => x.Category).AsEnumerable();
 
-            return recommendedEvents.Select(e => Mapper.Map<EventViewModel>(e)).ToList();;
-        }   
+            recommendedEvents = recommendedEvents.Where(x => ShouldRecommend(x, recommendationDictionary, averageScore))
+                .ToList();
+
+            return recommendedEvents.Select(e => Mapper.Map<EventViewModel>(e)).ToList();
+            ;
+        }
+
+        public async Task<EventAnalytics> GetAnalytics(Guid id)
+        {
+            // var e = await ApplicationContext.Events.AsNoTracking().AsSplitQuery().Include(x => x.EventCategories).FirstOrDefaultAsync(x => x.Id == id);
+
+            var pageViewEvents = await ApplicationContext.PageViewEvents.AsNoTracking().AsSplitQuery()
+                .Where(x => x.Event.Id == id).ToListAsync();
+            var ticketVerificationEvents = await ApplicationContext.VerificationEvents.AsNoTracking().AsSplitQuery()
+                .Where(x => x.Event.Id == id).ToListAsync();
+            // var recommendationScores = await ApplicationContext.RecommendationScores
+            // .Where(x => e.EventCategories.Any(c => c.CategoryId == x.Category.Id)).ToListAsync();
+
+            return new EventAnalytics()
+            {
+                PageViewEvents = pageViewEvents.Select(x => Mapper.Map<PageViewEventViewModel>(x))
+                    .OrderByDescending(x => x.Created).ToList(),
+                TicketVerificationEvents = ticketVerificationEvents
+                    .Select(x => Mapper.Map<TicketVerificationEventViewModel>(x)).OrderByDescending(x => x.Created)
+                    .ToList(),
+            };
+        }
 
         private bool ShouldRecommend(Event e, Dictionary<string, double> scores, double averageScore)
         {
             List<double> eScores = new List<double>();
             if (e.EventCategories.Any())
             {
-                e.EventCategories.ForEach(categoryEvent =>
-                {
-                    eScores.Add(scores[categoryEvent.Category.Name]);
-                });
+                e.EventCategories.ForEach(categoryEvent => { eScores.Add(scores[categoryEvent.Category.Name]); });
                 if (eScores.Average() >= averageScore) return true;
             }
+
             return false;
         }
     }

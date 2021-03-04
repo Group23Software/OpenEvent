@@ -20,5 +20,17 @@ namespace OpenEvent.Web
         public string AzureMapsKey { get; set; }
         
         public string StripeApiKey { get; set; }
+        
+        public MailSettings MailSettings { get; set; }
+    }
+
+    public class MailSettings
+    {
+        public string Server { get; set; }
+        public int Port { get; set; }
+        public string SenderName { get; set; }
+        public string SenderEmail { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

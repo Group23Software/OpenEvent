@@ -105,6 +105,7 @@ import {MatTableModule} from "@angular/material/table";
     GalleryModule,
     AngularFittextModule,
     // MatTableModule
+    MatSelectModule
   ],
   exports: [
 
@@ -145,6 +146,7 @@ import {MatTableModule} from "@angular/material/table";
     MatExpansionModule,
     MatSelectModule,
     FlexLayoutModule,
+    MatSelectModule,
 
     LoadingComponent,
     SocialComponent,

@@ -5,7 +5,6 @@ import {EventService} from "../../_Services/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Location} from '@angular/common';
 import {GalleryItem, ImageItem} from "ng-gallery";
-import {CreateAccountComponent} from "../../login/create-account/create-account.component";
 import {MatDialog} from "@angular/material/dialog";
 import {
   TicketPurchaseDialogComponent,

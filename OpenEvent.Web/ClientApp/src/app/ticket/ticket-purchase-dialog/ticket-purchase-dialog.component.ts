@@ -31,10 +31,20 @@ export class TicketPurchaseDialogComponent implements OnInit
   injectingPaymentMethod: boolean = false;
   confirmingTicket: boolean = false;
 
+  ticketPurchased: boolean = false;
+
+  get UsersCards()
+  {
+    return this.userService.User?.PaymentMethods;
+  }
 
   get Event ()
   {
     return this.data.Event;
+  }
+
+  get Transaction() {
+    return this.transactionService.CurrentTransaction;
   }
 
   constructor (@Inject(MAT_DIALOG_DATA) public data: TicketPurchaseDialogData, private userService: UserService, private transactionService: TransactionService, private dialog: MatDialogRef<TicketPurchaseDialogComponent>)
@@ -73,7 +83,14 @@ export class TicketPurchaseDialogComponent implements OnInit
     {
       console.log(i);
       this.confirmingTicket = false;
-      this.dialog.close('Success');
+      // this.dialog.close('Success');
+      this.dialog.disableClose = true;
+      this.ticketPurchased = true;
+      this.stepper.next();
+      this.stepper.steps.forEach(x => {
+        x.completed = true;
+        x.editable = false;
+      });
     }, (e: HttpErrorResponse) =>
     {
       this.confirmIntentError = e.error.Message;

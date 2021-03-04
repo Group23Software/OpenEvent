@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Contexts;
+using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Services;
@@ -187,6 +188,20 @@ namespace OpenEvent.Web.Controllers
                 Logger.LogInformation(e.ToString());
                 return BadRequest(e);
             }
+        }
+
+        [HttpGet("analytics")]
+        public async Task<ActionResult<EventAnalytics>> GetAnalytics(Guid id)
+        {
+            try
+            {
+                return await EventService.GetAnalytics(id);
+            }
+            catch (Exception e)
+            {
+                Logger.LogInformation(e.ToString());
+                return BadRequest(e);
+            } 
         }
     }
 }

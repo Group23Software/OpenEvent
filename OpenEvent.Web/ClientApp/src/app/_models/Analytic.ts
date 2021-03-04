@@ -20,6 +20,19 @@ export interface MappedUsersAnalytics
   TicketVerificationEvents: TicketVerificationEvent[];
 }
 
+export interface EventAnalytics
+{
+  PageViewEvents: PageViewEvent[];
+  TicketVerificationEvents: TicketVerificationEvent[],
+  AverageRecommendationScores: AverageRecommendationScore[]
+}
+
+export interface AverageRecommendationScore
+{
+  CategoryName: string;
+  Weight: number;
+}
+
 export interface AnalyticEvent
 {
   Id: string;

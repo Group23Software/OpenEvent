@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -81,6 +82,19 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
-        
+
+
+        [HttpPost("Capture")]
+        public async Task<ActionResult> Capture()
+        {
+            Logger.LogInformation("Capturing webhook");
+            
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+            var stripeEvent = EventUtility.ParseEvent(json);
+
+            await TransactionService.CaptureIntentHook(stripeEvent);
+            
+            return Ok();
+        }
     }
 }

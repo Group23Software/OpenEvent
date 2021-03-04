@@ -125,64 +125,120 @@
 
       <mat-card>
         <mat-card-content>
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Site URL</mat-label>
-          <input matInput [formControl]="Site" placeholder="https://www.custom.co.uk" autocomplete="off">
-          <mat-icon matSuffix svgIcon="site"></mat-icon>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Site URL</mat-label>
+            <input matInput [formControl]="Site" placeholder="https://www.custom.co.uk" autocomplete="off">
+            <mat-icon matSuffix svgIcon="site"></mat-icon>
+          </mat-form-field>
 
-        <div class="d-flex flex-row">
-          <div class="d-flex flex-column w-100 mr-3">
-            <mat-form-field appearance="outline">
-              <mat-label>Instagram</mat-label>
-              <input matInput [formControl]="Instagram" placeholder="username" class="w-100" autocomplete="off">
-              <mat-icon matSuffix svgIcon="instagram"></mat-icon>
-            </mat-form-field>
+          <div class="d-flex flex-row">
+            <div class="d-flex flex-column w-100 mr-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Instagram</mat-label>
+                <input matInput [formControl]="Instagram" placeholder="username" class="w-100" autocomplete="off">
+                <mat-icon matSuffix svgIcon="instagram"></mat-icon>
+              </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Twitter</mat-label>
-              <input matInput [formControl]="Twitter" placeholder="@username" class="w-100" autocomplete="off">
-              <mat-icon matSuffix svgIcon="twitter"></mat-icon>
-            </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Twitter</mat-label>
+                <input matInput [formControl]="Twitter" placeholder="@username" class="w-100" autocomplete="off">
+                <mat-icon matSuffix svgIcon="twitter"></mat-icon>
+              </mat-form-field>
+            </div>
+            <div class="d-flex flex-column w-100">
+              <mat-form-field appearance="outline">
+                <mat-label>Facebook</mat-label>
+                <input matInput [formControl]="Facebook" placeholder="username" class="w-100" autocomplete="off">
+                <mat-icon matSuffix svgIcon="facebook"></mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Reddit</mat-label>
+                <input matInput [formControl]="Reddit" placeholder="username" class="w-100" autocomplete="off">
+                <mat-icon matSuffix svgIcon="reddit"></mat-icon>
+              </mat-form-field>
+            </div>
           </div>
-          <div class="d-flex flex-column w-100">
-            <mat-form-field appearance="outline">
-              <mat-label>Facebook</mat-label>
-              <input matInput [formControl]="Facebook" placeholder="username" class="w-100" autocomplete="off">
-              <mat-icon matSuffix svgIcon="facebook"></mat-icon>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Reddit</mat-label>
-              <input matInput [formControl]="Reddit" placeholder="username" class="w-100" autocomplete="off">
-              <mat-icon matSuffix svgIcon="reddit"></mat-icon>
-            </mat-form-field>
-          </div>
-        </div>
         </mat-card-content>
       </mat-card>
     </div>
   </mat-tab>
+
   <mat-tab label="Promos"></mat-tab>
-  <mat-tab label="Analytics">
-    <div class="counters">
-      <div class="counter shadow-sm">
-        <img src="assets/pageview.svg">
-        <div>{{event?.PageViewEvents?.length}}</div>
-      </div>
-      <div class="counter"></div>
-      <div class="counter"></div>
-      <div class="counter"></div>
-    </div>
-  </mat-tab>
-  <mat-tab label="Raw Data">
-    <mat-card>
+
+  <mat-tab label="Transactions" *ngIf="event.Transactions">
+    <mat-card class="m-3">
       <mat-card-header>
-        <mat-icon mat-card-avatar>pageview</mat-icon>
-        <mat-card-title>Page views</mat-card-title>
-        <mat-card-subtitle>All the times a user visited your event page</mat-card-subtitle>
+        <mat-icon mat-card-avatar>receipt_long</mat-icon>
+        <mat-card-title>Transactions</mat-card-title>
+        <mat-card-subtitle>All transactions associated to this event</mat-card-subtitle>
       </mat-card-header>
-      <div *ngFor="let pageView of event?.PageViewEvents">At <span class="font-italic font-weight-bold">{{pageView.Created | date: 'full'}}</span></div>
+      <div *ngFor="let transaction of event?.Transactions">
+        <div>{{transaction.Status}} {{transaction.Amount}} {{transaction.Paid}}</div>
+      </div>
+    </mat-card>
+  </mat-tab>
+
+  <mat-tab label="Analytics" *ngIf="analytics">
+    <mat-card class="m-3">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>analytics</mat-icon>
+        <mat-card-title>Statistics</mat-card-title>
+        <mat-card-subtitle>Statistic counters for your event</mat-card-subtitle>
+      </mat-card-header>
+
+      <div>Total page views: {{analytics?.PageViewEvents.length}}</div>
+      <div>Average page views a day:</div>
+      <div>Tickets sold: {{event?.Tickets.length - event.TicketsLeft}}</div>
+      <div>Tickets left: {{event?.TicketsLeft}}</div>
+
+      <div id="categoryAverageScores">
+
+      </div>
+
+    </mat-card>
+
+    <mat-card class="m-3">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>trending_up</mat-icon>
+        <mat-card-title>Trends</mat-card-title>
+        <mat-card-subtitle>Cool graphs</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+
+    <mat-card class="m-3">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>people</mat-icon>
+        <mat-card-title>Demographic</mat-card-title>
+        <mat-card-subtitle>Analytics based demographic of your event</mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+  </mat-tab>
+  <mat-tab label="Raw Data" *ngIf="analytics">
+    <mat-card class="m-3">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>analytics</mat-icon>
+        <mat-card-title>All data we have on this event</mat-card-title>
+        <mat-card-subtitle>This is all the data that we have collected on your event</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card>
+        <mat-card-header>
+          <mat-icon mat-card-avatar>pageview</mat-icon>
+          <mat-card-title>Page views</mat-card-title>
+          <mat-card-subtitle>All the times a user visited your event page</mat-card-subtitle>
+        </mat-card-header>
+        <div *ngFor="let pageView of analytics?.PageViewEvents">At <span class="font-italic font-weight-bold">{{pageView.Created | date: 'full'}}</span></div>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-header>
+          <mat-icon mat-card-avatar>verified</mat-icon>
+          <mat-card-title>Ticket Verifications</mat-card-title>
+          <mat-card-subtitle>All the times you've verified a ticket</mat-card-subtitle>
+        </mat-card-header>
+        <div *ngFor="let verify of analytics?.TicketVerificationEvents">At <span class="font-italic font-weight-bold">{{verify.Created | date: 'full'}}</span> <span class="font-italic font-weight-bold">{{verify.TicketId}}</span> was verified</div>
+      </mat-card>
     </mat-card>
   </mat-tab>
 </mat-tab-group>

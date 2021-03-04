@@ -34,5 +34,7 @@ namespace OpenEvent.Web.Models.Event
 
         public List<PageViewEvent> PageViewEvents { get; set; }
         public List<TicketVerificationEvent> VerificationEvents { get; set; }
+        
+        public List<Transaction.Transaction> Transactions { get; set; } 
     }
 }

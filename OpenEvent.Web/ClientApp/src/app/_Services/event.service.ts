@@ -14,6 +14,7 @@ import {Category} from "../_models/Category";
 import {map} from "rxjs/operators";
 import {SocialMedia} from "../_models/SocialMedia";
 import {UserService} from "./user.service";
+import {EventAnalytics} from "../_models/Analytic";
 
 @Injectable({
   providedIn: 'root'
@@ -132,5 +133,10 @@ export class EventService
   public Explore (): Observable<EventViewModel[]>
   {
     return this.http.get<EventViewModel[]>(this.BaseUrl + EventPaths.Explore, {params: new HttpParams().set('id', this.userService.User.Id)});
+  }
+
+  public GetAnalytics(id: string) : Observable<EventAnalytics>
+  {
+    return this.http.get<EventAnalytics>(this.BaseUrl + EventPaths.Analytics, {params: new HttpParams().set('id', id)});
   }
 }

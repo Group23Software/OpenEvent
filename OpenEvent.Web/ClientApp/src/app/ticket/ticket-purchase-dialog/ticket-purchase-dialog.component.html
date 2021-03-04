@@ -1,13 +1,24 @@
 <mat-progress-bar mode="indeterminate" *ngIf="loadingData" id="loadingBar"></mat-progress-bar>
 <div class="mat-warn">{{createIntentError}}</div>
 <div *ngIf="Event && !loadingData && !createIntentError">
-  <div class="mat-dialog-title">Purchase Ticket</div>
+  <div class="mat-dialog-title">
+    <mat-icon>book_online</mat-icon>
+    Purchase Ticket
+  </div>
 
   <mat-horizontal-stepper [linear]="true">
     <mat-step [completed]="false">
       <ng-template matStepLabel>Payment Method</ng-template>
 
       <mat-card>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Cards</mat-label>
+          <mat-select required [(value)]="currentCard" (selectionChange)="currentCard = $event.value">
+            <mat-option *ngFor="let card of UsersCards" [value]="card">{{card.NickName}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <virtual-card [ShowActions]="false" *ngIf="currentCard" [Card]="currentCard"></virtual-card>
       </mat-card>
 
@@ -23,7 +34,21 @@
     <mat-step>
       <ng-template matStepLabel>Confirm</ng-template>
 
-      <div>Recipt</div>
+      <div>
+        <div class="d-flex flex-row justify-content-between">
+          <div>1 * {{Event.Name}} ticket(s)</div>
+          <div>{{Transaction.Amount / 100 | currency:'GBP'}}</div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="d-flex flex-row justify-content-between">
+          <div>Service fee (10%)</div>
+          <div>£{{(Transaction.Amount * 0.1) / 100}}</div>
+        </div>
+        <div class="d-flex flex-row justify-content-between">
+          <div>What the event gets</div>
+          <div>{{(Transaction.Amount / 100) * 0.9 | currency: 'GBP':true:'1.2-2'}}</div>
+        </div>
+      </div>
 
       <button mat-flat-button color="accent" *ngIf="!confirmingTicket" (click)="confirm()">Confirm</button>
 
@@ -34,19 +59,17 @@
       <mat-error>{{confirmIntentError}}</mat-error>
 
     </mat-step>
+    <mat-step [editable]="false">
+      <ng-template matStepLabel>Result</ng-template>
+
+      <div *ngIf="ticketPurchased">
+        <div class="mat-title">Ticket Purchased</div>
+        <div class="mat-caption">You will recive an email confirmaion in a bit</div>
+        <mat-dialog-actions>
+          <button matDialogClose="close" mat-flat-button color="primary">Close</button>
+        </mat-dialog-actions>
+      </div>
+    </mat-step>
   </mat-horizontal-stepper>
 
-<!--  <div>-->
-<!--    <mat-card id="receipt">-->
-<!--      <div>{{Event.Name}}</div>-->
-<!--      <div>{{Event.Price / 100 |currency:'GBP'}}</div>-->
-<!--    </mat-card>-->
-<!--    <mat-card id="cardSelect">-->
-<!--      <virtual-card [ShowActions]="false" *ngIf="currentCard" [Card]="currentCard"></virtual-card>-->
-<!--    </mat-card>-->
-<!--    <div class="mat-warn">{{confirmIntentError}}</div>-->
-<!--  </div>-->
-<!--  <mat-dialog-actions *ngIf="!confirmingTicket" align="end">-->
-<!--    <button (click)="confirm()" mat-flat-button color="accent">Confirm</button>-->
-<!--  </mat-dialog-actions>-->
 </div>
