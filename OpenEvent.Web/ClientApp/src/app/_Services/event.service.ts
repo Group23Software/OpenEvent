@@ -139,4 +139,9 @@ export class EventService
   {
     return this.http.get<EventAnalytics>(this.BaseUrl + EventPaths.Analytics, {params: new HttpParams().set('id', id)});
   }
+
+  public DownVote(id: string) : Observable<any>
+  {
+    return this.http.post(this.BaseUrl + EventPaths.DownVote,null,{params: new HttpParams().set('userId',this.userService.User.Id).set('eventId',id)});
+  }
 }

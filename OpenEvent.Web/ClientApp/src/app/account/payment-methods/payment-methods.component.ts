@@ -1,16 +1,21 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
-import {StripeService, StripeCardComponent} from 'ngx-stripe';
+import {StripeCardComponent, StripeService} from 'ngx-stripe';
 import {
-  CreateTokenCardData, StripeCardCvcElementOptions, StripeCardElementChangeEvent,
-  StripeCardElementOptions, StripeCardExpiryElementOptions, StripeCardNumberElementOptions,
+  CreateTokenCardData,
+  StripeCardCvcElementOptions,
+  StripeCardElementChangeEvent,
+  StripeCardElementOptions,
+  StripeCardExpiryElementOptions,
+  StripeCardNumberElementOptions,
   StripeElementsOptions
 } from '@stripe/stripe-js';
 import {PaymentService} from "../../_Services/payment.service";
 import {UserService} from "../../_Services/user.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {TriggerService} from "../../_Services/trigger.service";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 @Component({
   selector: 'payment-methods',
@@ -103,7 +108,7 @@ export class PaymentMethodsComponent implements OnInit
     private stripeService: StripeService,
     private paymentService: PaymentService,
     private userService: UserService,
-    private snackBar: MatSnackBar)
+    private trigger: TriggerService)
   {
   }
 
@@ -142,7 +147,7 @@ export class PaymentMethodsComponent implements OnInit
             }).subscribe(() =>
             {
               this.createCardTokenLoading = false;
-              this.snackBar.open('Added payment method', 'close', {duration: 500});
+              this.trigger.Iterate('Added payment method', 500, IteratorStatus.good);
               this.stripeTest.reset();
               // TODO: clear card input after added.
             }, (e: HttpErrorResponse) =>

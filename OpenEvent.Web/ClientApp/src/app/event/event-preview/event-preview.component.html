@@ -1,10 +1,15 @@
-<mat-card (click)="navigateToEvent()" *ngIf="event" id="event">
-<!--  <mat-card-header></mat-card-header>-->
-<!--  <div>{{event.Name}}</div>-->
-<!--  <div>{{event.StartLocal | date:'medium'}}</div>-->
-  <img mat-card-image [src]="event?.Thumbnail.Source">
-  <mat-card-content>
-    <div class="mat-caption mat-accent">{{event.StartLocal | date:'short'}}</div>
-    <div class="mat-title">{{event.Name}}</div>
-  </mat-card-content>
-</mat-card>
+<div class="position-relative">
+  <button mat-mini-fab (click)="downVote()" id="downVoteButton" *ngIf="event">
+    <mat-icon>thumb_down</mat-icon>
+  </button>
+  <mat-card (click)="navigateToEvent()" *ngIf="event" id="event">
+    <!--  <mat-card-header></mat-card-header>-->
+    <!--  <div>{{event.Name}}</div>-->
+    <!--  <div>{{event.StartLocal | date:'medium'}}</div>-->
+    <img mat-card-image [src]="event?.Thumbnail.Source">
+    <mat-card-content>
+      <div class="mat-caption mat-accent">{{event.StartLocal | date:'short'}}</div>
+      <div class="mat-title">{{event.Name}}</div>
+    </mat-card-content>
+  </mat-card>
+</div>

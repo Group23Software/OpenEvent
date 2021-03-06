@@ -1,148 +1,133 @@
 <user-nav></user-nav>
 
-<mat-card class="m-3 flex-grow-1" *ngIf="!loading">
+<mat-card class="m-3 flex-grow-1 overflow-auto" *ngIf="!loading">
   <div class="overlay" [@inOutAnimation] *ngIf="!UserHasBank">
     <mat-card class="m-auto">
       <div class="mat-headline warn-color">You need to add a bank account!</div>
     </mat-card>
   </div>
   <mat-card-header>
+    <mat-icon mat-card-avatar>event</mat-icon>
     <mat-card-title>Create Event</mat-card-title>
+    <mat-card-subtitle>Fill in all the information and preview your event</mat-card-subtitle>
   </mat-card-header>
-  <mat-horizontal-stepper [linear]="false" (selectionChange)="loadEventDate($event)">
-    <mat-step [stepControl]="createEventForm" [editable]="isEditable">
-      <form [formGroup]="createEventForm" id="createEventForm">
-        <ng-template matStepLabel>Basic info</ng-template>
+  <div fxLayout style="height: 95%">
+    <mat-horizontal-stepper [linear]="false" (selectionChange)="loadEventDate($event)" fxLayout="column" fxFlex="100" fxLayoutAlign=" stretch">
+      <mat-step [stepControl]="createEventForm" [editable]="isEditable" fxFlex="100" fxLayout="column">
+        <form [formGroup]="createEventForm" id="createEventForm">
+          <ng-template matStepLabel>Basic info</ng-template>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Name</mat-label>
-          <input matInput type="text" formControlName="Name" placeholder="Event name" autocomplete="off">
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="Description" placeholder="Event description" autocomplete="off"></textarea>
-        </mat-form-field>
-
-        <thumbnail-edit [thumbnail]="thumbnail" (thumbnailEvent)="thumbnail = $event"></thumbnail-edit>
-
-        <div class="d-flex flex-row">
-          <mat-form-field appearance="outline" class="w-100 mr-3">
-            <mat-label>Start date</mat-label>
-            <input autocomplete="off" matInput [ngxMatDatetimePicker]="startPicker" placeholder="Choose a date" [formControl]="DateForm.controls.StartLocal" [min]="minDate">
-            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-            <ngx-mat-datetime-picker #startPicker [stepHour]="1" [stepMinute]="1" [defaultTime]="defaultTime" [stepSecond]="0"></ngx-mat-datetime-picker>
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="Name" placeholder="Event name" autocomplete="off">
           </mat-form-field>
+
+          <div class="d-flex flex-row">
+            <mat-form-field appearance="outline" class="w-100 mr-3">
+              <mat-label>Start date</mat-label>
+              <input autocomplete="off" matInput [ngxMatDatetimePicker]="startPicker" placeholder="Choose a date" [formControl]="DateForm.controls.StartLocal" [min]="minDate">
+              <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+              <ngx-mat-datetime-picker #startPicker [stepHour]="1" [stepMinute]="1" [defaultTime]="defaultTime" [stepSecond]="0"></ngx-mat-datetime-picker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>End date</mat-label>
+              <input autocomplete="off" matInput [ngxMatDatetimePicker]="endPicker" placeholder="Choose a date" [formControl]="DateForm.controls.EndLocal" [min]="DateForm.controls.StartLocal.value">
+              <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+              <ngx-mat-datetime-picker #endPicker [stepHour]="1" [stepMinute]="1" [defaultTime]="defaultTime" [stepSecond]="0"></ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+
+          <div class="d-flex flex-row">
+            <mat-form-field appearance="outline" id="description">
+              <mat-label>Description</mat-label>
+              <textarea matInput mat-autosize cdkTextareaAutosize cdkAutosizeMinRows="20" [(ngModel)]="markdown" formControlName="Description" placeholder="Event description" autocomplete="off"></textarea>
+            </mat-form-field>
+            <markdown [data]="markdown" ngPreserveWhitespaces></markdown>
+          </div>
+
+          <!--        <thumbnail-edit [thumbnail]="thumbnail" (thumbnailEvent)="thumbnail = $event"></thumbnail-edit>-->
+
+          <div class="d-flex flex-row">
+            <mat-form-field appearance="outline" class="mr-3">
+              <mat-label>Price (£)</mat-label>
+              <input autocomplete="off" matInput type="number" min="0" step="0.01" formControlName="Price" placeholder="00.00">
+            </mat-form-field>
+
+            <!--      //TODO: Break down of fees. //TODO: Slider for price.-->
+
+            <mat-form-field appearance="outline">
+              <mat-label>Tickets</mat-label>
+              <input autocomplete="off" matInput type="number" min="0" step="1" formControlName="NumberOfTickets" placeholder="1">
+            </mat-form-field>
+          </div>
+
+          <div class="mat-caption mb-3">Please select at least one category</div>
+          <category-list [categories]="categoryStore" [inset]="true" formControlName="Categories"></category-list>
+          <mat-error *ngIf="createEventForm.controls.Categories.invalid && createEventForm.controls.Categories.dirty">You must select at least one category</mat-error>
+
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="addressForm" [editable]="isEditable" fxFlex="100" fxLayout="column">
+        <ng-template matStepLabel>Address</ng-template>
+        <div class="d-flex flex-column w-100">
+          <mat-checkbox id="isOnline" [formControl]="IsOnline" (click)="clickedOnline()">Online?</mat-checkbox>
+          <address-form [formControl]="addressForm"></address-form>
+        </div>
+      </mat-step>
+      <mat-step [stepControl]="SocialLinks" [editable]="isEditable">
+        <form [formGroup]="SocialLinks">
+          <ng-template matStepLabel>Images & Social</ng-template>
+
+          <image-list [images]="eventImages" (imageEvent)="eventImages = $event"></image-list>
 
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>End date</mat-label>
-            <input autocomplete="off" matInput [ngxMatDatetimePicker]="endPicker" placeholder="Choose a date" [formControl]="DateForm.controls.EndLocal" [min]="DateForm.controls.StartLocal.value">
-            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-            <ngx-mat-datetime-picker #endPicker [stepHour]="1" [stepMinute]="1" [defaultTime]="defaultTime" [stepSecond]="0"></ngx-mat-datetime-picker>
-          </mat-form-field>
-        </div>
-
-        <div class="d-flex flex-row">
-          <mat-form-field appearance="outline" class="mr-3">
-            <mat-label>Price (£)</mat-label>
-            <input autocomplete="off" matInput type="number" min="0" step="0.01" formControlName="Price" placeholder="00.00">
+            <mat-label>Site URL</mat-label>
+            <input matInput formControlName="Site" placeholder="https://www.custom.co.uk" autocomplete="off">
           </mat-form-field>
 
-          <!--      //TODO: Break down of fees. //TODO: Slider for price.-->
+          <div class="d-flex flex-row">
+            <div class="d-flex flex-column w-100 mr-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Instagram</mat-label>
+                <input matInput formControlName="Instagram" placeholder="username" class="w-100" autocomplete="off">
+              </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Tickets</mat-label>
-            <input autocomplete="off" matInput type="number" min="0" step="1" formControlName="NumberOfTickets" placeholder="1">
-          </mat-form-field>
-        </div>
+              <mat-form-field appearance="outline">
+                <mat-label>Twitter</mat-label>
+                <input matInput formControlName="Twitter" placeholder="@username" class="w-100" autocomplete="off">
+              </mat-form-field>
+            </div>
+            <div class="d-flex flex-column w-100">
+              <mat-form-field appearance="outline">
+                <mat-label>Facebook</mat-label>
+                <input matInput formControlName="Facebook" placeholder="username" class="w-100" autocomplete="off">
+              </mat-form-field>
 
-        <category-list [categories]="categoryStore" (categoryEvent)="categories = $event" [inset]="true"></category-list>
-      </form>
-    </mat-step>
-    <mat-step [stepControl]="addressForm" [editable]="isEditable">
-      <form [formGroup]="addressForm">
-        <ng-template matStepLabel>Address</ng-template>
-        <mat-checkbox id="isOnline" [formControl]="IsOnline" (click)="clickedOnline()">Online?</mat-checkbox>
-
-        <div class="d-flex flex-column">
-          <mat-form-field appearance="outline">
-            <mat-label>Address line 1</mat-label>
-            <input matInput type="text" formControlName="AddressLine1" placeholder="21 Main Street">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Address line 2</mat-label>
-            <input matInput type="text" formControlName="AddressLine2" placeholder="Apt 1">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>City</mat-label>
-            <input matInput type="text" formControlName="City" placeholder="London">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Postcode</mat-label>
-            <input matInput type="text" formControlName="PostalCode" placeholder="AA1 1AA">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Country</mat-label>
-            <input matInput type="text" disabled [value]="addressForm.controls.CountryName.value">
-          </mat-form-field>
-        </div>
-      </form>
-    </mat-step>
-    <mat-step [stepControl]="SocialLinks" [editable]="isEditable">
-      <form [formGroup]="SocialLinks">
-        <ng-template matStepLabel>Images & Social</ng-template>
-
-        <image-list [images]="eventImages" (imageEvent)="eventImages = $event"></image-list>
-
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Site URL</mat-label>
-          <input matInput formControlName="Site" placeholder="https://www.custom.co.uk" autocomplete="off">
-        </mat-form-field>
-
-        <div class="d-flex flex-row">
-          <div class="d-flex flex-column w-100 mr-3">
-            <mat-form-field appearance="outline">
-              <mat-label>Instagram</mat-label>
-              <input matInput formControlName="Instagram" placeholder="username" class="w-100" autocomplete="off">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Twitter</mat-label>
-              <input matInput formControlName="Twitter" placeholder="@username" class="w-100" autocomplete="off">
-            </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Reddit</mat-label>
+                <input matInput formControlName="Reddit" placeholder="username" class="w-100" autocomplete="off">
+              </mat-form-field>
+            </div>
           </div>
-          <div class="d-flex flex-column w-100">
-            <mat-form-field appearance="outline">
-              <mat-label>Facebook</mat-label>
-              <input matInput formControlName="Facebook" placeholder="username" class="w-100" autocomplete="off">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Reddit</mat-label>
-              <input matInput formControlName="Reddit" placeholder="username" class="w-100" autocomplete="off">
-            </mat-form-field>
-          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Confirm</ng-template>
+        <div id="eventPreview">
+          <mat-card class="d-flex flex-row align-items-center my-3">
+            <div style="flex: 1; font-size: larger">Preview</div>
+            <!--          <button type="submit" mat-flat-button color="primary" (click)="create()">Create</button>-->
+            <button type="submit" mat-flat-button color="primary" (click)="create()" [disabled]="createEventForm.invalid || addressForm.invalid || SocialLinks.invalid">Create event</button>
+          </mat-card>
+          <mat-card>
+            <mat-card-content>
+              <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>
+            </mat-card-content>
+          </mat-card>
         </div>
-      </form>
-    </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Confirm</ng-template>
-      <div id="eventPreview">
-        <mat-card class="d-flex flex-row align-items-center my-3">
-          <div style="flex: 1; font-size: larger">Preview</div>
-          <button type="submit" mat-flat-button color="primary" (click)="create()" [disabled]="createEventForm.invalid || addressForm.invalid || SocialLinks.invalid">Create event</button>
-        </mat-card>
-        <mat-card>
-          <mat-card-content>
-            <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </mat-step>
-  </mat-horizontal-stepper>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </div>
 </mat-card>
 <loading *ngIf="loading" [@inOutAnimation]></loading>

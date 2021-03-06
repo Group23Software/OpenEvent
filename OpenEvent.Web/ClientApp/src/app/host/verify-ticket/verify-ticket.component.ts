@@ -3,9 +3,10 @@ import {ActivatedRoute} from "@angular/router";
 import {BarcodeFormat, Exception} from "@zxing/library";
 import {FormControl} from "@angular/forms";
 import {TicketService} from "../../_Services/ticket.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
+import {TriggerService} from "../../_Services/trigger.service";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 @Component({
   template: '<mat-error>Ticket not valid!</mat-error><mat-dialog-actions align="end"><button mat-button color="warn" mat-dialog-close>Close</button></mat-dialog-actions>'
@@ -33,7 +34,7 @@ export class VerifyTicketComponent implements OnInit
 
   private lastTicket: string;
 
-  constructor (private route: ActivatedRoute, private ticketService: TicketService, private snackBar: MatSnackBar, private dialog: MatDialog)
+  constructor (private route: ActivatedRoute, private ticketService: TicketService, private trigger: TriggerService, private dialog: MatDialog)
   {
   }
 
@@ -49,7 +50,7 @@ export class VerifyTicketComponent implements OnInit
       EventId: this.EventId
     }).subscribe(r =>
     {
-      this.snackBar.open('Verified Ticket', 'close', {duration: 1000});
+      this.trigger.Iterate('Verified Ticket',1000,IteratorStatus.good);
     }, (e: HttpErrorResponse) =>
     {
       const dialogRef = this.dialog.open(VerifyDialog);
@@ -69,7 +70,7 @@ export class VerifyTicketComponent implements OnInit
         EventId: this.EventId
       }).subscribe(r =>
       {
-        this.snackBar.open('Verified Ticket', 'close', {duration: 1000});
+        this.trigger.Iterate('Verified Ticket',1000,IteratorStatus.good);
       }, (e: HttpErrorResponse) =>
       {
         const dialogRef = this.dialog.open(VerifyDialog);

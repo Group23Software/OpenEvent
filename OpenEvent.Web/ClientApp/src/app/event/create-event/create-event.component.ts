@@ -29,7 +29,6 @@ export class CreateEventComponent implements OnInit
     return this.userService.User?.BankAccounts?.length > 0
   }
 
-  public categories: Category[] = [];
   public thumbnail: ImageViewModel;
   public minDate: Date;
   public defaultTime: number[];
@@ -44,6 +43,7 @@ export class CreateEventComponent implements OnInit
     Description: new FormControl('', [Validators.required]),
     Price: new FormControl(10, [Validators.required]),
     NumberOfTickets: new FormControl(10, [Validators.required]),
+    Categories: new FormControl('', [Validators.required])
   });
 
   public DateForm = new FormGroup({
@@ -53,14 +53,16 @@ export class CreateEventComponent implements OnInit
 
   public IsOnline = new FormControl(false);
 
-  public addressForm = new FormGroup({
-    AddressLine1: new FormControl('', [Validators.required]),
-    AddressLine2: new FormControl(''),
-    City: new FormControl('', [Validators.required]),
-    PostalCode: new FormControl('', [Validators.required, Validators.pattern('([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})')]),
-    CountryCode: new FormControl('GB'),
-    CountryName: new FormControl('United Kingdom'),
-  });
+  // public addressForm = new FormGroup({
+  //   AddressLine1: new FormControl('', [Validators.required]),
+  //   AddressLine2: new FormControl(''),
+  //   City: new FormControl('', [Validators.required]),
+  //   PostalCode: new FormControl('', [Validators.required, Validators.pattern('([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})')]),
+  //   CountryCode: new FormControl('GB'),
+  //   CountryName: new FormControl('United Kingdom'),
+  // });
+
+  public addressForm = new FormControl();
 
   public SocialLinks = new FormGroup({
     Site: new FormControl(''),
@@ -92,6 +94,7 @@ export class CreateEventComponent implements OnInit
       Source: testImg
     }
   ];
+  markdown: string;
 
 
   constructor (private dialog: MatDialog, private userService: UserService, private eventService: EventService, private router: Router)
@@ -103,8 +106,10 @@ export class CreateEventComponent implements OnInit
   ngOnInit ()
   {
     this.loading = true;
-    let subs = [this.userService.NeedAccountUser(),this.eventService.GetAllCategories().pipe(map(x => this.categoryStore = x))];
-    forkJoin(subs).subscribe(value => {}, (e: HttpErrorResponse) => this.getError = e.error.Message, () => this.loading = false);
+    let subs = [this.userService.NeedAccountUser(), this.eventService.GetAllCategories().pipe(map(x => this.categoryStore = x))];
+    forkJoin(subs).subscribe(value =>
+    {
+    }, (e: HttpErrorResponse) => this.getError = e.error.Message, () => this.loading = false);
   }
 
   loadEventDate (event: StepperSelectionEvent)
@@ -113,15 +118,8 @@ export class CreateEventComponent implements OnInit
     {
       console.log('updating preview data');
       this.eventPreview = {
-        Address: {
-          AddressLine1: this.addressForm.controls.AddressLine1.value,
-          AddressLine2: this.addressForm.controls.AddressLine2.value,
-          City: this.addressForm.controls.City.value,
-          CountryCode: this.addressForm.controls.CountryCode.value,
-          CountryName: this.addressForm.controls.CountryName.value,
-          PostalCode: this.addressForm.controls.PostalCode.value
-        },
-        Categories: this.categories,
+        Address: this.addressForm.value,
+        Categories: this.createEventForm.controls.Categories.value,
         Description: this.createEventForm.controls.Description.value,
         EndLocal: this.DateForm.controls.EndLocal.value,
         EndUTC: undefined,
@@ -147,20 +145,7 @@ export class CreateEventComponent implements OnInit
 
   public clickedOnline ()
   {
-    if (!this.IsOnline.value)
-    {
-      for (let control in this.addressForm.controls)
-      {
-        this.addressForm.controls[control].disable();
-      }
-    } else
-    {
-      for (let control in this.addressForm.controls)
-      {
-        this.addressForm.controls[control].enable();
-      }
-    }
-
+    this.IsOnline.value ? this.addressForm.disable() : this.addressForm.enable();
   }
 
   create ()
@@ -170,15 +155,8 @@ export class CreateEventComponent implements OnInit
     console.log(this.DateForm);
 
     let createEventBody: CreateEventBody = {
-      Address: {
-        AddressLine1: this.addressForm.controls.AddressLine1.value,
-        AddressLine2: this.addressForm.controls.AddressLine2.value,
-        City: this.addressForm.controls.City.value,
-        CountryCode: this.addressForm.controls.CountryCode.value,
-        CountryName: this.addressForm.controls.CountryName.value,
-        PostalCode: this.addressForm.controls.PostalCode.value
-      },
-      Categories: this.categories,
+      Address: this.addressForm.value,
+      Categories: this.createEventForm.controls.Categories.value,
       Description: this.createEventForm.controls.Description.value,
       EndLocal: this.DateForm.controls.EndLocal.value,
       HostId: this.userService.User.Id,
@@ -197,6 +175,10 @@ export class CreateEventComponent implements OnInit
       StartLocal: this.DateForm.controls.StartLocal.value,
       Thumbnail: this.thumbnail
     }
+
+    createEventBody.Address.Lon = 0;
+    createEventBody.Address.Lat = 0;
+
     console.log(createEventBody);
 
     this.eventService.Create(createEventBody).subscribe(response =>

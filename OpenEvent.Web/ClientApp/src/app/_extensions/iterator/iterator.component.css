@@ -1,0 +1,46 @@
+/*:host {*/
+/*  position: absolute;*/
+/*  z-index: 9999;*/
+/*}*/
+
+#iterator {
+  /*position: absolute;*/
+  /*top: 74px;*/
+  /*right: 10px;*/
+  /*z-index: 999;*/
+  background-color: white;
+
+  animation: 200ms linear 0s 1 slideInFromRight;
+
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  max-width: 400px;
+
+  border-radius: 2px;
+
+  border-left-style: solid;
+  border-left-color: black;
+}
+
+#iterator > div {
+  margin: 0.25rem 1rem;
+  flex-wrap: wrap;
+  overflow-wrap: break-word;
+}
+
+#iterator > button {
+  width: fit-content;
+  margin-left: auto;
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

@@ -52,7 +52,8 @@ let eventPaths: ApiEventPaths = {
   Cancel: '',
   Search: '',
   Explore: '',
-  Analytics: ''
+  Analytics: '',
+  DownVote: ''
 }
 
 eventPaths = {
@@ -66,7 +67,8 @@ eventPaths = {
   Cancel: eventPaths.BasePath + '/cancel',
   Search: eventPaths.BasePath + '/search',
   Explore: eventPaths.BasePath + '/explore',
-  Analytics: eventPaths.BasePath + '/analytics'
+  Analytics: eventPaths.BasePath + '/analytics',
+  DownVote: eventPaths.BasePath + '/downvote'
 }
 
 let paymentPaths: ApiPaymentPaths = {
@@ -158,6 +160,7 @@ interface ApiEventPaths
   readonly Search: string;
   readonly Explore: string;
   readonly Analytics: string;
+  readonly DownVote: string;
 }
 
 interface ApiPaymentPaths

@@ -29,3 +29,19 @@ mat-card {
   flex: 1;
   font-size: xx-large;
 }
+
+#description {
+  width: 49%;
+  height: 100%;
+  margin-right: 1rem;
+}
+
+markdown {
+  margin-top: 4px;
+  margin-bottom: 25.5px;
+  padding: 1rem;
+  border: solid #dee1e4 1px;
+  border-radius: 6px;
+  /*width: 100%;*/
+  flex: 1;
+}

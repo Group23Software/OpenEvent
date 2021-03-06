@@ -4,9 +4,10 @@ import {CreateTokenIbanData, StripeIbanElementChangeEvent, StripeIbanElementOpti
 import {UserService} from "../../_Services/user.service";
 import {BankingService, StripeFilePurpose} from "../../_Services/banking.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {Signal} from "../../signal/Signal";
 import {Balance} from "../../_models/BankAccount";
+import {TriggerService} from "../../_Services/trigger.service";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 @Component({
   selector: 'bank-account',
@@ -84,7 +85,7 @@ export class BankAccountComponent implements OnInit
     return this.userService.User?.StripeAccountInfo?.Requirements?.disabled_reason;
   }
 
-  constructor (private stripeService: StripeService, private userService: UserService, private bankingService: BankingService, private snackBar: MatSnackBar)
+  constructor (private stripeService: StripeService, private userService: UserService, private bankingService: BankingService, private trigger: TriggerService)
   {
   }
 
@@ -122,7 +123,7 @@ export class BankAccountComponent implements OnInit
           UserId: this.userService.User.Id
         }).subscribe(() =>
         {
-          this.snackBar.open('Added bank account', 'close', {duration: 500});
+          this.trigger.Iterate('Added bank account',500,IteratorStatus.good);
           this.addBankAccountLoading = false;
         }, (e: HttpErrorResponse) =>
         {
@@ -145,7 +146,7 @@ export class BankAccountComponent implements OnInit
       UserId: this.userService.User.Id
     }).subscribe(response =>
     {
-      this.snackBar.open('Removed bank account', 'close', {duration: 500});
+      this.trigger.Iterate('Removed bank account',500,IteratorStatus.good);
       this.addBankAccountLoading = false;
     }, (e: HttpErrorResponse) =>
     {
@@ -166,7 +167,7 @@ export class BankAccountComponent implements OnInit
         if (a)
         {
           this.documentLoading = false;
-          this.snackBar.open('Uploaded Identity Document ', 'close', {duration: 500});
+          this.trigger.Iterate('Uploaded Identity Document',500,IteratorStatus.good)
           if (this.userService.User?.StripeAccountInfo?.Requirements) this.userService.User.StripeAccountInfo.Requirements.currently_due = this.userService.User.StripeAccountInfo.Requirements?.currently_due.filter(x => x != 'individual.verification.document')
         }
       }, (e: HttpErrorResponse) =>
@@ -174,7 +175,8 @@ export class BankAccountComponent implements OnInit
         this.documentLoading = false;
         this.documentError = e.error.Message;
       });
-    }, (e: HttpErrorResponse) => {
+    }, (e: HttpErrorResponse) =>
+    {
       this.documentLoading = false;
       this.documentError = e.error.Message;
     });
@@ -192,7 +194,7 @@ export class BankAccountComponent implements OnInit
         if (a)
         {
           this.documentLoading = false;
-          this.snackBar.open('Uploaded Additional Identity Document ', 'close', {duration: 500});
+          this.trigger.Iterate('Uploaded Additional Identity Document',500,IteratorStatus.good);
           if (this.userService.User?.StripeAccountInfo?.Requirements) this.userService.User.StripeAccountInfo.Requirements.currently_due = this.userService.User.StripeAccountInfo.Requirements?.currently_due.filter(x => x != 'individual.verification.additional_document')
         }
       }, (e: HttpErrorResponse) =>
@@ -200,7 +202,8 @@ export class BankAccountComponent implements OnInit
         this.documentLoading = false;
         this.documentError = e.error.Message;
       });
-    }, (e: HttpErrorResponse) => {
+    }, (e: HttpErrorResponse) =>
+    {
       this.documentLoading = false;
       this.documentError = e.error.Message;
     });

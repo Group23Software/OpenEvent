@@ -7,10 +7,10 @@ import {UserValidatorsService} from "../../_Services/user-validators.service";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {AuthService} from "../../_Services/auth.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload/image-upload.component";
-import {Address} from "../../_models/Address";
+import {TriggerService} from "../../_Services/trigger.service";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 @Component({
   selector: 'account-preferences',
@@ -53,7 +53,10 @@ export class AccountPreferencesComponent implements OnInit
     password: new FormControl('', [Validators.required]),
     passwordConfirm: new FormControl('', [Validators.required, this.userValidators.matches('password')])
   });
+
   public userName = new FormControl('', [Validators.required], [this.userValidators.usernameValidator()]);
+
+  public newAddressForm = new FormControl('', [Validators.required]);
 
   constructor (
     private userService: UserService,
@@ -61,7 +64,7 @@ export class AccountPreferencesComponent implements OnInit
     private dialog: MatDialog,
     private router: Router,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private trigger: TriggerService
   )
   {
   }
@@ -80,7 +83,7 @@ export class AccountPreferencesComponent implements OnInit
     }).subscribe(response =>
     {
       this.updatePasswordLoading = false;
-      this.snackBar.open('Updated password', 'close', {duration: 500})
+      this.trigger.Iterate('Updated password',500,IteratorStatus.good);
     }, (error: HttpErrorResponse) =>
     {
       this.updatePasswordLoading = false;
@@ -122,7 +125,7 @@ export class AccountPreferencesComponent implements OnInit
     this.userService.UpdateUserName({Id: this.user.Id, UserName: this.username.value}).subscribe(response =>
     {
       this.updateUserNameLoading = false;
-      this.snackBar.open('Updated username', 'close', {duration: 500});
+      this.trigger.Iterate('Updated username', 500, IteratorStatus.good);
     }, (error: HttpErrorResponse) =>
     {
       this.updateUserNameLoading = false;
@@ -154,7 +157,7 @@ export class AccountPreferencesComponent implements OnInit
         }).subscribe(response =>
         {
           this.avatarFileName = null;
-          this.snackBar.open('Updated avatar', 'close', {duration: 500});
+          this.trigger.Iterate('Updated avatar',500,IteratorStatus.good);
           this.updateAvatarLoading = false;
         }, (error: HttpErrorResponse) =>
         {
@@ -166,11 +169,11 @@ export class AccountPreferencesComponent implements OnInit
     });
   }
 
-  public newAddress (address: Address)
+  public newAddress ()
   {
-    this.userService.UpdateAddress({Id: this.user.Id, Address: address}).subscribe(x =>
+    this.userService.UpdateAddress({Id: this.user.Id, Address: this.newAddressForm.value}).subscribe(x =>
     {
-      this.snackBar.open('Updated Address', 'close', {duration: 500})
+      this.trigger.Iterate('Updated address',500,IteratorStatus.good);
     }, (e: HttpErrorResponse) => {
       console.error(e);
       this.newAddressError = e.error.Message;

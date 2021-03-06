@@ -19,11 +19,6 @@
           <input matInput type="text" [formControl]="Name" placeholder="Event name" autocomplete="off">
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Description</mat-label>
-          <textarea rows="8" matInput [formControl]="Description" placeholder="Event description" autocomplete="off"></textarea>
-        </mat-form-field>
-
         <div class="d-flex flex-row">
           <mat-form-field appearance="outline" class="w-100 mr-3">
             <mat-label>Start date</mat-label>
@@ -38,6 +33,19 @@
             <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
             <ngx-mat-datetime-picker #endPicker [stepHour]="1" [stepMinute]="1" [stepSecond]="0"></ngx-mat-datetime-picker>
           </mat-form-field>
+        </div>
+
+<!--        <mat-form-field appearance="outline">-->
+<!--          <mat-label>Description</mat-label>-->
+<!--          <textarea rows="8" matInput [formControl]="Description" placeholder="Event description" autocomplete="off"></textarea>-->
+<!--        </mat-form-field>-->
+
+        <div class="d-flex flex-row">
+          <mat-form-field appearance="outline" id="description">
+            <mat-label>Description</mat-label>
+            <textarea matInput mat-autosize cdkTextareaAutosize cdkAutosizeMinRows="20" [formControl]="Description" placeholder="Event description" autocomplete="off"></textarea>
+          </mat-form-field>
+          <markdown [data]="Description.value" ngPreserveWhitespaces></markdown>
         </div>
 
         <mat-accordion>

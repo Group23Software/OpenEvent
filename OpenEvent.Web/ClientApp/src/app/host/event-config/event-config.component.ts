@@ -6,8 +6,9 @@ import {EventService} from "../../_Services/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Category} from "../../_models/Category";
 import {SocialMedia} from "../../_models/SocialMedia";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {EventAnalytics} from "../../_models/Analytic";
+import {TriggerService} from "../../_Services/trigger.service";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 @Component({
   selector: 'app-event-config',
@@ -50,9 +51,10 @@ export class EventConfigComponent implements OnInit
   public gettingCategoriesError: string;
   public minDate: Date;
   public loading: boolean = true;
+  markdown: string;
 
 
-  constructor (private route: ActivatedRoute, private eventService: EventService, private snackBar: MatSnackBar)
+  constructor (private route: ActivatedRoute, private eventService: EventService, private trigger: TriggerService)
   {
     this.minDate = new Date();
   }
@@ -171,7 +173,7 @@ export class EventConfigComponent implements OnInit
     this.eventService.Update(updateEvent).subscribe(response =>
     {
       this.updatingEvent = false;
-      this.snackBar.open('Updated event', 'close', {duration: 500});
+      this.trigger.Iterate('Updated event',500,IteratorStatus.good);
     }, (e: HttpErrorResponse) =>
     {
       this.updatingEvent = false;

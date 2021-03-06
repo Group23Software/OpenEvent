@@ -1,16 +1,37 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR, ValidationErrors, Validator,
+  Validators
+} from "@angular/forms";
 import {Address} from "../_models/Address";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'address-form',
   templateUrl: './address-form.component.html',
-  styleUrls: ['./address-form.component.css']
+  styleUrls: ['./address-form.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: AddressFormComponent
+    },
+    {
+      provide: NG_VALIDATORS,
+      multi: true,
+      useExisting: AddressFormComponent
+    },
+  ]
 })
-export class AddressFormComponent implements OnInit
+export class AddressFormComponent implements ControlValueAccessor, OnDestroy, Validator, OnInit
 {
   @Input() Address: Address;
-  @Input() Disabled: boolean = false;
+  // @Input() Disabled: boolean = false;
   @Output() SubmitEvent: EventEmitter<Address> = new EventEmitter<Address>();
 
   public addressForm = new FormGroup({
@@ -24,23 +45,22 @@ export class AddressFormComponent implements OnInit
     Lon: new FormControl()
   });
 
+  addressChangeSubscriptions: Subscription[] = [];
+
+  onTouched = () => {};
+
+  touched = false;
+
   constructor ()
   {
   }
 
   ngOnInit (): void
   {
-    if (this.Disabled)
-    {
-      for (let control in this.addressForm.controls)
-      {
-        this.addressForm.controls[control].disable();
-      }
-    }
-
     if (this.Address)
     {
       this.addressForm.setValue(this.Address);
+      this.addressForm.disable();
     }
   }
 
@@ -56,5 +76,38 @@ export class AddressFormComponent implements OnInit
       Lon: this.addressForm.controls.Lon.value,
       Lat: this.addressForm.controls.Lat.value
     } as Address)
+  }
+
+  ngOnDestroy() {
+    for (let sub of this.addressChangeSubscriptions) {
+      sub.unsubscribe();
+    }
+  }
+
+  registerOnChange (fn: any): void
+  {
+    this.addressChangeSubscriptions.push(this.addressForm.valueChanges.subscribe(fn));
+  }
+
+  registerOnTouched (fn: any): void
+  {
+    this.onTouched = fn;
+  }
+
+  setDisabledState (isDisabled: boolean): void
+  {
+    if (isDisabled) this.addressForm.enable();
+    else this.addressForm.disable();
+  }
+
+  writeValue (address: Address): void
+  {
+    if (address) this.addressForm.setValue(address);
+  }
+
+  validate (control: AbstractControl): ValidationErrors | null
+  {
+   if (this.addressForm.valid) return null;
+   return {'required': true};
   }
 }

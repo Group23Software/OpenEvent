@@ -2,9 +2,8 @@ import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {UserService} from "../../_Services/user.service";
 import {TriggerService} from "../../_Services/trigger.service";
-import {HttpErrorResponse} from "@angular/common/http";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {Location} from "@angular/common";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 @Component({
   selector: 'user-nav',
@@ -19,7 +18,6 @@ export class UserNavComponent
     private userService: UserService,
     private router: Router,
     private trigger: TriggerService,
-    private snackBar: MatSnackBar,
     private location: Location)
   {
     trigger.loading.subscribe(loading => this.loading = loading);
@@ -49,10 +47,7 @@ export class UserNavComponent
       IsDarkMode: !isDark
     }).subscribe(response =>
     {
-      this.snackBar.open('Updated theme preference', 'close', {duration: 500});
-    }, (error: HttpErrorResponse) =>
-    {
-      this.snackBar.open(error.error.Message, 'close', {duration: 1000})
+      this.trigger.Iterate('Updated theme preference',500,IteratorStatus.good)
     });
   }
 

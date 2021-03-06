@@ -21,11 +21,13 @@ namespace OpenEvent.Web.Controllers
     {
         private readonly IEventService EventService;
         private readonly ILogger<EventController> Logger;
+        private readonly IRecommendationService RecommendationService;
 
-        public EventController(IEventService eventService, ILogger<EventController> logger)
+        public EventController(IEventService eventService, ILogger<EventController> logger, IRecommendationService recommendationService)
         {
             EventService = eventService;
             Logger = logger;
+            RecommendationService = recommendationService;
         }
 
         /// <summary>
@@ -203,5 +205,13 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             } 
         }
+
+        [HttpPost("downvote")]
+        public async Task<ActionResult> DownVote(Guid userId, Guid eventId)
+        {
+            RecommendationService.Influence(userId,eventId,Influence.DownVote);
+            return Ok();
+        }
+        
     }
 }

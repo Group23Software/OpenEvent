@@ -17,7 +17,8 @@ namespace OpenEvent.Web.Services
         PageView = 200,
         Search = 100,
         Purchase = 500,
-        Verify = 400
+        Verify = 400,
+        DownVote = -100
     }
 
     public interface IRecommendationService

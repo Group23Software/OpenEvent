@@ -1,6 +1,6 @@
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {EventService} from "../_Services/event.service";
-import {Category, CategoryViewModel} from "../_models/Category";
+import {Category} from "../_models/Category";
 import {InOutAnimation} from "../_extensions/animations";
 import {map} from "rxjs/operators";
 import {EventViewModel, SearchParam} from "../_models/Event";
@@ -8,6 +8,8 @@ import {forkJoin} from "rxjs";
 import {UserService} from "../_Services/user.service";
 import {MatChip, MatChipList} from "@angular/material/chips";
 import {HttpErrorResponse} from "@angular/common/http";
+import {TriggerService} from "../_Services/trigger.service";
+import {IteratorStatus} from "../_extensions/iterator/iterator.component";
 
 @Component({
   selector: 'app-explore',
@@ -31,7 +33,7 @@ export class ExploreComponent implements OnInit
     return new Array<number>(10);
   }
 
-  constructor (private eventService: EventService, private userService: UserService)
+  constructor (private eventService: EventService, private userService: UserService, private trigger: TriggerService)
   {
   }
 
@@ -41,7 +43,11 @@ export class ExploreComponent implements OnInit
       this.eventService.GetAllCategories().pipe(map(categories => this.Categories = categories)),
       this.eventService.Explore().pipe(map(events => this.Events = events))
     ];
-    forkJoin(subs).subscribe(x => console.log("explore data loaded", x, (e: HttpErrorResponse) => this.Error = e.message));
+    forkJoin(subs).subscribe(x => {
+      console.log("explore data loaded", x);
+      this.trigger.Iterate(null);
+      this.trigger.IterateForever(null, IteratorStatus.bad);
+    }, (e: HttpErrorResponse) => this.Error = e.message);
     // this.eventService.GetAllCategories().subscribe(x => this.Categories = x);
     // this.eventService.Explore().subscribe(x => this.Events = x);
   }

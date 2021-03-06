@@ -75,7 +75,7 @@ import {ReuseRouteReuseStrategy} from "./_extensions/ReuseRouteReuseStrategy";
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     {provide: RouteReuseStrategy, useClass: ReuseRouteReuseStrategy}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule
 {

@@ -8,8 +8,10 @@
   <mat-divider [inset]="inset"></mat-divider>
 </div>
 <mat-chip-list>
-  <mat-chip *ngFor="let category of categories" [@inOutAnimation]>
+    <mat-chip *ngFor="let category of categories" [@inOutAnimation]>
     {{category.Name}}
     <mat-icon matChipRemove id="add" (click)="addCategory(category)">add</mat-icon>
   </mat-chip>
 </mat-chip-list>
+
+<!--<mat-error>You have to select at least one category</mat-error>-->

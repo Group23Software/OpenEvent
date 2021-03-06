@@ -53,7 +53,8 @@
           <mat-card-title>Address</mat-card-title>
           <mat-card-subtitle>Billing address</mat-card-subtitle>
         </mat-card-header>
-        <address-form (SubmitEvent)="newAddress($event)" [Address]="user.Address" [Disabled]="user.Address != null"></address-form>
+        <address-form [Address]="user.Address" [formControl]="newAddressForm"></address-form>
+        <button [disabled]="newAddressForm.invalid" (click)="newAddress()" mat-flat-button color="accent" style="width: fit-content">Submit</button>
       </mat-card>
     </div>
 

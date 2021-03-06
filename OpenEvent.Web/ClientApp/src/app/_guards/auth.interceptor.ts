@@ -12,6 +12,7 @@ import {AuthService} from "../_Services/auth.service";
 import {catchError, map} from "rxjs/operators";
 import {TriggerService} from "../_Services/trigger.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {IteratorStatus} from "../_extensions/iterator/iterator.component";
 
 @Injectable({
   providedIn: 'root'
@@ -49,11 +50,7 @@ export class AuthInterceptor implements HttpInterceptor
       {
         console.log("there was an error response");
         this.trigger.loading.emit(false);
-        this.snackBar.open(error.message, 'close', {
-          duration: 1500,
-          horizontalPosition: 'right',
-          verticalPosition: 'top'
-        });
+        this.trigger.IterateForever(error.message,IteratorStatus.bad);
         return throwError(error);
       }));
   }

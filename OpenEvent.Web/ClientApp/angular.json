@@ -28,6 +28,9 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css",
               "node_modules/flag-icon-css/css/flag-icon.min.css"
+            ],
+            "scripts": [
+              "node_modules/marked/lib/marked.js"
             ]
           },
           "configurations": {

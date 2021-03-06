@@ -33,7 +33,7 @@ import {RouterModule} from "@angular/router";
 import {EventComponent} from "./event/event/event.component";
 import {MatListModule} from "@angular/material/list";
 import {MatExpansionModule} from "@angular/material/expansion";
-import {DomSanitizer, platformBrowser} from "@angular/platform-browser";
+import {DomSanitizer} from "@angular/platform-browser";
 import {MatSelectModule} from "@angular/material/select";
 import {CategoryListComponent} from './category-list/category-list.component';
 import {ImageListComponent} from './image-list/image-list.component';
@@ -47,6 +47,8 @@ import {AngularFittextModule} from "angular-fittext";
 import { TicketPurchaseDialogComponent } from './ticket/ticket-purchase-dialog/ticket-purchase-dialog.component';
 import {VirtualCardComponent} from "./account/payment-methods/virtual-card/virtual-card.component";
 import {MatTableModule} from "@angular/material/table";
+import {MarkdownModule} from "ngx-markdown";
+import { IteratorComponent } from './_extensions/iterator/iterator.component';
 
 
 @NgModule({
@@ -61,7 +63,8 @@ import {MatTableModule} from "@angular/material/table";
     AddressFormComponent,
     SignalComponent,
     TicketPurchaseDialogComponent,
-    VirtualCardComponent
+    VirtualCardComponent,
+    IteratorComponent
   ],
   imports: [
     HttpClientModule,
@@ -105,7 +108,8 @@ import {MatTableModule} from "@angular/material/table";
     GalleryModule,
     AngularFittextModule,
     // MatTableModule
-    MatSelectModule
+    MatSelectModule,
+    MarkdownModule.forRoot(),
   ],
   exports: [
 
@@ -161,6 +165,7 @@ import {MatTableModule} from "@angular/material/table";
     AngularFittextModule,
     VirtualCardComponent,
     // MatTableModule
+    MarkdownModule,
   ]
 })
 export class SharedModule

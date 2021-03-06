@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {EventViewModel} from "../../_models/Event";
 import {Router} from "@angular/router";
+import {EventService} from "../../_Services/event.service";
 
 @Component({
   selector: 'event-preview',
@@ -11,7 +12,7 @@ export class EventPreviewComponent implements OnInit
 {
   @Input() event: EventViewModel;
 
-  constructor (private router: Router)
+  constructor (private router: Router, private eventService: EventService)
   {
   }
 
@@ -22,5 +23,11 @@ export class EventPreviewComponent implements OnInit
   public navigateToEvent ()
   {
     this.router.navigate(['/event',this.event.Id]);
+  }
+
+  downVote ()
+  {
+    console.log("down voting", this.event);
+    this.eventService.DownVote(this.event.Id).subscribe();
   }
 }
