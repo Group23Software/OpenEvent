@@ -7,11 +7,9 @@
   </div>
 
   <mat-horizontal-stepper [linear]="true">
-    <mat-step [completed]="false">
-      <ng-template matStepLabel>Payment Method</ng-template>
+    <mat-step [completed]="false" fxLayout="column" label="Payment Method">
 
-      <mat-card>
-
+      <div class="d-flex flex-column w-100">
         <mat-form-field appearance="outline">
           <mat-label>Cards</mat-label>
           <mat-select required [(value)]="currentCard" (selectionChange)="currentCard = $event.value">
@@ -20,56 +18,48 @@
         </mat-form-field>
 
         <virtual-card [ShowActions]="false" *ngIf="currentCard" [Card]="currentCard"></virtual-card>
-      </mat-card>
 
-      <button mat-flat-button color="accent" *ngIf="!injectingPaymentMethod" (click)="inject()">Use this card</button>
+        <button mat-flat-button color="accent" [disabled]="loading" (click)="inject()">Use this card</button>
 
-      <mat-card *ngIf="injectingPaymentMethod">
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-      </mat-card>
-
-      <mat-error>{{injectPaymentMethodError}}</mat-error>
-
-    </mat-step>
-    <mat-step>
-      <ng-template matStepLabel>Confirm</ng-template>
-
-      <div>
-        <div class="d-flex flex-row justify-content-between">
-          <div>1 * {{Event.Name}} ticket(s)</div>
-          <div>{{Transaction.Amount / 100 | currency:'GBP'}}</div>
-        </div>
-        <mat-divider></mat-divider>
-        <div class="d-flex flex-row justify-content-between">
-          <div>Service fee (10%)</div>
-          <div>£{{(Transaction.Amount * 0.1) / 100}}</div>
-        </div>
-        <div class="d-flex flex-row justify-content-between">
-          <div>What the event gets</div>
-          <div>{{(Transaction.Amount / 100) * 0.9 | currency: 'GBP':true:'1.2-2'}}</div>
-        </div>
+        <mat-error>{{injectPaymentMethodError}}</mat-error>
       </div>
-
-      <button mat-flat-button color="accent" *ngIf="!confirmingTicket" (click)="confirm()">Confirm</button>
-
-      <mat-card *ngIf="confirmingTicket">
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-      </mat-card>
-
-      <mat-error>{{confirmIntentError}}</mat-error>
-
     </mat-step>
-    <mat-step [editable]="false">
-      <ng-template matStepLabel>Result</ng-template>
+    <mat-step fxLayout="column" label="Confirm">
 
-      <div *ngIf="ticketPurchased">
-        <div class="mat-title">Ticket Purchased</div>
-        <div class="mat-caption">You will recive an email confirmaion in a bit</div>
-        <mat-dialog-actions>
-          <button matDialogClose="close" mat-flat-button color="primary">Close</button>
-        </mat-dialog-actions>
+      <div class="d-flex flex-column w-100">
+        <div class="mb-3">
+          <div class="d-flex flex-row justify-content-between">
+            <div>1 * {{Event.Name}} ticket(s)</div>
+            <div>{{Transaction.Amount / 100 | currency:'GBP'}}</div>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="d-flex flex-row justify-content-between">
+            <div>Service fee (10%)</div>
+            <div>£{{(Transaction.Amount * 0.1) / 100}}</div>
+          </div>
+          <div class="d-flex flex-row justify-content-between">
+            <div>What the event gets</div>
+            <div>{{(Transaction.Amount / 100) * 0.9 | currency: 'GBP':true:'1.2-2'}}</div>
+          </div>
+        </div>
+
+        <button mat-flat-button color="accent" [disabled]="loading" (click)="confirm()">Confirm</button>
+
+        <mat-error>{{confirmIntentError}}</mat-error>
+      </div>
+    </mat-step>
+    <mat-step [editable]="false" fxLayout="column" label="Result">
+      <div class="d-flex flex-column w-100">
+        <div *ngIf="ticketPurchased">
+          <div class="mat-title">Ticket Purchased</div>
+          <div class="mat-caption">You will recive an email confirmaion in a bit</div>
+          <mat-dialog-actions>
+            <button matDialogClose="close" mat-flat-button color="primary">Close</button>
+          </mat-dialog-actions>
+        </div>
       </div>
     </mat-step>
   </mat-horizontal-stepper>
 
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 </div>

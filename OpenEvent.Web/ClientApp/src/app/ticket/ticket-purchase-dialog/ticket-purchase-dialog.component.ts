@@ -6,6 +6,7 @@ import {UserService} from "../../_Services/user.service";
 import {TransactionService} from "../../_Services/transaction.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MatStepper} from "@angular/material/stepper";
+import {StripeService} from "ngx-stripe";
 
 export interface TicketPurchaseDialogData
 {
@@ -32,8 +33,9 @@ export class TicketPurchaseDialogComponent implements OnInit
   confirmingTicket: boolean = false;
 
   ticketPurchased: boolean = false;
+  loading: boolean = false;
 
-  get UsersCards()
+  get UsersCards ()
   {
     return this.userService.User?.PaymentMethods;
   }
@@ -43,11 +45,12 @@ export class TicketPurchaseDialogComponent implements OnInit
     return this.data.Event;
   }
 
-  get Transaction() {
+  get Transaction ()
+  {
     return this.transactionService.CurrentTransaction;
   }
 
-  constructor (@Inject(MAT_DIALOG_DATA) public data: TicketPurchaseDialogData, private userService: UserService, private transactionService: TransactionService, private dialog: MatDialogRef<TicketPurchaseDialogComponent>)
+  constructor (@Inject(MAT_DIALOG_DATA) public data: TicketPurchaseDialogData, private userService: UserService, private transactionService: TransactionService, private dialog: MatDialogRef<TicketPurchaseDialogComponent>, private stripeService: StripeService)
   {
   }
 
@@ -75,30 +78,44 @@ export class TicketPurchaseDialogComponent implements OnInit
 
   public confirm (): void
   {
-    this.confirmingTicket = true;
+    this.loading = true;
     this.transactionService.ConfirmIntent({
       IntentId: this.transactionService.CurrentTransaction.StripeIntentId,
       UserId: this.userService.User.Id
     }).subscribe(i =>
     {
-      this.confirmingTicket = false;
-      this.dialog.disableClose = true;
-      this.ticketPurchased = true;
-      this.stepper.next();
-      this.stepper.steps.forEach(x => {
-        x.completed = true;
-        x.editable = false;
-      });
+      if (i.Status == 'requires_action')
+      {
+        console.log('requires action', i);
+        this.stripeService.handleCardAction(this.transactionService.TransactionSecret).subscribe(value =>
+        {
+          this.confirm();
+        });
+      } else
+      {
+        this.finishConfirmation();
+      }
     }, (e: HttpErrorResponse) =>
     {
       this.confirmIntentError = e.error.Message;
-      this.confirmingTicket = false;
+    }, () => this.loading = false);
+  }
+
+  private finishConfirmation ()
+  {
+    this.dialog.disableClose = true;
+    this.ticketPurchased = true;
+    this.stepper.next();
+    this.stepper.steps.forEach(x =>
+    {
+      x.completed = true;
+      x.editable = false;
     });
   }
 
   public inject (): void
   {
-    this.injectingPaymentMethod = true;
+    this.loading = true;
     this.transactionService.InjectPaymentMethod({
       UserId: this.userService.User.Id,
       IntentId: this.transactionService.CurrentTransaction.StripeIntentId,
@@ -108,6 +125,6 @@ export class TicketPurchaseDialogComponent implements OnInit
       this.stepper.steps.first.completed = true;
       this.stepper.next();
       this.stepper.steps.first.editable = false;
-    }, (e: HttpErrorResponse) => this.injectPaymentMethodError = e.message, () => this.injectingPaymentMethod = false);
+    }, (e: HttpErrorResponse) => this.injectPaymentMethodError = e.message, () => this.loading = false);
   }
 }

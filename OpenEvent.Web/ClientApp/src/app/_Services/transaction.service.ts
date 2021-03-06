@@ -22,6 +22,13 @@ export class TransactionService
 
   private currentTransaction: TransactionViewModel;
 
+  private transactionSecret: string;
+
+  get TransactionSecret () : string
+  {
+    return this.transactionSecret;
+  }
+
   get CurrentTransaction ()
   {
     return this.currentTransaction;
@@ -36,6 +43,8 @@ export class TransactionService
   {
     return this.http.post<TransactionViewModel>(this.BaseUrl + TransactionPaths.CreateIntent, createIntentBody).pipe(tap(t =>
     {
+      this.transactionSecret = t.ClientSecret;
+      t.ClientSecret = null;
       this.currentTransaction = t;
       this.cookieService.set('indent', t.StripeIntentId, new Date(new Date().getTime() + (20 * 60000)));
     }));

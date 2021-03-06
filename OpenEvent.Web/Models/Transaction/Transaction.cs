@@ -1,7 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.User;
+using Stripe;
 
 namespace OpenEvent.Web.Models.Transaction
 {
@@ -22,6 +24,8 @@ namespace OpenEvent.Web.Models.Transaction
         public Guid TicketId { get; set; }
         public Ticket.Ticket Ticket { get; set; }
         public Event.Event Event { get; set; }
+        
+        [NotMapped] public string ClientSecret { get; set; }
     }
 
     public class TransactionViewModel
@@ -34,5 +38,6 @@ namespace OpenEvent.Web.Models.Transaction
         public bool Paid { get; set; }
         public PaymentStatus Status { get; set; }
         public Guid TicketId { get; set; }
+        public string ClientSecret { get; set; }
     }
 }

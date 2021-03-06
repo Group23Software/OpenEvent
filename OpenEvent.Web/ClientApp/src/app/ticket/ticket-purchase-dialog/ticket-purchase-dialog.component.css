@@ -4,3 +4,11 @@ mat-card {
 #loadingBar {
   width: 70vw;
 }
+mat-horizontal-stepper  button {
+  width: fit-content;
+  margin-left: auto;
+}
+
+virtual-card {
+  margin-bottom: 1rem;
+}

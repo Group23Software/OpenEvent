@@ -16,6 +16,8 @@ export interface TransactionViewModel
   Paid: boolean;
   Status: string;
   TicketId: string;
+  NextAction: any;
+  ClientSecret?: string;
 }
 
 export interface InjectPaymentMethodBody

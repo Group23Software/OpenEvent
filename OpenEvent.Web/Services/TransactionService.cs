@@ -89,7 +89,7 @@ namespace OpenEvent.Web.Services
                 Currency = "gbp",
                 OnBehalfOf = e.Host.StripeAccountId,
                 Customer = user.StripeCustomerId,
-                ConfirmationMethod = "automatic",
+                ConfirmationMethod = "manual",
                 ApplicationFeeAmount = 10,
                 TransferData = new PaymentIntentTransferDataOptions()
                 {
@@ -102,7 +102,7 @@ namespace OpenEvent.Web.Services
                 Metadata = new Dictionary<string, string>()
                 {
                     {"EventId", e.Id.ToString()}
-                }
+                },
             };
 
             var service = new PaymentIntentService();
@@ -130,7 +130,8 @@ namespace OpenEvent.Web.Services
                     Updated = DateTime.Now,
                     Status = Enum.Parse<PaymentStatus>(intent.Status, true),
                     Ticket = ticket,
-                    Event = e
+                    Event = e,
+                    ClientSecret = intent.ClientSecret
                 };
 
                 await ApplicationContext.Transactions.AddAsync(transaction);
