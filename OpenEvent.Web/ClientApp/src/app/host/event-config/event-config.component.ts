@@ -173,7 +173,7 @@ export class EventConfigComponent implements OnInit
     this.eventService.Update(updateEvent).subscribe(response =>
     {
       this.updatingEvent = false;
-      this.trigger.Iterate('Updated event',500,IteratorStatus.good);
+      this.trigger.Iterate('Updated event',1000,IteratorStatus.good);
     }, (e: HttpErrorResponse) =>
     {
       this.updatingEvent = false;

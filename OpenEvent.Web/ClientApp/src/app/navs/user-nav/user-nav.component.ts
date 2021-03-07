@@ -47,7 +47,7 @@ export class UserNavComponent
       IsDarkMode: !isDark
     }).subscribe(response =>
     {
-      this.trigger.Iterate('Updated theme preference',500,IteratorStatus.good)
+      this.trigger.Iterate('Updated theme preference',1000,IteratorStatus.good)
     });
   }
 

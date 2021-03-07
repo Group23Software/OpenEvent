@@ -78,7 +78,8 @@ namespace OpenEvent.Web.Services
         /// <exception cref="UserNotFoundException"></exception>
         public async Task<EventViewModel> Create(CreateEventBody createEventBody)
         {
-            var host = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == createEventBody.HostId);
+            var host = await ApplicationContext.Users.AsSplitQuery().Include(x => x.HostedEvents)
+                .FirstOrDefaultAsync(x => x.Id == createEventBody.HostId);
 
             if (host == null)
             {
@@ -92,7 +93,7 @@ namespace OpenEvent.Web.Services
 
             Event newEvent = new Event()
             {
-                Id = Guid.NewGuid(),
+                // Id = Guid.NewGuid(),
                 Name = createEventBody.Name,
                 Description = createEventBody.Description,
                 Address = createEventBody.Address,
@@ -103,14 +104,10 @@ namespace OpenEvent.Web.Services
                 EndUTC = createEventBody.EndLocal.ToUniversalTime(),
                 StartLocal = createEventBody.StartLocal,
                 StartUTC = createEventBody.StartLocal.ToUniversalTime(),
-                Host = host,
                 Images = createEventBody.Images.Select(x => Mapper.Map<Image>(x)).ToList(),
                 Thumbnail = createEventBody.Thumbnail != null
                     ? Mapper.Map<Image>(createEventBody.Thumbnail)
                     : new Image(),
-                EventCategories = createEventBody.Categories != null
-                    ? createEventBody.Categories.Select(c => new EventCategory() {CategoryId = c.Id}).ToList()
-                    : new List<EventCategory>(),
                 SocialLinks = createEventBody.SocialLinks != null
                     ? createEventBody.SocialLinks.Select(x => Mapper.Map<SocialLink>(x)).ToList()
                     : new List<SocialLink>(),
@@ -122,11 +119,14 @@ namespace OpenEvent.Web.Services
             {
                 tickets.Add(new Ticket()
                 {
-                    Id = Guid.NewGuid(),
+                    // Id = Guid.NewGuid(),
                     Event = newEvent,
-                    Available = true
+                    Available = true,
+                    Uses = 0
                 });
             }
+
+            host.HostedEvents.Add(newEvent);
 
             try
             {
@@ -134,6 +134,15 @@ namespace OpenEvent.Web.Services
                 await ApplicationContext.Events.AddAsync(newEvent);
                 await ApplicationContext.Tickets.AddRangeAsync(tickets);
                 await ApplicationContext.SaveChangesAsync();
+
+                if (createEventBody.Categories != null)
+                {
+                    List<EventCategory> eventCategories = createEventBody.Categories
+                        .Select(c => new EventCategory() {CategoryId = c.Id, EventId = newEvent.Id}).ToList();
+                    await ApplicationContext.AddRangeAsync(eventCategories);
+                    await ApplicationContext.SaveChangesAsync();
+                }
+
                 return Mapper.Map<EventViewModel>(newEvent);
             }
             catch
@@ -355,20 +364,18 @@ namespace OpenEvent.Web.Services
                 events = ApplicationContext.Events.Include(x => x.EventCategories).AsSplitQuery()
                     .AsEnumerable();
 
-                if (isOnline)
+                if (!string.IsNullOrEmpty(keyword))
                 {
-                    events = events.Where(x => x.IsOnline);
+                    events = events.Where(x => x.Name.Contains(keyword!));
                 }
+
+                if (isOnline) events = events.Where(x => x.IsOnline);
 
                 if (searchCategories.Any())
-                {
                     events = events.Where(x => x.EventCategories.Any(c => searchCategories.Contains(c.CategoryId)));
-                }
 
                 if (cords != null)
-                {
                     events = events.Where(x => !x.IsOnline && EventDistance(x.Address.Lat, x.Address.Lon, cords));
-                }
 
                 if (date != null)
                 {
@@ -512,7 +519,7 @@ namespace OpenEvent.Web.Services
 
         public async Task<List<EventViewModel>> GetRecommended(Guid id)
         {
-            var recommendationScores = await ApplicationContext.RecommendationScores.AsSplitQuery()
+            var recommendationScores = await ApplicationContext.RecommendationScores.AsNoTracking().AsSplitQuery()
                 .Include(x => x.Category).Where(x => x.User.Id == id).ToListAsync();
 
             if (recommendationScores == null)

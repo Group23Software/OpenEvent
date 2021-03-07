@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.User;
 using Stripe;
@@ -19,11 +20,11 @@ namespace OpenEvent.Web.Models.Transaction
         public PaymentStatus Status { get; set; }
 
         // TODO: Does this need both sides of the transaction host and user
-        public User.User User { get; set; }
+        [JsonIgnore] public User.User User { get; set; }
         
         public Guid TicketId { get; set; }
-        public Ticket.Ticket Ticket { get; set; }
-        public Event.Event Event { get; set; }
+        [JsonIgnore] public Ticket.Ticket Ticket { get; set; }
+        [JsonIgnore] public Event.Event Event { get; set; }
         
         [NotMapped] public string ClientSecret { get; set; }
     }

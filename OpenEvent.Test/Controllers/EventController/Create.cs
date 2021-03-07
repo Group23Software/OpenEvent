@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using OpenEvent.Web.Models.Event;
+using OpenEvent.Web.Services;
 
 namespace OpenEvent.Test.Controllers.EventController
 {
@@ -13,6 +14,7 @@ namespace OpenEvent.Test.Controllers.EventController
     public class Create
     {
         private readonly Mock<Web.Services.IEventService> EventServiceMock = new();
+        private readonly Mock<IRecommendationService> RecommendationServiceMock = new();
 
         private readonly CreateEventBody CreateEventBody = new();
         private readonly EventViewModel EventViewModel = new();
@@ -30,7 +32,7 @@ namespace OpenEvent.Test.Controllers.EventController
             EventServiceMock.Setup(x => x.Create(CreateEventBody)).ReturnsAsync(EventViewModel);
             EventServiceMock.Setup(x => x.Create(SaveErrorBody)).ThrowsAsync(new DbUpdateException());
             EventController = new Web.Controllers.EventController(EventServiceMock.Object,
-                new Mock<ILogger<Web.Controllers.EventController>>().Object);
+                new Mock<ILogger<Web.Controllers.EventController>>().Object,RecommendationServiceMock.Object);
         }
 
         [Test]

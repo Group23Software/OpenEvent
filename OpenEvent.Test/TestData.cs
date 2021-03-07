@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bogus;
+using OpenEvent.Test.Setups;
 using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
@@ -84,7 +85,6 @@ namespace OpenEvent.Test
             .RuleFor(x => x.Thumbnail, () => FakeImageViewModel.Generate())
             .RuleFor(x => x.Images, () => FakeImageViewModel.Generate(6))
             .RuleFor(x => x.Address, () => FakeAddress.Generate())
-            .RuleFor(x => x.SocialLinks, f => new List<SocialLinkViewModel>() {FakeSocialLinkViewModel.Generate()})
-            .RuleFor(x => x.Categories, () => FakeCategory.Generate(4));
+            .RuleFor(x => x.SocialLinks, f => new List<SocialLinkViewModel>() {FakeSocialLinkViewModel.Generate()});
     }
 }

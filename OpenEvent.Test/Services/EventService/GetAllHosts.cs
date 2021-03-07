@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Test.Factories;
+using OpenEvent.Test.Setups;
 using OpenEvent.Web.Models.Event;
 
 namespace OpenEvent.Test.Services.EventService
 {
     [TestFixture]
-    public class GetAllHosts: EventTestFixture
+    public class GetAllHosts
     {
         [Test]
         public async Task ShouldGetAllHostsEvents()
         {
-            var result = await EventService.GetAllHosts(new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"));
-            result.Should().NotBeNull();
-            result.Should().BeOfType<List<EventHostModel>>();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new EventServiceFactory().Create(context);
+
+                var result = await service.GetAllHosts(new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"));
+                result.Should().NotBeNull();
+                result.Should().BeOfType<List<EventHostModel>>();
+            }
         }
     }
 }

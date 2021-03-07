@@ -53,15 +53,6 @@ export class CreateEventComponent implements OnInit
 
   public IsOnline = new FormControl(false);
 
-  // public addressForm = new FormGroup({
-  //   AddressLine1: new FormControl('', [Validators.required]),
-  //   AddressLine2: new FormControl(''),
-  //   City: new FormControl('', [Validators.required]),
-  //   PostalCode: new FormControl('', [Validators.required, Validators.pattern('([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\\s?[0-9][A-Za-z]{2})')]),
-  //   CountryCode: new FormControl('GB'),
-  //   CountryName: new FormControl('United Kingdom'),
-  // });
-
   public addressForm = new FormControl();
 
   public SocialLinks = new FormGroup({
@@ -112,7 +103,7 @@ export class CreateEventComponent implements OnInit
     }, (e: HttpErrorResponse) => this.getError = e.error.Message, () => this.loading = false);
   }
 
-  loadEventDate (event: StepperSelectionEvent)
+  loadEventData (event: StepperSelectionEvent)
   {
     if (event.selectedIndex == 3)
     {
@@ -145,7 +136,7 @@ export class CreateEventComponent implements OnInit
 
   public clickedOnline ()
   {
-    this.IsOnline.value ? this.addressForm.disable() : this.addressForm.enable();
+    this.IsOnline.value ? this.addressForm.enable() : this.addressForm.disable();
   }
 
   create ()
@@ -155,7 +146,7 @@ export class CreateEventComponent implements OnInit
     console.log(this.DateForm);
 
     let createEventBody: CreateEventBody = {
-      Address: this.addressForm.value,
+      Address: this.addressForm.value != null ? this.addressForm.value: null,
       Categories: this.createEventForm.controls.Categories.value,
       Description: this.createEventForm.controls.Description.value,
       EndLocal: this.DateForm.controls.EndLocal.value,
@@ -175,9 +166,6 @@ export class CreateEventComponent implements OnInit
       StartLocal: this.DateForm.controls.StartLocal.value,
       Thumbnail: this.thumbnail
     }
-
-    createEventBody.Address.Lon = 0;
-    createEventBody.Address.Lat = 0;
 
     console.log(createEventBody);
 

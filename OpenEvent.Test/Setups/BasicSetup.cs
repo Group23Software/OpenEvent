@@ -15,6 +15,7 @@ using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.PaymentMethod;
+using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.Transaction;
 
@@ -91,7 +92,7 @@ namespace OpenEvent.Test.Setups
                 }
             };
 
-            IQueryable<Category> seedCategories = new List<Category>
+            List<Category> seedCategories = new List<Category>
             {
                 new()
                 {
@@ -103,7 +104,7 @@ namespace OpenEvent.Test.Setups
                     Id = new Guid("08CC5B09-70E2-4215-9B35-1E6A067A0204"),
                     Name = "Comedy"
                 }
-            }.AsQueryable();
+            };
 
             List<Event> seedEvents = new List<Event>
             {
@@ -183,19 +184,23 @@ namespace OpenEvent.Test.Setups
                     IsOnline = true,
                     SocialLinks = new List<SocialLink> {new() {Link = "custom.co.uk", SocialMedia = SocialMedia.Site}},
                     Tickets = new List<Ticket>(),
-                    EventCategories = new List<EventCategory>
-                    {
-                        new()
-                        {
-                            CategoryId = new Guid("08CC5B09-70E2-4215-9B35-1E6A067A0204"),
-                            EventId = new Guid("5F35AA8F-4CC5-4E1A-AB73-6875D5769715")
-                        }
-                    },
+                    EventCategories = new List<EventCategory>(),
                     PageViewEvents = new List<PageViewEvent>(),
                     Transactions = new List<Transaction>(),
                     VerificationEvents = new List<TicketVerificationEvent>()
                 }
             };
+            
+            List<EventCategory> seedEventCategories = new List<EventCategory>()
+            {
+                new EventCategory()
+                {
+                    Category = seedCategories[0],
+                    Event = seedEvents[0],
+                }
+            };
+            
+            seedEvents[0].EventCategories.Add(seedEventCategories[0]);
 
             IQueryable<Ticket> seedTickets = new List<Ticket>()
             {
@@ -208,21 +213,31 @@ namespace OpenEvent.Test.Setups
                 }
             }.AsQueryable();
 
-            IQueryable<Transaction> seedTransactions = new List<Transaction>().AsQueryable();
+            IQueryable<RecommendationScore> seedRecommendationScores = new List<RecommendationScore>
+            {
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    User = seedUserList[0],
+                    Weight = 1,
+                    Category = seedCategories[0]
+                }
+            }.AsQueryable();
 
             seedUserList[0].Password = hasher.HashPassword(seedUserList[0], "Password");
 
 
-            IQueryable<User> seedUsers = seedUserList.AsQueryable();
-
-
-            var mockContext = new DbContextMock<ApplicationContext>(dbContextOptions);
-            var userDbSetMock = mockContext.CreateDbSetMock(x => x.Users, seedUsers);
+            var mockContext = new DbContextMock<ApplicationContext>("fake");
+            var userDbSetMock = mockContext.CreateDbSetMock(x => x.Users, seedUserList.AsQueryable());
             var eventDbSetMock = mockContext.CreateDbSetMock(x => x.Events, seedEvents.AsQueryable());
-            var categoryDbSetMock = mockContext.CreateDbSetMock(x => x.Categories, seedCategories);
+            var categoryDbSetMock = mockContext.CreateDbSetMock(x => x.Categories, seedCategories.AsQueryable());
             var ticketDbSetMock = mockContext.CreateDbSetMock(x => x.Tickets, seedTickets);
-            var transactionDbSetMock = mockContext.CreateDbSetMock(x => x.Transactions, seedTransactions);
-
+            var transactionDbSetMock = mockContext.CreateDbSetMock(x => x.Transactions, new List<Transaction>().AsQueryable());
+            var recommendationScoreDbSetMock =
+                mockContext.CreateDbSetMock(x => x.RecommendationScores, seedRecommendationScores.AsQueryable());
+            // var eventCategoryDbSetMock =
+            //     mockContext.CreateDbSetMock(x => x.EventCategories, seedEventCategories.AsQueryable());
+            
             return mockContext;
         }
     }

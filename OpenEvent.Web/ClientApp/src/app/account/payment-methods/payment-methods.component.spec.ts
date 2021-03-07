@@ -11,6 +11,8 @@ import {of, throwError} from "rxjs";
 import {UserAccountModel} from "../../_models/User";
 import {FakeAddress} from "../../_testData/Event";
 import {HttpErrorResponse} from "@angular/common/http";
+import {TriggerService} from "../../_Services/trigger.service";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 describe('PaymentMethodsComponent', () =>
 {
@@ -20,12 +22,11 @@ describe('PaymentMethodsComponent', () =>
   let stripeServiceMock;
   let paymentServiceMock;
   let userServiceMock;
-  let snackBarMock;
+  let triggerMock;
 
   beforeEach(async () =>
   {
-
-    snackBarMock = jasmine.createSpyObj('matSnackBar', ['open']);
+    triggerMock = jasmine.createSpyObj('triggerService', ['Iterate'])
     stripeServiceMock = jasmine.createSpyObj('StripeService', ['createToken']);
     paymentServiceMock = jasmine.createSpyObj('PaymentService', ['AddPaymentMethod', 'RemovePaymentMethod']);
     userServiceMock = jasmine.createSpyObj('UserService', ['User']);
@@ -39,7 +40,7 @@ describe('PaymentMethodsComponent', () =>
         {provide: StripeService, useValue: stripeServiceMock},
         {provide: UserService, useValue: userServiceMock},
         {provide: PaymentService, useValue: paymentServiceMock},
-        {provide: MatSnackBar, useValue: snackBarMock},
+        {provide: TriggerService, useValue: triggerMock},
       ]
     }).compileComponents();
   });
@@ -71,7 +72,7 @@ describe('PaymentMethodsComponent', () =>
     });
     paymentServiceMock.AddPaymentMethod.and.returnValue(of(true));
     component.createToken();
-    expect(snackBarMock.open).toHaveBeenCalledWith('Added payment method', 'close', {duration: 500});
+    expect(triggerMock.Iterate).toHaveBeenCalledWith('Added payment method', 1000, IteratorStatus.good);
     expect(component.createCardTokenLoading).toBeFalse();
   });
 

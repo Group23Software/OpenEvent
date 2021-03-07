@@ -147,7 +147,7 @@ export class PaymentMethodsComponent implements OnInit
             }).subscribe(() =>
             {
               this.createCardTokenLoading = false;
-              this.trigger.Iterate('Added payment method', 500, IteratorStatus.good);
+              this.trigger.Iterate('Added payment method', 1000, IteratorStatus.good);
               this.stripeTest.reset();
               // TODO: clear card input after added.
             }, (e: HttpErrorResponse) =>

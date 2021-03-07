@@ -18,7 +18,6 @@ namespace OpenEvent.Web.Services
 {
     public interface ITicketService
     {
-        Task BuyTicket();
         Task<List<TicketViewModel>> GetAllUsersTickets(Guid id);
         Task VerifyTicket(TicketVerifyBody ticketVerifyBody);
 
@@ -40,11 +39,6 @@ namespace OpenEvent.Web.Services
             Mapper = mapper;
             ApplicationContext = context;
             AnalyticsService = analyticsService;
-        }
-
-        public Task BuyTicket()
-        {
-            throw new NotImplementedException();
         }
 
         public async Task<List<TicketViewModel>> GetAllUsersTickets(Guid id)
@@ -72,7 +66,6 @@ namespace OpenEvent.Web.Services
             try
             {
                 AnalyticsService.CaptureTicketVerify(ticket.Id,ticketVerifyBody.EventId);
-                // RecommendationService.Influence(ticket.Id,ticketVerifyBody.EventId);
                 await ApplicationContext.SaveChangesAsync();
             }
             catch (Exception e)

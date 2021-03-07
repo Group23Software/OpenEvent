@@ -8,13 +8,15 @@ using NUnit.Framework;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Event;
+using OpenEvent.Web.Services;
 
 namespace OpenEvent.Test.Controllers.EventController
 {
     [TestFixture]
     public class Update
     {
-        private readonly Mock<Web.Services.IEventService> EventServiceMock = new();
+        private readonly Mock<IEventService> EventServiceMock = new();
+        private readonly Mock<IRecommendationService> RecommendationServiceMock = new();
 
         private readonly UpdateEventBody UpdateEventBody = new()
         {
@@ -41,7 +43,7 @@ namespace OpenEvent.Test.Controllers.EventController
             EventServiceMock.Setup(x => x.Update(null))
                 .ThrowsAsync(new EventNotFoundException());
             EventController = new Web.Controllers.EventController(EventServiceMock.Object,
-                new Mock<ILogger<Web.Controllers.EventController>>().Object);
+                new Mock<ILogger<Web.Controllers.EventController>>().Object,RecommendationServiceMock.Object);
         }
 
         [Test]

@@ -14,6 +14,7 @@ import {EventDetailModel} from "../../_models/Event";
 import {Router} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {FakeAddress} from "../../_testData/Event";
 
 describe('CreateEventComponent', () =>
 {
@@ -58,7 +59,7 @@ describe('CreateEventComponent', () =>
   beforeEach(() =>
   {
     router = TestBed.inject(Router);
-    dialogSpy = spyOn(TestBed.get(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
+    dialogSpy = spyOn(TestBed.inject(MatDialog), 'open').and.returnValue(dialogRefSpyObj);
     fixture = TestBed.createComponent(CreateEventComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -76,17 +77,11 @@ describe('CreateEventComponent', () =>
     component.IsOnline.setValue(false);
     fixture.detectChanges();
     component.clickedOnline();
-    for (let control in component.addressForm.controls)
-    {
-      expect(component.addressForm.controls[control].disabled).toBeTruthy();
-    }
+    expect(component.addressForm.disabled).toBeTruthy();
     component.IsOnline.setValue(true);
     fixture.detectChanges();
     component.clickedOnline();
-    for (let control in component.addressForm.controls)
-    {
-      expect(component.addressForm.controls[control].enabled).toBeTruthy();
-    }
+    expect(component.addressForm.enabled).toBeTruthy();
   });
 
   it('should get all categories on init', () =>
@@ -109,13 +104,17 @@ describe('CreateEventComponent', () =>
 
   it('should load event data', () =>
   {
-    component.addressForm.controls.AddressLine1.setValue("AddressLine1");
-    component.addressForm.controls.AddressLine2.setValue("AddressLine2");
-    component.addressForm.controls.City.setValue("City");
-    component.addressForm.controls.CountryCode.setValue("CountryCode");
-    component.addressForm.controls.CountryName.setValue("CountryName");
-    component.addressForm.controls.PostalCode.setValue("PostalCode");
-    component.categories = null;
+    component.addressForm.setValue({
+      AddressLine1: "AddressLine1",
+      AddressLine2: "AddressLine2",
+      PostalCode: "PostalCode",
+      CountryName: "CountryName",
+      City: "City",
+      CountryCode: "CountryCode",
+      Lon: 1,
+      Lat: 1
+    });
+    component.createEventForm.controls.Categories.setValue(null);
     component.createEventForm.controls.Description.setValue("Description");
     component.DateForm.controls.EndLocal.setValue(new Date(0));
     component.eventImages = null;
@@ -134,7 +133,7 @@ describe('CreateEventComponent', () =>
     component.createEventForm.controls.NumberOfTickets.setValue(10);
     let e = new StepperSelectionEvent();
     e.selectedIndex = 3
-    component.loadEventDate(e);
+    component.loadEventData(e);
     const eventPreview: EventDetailModel = {
       Address: {
         AddressLine1: "AddressLine1",
@@ -142,7 +141,9 @@ describe('CreateEventComponent', () =>
         PostalCode: "PostalCode",
         CountryName: "CountryName",
         City: "City",
-        CountryCode: "CountryCode"
+        CountryCode: "CountryCode",
+        Lon: 1,
+        Lat: 1
       },
       Categories: null,
       Description: "Description",

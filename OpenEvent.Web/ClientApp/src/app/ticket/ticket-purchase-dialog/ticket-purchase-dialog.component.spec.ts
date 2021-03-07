@@ -6,6 +6,7 @@ import {UserService} from "../../_Services/user.service";
 import {TransactionService} from "../../_Services/transaction.service";
 import {of} from "rxjs";
 import {FakeEventHostModel} from "../../_testData/Event";
+import {StripeService} from "ngx-stripe";
 
 describe('TicketPurchaseDialogComponent', () =>
 {
@@ -14,9 +15,12 @@ describe('TicketPurchaseDialogComponent', () =>
   let userServiceMock;
   let transactionServiceMock;
   let dialogRefMock;
+  let stripeServiceMock;
 
   beforeEach(async () =>
   {
+    stripeServiceMock = jasmine.createSpyObj('StripeService',['handleCardAction']);
+
     userServiceMock = jasmine.createSpyObj('UserService', ['NeedAccountUser']);
     userServiceMock.NeedAccountUser.and.returnValue(of(null));
 
@@ -31,7 +35,8 @@ describe('TicketPurchaseDialogComponent', () =>
         {provide: MAT_DIALOG_DATA, useValue: {Event: FakeEventHostModel} as TicketPurchaseDialogData},
         {provide: UserService, useValue: userServiceMock},
         {provide: TransactionService, useValue: transactionServiceMock},
-        {provide: MatDialogRef, useValue: dialogRefMock}
+        {provide: MatDialogRef, useValue: dialogRefMock},
+        {provide: StripeService, useValue: stripeServiceMock}
       ]
     }).compileComponents();
   });

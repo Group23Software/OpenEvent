@@ -12,7 +12,6 @@ class triggerServiceStub {
 describe('AddressFormComponent', () => {
   let component: AddressFormComponent;
   let fixture: ComponentFixture<AddressFormComponent>;
-  let trigger;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -23,7 +22,6 @@ describe('AddressFormComponent', () => {
   });
 
   beforeEach(() => {
-    // trigger = TestBed.inject(TriggerService);
     fixture = TestBed.createComponent(AddressFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -35,27 +33,16 @@ describe('AddressFormComponent', () => {
 
   it('should disable form controls', () =>
   {
-    component.Disabled = true;
+    component.setDisabledState(true);
     component.ngOnInit();
-    for (let control in component.addressForm.controls)
-    {
-      expect(component.addressForm.controls[control].disabled).toBeTrue();
-    }
+    expect(component.addressForm.disabled).toBeTruthy();
   });
 
   it('should load address into form', () =>
   {
-    component.Disabled = false;
+    component.setDisabledState(false);
     component.Address = FakeAddress;
     component.ngOnInit();
     expect(component.addressForm.value).toEqual(FakeAddress);
-  });
-
-  it('should emit address', () =>
-  {
-    component.addressForm.setValue(FakeAddress);
-    let eventSpy = spyOn(component.SubmitEvent,'emit');
-    component.submit();
-    expect(eventSpy).toHaveBeenCalledWith(FakeAddress);
   });
 });

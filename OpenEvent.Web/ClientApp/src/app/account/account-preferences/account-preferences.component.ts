@@ -83,7 +83,7 @@ export class AccountPreferencesComponent implements OnInit
     }).subscribe(response =>
     {
       this.updatePasswordLoading = false;
-      this.trigger.Iterate('Updated password',500,IteratorStatus.good);
+      this.trigger.Iterate('Updated password',1000,IteratorStatus.good);
     }, (error: HttpErrorResponse) =>
     {
       this.updatePasswordLoading = false;
@@ -125,7 +125,7 @@ export class AccountPreferencesComponent implements OnInit
     this.userService.UpdateUserName({Id: this.user.Id, UserName: this.username.value}).subscribe(response =>
     {
       this.updateUserNameLoading = false;
-      this.trigger.Iterate('Updated username', 500, IteratorStatus.good);
+      this.trigger.Iterate('Updated username', 1000, IteratorStatus.good);
     }, (error: HttpErrorResponse) =>
     {
       this.updateUserNameLoading = false;
@@ -157,7 +157,7 @@ export class AccountPreferencesComponent implements OnInit
         }).subscribe(response =>
         {
           this.avatarFileName = null;
-          this.trigger.Iterate('Updated avatar',500,IteratorStatus.good);
+          this.trigger.Iterate('Updated avatar',1000,IteratorStatus.good);
           this.updateAvatarLoading = false;
         }, (error: HttpErrorResponse) =>
         {
@@ -173,7 +173,7 @@ export class AccountPreferencesComponent implements OnInit
   {
     this.userService.UpdateAddress({Id: this.user.Id, Address: this.newAddressForm.value}).subscribe(x =>
     {
-      this.trigger.Iterate('Updated address',500,IteratorStatus.good);
+      this.trigger.Iterate('Updated address',1000,IteratorStatus.good);
     }, (e: HttpErrorResponse) => {
       console.error(e);
       this.newAddressError = e.error.Message;

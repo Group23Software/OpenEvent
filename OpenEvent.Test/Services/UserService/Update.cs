@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace OpenEvent.Test.Services.UserService
 {
     [TestFixture]
-    public class Update : UserTestFixture
+    public class Update
     {
         // [Test]
         // public async Task ShouldUpdateUser()

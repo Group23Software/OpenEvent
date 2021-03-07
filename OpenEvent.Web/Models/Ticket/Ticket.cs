@@ -17,7 +17,7 @@ namespace OpenEvent.Web.Models.Ticket
         public Transaction.Transaction Transaction { get; set; }
         public bool Available { get; set; }
         public int Uses { get; set; }
-        public List<TicketVerificationEvent> VerificationEvents { get; set; }
+        [JsonIgnore] public List<TicketVerificationEvent> VerificationEvents { get; set; }
     }
 
     public class TicketVerifyBody

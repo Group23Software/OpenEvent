@@ -12,7 +12,7 @@
     <mat-card-subtitle>Fill in all the information and preview your event</mat-card-subtitle>
   </mat-card-header>
   <div fxLayout style="height: 95%">
-    <mat-horizontal-stepper [linear]="false" (selectionChange)="loadEventDate($event)" fxLayout="column" fxFlex="100" fxLayoutAlign=" stretch">
+    <mat-horizontal-stepper [linear]="false" (selectionChange)="loadEventData($event)" fxLayout="column" fxFlex="100" fxLayoutAlign=" stretch">
       <mat-step [stepControl]="createEventForm" [editable]="isEditable" fxFlex="100" fxLayout="column">
         <form [formGroup]="createEventForm" id="createEventForm">
           <ng-template matStepLabel>Basic info</ng-template>

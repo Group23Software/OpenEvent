@@ -1,18 +1,19 @@
 import {AccountPreferencesComponent} from "./account-preferences.component";
 import {ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing";
 import {UserService} from "../../_Services/user.service";
-import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Router} from "@angular/router";
 import {of, throwError} from "rxjs";
 import {AuthService} from "../../_Services/auth.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {ImageCropperModule} from "ngx-image-cropper";
 import {ImageUploadComponent} from "../../_extensions/image-upload/image-upload.component";
 import {UpdateUserNameBody, UserAccountModel} from "../../_models/User";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
 import {Component} from "@angular/core";
+import {TriggerService} from "../../_Services/trigger.service";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 
 @Component({
@@ -33,12 +34,12 @@ describe('AccountPreferencesComponent', () =>
   let dialogMock;
   let router;
   let authMock;
-  let snackBarMock;
+  let triggerMock;
 
   beforeEach(async () =>
   {
 
-    snackBarMock = jasmine.createSpyObj('matSnackBar', ['open']);
+    triggerMock = jasmine.createSpyObj('triggerService', ['Iterate']);
 
     dialogMock = jasmine.createSpyObj('matDialog', ['open']);
 
@@ -60,7 +61,7 @@ describe('AccountPreferencesComponent', () =>
         {provide: UserService, useValue: userServiceMock},
         {provide: MatDialog, useValue: dialogMock},
         {provide: AuthService, useValue: authMock},
-        {provide: MatSnackBar, useValue: snackBarMock},
+        {provide: TriggerService, useValue: triggerMock},
       ]
     }).compileComponents();
   });
@@ -123,7 +124,7 @@ describe('AccountPreferencesComponent', () =>
 
     expect(component.avatarFileName).toBeNull();
     expect(component.updateAvatarLoading).toBeFalse();
-    expect(snackBarMock.open).toHaveBeenCalledWith('Updated avatar', 'close', {duration: 500});
+    expect(triggerMock.Iterate).toHaveBeenCalledWith('Updated avatar',1000,IteratorStatus.good);
   });
 
   it('should handle update avatar error', () =>
@@ -221,7 +222,7 @@ describe('AccountPreferencesComponent', () =>
 
     component.UpdatePassword();
     expect(component.updatePasswordLoading).toBe(false);
-    expect(snackBarMock.open).toHaveBeenCalledWith('Updated password', 'close', {duration: 500});
+    expect(triggerMock.Iterate).toHaveBeenCalledWith('Updated password',1000,IteratorStatus.good);
   });
 
   it('should handle password error', () =>
@@ -248,7 +249,7 @@ describe('AccountPreferencesComponent', () =>
 
     component.UpdateUserName();
     expect(component.updateUserNameLoading).toBe(false);
-    expect(snackBarMock.open).toHaveBeenCalledWith('Updated username', 'close', {duration: 500});
+    expect(triggerMock.Iterate).toHaveBeenCalledWith('Updated username', 1000, IteratorStatus.good);
   });
 
   it('should handle username error', () =>

@@ -3,54 +3,81 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Test.Factories;
+using OpenEvent.Test.Setups;
 using OpenEvent.Web.Exceptions;
 
 namespace OpenEvent.Test.Services.AuthService
 {
     [TestFixture]
-    public class Login : AuthTestFixture
+    public class Login
     {
         [Test]
         public async Task ShouldLogin()
         {
-            var result = await AuthService.Login("exists@email.co.uk", "Password", false);
-            result.Should().NotBeNull();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new AuthServiceFactory().Create(context);
+
+                var result = await service.Login("exists@email.co.uk", "Password", false);
+                result.Should().NotBeNull();
+            }
         }
         
         [Test]
         public async Task PasswordShouldBeIncorrect()
         {
-            FluentActions.Invoking(async () => await AuthService.Login("exists@email.co.uk", "Wrong", false))
-                .Should().Throw<IncorrectPasswordException>();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new AuthServiceFactory().Create(context);
+
+                FluentActions.Invoking(async () => await service.Login("exists@email.co.uk", "Wrong", false))
+                    .Should().Throw<IncorrectPasswordException>();
+            }
         }
         
         [Test]
         public async Task ShouldNotFind()
         {
-            FluentActions.Invoking(async () => await AuthService.Login("wrong@email.co.uk", "Wrong", false))
-                .Should().Throw<UserNotFoundException>();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new AuthServiceFactory().Create(context);
+
+                FluentActions.Invoking(async () => await service.Login("wrong@email.co.uk", "Wrong", false))
+                    .Should().Throw<UserNotFoundException>();
+            }
         }
 
         [Test]
         public async Task ShouldReturn30DayToken()
         {
-            var result = await AuthService.Login("exists@email.co.uk", "Password", true);
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(result.Token);
-            DateTime validFrom = token.ValidFrom;
-            DateTime validTo = token.ValidTo;
-            validTo.Should().Be(validFrom.AddDays(30));
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new AuthServiceFactory().Create(context);
+
+                var result = await service.Login("exists@email.co.uk", "Password", true);
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(result.Token);
+                DateTime validFrom = token.ValidFrom;
+                DateTime validTo = token.ValidTo;
+                validTo.Should().Be(validFrom.AddDays(30));
+            }
         }
         
         [Test]
         public async Task ShouldReturn1DayToken()
         {
-            var result = await AuthService.Login("exists@email.co.uk", "Password", false);
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadJwtToken(result.Token);
-            DateTime validFrom = token.ValidFrom;
-            DateTime validTo = token.ValidTo;
-            validTo.Should().Be(validFrom.AddDays(1));
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new AuthServiceFactory().Create(context);
+
+                var result = await service.Login("exists@email.co.uk", "Password", false);
+                var handler = new JwtSecurityTokenHandler();
+                var token = handler.ReadJwtToken(result.Token);
+                DateTime validFrom = token.ValidFrom;
+                DateTime validTo = token.ValidTo;
+                validTo.Should().Be(validFrom.AddDays(1));
+            }
         }
     }
 }

@@ -32,9 +32,8 @@ namespace OpenEvent.Web.Models.Event
         public List<EventCategory> EventCategories { get; set; }
         public bool isCanceled { get; set; }
 
-        public List<PageViewEvent> PageViewEvents { get; set; }
-        public List<TicketVerificationEvent> VerificationEvents { get; set; }
-        
+        [JsonIgnore] public List<PageViewEvent> PageViewEvents { get; set; }
+        [JsonIgnore] public List<TicketVerificationEvent> VerificationEvents { get; set; }
         public List<Transaction.Transaction> Transactions { get; set; } 
     }
 }

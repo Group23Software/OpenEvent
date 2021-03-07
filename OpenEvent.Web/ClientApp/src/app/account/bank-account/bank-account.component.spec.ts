@@ -7,6 +7,8 @@ import {BankingService} from "../../_Services/banking.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {of, throwError} from "rxjs";
 import {HttpErrorResponse} from "@angular/common/http";
+import {TriggerService} from "../../_Services/trigger.service";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 describe('BankAccountComponent', () =>
 {
@@ -16,12 +18,12 @@ describe('BankAccountComponent', () =>
   let stripeServiceMock;
   let bankingServiceMock;
   let userServiceMock;
-  let snackBarMock;
+  let triggerMock;
 
   beforeEach(async () =>
   {
 
-    snackBarMock = jasmine.createSpyObj('matSnackBar', ['open']);
+    triggerMock = jasmine.createSpyObj('triggerService', ['Iterate']);
     stripeServiceMock = jasmine.createSpyObj('StripeService', ['createToken']);
     bankingServiceMock = jasmine.createSpyObj('BankingService', ['AddBankAccount','RemoveBankAccount','GetBalance','UploadIdentityDocument','AttachFrontFile','AttachAdditionalFile']);
     bankingServiceMock.GetBalance.and.returnValue(of(null));
@@ -39,7 +41,7 @@ describe('BankAccountComponent', () =>
         {provide: StripeService, useValue: stripeServiceMock},
         {provide: UserService, useValue: userServiceMock},
         {provide: BankingService, useValue: bankingServiceMock},
-        {provide: MatSnackBar, useValue: snackBarMock}
+        {provide: TriggerService, useValue: triggerMock}
       ]
     }).compileComponents();
   });
@@ -65,7 +67,7 @@ describe('BankAccountComponent', () =>
     }));
     bankingServiceMock.AddBankAccount.and.returnValue(of(true));
     component.addBankAccount();
-    expect(snackBarMock.open).toHaveBeenCalledWith('Added bank account', 'close', {duration: 500});
+    expect(triggerMock.Iterate).toHaveBeenCalledWith('Added bank account',1000,IteratorStatus.good);
   });
 
   it('should handle add bank account error', () =>
@@ -96,7 +98,7 @@ describe('BankAccountComponent', () =>
     spyOnProperty(component,'bankAccount','get').and.returnValue({StripeBankAccountId: "Id"});
     bankingServiceMock.RemoveBankAccount.and.returnValue(of(true));
     component.removeBankAccount();
-    expect(snackBarMock.open).toHaveBeenCalledWith('Removed bank account', 'close', {duration: 500});
+    expect(triggerMock.Iterate).toHaveBeenCalledWith('Removed bank account',1000,IteratorStatus.good);
   });
 
   it('should handle remove bank account error', () =>
@@ -119,7 +121,7 @@ describe('BankAccountComponent', () =>
     bankingServiceMock.UploadIdentityDocument.and.returnValue(of(true));
     bankingServiceMock.AttachFrontFile.and.returnValue(of(true));
     component.documentInputEvent({target:{files:[null]}});
-    expect(snackBarMock.open).toHaveBeenCalledWith('Uploaded Identity Document ', 'close', {duration: 500});
+    expect(triggerMock.Iterate).toHaveBeenCalledWith('Uploaded Identity Document',1000,IteratorStatus.good);
     expect(component.documentLoading).toBeFalse();
   });
 
@@ -145,7 +147,7 @@ describe('BankAccountComponent', () =>
     bankingServiceMock.UploadIdentityDocument.and.returnValue(of(true));
     bankingServiceMock.AttachAdditionalFile.and.returnValue(of(true));
     component.additionalDocumentInputEvent({target:{files:[null]}});
-    expect(snackBarMock.open).toHaveBeenCalledWith('Uploaded Additional Identity Document ', 'close', {duration: 500});
+    expect(triggerMock.Iterate).toHaveBeenCalledWith('Uploaded Additional Identity Document',1000,IteratorStatus.good);
     expect(component.documentLoading).toBeFalse();
   });
 

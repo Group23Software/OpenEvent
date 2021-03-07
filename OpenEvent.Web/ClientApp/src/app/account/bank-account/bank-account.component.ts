@@ -123,7 +123,7 @@ export class BankAccountComponent implements OnInit
           UserId: this.userService.User.Id
         }).subscribe(() =>
         {
-          this.trigger.Iterate('Added bank account',500,IteratorStatus.good);
+          this.trigger.Iterate('Added bank account',1000,IteratorStatus.good);
           this.addBankAccountLoading = false;
         }, (e: HttpErrorResponse) =>
         {
@@ -146,7 +146,7 @@ export class BankAccountComponent implements OnInit
       UserId: this.userService.User.Id
     }).subscribe(response =>
     {
-      this.trigger.Iterate('Removed bank account',500,IteratorStatus.good);
+      this.trigger.Iterate('Removed bank account',1000,IteratorStatus.good);
       this.addBankAccountLoading = false;
     }, (e: HttpErrorResponse) =>
     {
@@ -167,7 +167,7 @@ export class BankAccountComponent implements OnInit
         if (a)
         {
           this.documentLoading = false;
-          this.trigger.Iterate('Uploaded Identity Document',500,IteratorStatus.good)
+          this.trigger.Iterate('Uploaded Identity Document',1000,IteratorStatus.good)
           if (this.userService.User?.StripeAccountInfo?.Requirements) this.userService.User.StripeAccountInfo.Requirements.currently_due = this.userService.User.StripeAccountInfo.Requirements?.currently_due.filter(x => x != 'individual.verification.document')
         }
       }, (e: HttpErrorResponse) =>
@@ -194,7 +194,7 @@ export class BankAccountComponent implements OnInit
         if (a)
         {
           this.documentLoading = false;
-          this.trigger.Iterate('Uploaded Additional Identity Document',500,IteratorStatus.good);
+          this.trigger.Iterate('Uploaded Additional Identity Document',1000,IteratorStatus.good);
           if (this.userService.User?.StripeAccountInfo?.Requirements) this.userService.User.StripeAccountInfo.Requirements.currently_due = this.userService.User.StripeAccountInfo.Requirements?.currently_due.filter(x => x != 'individual.verification.additional_document')
         }
       }, (e: HttpErrorResponse) =>

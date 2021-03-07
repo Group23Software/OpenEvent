@@ -2,26 +2,38 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Test.Factories;
+using OpenEvent.Test.Setups;
 using OpenEvent.Web.Exceptions;
 
 namespace OpenEvent.Test.Services.UserService
 {
     [TestFixture]
-    public class Get : UserTestFixture
+    public class Get
     {
         [Test]
         public async Task ShouldGetUser()
         {
-            var result = UserService.Get(new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"));
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new UserServiceFactory().Create(context);
 
-            result.Should().NotBeNull();
+                var result = service.Get(new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"));
+
+                result.Should().NotBeNull();
+            }
         }
 
         [Test]
         public async Task ShouldNotFindUser()
         {
-            FluentActions.Invoking(async () => await UserService.Get(new Guid()))
-                .Should().Throw<UserNotFoundException>();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new UserServiceFactory().Create(context);
+
+                FluentActions.Invoking(async () => await service.Get(new Guid()))
+                    .Should().Throw<UserNotFoundException>();
+            }
         }
     }
 }

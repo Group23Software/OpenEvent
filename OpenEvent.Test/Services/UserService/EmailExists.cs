@@ -1,24 +1,37 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Test.Factories;
+using OpenEvent.Test.Setups;
 
 namespace OpenEvent.Test.Services.UserService
 {
     [TestFixture]
-    public class EmailExists : UserTestFixture
+    public class EmailExists
     {
         [Test]
         public async Task EmailShouldExist()
         {
-            var result = await UserService.EmailExists("exists@email.co.uk");
-            result.Should().BeTrue();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new UserServiceFactory().Create(context);
+
+                var result = await service.EmailExists("exists@email.co.uk");
+                result.Should().BeTrue();
+
+            }
         }
         
         [Test]
         public async Task EmailShouldNotExist()
         {
-            var result = await UserService.EmailExists("doesntExist@email.co.uk");
-            result.Should().BeFalse();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new UserServiceFactory().Create(context);
+
+                var result = await service.EmailExists("doesntExist@email.co.uk");
+                result.Should().BeFalse();
+            }
         }
     }
 }

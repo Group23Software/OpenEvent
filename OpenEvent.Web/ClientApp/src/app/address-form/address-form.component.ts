@@ -73,8 +73,8 @@ export class AddressFormComponent implements ControlValueAccessor, OnDestroy, Va
       CountryCode: this.addressForm.controls.CountryCode.value,
       CountryName: this.addressForm.controls.CountryName.value,
       PostalCode: this.addressForm.controls.PostalCode.value,
-      Lon: this.addressForm.controls.Lon.value,
-      Lat: this.addressForm.controls.Lat.value
+      Lon: 0,
+      Lat: 0
     } as Address)
   }
 
@@ -96,8 +96,8 @@ export class AddressFormComponent implements ControlValueAccessor, OnDestroy, Va
 
   setDisabledState (isDisabled: boolean): void
   {
-    if (isDisabled) this.addressForm.enable();
-    else this.addressForm.disable();
+    if (isDisabled) this.addressForm.disable();
+    else this.addressForm.enable();
   }
 
   writeValue (address: Address): void

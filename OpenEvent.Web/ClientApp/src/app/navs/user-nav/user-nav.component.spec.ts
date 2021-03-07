@@ -15,6 +15,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {UpdateThemePreferenceBody, UserAccountModel} from "../../_models/User";
 import {Observable, of} from "rxjs";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 class UserServiceStub
 {
@@ -48,6 +49,7 @@ class TriggerServiceStub
 {
   public isDark: EventEmitter<boolean> = new EventEmitter<boolean>();
   public loading: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public Iterate (message?: string, duration?: number, status?: IteratorStatus, forever?: boolean){};
 }
 
 describe('UserNavComponent', () =>
@@ -75,8 +77,6 @@ describe('UserNavComponent', () =>
       get: m => m.returnValue(null),
       set: null
     }
-
-    snackBarMock = jasmine.createSpyObj('matSnackBar', ['open']);
 
     triggerServiceMock = jasmine.createSpyObj<TriggerService>('triggerService', ['isDark']);
 

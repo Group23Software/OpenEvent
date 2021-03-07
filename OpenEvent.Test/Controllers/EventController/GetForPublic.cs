@@ -8,6 +8,7 @@ using Moq;
 using NUnit.Framework;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Event;
+using OpenEvent.Web.Services;
 using IEventService = OpenEvent.Web.Services.IEventService;
 
 namespace OpenEvent.Test.Controllers.EventController
@@ -16,7 +17,8 @@ namespace OpenEvent.Test.Controllers.EventController
     public class GetForPublic
     {
         private readonly Mock<IEventService> EventServiceMock = new();
-
+        private readonly Mock<IRecommendationService> RecommendationServiceMock = new();
+        
         private readonly EventDetailModel TestEvent = new()
         {
             Id = new Guid("361F25C7-6F93-463F-AA8C-C6976D5AEDEC")
@@ -30,7 +32,7 @@ namespace OpenEvent.Test.Controllers.EventController
             EventServiceMock.Setup(x => x.GetForPublic(TestEvent.Id,new Guid())).ReturnsAsync(TestEvent);
             EventServiceMock.Setup(x => x.GetForPublic(new Guid(),new Guid())).ThrowsAsync(new EventNotFoundException());
             EventController = new Web.Controllers.EventController(EventServiceMock.Object,
-                new Mock<ILogger<Web.Controllers.EventController>>().Object);
+                new Mock<ILogger<Web.Controllers.EventController>>().Object,RecommendationServiceMock.Object);
         }
 
         [Test]

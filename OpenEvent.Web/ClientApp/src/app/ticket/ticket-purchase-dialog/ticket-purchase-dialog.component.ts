@@ -63,7 +63,7 @@ export class TicketPurchaseDialogComponent implements OnInit
       this.transactionService.CreateIntent({
         Amount: this.Event.Price,
         EventId: this.Event.Id,
-        UserId: this.userService.User.Id
+        UserId: this.userService.User?.Id
       }).subscribe(i =>
       {
         console.log(i);

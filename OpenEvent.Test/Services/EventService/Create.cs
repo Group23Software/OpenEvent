@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using NUnit.Framework;
+using OpenEvent.Test.Factories;
+using OpenEvent.Test.Setups;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Category;
@@ -15,12 +14,9 @@ using OpenEvent.Web.Models.Event;
 
 namespace OpenEvent.Test.Services.EventService
 {
-    [TestFixture]
-    public class Create : EventTestFixture
+    public class Create
     {
-        private readonly CreateEventBody ValidCreateEventBody = TestData.FakeCreateEventBody.Generate();
-
-        private readonly CreateEventBody NoHostCreateBody = new CreateEventBody()
+        private readonly CreateEventBody NoHostCreateBody = new()
         {
             Name = "Test create event",
             Description = "this is a test create event",
@@ -38,56 +34,82 @@ namespace OpenEvent.Test.Services.EventService
         };
 
         [Test]
-        public async Task ShouldCreateNewEvent()
+        public async Task Should_Create_New_Event()
         {
-            var result = await EventService.Create(ValidCreateEventBody);
-            result.Should().NotBeNull();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new EventServiceFactory().Create(context);
 
-            var check = MockContext.Object.Events.FirstOrDefault(x => x.Name == ValidCreateEventBody.Name);
-            check.Should().NotBeNull();
-        }
+                var validCreateEventBody = TestData.FakeCreateEventBody.Generate();
+                validCreateEventBody.Categories = await context.Categories.ToListAsync();
+                var result = await service.Create(validCreateEventBody);
+                result.Should().NotBeNull();
 
-        [Test]
-        public async Task Should_Not_Find_Address()
-        {
-            // TODO   
+                var check = context.Events.FirstOrDefault(x => x.Name == validCreateEventBody.Name);
+                check.Should().NotBeNull();
+            }
         }
 
         [Test]
         public async Task ShouldCreateEmptyTickets()
         {
-            var result = await EventService.Create(ValidCreateEventBody);
-            result.Should().NotBeNull();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new EventServiceFactory().Create(context);
 
-            // var check = MockContext.Object.Events.FirstOrDefault(x => x.Name == ValidCreateEventBody.Name);
-            // check.Should().NotBeNull();
-            // check.Tickets.Count.Should().Be(ValidCreateEventBody.NumberOfTickets);
-            // check.TicketsLeft.Should().Be(ValidCreateEventBody.NumberOfTickets);
-            var tickets = await MockContext.Object.Tickets.Where(x => x.Event.Name == ValidCreateEventBody.Name).ToListAsync();
-            tickets.Count().Should().Be(ValidCreateEventBody.NumberOfTickets);
+                var validCreateEventBody = TestData.FakeCreateEventBody.Generate();
+                validCreateEventBody.Categories = await context.Categories.ToListAsync();
+                var result = await service.Create(validCreateEventBody);
+                result.Should().NotBeNull();
+
+                var tickets = await context.Tickets.Where(x => x.Event.Name == validCreateEventBody.Name)
+                    .ToListAsync();
+                tickets.Count().Should().Be(validCreateEventBody.NumberOfTickets);
+            }
         }
+        
+        // [Test]
+        // public async Task Should_Not_Find_Address()
+        // {
+        //     // TODO   
+        // }
 
         [Test]
         public async Task ShouldNotFindHost()
         {
-            FluentActions.Invoking(async () => await EventService.Create(NoHostCreateBody))
-                .Should().Throw<UserNotFoundException>();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new EventServiceFactory().Create(context);
+                FluentActions.Invoking(async () => await service.Create(NoHostCreateBody))
+                    .Should().Throw<UserNotFoundException>();
+            }
         }
 
-        [Test]
-        public async Task ShouldThrowDbUpdateException()
-        {
-            MockContext.Setup(c => c.SaveChangesAsync(new CancellationToken()))
-                .ReturnsAsync(() => throw new DbUpdateException());
+        // [Test]
+        // [Ignore("Need to make separate mock")]
+        // public async Task ShouldThrowDbUpdateException()
+        // {
+        //     MockContext.Setup(c => c.SaveChangesAsync(new CancellationToken()))
+        //         .ReturnsAsync(() => throw new DbUpdateException());
+        //
+        //     FluentActions.Invoking(async () => await EventService.Create(ValidCreateEventBody)).Should()
+        //         .Throw<DbUpdateException>();
+        // }
 
-            FluentActions.Invoking(async () => await EventService.Create(ValidCreateEventBody)).Should()
-                .Throw<DbUpdateException>();
-        }
-
         [Test]
-        public async Task EventShouldHaveHost()
+        public async Task Event_Should_Have_Host()
         {
-            
+            using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new EventServiceFactory().Create(context);
+                var validCreateEventBody = TestData.FakeCreateEventBody.Generate();
+                validCreateEventBody.Categories = await context.Categories.ToListAsync();
+                var result = await service.Create(validCreateEventBody);
+                result.Should().NotBeNull();
+
+                var check = await context.Events.Include(x => x.Host).FirstOrDefaultAsync(x => x.Name == validCreateEventBody.Name);
+                check.Host.Id.Should().Be(new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"));
+            }
         }
     }
 }

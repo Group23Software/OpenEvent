@@ -2,27 +2,40 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Test.Factories;
+using OpenEvent.Test.Setups;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Ticket;
 
 namespace OpenEvent.Test.Services.TicketService
 {
     [TestFixture]
-    public class Get : TicketTestFixture
+    public class Get
     {
         [Test]
-        public async Task ShouldGetTicket()
+        public async Task Should_Get_Ticket()
         {
-            var result = await TicketService.Get(new Guid("853F592D-D454-4FA1-BC9B-12991C13D835"));
-            result.Should().NotBeNull();
-            result.Should().BeOfType<TicketDetailModel>();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new TicketServiceFactory().Create(context);
+                
+                var result = await service.Get(new Guid("A85DDDF9-C5ED-469C-914F-75097B950024"));
+                result.Should().NotBeNull();
+                result.QRCode.Should().NotBeNull();
+                result.Should().BeOfType<TicketDetailModel>();
+            }
         }
         
         [Test]
-        public async Task ShouldNotFindTicket()
+        public async Task Should_Not_Find_Ticket()
         {
-            FluentActions.Invoking(async () => await TicketService.Get(new Guid()))
-                .Should().Throw<TicketNotFoundException>();
+            await using (var context = new DbContextFactory().CreateContext())
+            {
+                var service = new TicketServiceFactory().Create(context);
+
+                FluentActions.Invoking(async () => await service.Get(new Guid()))
+                    .Should().Throw<TicketNotFoundException>();
+            }
         }
     }
 }
