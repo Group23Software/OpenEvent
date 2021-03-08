@@ -7,7 +7,7 @@
 <mat-card *ngIf="!bankAccount" class="m-3">
   <mat-card-header>
     <mat-icon mat-card-avatar>account_balance</mat-icon>
-    <mat-card-title>Add Bank</mat-card-title>
+    <mat-card-title>Add Bank using IBAN</mat-card-title>
     <mat-card-subtitle>If you want to accept payments you need a bank account</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
@@ -15,16 +15,54 @@
       <mat-card class="flex-grow-1 mr-3">
         <ngx-stripe-iban (change)="onChange($event)" [options]="options"></ngx-stripe-iban>
       </mat-card>
-      <button type="submit" mat-fab color="primary" (click)="addBankAccount()" [disabled]="!bankComplete">
+      <button type="submit" mat-fab color="primary" (click)="addIBANBankAccount()" [disabled]="!bankComplete">
         <mat-icon>add</mat-icon>
       </button>
     </div>
   </mat-card-content>
+</mat-card>
 
-  <mat-card-footer>
-    <mat-progress-bar mode="indeterminate" *ngIf="addBankAccountLoading"></mat-progress-bar>
-    <div class="warn-color">{{addBankAccountError}}</div>
-  </mat-card-footer>
+<mat-card *ngIf="!bankAccount" class="m-3">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>account_balance</mat-icon>
+    <mat-card-title>Add Bank</mat-card-title>
+    <mat-card-subtitle>If you want to accept payments you need a bank account</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <form id="bankAccountForm" [formGroup]="bankAccountForm" (ngSubmit)="addBankAccount()">
+      <div>Sort Code</div>
+      <div id="sortCodeInput">
+        <mat-form-field appearance="outline">
+          <input matInput type="text" formControlName="sortCode1" placeholder="00" onKeyPress="if(this.value.length == 2) return false">
+          <mat-error>{{bankAccountForm.controls.sortCode1.errors | json}}</mat-error>
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field appearance="outline">
+          <input matInput type="text" formControlName="sortCode2" placeholder="00" onKeyPress="if(this.value.length == 2) return false">
+          <mat-error>{{bankAccountForm.controls.sortCode2.errors | json}}</mat-error>
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field appearance="outline">
+          <input matInput type="text" formControlName="sortCode3" placeholder="00" onKeyPress="if(this.value.length == 2) return false">
+          <mat-error>{{bankAccountForm.controls.sortCode3.errors | json}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="d-flex flex-row">
+        <mat-form-field appearance="outline" class="flex-grow-1 mr-3">
+          <mat-label>Account number</mat-label>
+          <input matInput type="text" formControlName="accountNumber" placeholder="01234567" onKeyPress="if(this.value.length == 8) return false">
+        </mat-form-field>
+        <button type="submit" mat-fab color="primary" [disabled]="bankAccountForm.invalid">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="m-3" *ngIf="addBankAccountLoading || addBankAccountError">
+  <mat-progress-bar mode="indeterminate" *ngIf="addBankAccountLoading"></mat-progress-bar>
+  <div class="warn-color">{{addBankAccountError}}</div>
 </mat-card>
 
 <div *ngIf="bankAccount" class="m-3">

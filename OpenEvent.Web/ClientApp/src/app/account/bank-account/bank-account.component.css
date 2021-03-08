@@ -25,3 +25,18 @@
   text-effect: emboss;
   font-size: 20px;
 }
+
+#sortCodeInput {
+  display: flex;
+  flex-direction: row;
+}
+
+#bankAccountForm {
+  display: flex;
+  flex-direction: column;
+}
+
+#sortCodeInput > span {
+  margin: auto 1rem;
+  padding-bottom: 21px;
+}

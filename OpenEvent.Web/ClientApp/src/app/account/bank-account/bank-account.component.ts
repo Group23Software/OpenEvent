@@ -1,6 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {StripeIbanComponent, StripeService} from "ngx-stripe";
-import {CreateTokenIbanData, StripeIbanElementChangeEvent, StripeIbanElementOptions} from "@stripe/stripe-js";
+import {
+  CreateTokenBankAccountData,
+  CreateTokenIbanData,
+  StripeIbanElementChangeEvent,
+  StripeIbanElementOptions
+} from "@stripe/stripe-js";
 import {UserService} from "../../_Services/user.service";
 import {BankingService, StripeFilePurpose} from "../../_Services/banking.service";
 import {HttpErrorResponse} from "@angular/common/http";
@@ -8,6 +13,7 @@ import {Signal} from "../../signal/Signal";
 import {Balance} from "../../_models/BankAccount";
 import {TriggerService} from "../../_Services/trigger.service";
 import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'bank-account',
@@ -35,6 +41,13 @@ export class BankAccountComponent implements OnInit
       }
     }
   };
+
+  public bankAccountForm: FormGroup = new FormGroup({
+    sortCode1: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]{2}?$/)]),
+    sortCode2: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]{2}?$/)]),
+    sortCode3: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]{2}?$/)]),
+    accountNumber: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]{8}?$/)])
+  });
 
   public addBankAccountError: string;
   public addBankAccountLoading: boolean = false;
@@ -109,33 +122,55 @@ export class BankAccountComponent implements OnInit
   public addBankAccount ()
   {
     this.addBankAccountLoading = true;
+    console.log('creating bank account', this.bankAccountForm);
+    this.stripeService.createToken('bank_account', {
+      account_holder_name: this.User.FirstName + " " + this.User.LastName,
+      account_holder_type: 'individual',
+      routing_number: (this.bankAccountForm.controls.sortCode1.value + this.bankAccountForm.controls.sortCode2.value + this.bankAccountForm.controls.sortCode3.value),
+      account_number: this.bankAccountForm.controls.accountNumber.value,
+      country: 'GB',
+      currency: 'GBP'
+    } as CreateTokenBankAccountData).subscribe((result) =>
+    {
+      this.handleBankAccountResult(result);
+    });
+  }
+
+  public addIBANBankAccount ()
+  {
+    this.addBankAccountLoading = true;
     this.stripeService.createToken(this.bank.element, {
       account_holder_name: this.userService.User.FirstName + " " + this.userService.User.LastName,
       account_holder_type: "individual",
       currency: "gbp"
     } as CreateTokenIbanData).subscribe((result) =>
     {
-      console.log(result);
-      if (result.token)
-      {
-        this.bankingService.AddBankAccount({
-          BankToken: result.token.id,
-          UserId: this.userService.User.Id
-        }).subscribe(() =>
-        {
-          this.trigger.Iterate('Added bank account',1000,IteratorStatus.good);
-          this.addBankAccountLoading = false;
-        }, (e: HttpErrorResponse) =>
-        {
-          this.addBankAccountError = e.error.Message;
-          this.addBankAccountLoading = false;
-        });
-      } else if (result.error)
-      {
-        this.addBankAccountError = result.error.message;
-        this.addBankAccountLoading = false;
-      }
+      this.handleBankAccountResult(result);
     });
+  }
+
+  private handleBankAccountResult (result)
+  {
+    console.log(result);
+    if (result.token)
+    {
+      this.bankingService.AddBankAccount({
+        BankToken: result.token.id,
+        UserId: this.userService.User.Id
+      }).subscribe(() =>
+      {
+        this.trigger.Iterate('Added bank account', 1000, IteratorStatus.good);
+        this.addBankAccountLoading = false;
+      }, (e: HttpErrorResponse) =>
+      {
+        this.addBankAccountError = e.error.Message;
+        this.addBankAccountLoading = false;
+      });
+    } else if (result.error)
+    {
+      this.addBankAccountError = result.error.message;
+      this.addBankAccountLoading = false;
+    }
   }
 
   public removeBankAccount ()
@@ -146,8 +181,8 @@ export class BankAccountComponent implements OnInit
       UserId: this.userService.User.Id
     }).subscribe(response =>
     {
-      this.trigger.Iterate('Removed bank account',1000,IteratorStatus.good);
-      this.addBankAccountLoading = false;
+      this.trigger.Iterate('Removed bank account', 1000, IteratorStatus.good);
+      this.removeBankAccountLoading = false;
     }, (e: HttpErrorResponse) =>
     {
       this.removeBankAccountError = e.error.Message;
@@ -167,7 +202,7 @@ export class BankAccountComponent implements OnInit
         if (a)
         {
           this.documentLoading = false;
-          this.trigger.Iterate('Uploaded Identity Document',1000,IteratorStatus.good)
+          this.trigger.Iterate('Uploaded Identity Document', 1000, IteratorStatus.good)
           if (this.userService.User?.StripeAccountInfo?.Requirements) this.userService.User.StripeAccountInfo.Requirements.currently_due = this.userService.User.StripeAccountInfo.Requirements?.currently_due.filter(x => x != 'individual.verification.document')
         }
       }, (e: HttpErrorResponse) =>
@@ -194,7 +229,7 @@ export class BankAccountComponent implements OnInit
         if (a)
         {
           this.documentLoading = false;
-          this.trigger.Iterate('Uploaded Additional Identity Document',1000,IteratorStatus.good);
+          this.trigger.Iterate('Uploaded Additional Identity Document', 1000, IteratorStatus.good);
           if (this.userService.User?.StripeAccountInfo?.Requirements) this.userService.User.StripeAccountInfo.Requirements.currently_due = this.userService.User.StripeAccountInfo.Requirements?.currently_due.filter(x => x != 'individual.verification.additional_document')
         }
       }, (e: HttpErrorResponse) =>

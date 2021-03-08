@@ -66,7 +66,7 @@ describe('BankAccountComponent', () =>
       token: {id: "Test bank account token"}
     }));
     bankingServiceMock.AddBankAccount.and.returnValue(of(true));
-    component.addBankAccount();
+    component.addIBANBankAccount();
     expect(triggerMock.Iterate).toHaveBeenCalledWith('Added bank account',1000,IteratorStatus.good);
   });
 
@@ -78,7 +78,7 @@ describe('BankAccountComponent', () =>
       token: {id: "Test bank account token"}
     }));
     bankingServiceMock.AddBankAccount.and.returnValue(throwError({error:{Message: "Error adding bank account"}} as HttpErrorResponse));
-    component.addBankAccount();
+    component.addIBANBankAccount();
     expect(component.addBankAccountError).toEqual("Error adding bank account");
   });
 
@@ -89,7 +89,7 @@ describe('BankAccountComponent', () =>
     stripeServiceMock.createToken.and.returnValue(of({
       error: {message: "Error creating bank token"}
     }));
-    component.addBankAccount();
+    component.addIBANBankAccount();
     expect(component.addBankAccountError).toEqual("Error creating bank token");
   });
 
