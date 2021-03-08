@@ -90,6 +90,9 @@ namespace OpenEvent.Web
 
             // Add automapping configuration.
             services.AddAutoMapper(typeof(Startup));
+            
+            services.AddSingleton<IWorkQueue, WorkQueue>();
+            services.AddHostedService<BackGroundWorkService>();
 
             services.AddSingleton<IAnalyticsService, AnalyticsService>();
             services.AddSingleton<IRecommendationService, RecommendationService>();

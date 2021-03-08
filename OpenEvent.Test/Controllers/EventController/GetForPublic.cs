@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using IdentityServer4.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Web;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Services;
@@ -18,6 +18,7 @@ namespace OpenEvent.Test.Controllers.EventController
     {
         private readonly Mock<IEventService> EventServiceMock = new();
         private readonly Mock<IRecommendationService> RecommendationServiceMock = new();
+        private readonly Mock<IWorkQueue> WorkQueueMock = new();
         
         private readonly EventDetailModel TestEvent = new()
         {
@@ -31,8 +32,11 @@ namespace OpenEvent.Test.Controllers.EventController
         {
             EventServiceMock.Setup(x => x.GetForPublic(TestEvent.Id,new Guid())).ReturnsAsync(TestEvent);
             EventServiceMock.Setup(x => x.GetForPublic(new Guid(),new Guid())).ThrowsAsync(new EventNotFoundException());
-            EventController = new Web.Controllers.EventController(EventServiceMock.Object,
-                new Mock<ILogger<Web.Controllers.EventController>>().Object,RecommendationServiceMock.Object);
+            EventController = new Web.Controllers.EventController(
+                EventServiceMock.Object,
+                new Mock<ILogger<Web.Controllers.EventController>>().Object, 
+                RecommendationServiceMock.Object,
+                WorkQueueMock.Object);
         }
 
         [Test]

@@ -22,12 +22,15 @@ namespace OpenEvent.Web.Controllers
         private readonly IEventService EventService;
         private readonly ILogger<EventController> Logger;
         private readonly IRecommendationService RecommendationService;
+        private readonly IWorkQueue WorkQueue;
 
-        public EventController(IEventService eventService, ILogger<EventController> logger, IRecommendationService recommendationService)
+        public EventController(IEventService eventService, ILogger<EventController> logger,
+            IRecommendationService recommendationService, IWorkQueue workQueue)
         {
             EventService = eventService;
             Logger = logger;
             RecommendationService = recommendationService;
+            WorkQueue = workQueue;
         }
 
         /// <summary>
@@ -78,7 +81,7 @@ namespace OpenEvent.Web.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet("public")]
-        public async Task<ActionResult<EventDetailModel>> GetForPublic(Guid id, Guid? userId)
+        public async Task<ActionResult<EventDetailModel>> GetForPublic(Guid id, Guid userId)
         {
             try
             {
@@ -164,7 +167,8 @@ namespace OpenEvent.Web.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpPost("search")]
-        public async Task<ActionResult<List<EventViewModel>>> Search(string keyword, List<SearchFilter> filters, Guid userId)
+        public async Task<ActionResult<List<EventViewModel>>> Search(string keyword, List<SearchFilter> filters,
+            Guid userId)
         {
             try
             {
@@ -203,15 +207,15 @@ namespace OpenEvent.Web.Controllers
             {
                 Logger.LogInformation(e.ToString());
                 return BadRequest(e);
-            } 
+            }
         }
 
         [HttpPost("downvote")]
         public async Task<ActionResult> DownVote(Guid userId, Guid eventId)
         {
-            RecommendationService.Influence(userId,eventId,Influence.DownVote);
+            WorkQueue.QueueWork(token =>
+                RecommendationService.InfluenceAsync(token, userId, eventId, Influence.DownVote, DateTime.Now));
             return Ok();
         }
-        
     }
 }

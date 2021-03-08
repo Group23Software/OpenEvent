@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Web;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Services;
 
@@ -16,6 +17,7 @@ namespace OpenEvent.Test.Controllers.EventController
     {
         private readonly Mock<IEventService> EventServiceMock = new();
         private readonly Mock<IRecommendationService> RecommendationServiceMock = new();
+        private readonly Mock<IWorkQueue> WorkQueueMock = new();
 
         private readonly Guid EventId = new Guid("68933B68-4D0F-44B3-B7C4-CAB80AE97F31");
         private readonly Guid SaveErrorId = new Guid("BEB7C944-EC49-43AA-BAAC-94BD5825556D");
@@ -28,8 +30,11 @@ namespace OpenEvent.Test.Controllers.EventController
             EventServiceMock.Setup(x => x.Cancel(EventId));
             EventServiceMock.Setup(x => x.Cancel(new Guid())).ThrowsAsync(new EventNotFoundException());
             EventServiceMock.Setup(x => x.Cancel(SaveErrorId)).ThrowsAsync(new DbUpdateException());
-            EventController = new Web.Controllers.EventController(EventServiceMock.Object,
-                new Mock<ILogger<Web.Controllers.EventController>>().Object,RecommendationServiceMock.Object);
+            EventController = new Web.Controllers.EventController(
+                EventServiceMock.Object,
+                new Mock<ILogger<Web.Controllers.EventController>>().Object, 
+                RecommendationServiceMock.Object,
+                WorkQueueMock.Object);
         }
 
         [Test]

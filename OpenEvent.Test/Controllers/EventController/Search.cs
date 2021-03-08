@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Web;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Services;
 
@@ -14,8 +15,9 @@ namespace OpenEvent.Test.Controllers.EventController
     [TestFixture]
     public class Search
     {
-        private readonly Mock<Web.Services.IEventService> EventServiceMock = new();
+        private readonly Mock<IEventService> EventServiceMock = new();
         private readonly Mock<IRecommendationService> RecommendationServiceMock = new();
+        private readonly Mock<IWorkQueue> WorkQueueMock = new();
 
         private Web.Controllers.EventController EventController;
 
@@ -24,8 +26,11 @@ namespace OpenEvent.Test.Controllers.EventController
         {
             // EventServiceMock.Setup(x => x.GetForHost(TestData.Id)).ReturnsAsync(TestData);
             EventServiceMock.Setup(x => x.Search(null,null,new Guid())).ThrowsAsync(new Exception("Error searching"));
-            EventController = new Web.Controllers.EventController(EventServiceMock.Object,
-                new Mock<ILogger<Web.Controllers.EventController>>().Object,RecommendationServiceMock.Object);
+            EventController = new Web.Controllers.EventController(
+                EventServiceMock.Object,
+                new Mock<ILogger<Web.Controllers.EventController>>().Object, 
+                RecommendationServiceMock.Object,
+                WorkQueueMock.Object);
         }
 
         [Test]

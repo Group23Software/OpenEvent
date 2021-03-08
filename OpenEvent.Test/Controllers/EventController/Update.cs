@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Web;
 using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Event;
@@ -17,6 +18,7 @@ namespace OpenEvent.Test.Controllers.EventController
     {
         private readonly Mock<IEventService> EventServiceMock = new();
         private readonly Mock<IRecommendationService> RecommendationServiceMock = new();
+        private readonly Mock<IWorkQueue> WorkQueueMock = new();
 
         private readonly UpdateEventBody UpdateEventBody = new()
         {
@@ -42,8 +44,11 @@ namespace OpenEvent.Test.Controllers.EventController
             EventServiceMock.Setup(x => x.Update(UpdateEventBody));
             EventServiceMock.Setup(x => x.Update(null))
                 .ThrowsAsync(new EventNotFoundException());
-            EventController = new Web.Controllers.EventController(EventServiceMock.Object,
-                new Mock<ILogger<Web.Controllers.EventController>>().Object,RecommendationServiceMock.Object);
+            EventController = new Web.Controllers.EventController(
+                EventServiceMock.Object,
+                new Mock<ILogger<Web.Controllers.EventController>>().Object, 
+                RecommendationServiceMock.Object,
+                WorkQueueMock.Object);
         }
 
         [Test]

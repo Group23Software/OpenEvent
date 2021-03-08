@@ -30,15 +30,18 @@ namespace OpenEvent.Web.Services
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
         private readonly IAnalyticsService AnalyticsService;
-        
+        private readonly IRecommendationService RecommendationService;
+        private readonly IWorkQueue WorkQueue;
+
 
         public TicketService(ApplicationContext context, ILogger<TicketService> logger, IMapper mapper,
-            IAnalyticsService analyticsService)
+            IAnalyticsService analyticsService, IRecommendationService recommendationService, IWorkQueue workQueue)
         {
             Logger = logger;
             Mapper = mapper;
             ApplicationContext = context;
             AnalyticsService = analyticsService;
+            WorkQueue = workQueue;
         }
 
         public async Task<List<TicketViewModel>> GetAllUsersTickets(Guid id)
@@ -65,7 +68,14 @@ namespace OpenEvent.Web.Services
 
             try
             {
-                AnalyticsService.CaptureTicketVerify(ticket.Id,ticketVerifyBody.EventId);
+                WorkQueue.QueueWork(token =>
+                    AnalyticsService.CaptureTicketVerifyAsync(token, ticket.Id, ticketVerifyBody.EventId,
+                        DateTime.Now));
+
+                WorkQueue.QueueWork(token =>
+                    RecommendationService.InfluenceAsync(token, ticket.User.Id, ticket.Event.Id, Influence.Verify,
+                        DateTime.Now));
+
                 await ApplicationContext.SaveChangesAsync();
             }
             catch (Exception e)

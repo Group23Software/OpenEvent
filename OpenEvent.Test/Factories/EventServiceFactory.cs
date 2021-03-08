@@ -34,8 +34,13 @@ namespace OpenEvent.Test.Factories
             var distributedCacheMock = new Mock<IDistributedCache>();
 
             var analyticsServiceMock = new Mock<IAnalyticsService>();
-            analyticsServiceMock.Setup(x => x.CaptureSearch(null, null, new Guid()));
-            analyticsServiceMock.Setup(x => x.CapturePageView(new Guid(), new Guid()));
+            analyticsServiceMock.Setup(x =>
+                x.CaptureSearchAsync(CancellationToken.None, null, null, new Guid(), new DateTime()));
+            analyticsServiceMock.Setup(
+                x => x.CapturePageViewAsync(CancellationToken.None, new Guid(), new Guid(), new DateTime()));
+
+            var workQueueMock = new Mock<IWorkQueue>();
+            workQueueMock.Setup(x => x.QueueWork(new Mock<Func<CancellationToken,Task>>().Object));
 
             var recommendationServiceMock = new Mock<IRecommendationService>();
 
@@ -61,16 +66,17 @@ namespace OpenEvent.Test.Factories
                 ItExpr.IsAny<CancellationToken>()).ReturnsAsync(mapResponse);
 
             var httpClientMock = new HttpClient(httpMessageHandlerMock.Object);
-            
+
             return new EventService(
                 context,
-                new Mock<ILogger<EventService>>().Object, 
-                mapper, 
-                httpClientMock, 
+                new Mock<ILogger<EventService>>().Object,
+                mapper,
+                httpClientMock,
                 appSettings,
-                analyticsServiceMock.Object, 
-                recommendationServiceMock.Object, 
-                distributedCacheMock.Object);
+                analyticsServiceMock.Object,
+                recommendationServiceMock.Object,
+                distributedCacheMock.Object, 
+                workQueueMock.Object);
         }
     }
 }

@@ -7,51 +7,34 @@ using OpenEvent.Web.Services;
 
 namespace OpenEvent.Test.Factories
 {
-    // public class AnalyticsServiceFactory
-    // {
-    //     public AnalyticsService Create(ApplicationContext context)
-    //     {
-    //         var recommendationServiceMock = new Mock<IRecommendationService>();
-    //         
-    //         var s = new scopeFactory();
-    //
-    //
-    //         return new AnalyticsService(
-    //             new Logger<AnalyticsService>(new LoggerFactory()),
-    //             s,
-    //             recommendationServiceMock.Object);
-    //     }
-    //
-    //
-    //     public class scopeFactory : IServiceScopeFactory
-    //     {
-    //         public IServiceScope CreateScope()
-    //         {
-    //             return new serviceScope();
-    //         }
-    //     }
-    //     
-    //     public class serviceScope: IServiceScope
-    //     {
-    //         public serviceScope()
-    //         {
-    //             this.ServiceProvider = new serviceProvider();
-    //         }
-    //         
-    //         public void Dispose()
-    //         {
-    //             throw new NotImplementedException();
-    //         }
-    //
-    //         public IServiceProvider ServiceProvider { get; }
-    //     }
-    //
-    //     public class serviceProvider : IServiceProvider
-    //     {
-    //         public object? GetService(Type serviceType)
-    //         {
-    //             return new AnalyticsService();
-    //         }
-    //     }
-    // }
+    public class AnalyticsServiceFactory
+    {
+        public AnalyticsService Create(ApplicationContext context)
+        {
+            var recommendationServiceMock = new Mock<IRecommendationService>();
+
+            var serviceProvider = new Mock<IServiceProvider>();
+            serviceProvider
+                .Setup(x => x.GetService(typeof(ApplicationContext)))
+                .Returns(context);
+
+            var serviceScope = new Mock<IServiceScope>();
+            serviceScope.Setup(x => x.ServiceProvider).Returns(serviceProvider.Object);
+
+            var serviceScopeFactory = new Mock<IServiceScopeFactory>();
+            serviceScopeFactory
+                .Setup(x => x.CreateScope())
+                .Returns(serviceScope.Object);
+
+            serviceProvider
+                .Setup(x => x.GetService(typeof(IServiceScopeFactory)))
+                .Returns(serviceScopeFactory.Object);
+            
+
+            return new AnalyticsService(
+                new Logger<AnalyticsService>(new LoggerFactory()),
+                serviceProvider.Object,
+                recommendationServiceMock.Object);
+        }
+    }
 }

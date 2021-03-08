@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ namespace OpenEvent.Web.Services
         Task<List<EventHostModel>> GetAllHosts(Guid hostId);
 
         //public methods
-        Task<EventDetailModel> GetForPublic(Guid id, Guid? userId);
+        Task<EventDetailModel> GetForPublic(Guid id, Guid userId);
         Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters, Guid userId);
 
         Task<List<Category>> GetAllCategories();
@@ -54,10 +55,12 @@ namespace OpenEvent.Web.Services
         private readonly IAnalyticsService AnalyticsService;
         private readonly IRecommendationService RecommendationService;
         private readonly IDistributedCache DistributedCache;
+        private readonly IWorkQueue WorkQueue;
 
         public EventService(ApplicationContext context, ILogger<EventService> logger, IMapper mapper,
             HttpClient httpClient, IOptions<AppSettings> appSettings, IAnalyticsService analyticsService,
-            IRecommendationService recommendationService, IDistributedCache distributedCache)
+            IRecommendationService recommendationService, IDistributedCache distributedCache,
+            IWorkQueue workQueue)
         {
             Logger = logger;
             ApplicationContext = context;
@@ -67,6 +70,7 @@ namespace OpenEvent.Web.Services
             AnalyticsService = analyticsService;
             RecommendationService = recommendationService;
             DistributedCache = distributedCache;
+            WorkQueue = workQueue;
         }
 
         /// <summary>
@@ -280,7 +284,7 @@ namespace OpenEvent.Web.Services
         /// <param name="userId"></param>
         /// <returns></returns>
         /// <exception cref="EventNotFoundException"></exception>
-        public async Task<EventDetailModel> GetForPublic(Guid id, Guid? userId)
+        public async Task<EventDetailModel> GetForPublic(Guid id, Guid userId)
         {
             var e = await CacheHelpers.Get<Event>(DistributedCache, id.ToString(), "PublicEvent");
 
@@ -308,8 +312,10 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("Found event in cache");
             }
 
-            AnalyticsService.CapturePageView(e.Id, userId);
-            RecommendationService.Influence(userId, e.Id, Influence.PageView);
+
+            WorkQueue.QueueWork(token => AnalyticsService.CapturePageViewAsync(token, e.Id, userId, DateTime.Now));
+            WorkQueue.QueueWork(token =>
+                RecommendationService.InfluenceAsync(token, userId, e.Id, Influence.PageView, DateTime.Now));
 
             return new EventDetailModel
             {
@@ -397,8 +403,10 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("Found search in cache");
             }
 
-            AnalyticsService.CaptureSearch(keyword, String.Join(",", filters), userId);
-            RecommendationService.Influence(userId, keyword, filters);
+            WorkQueue.QueueWork(token =>
+                AnalyticsService.CaptureSearchAsync(token, keyword, String.Join(",", filters), userId, DateTime.Now));
+            WorkQueue.QueueWork(token =>
+                RecommendationService.InfluenceAsync(token, userId, keyword, filters, DateTime.Now));
 
             return events.Select(e => Mapper.Map<EventViewModel>(e)).ToList();
         }

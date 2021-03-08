@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Web;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Test.Controllers.EventController
@@ -17,8 +15,9 @@ namespace OpenEvent.Test.Controllers.EventController
     [TestFixture]
     public class GetForHost
     {
-        private readonly Mock<Web.Services.IEventService> EventServiceMock = new();
+        private readonly Mock<IEventService> EventServiceMock = new();
         private readonly Mock<IRecommendationService> RecommendationServiceMock = new();
+        private readonly Mock<IWorkQueue> WorkQueueMock = new();
 
         private readonly EventHostModel TestData = new()
         {
@@ -32,8 +31,11 @@ namespace OpenEvent.Test.Controllers.EventController
         {
             EventServiceMock.Setup(x => x.GetForHost(TestData.Id)).ReturnsAsync(TestData);
             EventServiceMock.Setup(x => x.GetForHost(new Guid())).ThrowsAsync(new EventNotFoundException());
-            EventController = new Web.Controllers.EventController(EventServiceMock.Object,
-                new Mock<ILogger<Web.Controllers.EventController>>().Object,RecommendationServiceMock.Object);
+            EventController = new Web.Controllers.EventController(
+                EventServiceMock.Object,
+                new Mock<ILogger<Web.Controllers.EventController>>().Object, 
+                RecommendationServiceMock.Object,
+                WorkQueueMock.Object);
         }
         
         
