@@ -1,4 +1,4 @@
-<button mat-flat-button color="accent" (click)="create()">New Promo</button>
+
 <mat-card id="promos">
   <mat-card-header>
     <mat-icon mat-card-avatar>local_offer</mat-icon>
@@ -6,5 +6,28 @@
     <mat-card-subtitle>All promos created for this event</mat-card-subtitle>
   </mat-card-header>
 
-  <mat-card class="promo" *ngFor="let promo of Event.Promos">{{promo.Start}} {{promo.End}}</mat-card>
+  <mat-card class="promo" *ngFor="let promo of Event.Promos">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>price_change</mat-icon>
+      <mat-card-title>
+        {{promo.Discount}}% Discount
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="d-flex flex-row justify-content-between">
+        <div>
+          <div>Starts <span class="font-italic font-weight-bold">{{promo.Start | date: 'full'}}</span></div>
+          <div>Ends <span class="font-italic font-weight-bold">{{promo.End | date: 'full'}}</span></div>
+        </div>
+        <div>
+          <mat-slide-toggle [checked]="promo.Active" (change)="activeToggle($event,promo)" class="mr-3">Active</mat-slide-toggle>
+          <button mat-mini-fab color="warn" (click)="delete(promo)">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card><button mat-flat-button color="accent" (click)="create()">New Promo</button></mat-card>
 </mat-card>

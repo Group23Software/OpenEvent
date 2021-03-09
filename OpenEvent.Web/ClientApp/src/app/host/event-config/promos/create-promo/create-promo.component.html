@@ -31,6 +31,6 @@
   <div class="d-flex flex-row justify-content-between">
     <mat-checkbox color="accent" formControlName="active" class="ml-1">Active?</mat-checkbox>
 
-    <button mat-flat-button color="accent" type="submit">Create</button>
+    <button mat-flat-button color="accent" type="submit" [disabled]="createPromoForm.invalid">Create</button>
   </div>
 </form>

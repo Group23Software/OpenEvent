@@ -337,7 +337,7 @@ namespace OpenEvent.Web.Services
                 TicketsLeft = e.TicketsLeft,
                 EndUTC = e.EndUTC,
                 StartUTC = e.StartUTC,
-                Promos = e.Promos.Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList()
+                Promos = e.Promos.Where(x => x.Active).Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList()
             };
         }
 

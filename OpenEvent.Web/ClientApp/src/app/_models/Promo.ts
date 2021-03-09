@@ -18,6 +18,7 @@ export interface CreatePromoBody
 
 export interface UpdatePromoBody
 {
+  Id: string;
   Start: Date;
   End: Date;
   Active: boolean;

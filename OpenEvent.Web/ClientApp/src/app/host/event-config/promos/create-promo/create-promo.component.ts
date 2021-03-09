@@ -19,7 +19,7 @@ export class CreatePromoComponent implements OnInit
     discount: new FormControl(0, [Validators.required]),
     start: new FormControl('', [Validators.required]),
     end: new FormControl('', [Validators.required]),
-    active: new FormControl('',[Validators.required])
+    active: new FormControl(false,[Validators.required])
   });
   public defaultTime: number[];
   minDate: Date;
