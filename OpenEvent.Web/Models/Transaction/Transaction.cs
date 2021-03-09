@@ -2,9 +2,6 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
-using OpenEvent.Web.Models.Ticket;
-using OpenEvent.Web.Models.User;
-using Stripe;
 
 namespace OpenEvent.Web.Models.Transaction
 {

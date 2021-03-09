@@ -294,11 +294,12 @@ namespace OpenEvent.Web.Services
             if (e == null)
             {
                 e = await ApplicationContext.Events
+                    .Include(x => x.Promos)
                     .Include(x => x.Address)
                     .Include(x => x.EventCategories).ThenInclude(x => x.Category)
                     .Include(x => x.Images)
                     .Include(x => x.Thumbnail)
-                    .Include(x => x.SocialLinks).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+                    .Include(x => x.SocialLinks).AsSplitQuery().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
                 if (e == null)
                 {
@@ -337,7 +338,7 @@ namespace OpenEvent.Web.Services
                 TicketsLeft = e.TicketsLeft,
                 EndUTC = e.EndUTC,
                 StartUTC = e.StartUTC,
-                Promos = e.Promos.Where(x => x.Active).Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList()
+                Promos = e.Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End).Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList()
             };
         }
 

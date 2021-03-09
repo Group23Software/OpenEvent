@@ -216,7 +216,7 @@ namespace OpenEvent.Test.Factories
                         {
                             Id = new Guid("AB261AEC-B56A-4D12-A9CC-8F499B98D4B1"),
                             Active = true,
-                            Discount = 0.5,
+                            Discount = 50,
                             Start = DateTime.Now,
                             End = DateTime.Now.AddMonths(1)
                         }

@@ -13,18 +13,27 @@
     </div>
   </div>
 
+  <mat-card id="promoBanner" *ngIf="Promo">
+    <div class="mat-caption">Ends {{Promo.End | date:'medium'}}</div>
+    <div class="mat-headline">{{Promo.Discount}}% Off Now!</div>
+  </mat-card>
+
   <gallery id="imageGallery" *ngIf="eventImages" [items]="eventImages" [thumb]="false" imageSize="cover" loadingStrategy="lazy"></gallery>
 
   <div id="eventInfo">
     <div class="d-flex flex-row" ngClass.lt-sm="flex-column">
-    <mat-card class="flex-grow-1 mr-3 d-flex">
-      <div class="m-auto">Starts at <span class="dateTime">{{Event.StartLocal | date:'medium'}}</span> and finishes <span class="dateTime">{{Event.EndLocal | date:'medium'}}</span></div>
-    </mat-card>
+      <mat-card class="flex-grow-1 mr-3 d-flex">
+        <div class="m-auto">Starts at <span class="dateTime">{{Event.StartLocal | date:'medium'}}</span> and finishes <span class="dateTime">{{Event.EndLocal | date:'medium'}}</span></div>
+      </mat-card>
 
-    <mat-card id="ticketsAndPrice">
-      <div class="mr-3">{{Event.TicketsLeft}} ticket(s) left!</div>
-      <button mat-flat-button color="accent" [disabled]="Event.TicketsLeft == 0" (click)="purchase()">{{Event.Price / 100 |currency:'GBP'}}</button>
-    </mat-card>
+      <mat-card id="ticketsAndPrice">
+        <div class="mr-3">{{Event.TicketsLeft}} ticket(s) left!</div>
+        <button *ngIf="Promo && Event.TicketsLeft != 0" mat-flat-button color="accent" (click)="purchase()">
+          <span style="text-decoration: line-through; margin-right: 0.25rem">{{Event.Price / 100 |currency:'GBP'}}</span>
+          <span>{{(Event.Price / 100) - (((Event.Price / 100) / 100) * Promo.Discount) |currency:'GBP'}}</span>
+        </button>
+        <button *ngIf="!Promo" mat-flat-button color="accent" [disabled]="Event.TicketsLeft == 0" (click)="purchase()">{{Event.Price / 100 |currency:'GBP'}}</button>
+      </mat-card>
     </div>
     <div class="d-flex flex-row">
 

@@ -129,7 +129,8 @@ export class CreateEventComponent implements OnInit
         StartLocal: this.DateForm.controls.StartLocal.value,
         StartUTC: undefined,
         Thumbnail: this.thumbnail,
-        TicketsLeft: this.createEventForm.controls.NumberOfTickets.value
+        TicketsLeft: this.createEventForm.controls.NumberOfTickets.value,
+        Promos: null
       }
     }
   }

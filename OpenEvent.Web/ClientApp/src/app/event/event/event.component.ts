@@ -31,6 +31,11 @@ export class EventComponent implements OnInit, OnChanges
   //   return images;
   // }
 
+  get Promo ()
+  {
+    return this.Event.Promos[0];
+  }
+
   get Event ()
   {
     return this.event;
@@ -98,7 +103,8 @@ export class EventComponent implements OnInit, OnChanges
     });
 
     // TODO: Go to ticket
-    dialog.afterClosed().subscribe(result => {
+    dialog.afterClosed().subscribe(result =>
+    {
       if (result == undefined) this.transactionService.CancelIntent(this.Event.Id).subscribe();
       dialog = null;
     });

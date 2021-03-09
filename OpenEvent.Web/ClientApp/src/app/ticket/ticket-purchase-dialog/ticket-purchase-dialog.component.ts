@@ -45,6 +45,11 @@ export class TicketPurchaseDialogComponent implements OnInit
     return this.data.Event;
   }
 
+  get Promo ()
+  {
+    return this.Event.Promos[0];
+  }
+
   get Transaction ()
   {
     return this.transactionService.CurrentTransaction;

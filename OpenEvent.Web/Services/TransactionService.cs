@@ -61,6 +61,7 @@ namespace OpenEvent.Web.Services
                 .FirstOrDefaultAsync(x => x.Id == createIntentBody.UserId);
 
             var e = await ApplicationContext.Events.AsSplitQuery()
+                .Include(x => x.Promos)
                 .Include(x => x.Host)
                 .Include(x => x.Tickets)
                 .Include(x => x.Transactions)
@@ -83,6 +84,14 @@ namespace OpenEvent.Web.Services
 
             if (e.Host.StripeAccountId == null) throw new Exception("The host doesn't have enough stripe info");
 
+            var promo = e.Promos.FirstOrDefault(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End);
+
+            if (promo != null)
+            {
+                createIntentBody.Amount -= (createIntentBody.Amount * promo.Discount / 100);
+                Logger.LogInformation("Found promo for event");
+            }
+    
             var options = new PaymentIntentCreateOptions()
             {
                 Amount = createIntentBody.Amount,
@@ -99,9 +108,10 @@ namespace OpenEvent.Web.Services
                 {
                     "card"
                 },
-                Metadata = new Dictionary<string, string>()
+                Metadata = new Dictionary<string, string>
                 {
-                    {"EventId", e.Id.ToString()}
+                    {"EventId", e.Id.ToString()},
+                    {"PromoId", promo?.Id.ToString()}
                 },
             };
 
@@ -299,11 +309,12 @@ namespace OpenEvent.Web.Services
                 if (stripeEvent.Type == Events.PaymentIntentSucceeded)
                 {
                     Logger.LogInformation("Payment intent succeeded");
-                    
+
                     var stripeCharge = stripeEvent.Data.Object as PaymentIntent;
 
                     var transaction =
-                        await ApplicationContext.Transactions.Include(x => x.User).AsSplitQuery().FirstOrDefaultAsync(x => x.StripeIntentId == stripeCharge.Id);
+                        await ApplicationContext.Transactions.Include(x => x.User).AsSplitQuery()
+                            .FirstOrDefaultAsync(x => x.StripeIntentId == stripeCharge.Id);
 
                     if (transaction != null)
                     {
@@ -328,7 +339,7 @@ namespace OpenEvent.Web.Services
                 else if (stripeEvent.Type == Events.PaymentIntentPaymentFailed)
                 {
                     Logger.LogInformation("Payment intent failed");
-                    
+
                     var intent = stripeEvent.Data.Object as PaymentIntent;
 
                     var transaction = await ApplicationContext.Transactions.FirstOrDefaultAsync(x =>

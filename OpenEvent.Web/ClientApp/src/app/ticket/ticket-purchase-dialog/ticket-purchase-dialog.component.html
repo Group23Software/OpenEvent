@@ -30,7 +30,15 @@
         <div class="mb-3">
           <div class="d-flex flex-row justify-content-between">
             <div>1 * {{Event.Name}} ticket(s)</div>
-            <div>{{Transaction?.Amount / 100 | currency:'GBP'}}</div>
+            <div>{{Event?.Price / 100 | currency:'GBP':true:'1.2-2'}}</div>
+          </div>
+          <div class="d-flex flex-row justify-content-between" *ngIf="Promo">
+            <div>Promo applied ({{Promo.Discount}}%)</div>
+            <div>{{(Event.Price * Promo.Discount) / 10000|currency:'GBP':true:'1.2-2'}}</div>
+          </div>
+          <div class="d-flex flex-row justify-content-between" *ngIf="Promo">
+            <div>Total</div>
+            <div>{{Transaction?.Amount / 100 | currency:'GBP':true:'1.2-2'}}</div>
           </div>
           <mat-divider></mat-divider>
           <div class="d-flex flex-row justify-content-between">

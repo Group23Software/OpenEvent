@@ -26,7 +26,6 @@ export interface EventHostModel extends EventViewModel
   // VerificationEvents?: TicketVerificationEvent[];
 
   Transactions: TransactionViewModel[];
-  Promos: Promo[];
 }
 
 export interface EventViewModel
@@ -43,6 +42,7 @@ export interface EventViewModel
   Price: number;
 
   Categories: CategoryViewModel[];
+  Promos: Promo[];
 }
 
 export interface CreateEventBody
