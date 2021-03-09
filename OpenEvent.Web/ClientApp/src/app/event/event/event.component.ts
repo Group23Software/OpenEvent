@@ -105,7 +105,7 @@ export class EventComponent implements OnInit, OnChanges
     // TODO: Go to ticket
     dialog.afterClosed().subscribe(result =>
     {
-      if (result == undefined) this.transactionService.CancelIntent(this.Event.Id).subscribe();
+      if (result == undefined) this.transactionService.CancelCurrentIntent(this.Event.Id).subscribe();
       dialog = null;
     });
   }

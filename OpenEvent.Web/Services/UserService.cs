@@ -14,6 +14,7 @@ using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Recommendation;
+using OpenEvent.Web.Models.Transaction;
 using OpenEvent.Web.Models.User;
 using Stripe;
 using Address = OpenEvent.Web.Models.Address.Address;
@@ -29,7 +30,7 @@ namespace OpenEvent.Web.Services
         Task Destroy(Guid id);
         Task<UserAccountModel> Get(Guid id);
 
-        Task<UsersAnalytics> GetUsersAnalytics(Guid id);
+        Task<UsersAnalytics> GetAnalytics(Guid id);
 
         // Task<User> UpdateBasicInfo(UserAccountModel user);
         Task<string> UpdateAvatar(Guid id, byte[] avatar);
@@ -174,7 +175,11 @@ namespace OpenEvent.Web.Services
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         public async Task<UserAccountModel> Get(Guid id)
         {
-            var userRaw = ApplicationContext.Users.Include(x => x.BankAccounts).Include(x => x.PaymentMethods).AsSplitQuery().AsNoTracking().FirstOrDefault(x => x.Id == id);
+            var userRaw = ApplicationContext.Users
+                .Include(x => x.BankAccounts)
+                .Include(x => x.PaymentMethods)
+                .Include(x => x.Transactions).ThenInclude(x => x.Event)
+                .AsSplitQuery().AsNoTracking().FirstOrDefault(x => x.Id == id);
 
             if (userRaw == null)
             {
@@ -202,6 +207,9 @@ namespace OpenEvent.Web.Services
                 BankAccounts = userRaw.BankAccounts != null
                     ? userRaw.BankAccounts.Select(p => Mapper.Map<BankAccountViewModel>(p)).ToList()
                     : new List<BankAccountViewModel>(),
+                Transactions = userRaw.Transactions.Any()
+                    ? userRaw.Transactions.Select(x => Mapper.Map<TransactionViewModel>(x)).ToList()
+                    : new List<TransactionViewModel>()
             };
 
             if (user.StripeAccountId != null)
@@ -214,28 +222,37 @@ namespace OpenEvent.Web.Services
                     Logger.LogInformation("Stripe user not found");
                     throw new UserNotFoundException();
                 }
-                
+
                 user.StripeAccountInfo = Mapper.Map<StripeAccountInfo>(stripeAccount);
             }
 
             return user;
         }
 
-        public async Task<UsersAnalytics> GetUsersAnalytics(Guid id)
+        public async Task<UsersAnalytics> GetAnalytics(Guid id)
         {
-            var pageViewEvents = await ApplicationContext.PageViewEvents.Include(x => x.Event).AsSplitQuery().AsNoTracking().Where(x => x.User.Id == id).ToListAsync();
-            var searchEvents = await ApplicationContext.SearchEvents.Where(x => x.User.Id == id).AsSplitQuery().AsNoTracking().ToListAsync();
-            var recommendationScores = await ApplicationContext.RecommendationScores.Include(x => x.Category).AsSplitQuery().AsNoTracking().Where(x => x.User.Id == id)
+            var pageViewEvents = await ApplicationContext.PageViewEvents.Include(x => x.Event).AsSplitQuery()
+                .AsNoTracking().Where(x => x.User.Id == id).ToListAsync();
+            var searchEvents = await ApplicationContext.SearchEvents.Where(x => x.User.Id == id).AsSplitQuery()
                 .AsNoTracking().ToListAsync();
-            var ticketVerificationEvents = await ApplicationContext.VerificationEvents.Include(x => x.Ticket).Include(x => x.Event).AsSplitQuery().AsNoTracking().Where(x => x.User.Id == id)
+            var recommendationScores = await ApplicationContext.RecommendationScores.Include(x => x.Category)
+                .AsSplitQuery().AsNoTracking().Where(x => x.User.Id == id)
+                .AsNoTracking().ToListAsync();
+            var ticketVerificationEvents = await ApplicationContext.VerificationEvents.Include(x => x.Ticket)
+                .Include(x => x.Event).AsSplitQuery().AsNoTracking().Where(x => x.User.Id == id)
                 .AsNoTracking().ToListAsync();
 
             return new UsersAnalytics
             {
-                SearchEvents = searchEvents.Select(x => Mapper.Map<SearchEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
-                PageViewEvents = pageViewEvents.Select(x => Mapper.Map<PageViewEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
-                RecommendationScores = recommendationScores.Select(x => Mapper.Map<RecommendationScoreViewModel>(x)).ToList(),
-                TicketVerificationEvents = ticketVerificationEvents.Select(x => Mapper.Map<TicketVerificationEventViewModel>(x)).OrderByDescending(x => x.Created).ToList()
+                SearchEvents = searchEvents.Select(x => Mapper.Map<SearchEventViewModel>(x))
+                    .OrderByDescending(x => x.Created).ToList(),
+                PageViewEvents = pageViewEvents.Select(x => Mapper.Map<PageViewEventViewModel>(x))
+                    .OrderByDescending(x => x.Created).ToList(),
+                RecommendationScores = recommendationScores.Select(x => Mapper.Map<RecommendationScoreViewModel>(x))
+                    .ToList(),
+                TicketVerificationEvents = ticketVerificationEvents
+                    .Select(x => Mapper.Map<TicketVerificationEventViewModel>(x)).OrderByDescending(x => x.Created)
+                    .ToList()
             };
         }
 

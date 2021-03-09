@@ -18,7 +18,7 @@ namespace OpenEvent.Test.Services.UserService
             {
                 var service = new UserServiceFactory().Create(context);
 
-                var result = await service.GetUsersAnalytics(new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"));
+                var result = await service.GetAnalytics(new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"));
 
                 result.Should().NotBeNull();
 

@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../_Services/user.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import {TransactionViewModel} from "../_models/Transaction";
+import {TransactionService} from "../_Services/transaction.service";
 
 
 @Component({
@@ -13,9 +15,16 @@ export class AccountComponent implements OnInit
   public getUserError: string;
   public userLoaded: boolean = false;
   public currentTab: number = 0;
+  transactionColumns = ['stripeId', 'status', 'start', 'end', 'amount', 'paid', 'actions'];
+  defaultDate = "0001-01-01T00:00:00";
+  public transactionActionLoading: boolean = false;
 
-  constructor (
-    private userService: UserService)
+  get User ()
+  {
+    return this.userService.User;
+  }
+
+  constructor (private userService: UserService, private transactionService: TransactionService)
   {
   }
 
@@ -33,5 +42,16 @@ export class AccountComponent implements OnInit
   public changeTab (tab: number)
   {
     this.currentTab = tab;
+  }
+
+  public cancel (transaction: TransactionViewModel)
+  {
+    this.transactionActionLoading = true;
+    this.transactionService.CancelIntent(transaction.StripeIntentId, transaction.EventId, transaction.TicketId).subscribe(() =>
+    {
+      this.User.Transactions = this.User.Transactions.filter(x => x.StripeIntentId != transaction.StripeIntentId);
+    }, () =>
+    {
+    }, () => this.transactionActionLoading = false);
   }
 }

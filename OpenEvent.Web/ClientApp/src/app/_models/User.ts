@@ -2,6 +2,7 @@ import {TicketViewModel} from "./Ticket";
 import {PaymentMethodViewModel} from "./PaymentMethod";
 import {Address} from "./Address";
 import {BankAccountViewModel} from "./BankAccount";
+import {TransactionViewModel} from "./Transaction";
 
 export interface UserViewModel
 {
@@ -23,15 +24,11 @@ interface StripeAccountInfo
 
 export interface UserAccountModel extends UserViewModel
 {
-  // Id: string;
-  // UserName: string;
   Email?: string;
   FirstName?: string;
   LastName?: string;
-  // Avatar: string;
   PhoneNumber?: string;
   DateOfBirth?: Date;
-  // IsDarkMode: boolean;
   Tickets?: TicketViewModel[];
   PaymentMethods?: PaymentMethodViewModel[];
   BankAccounts?: BankAccountViewModel[];
@@ -39,6 +36,7 @@ export interface UserAccountModel extends UserViewModel
   StripeAccountId?: string;
   StripeCustomerId?: string;
   StripeAccountInfo?: StripeAccountInfo;
+  Transactions?: TransactionViewModel[];
 }
 
 export interface AuthBody

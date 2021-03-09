@@ -24,7 +24,7 @@ export class TransactionService
 
   private transactionSecret: string;
 
-  get TransactionSecret () : string
+  get TransactionSecret (): string
   {
     return this.transactionSecret;
   }
@@ -64,7 +64,7 @@ export class TransactionService
     }));
   }
 
-  public CancelIntent (eventId: string): Observable<any>
+  public CancelCurrentIntent (eventId: string): Observable<any>
   {
     return this.http.post(this.BaseUrl + TransactionPaths.CancelIntent, {
       Id: this.currentTransaction.StripeIntentId,
@@ -75,5 +75,14 @@ export class TransactionService
       this.currentTransaction = null;
       this.cookieService.delete('indent', '/event');
     }));
+  }
+
+  public CancelIntent (intentId: string, eventId: string, ticketId: string)
+  {
+    return this.http.post(this.BaseUrl + TransactionPaths.CancelIntent, {
+      TicketId: ticketId,
+      EventId: eventId,
+      Id: intentId
+    } as CancelIntentBody);
   }
 }

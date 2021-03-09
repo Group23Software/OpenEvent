@@ -242,7 +242,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
-                var result = await UserService.GetUsersAnalytics(id);
+                var result = await UserService.GetAnalytics(id);
                 return result;
             }
             catch (Exception e)

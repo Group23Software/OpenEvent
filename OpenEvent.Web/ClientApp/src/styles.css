@@ -100,3 +100,7 @@ mat-card {
   position: absolute;
   flex-direction: column;
 }
+
+.successIcon {
+  color: #8bc34a;
+}

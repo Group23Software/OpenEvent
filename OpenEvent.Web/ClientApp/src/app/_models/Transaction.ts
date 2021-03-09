@@ -8,6 +8,7 @@ export interface CreateIntentBody
 
 export interface TransactionViewModel
 {
+  EventId: string;
   StripeIntentId: string;
   Start: Date;
   Updated: Date;
