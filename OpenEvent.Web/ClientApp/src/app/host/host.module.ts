@@ -10,6 +10,8 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {RouterModule} from "@angular/router";
 import {MatDialogModule} from "@angular/material/dialog";
 import {ZXingScannerModule} from "@zxing/ngx-scanner";
+import { PromosComponent } from './event-config/promos/promos.component';
+import { CreatePromoComponent } from './event-config/promos/create-promo/create-promo.component';
 
 
 
@@ -20,7 +22,9 @@ import {ZXingScannerModule} from "@zxing/ngx-scanner";
     DashboardComponent,
     EventConfigComponent,
     VerifyTicketComponent,
-    VerifyDialog
+    VerifyDialog,
+    PromosComponent,
+    CreatePromoComponent
   ],
   imports: [
     CommonModule,

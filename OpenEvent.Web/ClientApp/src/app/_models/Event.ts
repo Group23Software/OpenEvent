@@ -5,6 +5,7 @@ import {ImageViewModel} from "./Image";
 import {TicketViewModel} from "./Ticket";
 import {PageViewEvent, TicketVerificationEvent} from "./Analytic";
 import {TransactionViewModel} from "./Transaction";
+import {Promo} from "./Promo";
 
 export interface EventDetailModel extends EventViewModel
 {
@@ -25,6 +26,7 @@ export interface EventHostModel extends EventViewModel
   // VerificationEvents?: TicketVerificationEvent[];
 
   Transactions: TransactionViewModel[];
+  Promos: Promo[];
 }
 
 export interface EventViewModel

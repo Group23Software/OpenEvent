@@ -1,0 +1,10 @@
+<button mat-flat-button color="accent" (click)="create()">New Promo</button>
+<mat-card id="promos">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>local_offer</mat-icon>
+    <mat-card-title>Promos</mat-card-title>
+    <mat-card-subtitle>All promos created for this event</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card class="promo" *ngFor="let promo of Event.Promos">{{promo.Start}} {{promo.End}}</mat-card>
+</mat-card>

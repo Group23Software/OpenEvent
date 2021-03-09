@@ -19,6 +19,7 @@ using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
+using OpenEvent.Web.Models.Promo;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.Transaction;
 
@@ -240,6 +241,7 @@ namespace OpenEvent.Web.Services
                 .Include(x => x.Tickets)
                 .Include(x => x.Transactions)
                 .Include(x => x.Host)
+                .Include(x => x.Promos)
                 .AsSplitQuery().AsNoTracking().AsEnumerable();
 
             events = events.Where(x => x.Host.Id == hostId && !x.isCanceled);
@@ -273,7 +275,8 @@ namespace OpenEvent.Web.Services
                     StartUTC = x.StartUTC,
                     Transactions = x.Transactions.Any()
                         ? x.Transactions.Select(transaction => Mapper.Map<TransactionViewModel>(transaction)).ToList()
-                        : new List<TransactionViewModel>()
+                        : new List<TransactionViewModel>(),
+                    Promos = x.Promos.Any() ? x.Promos.Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList() : new List<PromoViewModel>()
                 }).ToList();
         }
 
@@ -333,7 +336,8 @@ namespace OpenEvent.Web.Services
                 StartLocal = e.StartLocal,
                 TicketsLeft = e.TicketsLeft,
                 EndUTC = e.EndUTC,
-                StartUTC = e.StartUTC
+                StartUTC = e.StartUTC,
+                Promos = e.Promos.Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList()
             };
         }
 
@@ -441,7 +445,10 @@ namespace OpenEvent.Web.Services
         /// <exception cref="EventNotFoundException"></exception>
         public async Task<ActionResult<EventHostModel>> GetForHost(Guid id)
         {
-            var e = await ApplicationContext.Events.Include(x => x.PageViewEvents).Include(x => x.Tickets).Select(
+            var e = await ApplicationContext.Events
+                .Include(x => x.Promos)
+                .Include(x => x.PageViewEvents)
+                .Include(x => x.Tickets).Select(
                 x => new EventHostModel
                 {
                     Id = x.Id,
@@ -462,7 +469,8 @@ namespace OpenEvent.Web.Services
                     StartUTC = x.StartUTC,
                     Transactions = x.Transactions.Any()
                         ? x.Transactions.Select(transaction => Mapper.Map<TransactionViewModel>(transaction)).ToList()
-                        : new List<TransactionViewModel>()
+                        : new List<TransactionViewModel>(),
+                    Promos = x.Promos.Any() ? x.Promos.Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList() : new List<PromoViewModel>()
                 }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (e == null)

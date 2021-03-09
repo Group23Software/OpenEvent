@@ -172,7 +172,9 @@
     </div>
   </mat-tab>
 
-  <mat-tab label="Promos"></mat-tab>
+  <mat-tab label="Promos">
+    <promos [Event]="event"></promos>
+  </mat-tab>
 
   <mat-tab label="Transactions" *ngIf="event.Transactions">
     <mat-card class="m-3">

@@ -45,8 +45,6 @@ export class ExploreComponent implements OnInit
     ];
     forkJoin(subs).subscribe(x => {
       console.log("explore data loaded", x);
-      this.trigger.Iterate(null);
-      this.trigger.IterateForever(null, IteratorStatus.bad);
     }, (e: HttpErrorResponse) => this.Error = e.message);
     // this.eventService.GetAllCategories().subscribe(x => this.Categories = x);
     // this.eventService.Explore().subscribe(x => this.Events = x);

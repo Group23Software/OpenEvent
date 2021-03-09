@@ -1,0 +1,36 @@
+<mat-card-header>
+  <mat-icon mat-card-avatar>local_offer</mat-icon>
+  <mat-card-title>Create Promo</mat-card-title>
+  <mat-card-subtitle>Create a promotional offer for this event</mat-card-subtitle>
+</mat-card-header>
+
+<form [formGroup]="createPromoForm" (ngSubmit)="create()">
+
+  <mat-form-field floatLabel="always" appearance="outline" class="mb-3 w-100">
+    <mat-label>Discount</mat-label>
+    <input matInput type="number" formControlName="discount" [max]="90" class="right-align">
+    <mat-hint>Percentage off</mat-hint>
+  </mat-form-field>
+
+  <div class="d-flex flex-row">
+    <mat-form-field appearance="outline" class="w-100 mr-3">
+      <mat-label>Start date</mat-label>
+      <input autocomplete="off" matInput [ngxMatDatetimePicker]="startPicker" placeholder="Choose a date" formControlName="start" [min]="minDate" [max]="data.event.EndLocal">
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <ngx-mat-datetime-picker #startPicker [stepHour]="1" [stepMinute]="1" [defaultTime]="defaultTime" [stepSecond]="0"></ngx-mat-datetime-picker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>End date</mat-label>
+      <input autocomplete="off" matInput [ngxMatDatetimePicker]="endPicker" placeholder="Choose a date" formControlName="end" [min]="createPromoForm.controls.start.value" [max]="data.event.EndLocal">
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <ngx-mat-datetime-picker #endPicker [stepHour]="1" [stepMinute]="1" [defaultTime]="defaultTime" [stepSecond]="0"></ngx-mat-datetime-picker>
+    </mat-form-field>
+  </div>
+
+  <div class="d-flex flex-row justify-content-between">
+    <mat-checkbox color="accent" formControlName="active" class="ml-1">Active?</mat-checkbox>
+
+    <button mat-flat-button color="accent" type="submit">Create</button>
+  </div>
+</form>

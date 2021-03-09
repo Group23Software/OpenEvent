@@ -125,6 +125,16 @@ ticketPaths = {
   Verify: ticketPaths.BasePath + '/verify'
 }
 
+let promoPaths: ApiPromoPaths = {
+  BasePath: 'api/promo',
+  Update: '',
+}
+
+promoPaths = {
+  ...promoPaths,
+  Update: promoPaths.BasePath + '/update'
+}
+
 interface ApiAuthPaths
 {
   readonly BasePath: string;
@@ -194,6 +204,12 @@ interface ApiTicketPaths
   readonly Verify: string;
 }
 
+interface ApiPromoPaths
+{
+  readonly BasePath: string;
+  readonly Update: string;
+}
+
 export const UserPaths: ApiUserPaths = userPaths;
 export const AuthPaths: ApiAuthPaths = authPaths;
 export const EventPaths: ApiEventPaths = eventPaths;
@@ -201,3 +217,4 @@ export const PaymentPaths: ApiPaymentPaths = paymentPaths;
 export const BankingPaths: ApiBankingPaths = bankingPaths;
 export const TransactionPaths: ApiTransactionPaths = transactionPaths;
 export const TicketPaths: ApiTicketPaths = ticketPaths;
+export const PromoPaths: ApiPromoPaths = promoPaths;
