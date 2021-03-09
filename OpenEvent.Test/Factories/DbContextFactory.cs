@@ -15,6 +15,7 @@ using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.PaymentMethod;
+using OpenEvent.Web.Models.Promo;
 using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.Transaction;
@@ -208,7 +209,18 @@ namespace OpenEvent.Test.Factories
                     Transactions = new List<Transaction>(),
                     VerificationEvents = new List<TicketVerificationEvent>(),
                     PageViewEvents = new List<PageViewEvent>(),
-                    EventCategories = new List<EventCategory>()
+                    EventCategories = new List<EventCategory>(),
+                    Promos = new List<Promo>
+                    {
+                        new()
+                        {
+                            Id = new Guid("AB261AEC-B56A-4D12-A9CC-8F499B98D4B1"),
+                            Active = true,
+                            Discount = 0.5,
+                            Start = DateTime.Now,
+                            End = DateTime.Now.AddMonths(1)
+                        }
+                    }
                 },
                 new()
                 {

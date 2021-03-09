@@ -18,7 +18,7 @@ using OpenEvent.Web.Services;
 
 namespace OpenEvent.Test.Factories
 {
-    public class EventServiceFactory
+    public class EventServiceFactory : IServiceFactory<EventService>
     {
         public EventService Create(ApplicationContext context)
         {

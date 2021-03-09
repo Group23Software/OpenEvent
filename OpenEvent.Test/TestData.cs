@@ -6,6 +6,7 @@ using OpenEvent.Test.Setups;
 using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
+using OpenEvent.Web.Models.Promo;
 using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Test
@@ -86,5 +87,11 @@ namespace OpenEvent.Test
             .RuleFor(x => x.Images, () => FakeImageViewModel.Generate(6))
             .RuleFor(x => x.Address, () => FakeAddress.Generate())
             .RuleFor(x => x.SocialLinks, f => new List<SocialLinkViewModel>() {FakeSocialLinkViewModel.Generate()});
+
+        public static Faker<CreatePromoBody> FakeCreatePromoBody = new Faker<CreatePromoBody>()
+            .RuleFor(x => x.Active, f => f.Random.Bool())
+            .RuleFor(x => x.Discount, f => f.Random.Double(0,1))
+            .RuleFor(x => x.Start, f => f.Date.Between(DateTime.Now, DateTime.Now.AddDays(10)))
+            .RuleFor(x => x.End, f => f.Date.Between(DateTime.Now.AddDays(15),DateTime.Now.AddMonths(4)));
     }
 }

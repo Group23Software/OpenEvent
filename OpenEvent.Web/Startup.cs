@@ -90,7 +90,7 @@ namespace OpenEvent.Web
 
             // Add automapping configuration.
             services.AddAutoMapper(typeof(Startup));
-            
+
             services.AddSingleton<IWorkQueue, WorkQueue>();
             services.AddHostedService<BackGroundWorkService>();
 
@@ -107,6 +107,7 @@ namespace OpenEvent.Web
             services.AddScoped<IBankingService, BankingService>();
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ITicketService, TicketService>();
+            services.AddScoped<IPromoService, PromoService>();
 
             services.AddHttpClient<IEventService, EventService>();
 

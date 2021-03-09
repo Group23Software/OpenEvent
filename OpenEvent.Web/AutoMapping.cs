@@ -5,6 +5,7 @@ using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.PaymentMethod;
+using OpenEvent.Web.Models.Promo;
 using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.Transaction;
@@ -63,6 +64,7 @@ namespace OpenEvent.Web
             CreateMap<Transaction, TransactionViewModel>();
             CreateMap<RecommendationScore, RecommendationScoreViewModel>();
             CreateMap<TicketVerificationEvent, TicketVerificationEventViewModel>();
+            CreateMap<Promo, PromoViewModel>();
         }
     }
 }

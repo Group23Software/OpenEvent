@@ -35,5 +35,6 @@ namespace OpenEvent.Web.Models.Event
         [JsonIgnore] public List<PageViewEvent> PageViewEvents { get; set; }
         [JsonIgnore] public List<TicketVerificationEvent> VerificationEvents { get; set; }
         public List<Transaction.Transaction> Transactions { get; set; } 
+        public List<Promo.Promo> Promos { get; set; }
     }
 }

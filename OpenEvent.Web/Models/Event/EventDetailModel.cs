@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using OpenEvent.Web.Models.Category;
+using OpenEvent.Web.Models.Promo;
 
 namespace OpenEvent.Web.Models.Event
 {
@@ -24,5 +25,6 @@ namespace OpenEvent.Web.Models.Event
         public bool IsOnline { get; set; }
         public int TicketsLeft { get; set; }
         public List<CategoryViewModel> Categories { get; set; }
+        public List<PromoViewModel> Promos { get; set; }
     }
 }
