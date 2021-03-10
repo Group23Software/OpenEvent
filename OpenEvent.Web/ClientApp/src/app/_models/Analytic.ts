@@ -27,6 +27,13 @@ export interface EventAnalytics
   AverageRecommendationScores: AverageRecommendationScore[]
 }
 
+export interface MappedEventAnalytics
+{
+  PageViewEvents: PageViewByDate[];
+  TicketVerificationEvents: TicketVerificationEvent[];
+  AverageRecommendationScores: AverageRecommendationScore[]
+}
+
 export interface AverageRecommendationScore
 {
   CategoryName: string;

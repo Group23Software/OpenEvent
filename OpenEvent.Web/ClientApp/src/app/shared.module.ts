@@ -110,6 +110,7 @@ import { IteratorComponent } from './_extensions/iterator/iterator.component';
     // MatTableModule
     MatSelectModule,
     MarkdownModule.forRoot(),
+    MatTableModule,
   ],
   exports: [
 
@@ -166,6 +167,7 @@ import { IteratorComponent } from './_extensions/iterator/iterator.component';
     VirtualCardComponent,
     // MatTableModule
     MarkdownModule,
+    MatTableModule,
   ]
 })
 export class SharedModule

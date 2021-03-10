@@ -3,6 +3,7 @@ import {UserService} from "../_Services/user.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {TransactionViewModel} from "../_models/Transaction";
 import {TransactionService} from "../_Services/transaction.service";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -24,7 +25,7 @@ export class AccountComponent implements OnInit
     return this.userService.User;
   }
 
-  constructor (private userService: UserService, private transactionService: TransactionService)
+  constructor (private userService: UserService, private transactionService: TransactionService, private router: Router)
   {
   }
 
@@ -53,5 +54,10 @@ export class AccountComponent implements OnInit
     }, () =>
     {
     }, () => this.transactionActionLoading = false);
+  }
+
+  public navigateToTicket (transaction: TransactionViewModel)
+  {
+    this.router.navigate(['/user/ticket/', transaction.TicketId]);
   }
 }

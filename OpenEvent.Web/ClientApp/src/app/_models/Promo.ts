@@ -5,6 +5,7 @@ export interface Promo
   End: Date;
   Active: boolean;
   Discount: number;
+  NumberOfSales: number;
 }
 
 export interface CreatePromoBody

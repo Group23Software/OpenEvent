@@ -14,5 +14,6 @@ namespace OpenEvent.Web.Models.Transaction
         public Guid TicketId { get; set; }
         public string ClientSecret { get; set; }
         public Guid EventId { get; set; }
+        public Guid PromoId { get; set; }
     }
 }

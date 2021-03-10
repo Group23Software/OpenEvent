@@ -45,3 +45,7 @@ markdown {
   /*width: 100%;*/
   flex: 1;
 }
+
+table {
+  width: 100%;
+}

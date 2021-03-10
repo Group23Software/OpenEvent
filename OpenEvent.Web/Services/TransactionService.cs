@@ -141,7 +141,8 @@ namespace OpenEvent.Web.Services
                     Status = Enum.Parse<PaymentStatus>(intent.Status, true),
                     Ticket = ticket,
                     Event = e,
-                    ClientSecret = intent.ClientSecret
+                    ClientSecret = intent.ClientSecret,
+                    PromoId = promo?.Id
                 };
 
                 await ApplicationContext.Transactions.AddAsync(transaction);

@@ -9,5 +9,6 @@ namespace OpenEvent.Web.Models.Promo
         public DateTime End { get; set; }
         public bool Active { get; set; }
         public int Discount { get; set; }
+        public int NumberOfSales { get; set; }
     }
 }

@@ -6,7 +6,7 @@ import {EventService} from "../../_Services/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Category} from "../../_models/Category";
 import {SocialMedia} from "../../_models/SocialMedia";
-import {EventAnalytics} from "../../_models/Analytic";
+import {EventAnalytics, MappedEventAnalytics} from "../../_models/Analytic";
 import {TriggerService} from "../../_Services/trigger.service";
 import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
@@ -19,7 +19,7 @@ export class EventConfigComponent implements OnInit
 {
 
   public event: EventHostModel = null;
-  public analytics: EventAnalytics;
+  public analytics: MappedEventAnalytics;
   public categoryStore: Category[] = [];
   public categories: Category[] = [];
 
@@ -52,6 +52,8 @@ export class EventConfigComponent implements OnInit
   public minDate: Date;
   public loading: boolean = true;
   markdown: string;
+  transactionColumns = ['stripeId', 'status', 'start', 'end', 'amount', 'paid'];
+  defaultDate = "0001-01-01T00:00:00";
 
 
   constructor (private route: ActivatedRoute, private eventService: EventService, private trigger: TriggerService)

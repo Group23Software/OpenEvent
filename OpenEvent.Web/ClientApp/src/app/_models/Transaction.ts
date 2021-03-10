@@ -19,6 +19,7 @@ export interface TransactionViewModel
   TicketId: string;
   NextAction: any;
   ClientSecret?: string;
+  PromoId: string;
 }
 
 export interface InjectPaymentMethodBody

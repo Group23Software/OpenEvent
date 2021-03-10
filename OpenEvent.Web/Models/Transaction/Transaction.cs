@@ -22,6 +22,7 @@ namespace OpenEvent.Web.Models.Transaction
         public Guid TicketId { get; set; }
         [JsonIgnore] public Ticket.Ticket Ticket { get; set; }
         [JsonIgnore] public Event.Event Event { get; set; }
+        public Guid? PromoId { get; set; }
         
         [NotMapped] public string ClientSecret { get; set; }
     }

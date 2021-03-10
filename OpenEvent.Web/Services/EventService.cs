@@ -276,7 +276,15 @@ namespace OpenEvent.Web.Services
                     Transactions = x.Transactions.Any()
                         ? x.Transactions.Select(transaction => Mapper.Map<TransactionViewModel>(transaction)).ToList()
                         : new List<TransactionViewModel>(),
-                    Promos = x.Promos.Any() ? x.Promos.Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList() : new List<PromoViewModel>()
+                    Promos = x.Promos.Any() ? x.Promos.Select(promo => new PromoViewModel()
+                    {
+                        Active = promo.Active,
+                        Discount = promo.Discount,
+                        End = promo.End,
+                        Id = promo.Id,
+                        Start = promo.Start,
+                        NumberOfSales = x.Transactions.Count(x => x.PromoId == promo.Id)
+                    }).ToList() : new List<PromoViewModel>()
                 }).ToList();
         }
 

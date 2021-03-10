@@ -14,7 +14,7 @@ import {Category} from "../_models/Category";
 import {map} from "rxjs/operators";
 import {SocialMedia} from "../_models/SocialMedia";
 import {UserService} from "./user.service";
-import {EventAnalytics} from "../_models/Analytic";
+import {EventAnalytics, MappedEventAnalytics, PageViewEvent} from "../_models/Analytic";
 
 @Injectable({
   providedIn: 'root'
@@ -135,9 +135,33 @@ export class EventService
     return this.http.get<EventViewModel[]>(this.BaseUrl + EventPaths.Explore, {params: new HttpParams().set('id', this.userService.User.Id)});
   }
 
-  public GetAnalytics(id: string) : Observable<EventAnalytics>
+  public GetAnalytics(id: string) : Observable<MappedEventAnalytics>
   {
-    return this.http.get<EventAnalytics>(this.BaseUrl + EventPaths.Analytics, {params: new HttpParams().set('id', id)});
+    return this.http.get<EventAnalytics>(this.BaseUrl + EventPaths.Analytics, {params: new HttpParams().set('id', id)}).pipe(map(a => {
+
+      let pageViews: Map<string, PageViewEvent[]> = new Map<string, PageViewEvent[]>();
+      a.PageViewEvents.forEach(x =>
+      {
+        let created = new Date(x.Created);
+        let fullDate: string = (new Date(created.getFullYear(), created.getMonth(), created.getDay())).toDateString();
+        if (!pageViews.has(fullDate))
+        {
+          pageViews.set(fullDate, [x]);
+        } else
+        {
+          pageViews.set(fullDate, [...pageViews.get(fullDate), x]);
+        }
+      });
+
+      let mapped: MappedEventAnalytics = {
+        PageViewEvents: Array.from(pageViews, ([key, value]) => ({Date: new Date(key), PageViews: value})),
+        TicketVerificationEvents: a.TicketVerificationEvents,
+        AverageRecommendationScores: a.AverageRecommendationScores
+      }
+
+      return mapped;
+
+    }));
   }
 
   public DownVote(id: string) : Observable<any>

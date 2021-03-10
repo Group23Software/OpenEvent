@@ -20,6 +20,7 @@
           <div>Ends <span class="font-italic font-weight-bold">{{promo.End | date: 'full'}}</span></div>
         </div>
         <div>
+          <mat-chip color="primary" class="mr-3">Sales: {{promo.NumberOfSales}}</mat-chip>
           <mat-slide-toggle [checked]="promo.Active" (change)="activeToggle($event,promo)" class="mr-3">Active</mat-slide-toggle>
           <button mat-mini-fab color="warn" (click)="delete(promo)">
             <mat-icon>delete_forever</mat-icon>

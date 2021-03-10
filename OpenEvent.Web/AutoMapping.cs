@@ -64,7 +64,7 @@ namespace OpenEvent.Web
             CreateMap<Transaction, TransactionViewModel>();
             CreateMap<RecommendationScore, RecommendationScoreViewModel>();
             CreateMap<TicketVerificationEvent, TicketVerificationEventViewModel>();
-            CreateMap<Promo, PromoViewModel>();
+            CreateMap<Promo, PromoViewModel>().ForMember(x => x.NumberOfSales, op => op.Ignore());
         }
     }
 }
