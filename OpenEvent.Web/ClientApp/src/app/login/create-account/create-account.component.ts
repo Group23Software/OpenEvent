@@ -29,7 +29,9 @@ export class CreateAccountComponent implements OnInit
     lastName: new FormControl('', [Validators.required]),
     userName: new FormControl('', [Validators.required], [this.userValidators.usernameValidator()]),
     password: new FormControl('', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]),
-    phoneNumber: new FormControl('', [Validators.required], [this.userValidators.phoneValidator()]),
+    passwordConfirm: new FormControl('', [Validators.required, this.userValidators.matches('password')]),
+    phoneCode: new FormControl('+44'),
+    phoneNumber: new FormControl('', [Validators.required, Validators.pattern("^((\\\\+91-?)|0)?[0-9]{10}$")], [this.userValidators.phoneValidator()]),
     dOB: new FormControl('', [Validators.required]),
     remember: new FormControl('')
   });
@@ -83,7 +85,7 @@ export class CreateAccountComponent implements OnInit
       LastName: this.createAccountForm.value.lastName,
       UserName: this.createAccountForm.value.userName,
       DateOfBirth: this.createAccountForm.value.dOB,
-      PhoneNumber: this.createAccountForm.value.phoneNumber,
+      PhoneNumber: this.createAccountForm.value.phoneCode + this.createAccountForm.value.phoneNumber,
       Avatar: (new ImageManipulationService).toUTF8Array(this.avatar),
       Password: this.createAccountForm.value.password,
       Remember: this.createAccountForm.value.remember == true

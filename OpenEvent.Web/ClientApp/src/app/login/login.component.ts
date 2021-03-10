@@ -33,9 +33,9 @@ export class LoginComponent implements OnInit
 
   ngOnInit ()
   {
+    // TODO: this might be breaking stuff
     this.authService.IsAuthenticated().subscribe(isAuthenticated => {
-      // TODO : This will need to navigate to app not account in future
-      if (isAuthenticated) this.router.navigate(['/user/account']);
+      if (isAuthenticated) this.router.navigate(['/explore']);
     });
   }
 
@@ -51,8 +51,7 @@ export class LoginComponent implements OnInit
     }).subscribe(
       (response) =>
       {
-        // TODO: redirect to app
-        this.router.navigate(['/user/account']);
+        this.router.navigate(['/explore']);
       },
       (error: HttpErrorResponse) =>
       {
