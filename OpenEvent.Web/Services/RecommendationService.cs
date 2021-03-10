@@ -36,13 +36,18 @@ namespace OpenEvent.Web.Services
     {
         private readonly ILogger<RecommendationService> Logger;
         private readonly IServiceScopeFactory ScopeFactory;
+        private readonly IPopularityService PopularityService;
+        private readonly IWorkQueue WorkQueue;
 
-        public RecommendationService(ILogger<RecommendationService> logger, IServiceScopeFactory serviceScopeFactory)
+        public RecommendationService(ILogger<RecommendationService> logger, IServiceScopeFactory serviceScopeFactory,
+            IWorkQueue workQueue, IPopularityService popularityService)
         {
             Logger = logger;
             ScopeFactory = serviceScopeFactory;
+            WorkQueue = workQueue;
+            PopularityService = popularityService;
         }
-        
+
         public async Task InfluenceAsync(CancellationToken cancellationToken, Guid userId, Guid eventId,
             Influence influence,
             DateTime created)
@@ -121,6 +126,8 @@ namespace OpenEvent.Web.Services
             if (user.RecommendationScores == null) user.RecommendationScores = new List<RecommendationScore>();
             categories.ForEach(c =>
             {
+                WorkQueue.QueueWork(token => PopularityService.PopulariseCategory(token, c.Id, DateTime.Now));
+
                 var recommendationScore = user.RecommendationScores.FirstOrDefault(x => x.Category.Id == c.Id);
 
                 if (recommendationScore == null)

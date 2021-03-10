@@ -93,9 +93,11 @@ namespace OpenEvent.Web
 
             services.AddSingleton<IWorkQueue, WorkQueue>();
             services.AddHostedService<BackGroundWorkService>();
+            services.AddHostedService<PopularityWatchDog>();
 
             services.AddSingleton<IAnalyticsService, AnalyticsService>();
             services.AddSingleton<IRecommendationService, RecommendationService>();
+            services.AddSingleton<IPopularityService, PopularityService>();
 
             services.AddSingleton<IEmailService, EmailService>();
 

@@ -92,7 +92,7 @@ describe('LoginComponent', () =>
     tick();
 
     expect(authMock.IsAuthenticated).toHaveBeenCalled();
-    expect(routerSpy).toHaveBeenCalledWith(['/user/account']);
+    expect(routerSpy).toHaveBeenCalledWith(['/explore']);
 
   }));
 
@@ -108,7 +108,7 @@ describe('LoginComponent', () =>
 
     component.login();
 
-    expect(routerSpy).toHaveBeenCalledWith(['/user/account']);
+    expect(routerSpy).toHaveBeenCalledWith(['/explore']);
 
   }));
 

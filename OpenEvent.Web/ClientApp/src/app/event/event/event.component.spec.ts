@@ -21,6 +21,7 @@ describe('EventComponent', () =>
   let transactionServiceMock;
 
   const mockEvent: EventDetailModel = {
+    Promos: [],
     Address: {
       AddressLine1: "AddressLine1",
       AddressLine2: "AddressLine2",
@@ -122,6 +123,7 @@ describe('EventComponent', () =>
   it('should use preview event', () =>
   {
     component.EventPreview = {
+      Promos: [],
       Address: undefined,
       Categories: [],
       Description: "",

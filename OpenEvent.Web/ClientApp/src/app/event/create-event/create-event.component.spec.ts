@@ -14,7 +14,6 @@ import {EventDetailModel} from "../../_models/Event";
 import {Router} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {FakeAddress} from "../../_testData/Event";
 
 describe('CreateEventComponent', () =>
 {
@@ -135,6 +134,7 @@ describe('CreateEventComponent', () =>
     e.selectedIndex = 3
     component.loadEventData(e);
     const eventPreview: EventDetailModel = {
+      Promos: null,
       Address: {
         AddressLine1: "AddressLine1",
         AddressLine2: "AddressLine2",

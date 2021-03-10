@@ -15,7 +15,7 @@ import {CookieService} from "ngx-cookie-service";
 import {UserService} from "../../_Services/user.service";
 import {of, throwError} from "rxjs";
 import {MatDialogModule, MatDialogRef} from "@angular/material/dialog";
-import {MatNativeDateModule} from "@angular/material/core";
+import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
 import {BrowserDynamicTestingModule} from "@angular/platform-browser-dynamic/testing";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatInputModule} from "@angular/material/input";
@@ -23,6 +23,8 @@ import {UserValidatorsService} from "../../_Services/user-validators.service";
 import {UserViewModel} from "../../_models/User";
 import {HttpErrorResponse} from "@angular/common/http";
 import 'jasmine';
+import {BrowserModule} from "@angular/platform-browser";
+import {MatSelectModule} from "@angular/material/select";
 
 export class DialogRef
 {
@@ -73,6 +75,9 @@ describe('CreateAccountComponent', () =>
         MatDialogModule,
         HttpClientTestingModule,
         MatNativeDateModule,
+        MatSelectModule,
+        MatOptionModule,
+
       ], providers: [
         {provide: 'BASE_URL', useValue: ''},
         {provide: UserService, useValue: userServiceMock},
@@ -138,6 +143,7 @@ describe('CreateAccountComponent', () =>
       expect(form.valid).toBeFalsy();
       form.controls.email.setValue('email@email.co.uk');
       form.controls.password.setValue('Password1@');
+      form.controls.passwordConfirm.setValue('Password1@');
       form.controls.firstName.setValue('joe');
       form.controls.lastName.setValue('blogs');
       form.controls.userName.setValue('joe.blogs');

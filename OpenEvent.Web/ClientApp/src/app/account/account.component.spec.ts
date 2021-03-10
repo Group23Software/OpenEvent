@@ -2,9 +2,10 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {AccountComponent} from "./account.component";
 import {UserService} from "../_Services/user.service";
 import {of, throwError} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
 import {HttpErrorResponse} from "@angular/common/http";
 import {UserAccountModel} from "../_models/User";
+import {TransactionService} from "../_Services/transaction.service";
+import {RouterTestingModule} from "@angular/router/testing";
 
 
 describe('AccountComponent', () =>
@@ -13,7 +14,7 @@ describe('AccountComponent', () =>
   let fixture: ComponentFixture<AccountComponent>;
 
   let userServiceMock;
-
+  let transactionServiceMock;
 
   beforeEach(async () =>
   {
@@ -21,12 +22,14 @@ describe('AccountComponent', () =>
     userServiceMock = jasmine.createSpyObj('userService', ['GetAccountUser', 'User']);
     userServiceMock.GetAccountUser.and.returnValue(of());
 
+    transactionServiceMock = jasmine.createSpyObj('TransactionService', ['CancelIntent'])
+
     await TestBed.configureTestingModule({
-      imports: [],
+      imports: [RouterTestingModule],
       declarations: [AccountComponent],
       providers: [
         {provide: UserService, useValue: userServiceMock},
-
+        {provide: TransactionService, useValue: transactionServiceMock}
       ]
     }).compileComponents();
   });

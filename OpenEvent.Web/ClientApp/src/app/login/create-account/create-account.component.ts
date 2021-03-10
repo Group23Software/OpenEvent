@@ -77,6 +77,7 @@ export class CreateAccountComponent implements OnInit
 
   public createAccount () : void
   {
+    console.log('creating account');
     this.loading = true;
 
     let newUserInput: NewUserInput = {

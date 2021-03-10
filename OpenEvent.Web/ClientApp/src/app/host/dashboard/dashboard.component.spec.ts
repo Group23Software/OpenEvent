@@ -86,6 +86,7 @@ describe('DashboardComponent', () =>
     component = fixture.componentInstance;
     fixture.detectChanges();
     component.eventPreview = {
+      Promos: [],
       Address: undefined,
       Categories: [],
       Description: "",

@@ -57,11 +57,12 @@ namespace OpenEvent.Web.Services
         private readonly IRecommendationService RecommendationService;
         private readonly IDistributedCache DistributedCache;
         private readonly IWorkQueue WorkQueue;
+        private readonly IPopularityService PopularityService;
 
         public EventService(ApplicationContext context, ILogger<EventService> logger, IMapper mapper,
             HttpClient httpClient, IOptions<AppSettings> appSettings, IAnalyticsService analyticsService,
             IRecommendationService recommendationService, IDistributedCache distributedCache,
-            IWorkQueue workQueue)
+            IWorkQueue workQueue, IPopularityService popularityService)
         {
             Logger = logger;
             ApplicationContext = context;
@@ -72,6 +73,7 @@ namespace OpenEvent.Web.Services
             RecommendationService = recommendationService;
             DistributedCache = distributedCache;
             WorkQueue = workQueue;
+            PopularityService = popularityService;
         }
 
         /// <summary>
@@ -328,6 +330,7 @@ namespace OpenEvent.Web.Services
             WorkQueue.QueueWork(token => AnalyticsService.CapturePageViewAsync(token, e.Id, userId, DateTime.Now));
             WorkQueue.QueueWork(token =>
                 RecommendationService.InfluenceAsync(token, userId, e.Id, Influence.PageView, DateTime.Now));
+            WorkQueue.QueueWork(token => PopularityService.PopulariseEvent(token,e.Id,DateTime.Now));
 
             return new EventDetailModel
             {

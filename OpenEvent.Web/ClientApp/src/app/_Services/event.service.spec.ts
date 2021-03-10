@@ -42,6 +42,7 @@ describe('EventService', () =>
   ]
 
   const mockPublicEvent: EventDetailModel = {
+    Promos: [],
     Address: undefined,
     Categories: [],
     Description: "",
@@ -82,6 +83,7 @@ describe('EventService', () =>
   }
 
   const mockEventViewModel: EventViewModel = {
+    Promos: [],
     Categories: [],
     Description: mockCreateEventBody.Description,
     EndLocal: mockCreateEventBody.EndLocal,
@@ -96,6 +98,7 @@ describe('EventService', () =>
   }
 
   const mockEventHostModel: EventHostModel = {
+    Promos: [],
     Transactions: [],
     Address: undefined,
     Categories: [],

@@ -36,7 +36,10 @@ export class PromosComponent implements OnInit
       }
     });
 
-    ref.afterClosed().subscribe(r => this.Event.Promos.push(r));
+    ref.afterClosed().subscribe(r =>
+    {
+      if (r != null) this.Event.Promos.push(r);
+    });
   }
 
   public delete (promo: Promo)

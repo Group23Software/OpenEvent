@@ -3,6 +3,7 @@ import {SocialMedia} from "../_models/SocialMedia";
 import {Address} from "../_models/Address";
 
 export const FakeEventHostModel: EventHostModel = {
+  Promos: [],
   Transactions: [],
   Address: {AddressLine1: "", AddressLine2: "", City: "", CountryCode: "", CountryName: "", PostalCode: ""},
   Categories: [

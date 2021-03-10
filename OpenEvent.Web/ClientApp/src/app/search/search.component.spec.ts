@@ -66,6 +66,7 @@ describe('SearchComponent', () =>
   {
     const events: EventViewModel[] = [
       {
+        Promos: [],
         Categories: [],
         Description: "",
         EndLocal: undefined,
