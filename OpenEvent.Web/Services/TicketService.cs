@@ -46,17 +46,20 @@ namespace OpenEvent.Web.Services
 
         public async Task<List<TicketViewModel>> GetAllUsersTickets(Guid id)
         {
-            var user = await ApplicationContext.Users.Include(x => x.Tickets).ThenInclude(x => x.Event).AsSplitQuery()
-                .AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var user = await ApplicationContext.Users
+                .Include(x => x.Tickets).ThenInclude(x => x.Transaction)
+                .Include(x => x.Tickets).ThenInclude(x => x.Event)
+                .AsNoTracking().AsSplitQuery().FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null) throw new UserNotFoundException();
 
-            return user.Tickets.Select(x => Mapper.Map<TicketViewModel>(x)).ToList();
+            return user.Tickets.Where(x => x.Transaction !=null && x.Transaction.Paid).Select(x => Mapper.Map<TicketViewModel>(x)).ToList();
         }
 
         public async Task VerifyTicket(TicketVerifyBody ticketVerifyBody)
         {
-            var ticket = await ApplicationContext.Tickets.Include(x => x.Event)
+            var ticket = await ApplicationContext.Tickets
+                .Include(x => x.Event)
                 .FirstOrDefaultAsync(x => x.Id == ticketVerifyBody.Id && x.Event.Id == ticketVerifyBody.EventId);
 
             if (ticket == null)
@@ -87,7 +90,10 @@ namespace OpenEvent.Web.Services
 
         public async Task<TicketDetailModel> Get(Guid id)
         {
-            var ticket = await ApplicationContext.Tickets.Include(x => x.Event).FirstOrDefaultAsync(x => x.Id == id);
+            var ticket = await ApplicationContext.Tickets
+                .Include(x => x.Event)
+                .Include(x => x.Transaction)
+                .AsNoTracking().AsSplitQuery().FirstOrDefaultAsync(x => x.Id == id);
 
             if (ticket == null)
             {

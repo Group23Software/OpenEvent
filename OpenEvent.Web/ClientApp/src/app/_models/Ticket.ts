@@ -1,4 +1,5 @@
 import {EventViewModel} from "./Event";
+import {TransactionViewModel} from "./Transaction";
 
 export interface TicketViewModel
 {
@@ -15,6 +16,7 @@ export interface TicketDetailModel
   Id: string;
   QRCode: string;
   Event: EventViewModel;
+  Transaction: TransactionViewModel;
 }
 
 export interface VerifyTicketBody

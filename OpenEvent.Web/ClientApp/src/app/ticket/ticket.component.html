@@ -7,13 +7,14 @@
 
 <div id="ticket" *ngIf="Ticket && !getTicketError && !loading" class="m-3">
   <mat-card>
-    <div class="mat-headline">Ticket for "{{Ticket.Event?.Name}}"</div>
+    <div class="mat-headline mb-1">Ticket for "{{Ticket.Event?.Name}}"</div>
+    <div class="m-auto">Starts at <span class="font-weight-bold">{{Ticket.Event.StartLocal | date:'medium'}}</span> and finishes <span class="font-weight-bold">{{Ticket.Event.EndLocal | date:'medium'}}</span></div>
   </mat-card>
+
   <mat-card><img class="img-fluid" [src]="Ticket.QRCode"></mat-card>
-  <mat-card>
-    <button mat-flat-button color="accent">Recipt</button>
-    <div>{{Ticket.Id}}</div>
-    <div>{{Ticket.Event.StartLocal | date:'medium'}}</div>
-    <div>{{Ticket.Event.EndLocal | date:'medium'}}</div>
+
+  <mat-card class="d-flex flex-row justify-content-between align-items-center">
+    <button mat-flat-button color="accent" (click)="openReceipt()">Receipt</button>
+    <div>Id: {{Ticket.Id}}</div>
   </mat-card>
 </div>

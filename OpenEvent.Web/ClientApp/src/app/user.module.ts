@@ -5,12 +5,14 @@ import {RouterModule} from "@angular/router";
 import {AuthGuard} from "./_guards/auth.guard";
 import {MyTicketsComponent} from "./my-tickets/my-tickets.component";
 import { TicketComponent } from './ticket/ticket.component';
+import { TicketReceiptDialogComponent } from './ticket/ticket-receipt-dialog/ticket-receipt-dialog.component';
 
 
 @NgModule({
   declarations: [
     MyTicketsComponent,
-    TicketComponent
+    TicketComponent,
+    TicketReceiptDialogComponent
   ],
   imports: [
     CommonModule,

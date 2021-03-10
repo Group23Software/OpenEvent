@@ -1,0 +1,34 @@
+<div class="m-3">
+  <div class="line">
+    <div>Transaction Id</div>
+    <div>{{Ticket.Transaction.StripeIntentId}}</div>
+  </div>
+
+  <div class="line">
+    <div>Order date</div>
+    <div>{{Ticket.Transaction.End | date:'full'}}</div>
+  </div>
+
+  <div class="line">
+    <div>Ticket Id</div>
+    <div>{{Ticket.Id}}</div>
+  </div>
+
+  <div class="line">
+    <div>Event Id</div>
+    <div>{{Ticket.Event.Id}}</div>
+  </div>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="line m-3">
+  <div>1 * {{Ticket.Event.Name}} Ticket</div>
+  <div class="d-flex">
+    <mat-icon class="mr-1 my-auto" *ngIf="Ticket.Transaction.PromoId != '00000000-0000-0000-0000-000000000000'">price_change</mat-icon>
+    {{Ticket.Transaction.Amount / 100 | currency:'GBP':true:'1.2-2'}}</div>
+</div>
+
+<mat-divider></mat-divider>
+
+

@@ -19,10 +19,4 @@ namespace OpenEvent.Web.Models.Ticket
         public int Uses { get; set; }
         [JsonIgnore] public List<TicketVerificationEvent> VerificationEvents { get; set; }
     }
-
-    public class TicketVerifyBody
-    {
-        public Guid Id { get; set; }
-        public Guid EventId { get; set; }
-    }
 }
