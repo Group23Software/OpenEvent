@@ -12,8 +12,8 @@ namespace OpenEvent.Web
         private readonly ILogger<PopularityWatchDog> Logger;
         private readonly IPopularityService PopularityService;
 
-        private readonly TimeSpan CheckSpan = TimeSpan.FromSeconds(5);
-        private readonly TimeSpan DowngradeSpan = TimeSpan.FromSeconds(10);
+        private readonly TimeSpan CheckSpan = TimeSpan.FromMinutes(10);
+        private readonly TimeSpan DowngradeSpan = TimeSpan.FromMinutes(20);
 
         // Using timer will not wait for the last operation to finish.
         private Timer Timer;

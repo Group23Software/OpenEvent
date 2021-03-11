@@ -11,6 +11,7 @@ import {EventService} from "../../_Services/event.service";
 export class EventPreviewComponent implements OnInit
 {
   @Input() event: EventViewModel;
+  @Input() showDownVote: boolean = true;
 
   constructor (private router: Router, private eventService: EventService)
   {

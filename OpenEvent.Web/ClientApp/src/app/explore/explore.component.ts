@@ -9,7 +9,7 @@ import {UserService} from "../_Services/user.service";
 import {MatChip, MatChipList} from "@angular/material/chips";
 import {HttpErrorResponse} from "@angular/common/http";
 import {TriggerService} from "../_Services/trigger.service";
-import {IteratorStatus} from "../_extensions/iterator/iterator.component";
+import {PopularityService} from "../_Services/popularity.service";
 
 @Component({
   selector: 'app-explore',
@@ -30,10 +30,15 @@ export class ExploreComponent implements OnInit
 
   get PopularEvents ()
   {
-    return new Array<number>(10);
+    return this.popularityService.PopularEvents;
   }
 
-  constructor (private eventService: EventService, private userService: UserService, private trigger: TriggerService)
+  get PopularCategories ()
+  {
+    return this.popularityService.PopularCategories;
+  }
+
+  constructor (private eventService: EventService, private userService: UserService, private trigger: TriggerService, private popularityService: PopularityService)
   {
   }
 
@@ -41,7 +46,9 @@ export class ExploreComponent implements OnInit
   {
     let subs = [
       this.eventService.GetAllCategories().pipe(map(categories => this.Categories = categories)),
-      this.eventService.Explore().pipe(map(events => this.Events = events))
+      this.eventService.Explore().pipe(map(events => this.Events = events)),
+      this.popularityService.GetEvents(),
+      this.popularityService.GetCategories()
     ];
     forkJoin(subs).subscribe(x => {
       console.log("explore data loaded", x);

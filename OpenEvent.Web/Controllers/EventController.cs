@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Contexts;
@@ -80,6 +81,7 @@ namespace OpenEvent.Web.Controllers
         /// <param name="id"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet("public")]
         public async Task<ActionResult<EventDetailModel>> GetForPublic(Guid id, Guid userId)
         {

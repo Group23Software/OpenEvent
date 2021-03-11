@@ -62,7 +62,7 @@ mat-chip > mat-icon {
   margin-right: 5px;
 }
 
-#events {
+.events {
   display: flex;
   flex-direction: row;
 }

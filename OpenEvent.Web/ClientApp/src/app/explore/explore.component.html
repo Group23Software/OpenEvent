@@ -1,7 +1,12 @@
 <user-nav></user-nav>
 
 <mat-card class="m-3" id="popular">
-  <div class="popularTile" *ngFor="let i of PopularEvents">Popular</div>
+<!--  <div class="popularTile" *ngFor="let i of PopularEvents">Popular</div>-->
+  <div *ngIf="PopularEvents" class="events">
+    <div *ngFor="let event of PopularEvents" class="mr-3">
+      <event-preview [event]="event" [showDownVote]="false"></event-preview>
+    </div>
+  </div>
 </mat-card>
 
 <mat-card class="m-3 overflow-hidden">
@@ -20,7 +25,7 @@
 </mat-card>
 
 <mat-card class="m-3">
-  <div *ngIf="Events" id="events">
+  <div *ngIf="Events" class="events">
     <div *ngFor="let event of Events; let i = index" [ngClass]="i != Events.length-1 ? 'mb-3' : null">
       <event-preview [event]="event"></event-preview>
     </div>

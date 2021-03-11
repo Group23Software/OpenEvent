@@ -135,6 +135,18 @@ promoPaths = {
   Update: promoPaths.BasePath + '/update'
 }
 
+let popularityPaths: ApiPopularityPaths = {
+  BasePath: 'api/popularity',
+  Categories: '',
+  Events: ''
+}
+
+popularityPaths = {
+  ...popularityPaths,
+  Events: popularityPaths.BasePath + '/events',
+  Categories: popularityPaths.BasePath + '/categories'
+}
+
 interface ApiAuthPaths
 {
   readonly BasePath: string;
@@ -210,6 +222,13 @@ interface ApiPromoPaths
   readonly Update: string;
 }
 
+interface ApiPopularityPaths
+{
+  readonly BasePath: string;
+  readonly Events: string;
+  readonly Categories: string;
+}
+
 export const UserPaths: ApiUserPaths = userPaths;
 export const AuthPaths: ApiAuthPaths = authPaths;
 export const EventPaths: ApiEventPaths = eventPaths;
@@ -218,3 +237,4 @@ export const BankingPaths: ApiBankingPaths = bankingPaths;
 export const TransactionPaths: ApiTransactionPaths = transactionPaths;
 export const TicketPaths: ApiTicketPaths = ticketPaths;
 export const PromoPaths: ApiPromoPaths = promoPaths;
+export const PopularityPaths: ApiPopularityPaths = popularityPaths;
