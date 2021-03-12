@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'public-nav',
@@ -8,7 +9,7 @@ import {Router} from "@angular/router";
 })
 export class PublicNavComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private location: Location) { }
 
   ngOnInit() {
   }
@@ -16,5 +17,10 @@ export class PublicNavComponent implements OnInit {
   routeHome ()
   {
     this.router.navigate(['/']);
+  }
+
+  public back ()
+  {
+    this.location.back();
   }
 }

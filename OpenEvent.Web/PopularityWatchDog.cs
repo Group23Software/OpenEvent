@@ -13,7 +13,7 @@ namespace OpenEvent.Web
         private readonly IPopularityService PopularityService;
 
         private readonly TimeSpan CheckSpan = TimeSpan.FromMinutes(10);
-        private readonly TimeSpan DowngradeSpan = TimeSpan.FromMinutes(20);
+        private readonly TimeSpan DowngradeSpan = TimeSpan.FromHours(1);
 
         // Using timer will not wait for the last operation to finish.
         private Timer Timer;
@@ -58,6 +58,9 @@ namespace OpenEvent.Web
                     if (PopularityService.DownGradeCategory(PopularityService.GetCategories()[i].Record)) i--;
                 }
             }
+            
+            // Sending updated event and category arrays to client.
+            PopularityService.CommunicateState();
 
             Logger.LogInformation("Finished checking popularity");
         }

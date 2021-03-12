@@ -1,7 +1,10 @@
-<div id="LupercalsCourt"><ng-template #LupercalsCourt></ng-template></div>
+<div id="LupercalsCourt">
+  <ng-template #LupercalsCourt></ng-template>
+</div>
 <body class="main mat-app-background" [class.theme-alternate]="isDark">
 
-<!--  <div class="container">-->
-    <router-outlet [@inOutAnimation]></router-outlet>
-<!--  </div>-->
+<public-nav *ngIf="!(IsLogged | async)"></public-nav>
+<user-nav *ngIf="IsLogged | async"></user-nav>
+
+<router-outlet [@inOutAnimation]></router-outlet>
 </body>

@@ -11,6 +11,8 @@ import {
   TicketPurchaseDialogData
 } from "../../ticket/ticket-purchase-dialog/ticket-purchase-dialog.component";
 import {TransactionService} from "../../_Services/transaction.service";
+import {UserService} from "../../_Services/user.service";
+import {AuthService} from "../../_Services/auth.service";
 
 @Component({
   selector: 'event',
@@ -24,13 +26,6 @@ export class EventComponent implements OnInit, OnChanges
   public mapLink: string;
   public eventImages: GalleryItem[];
 
-  // get eventImages () : GalleryItem[]
-  // {
-  //   let images: ImageItem[] = this.Event.Images.map(x => new ImageItem({src: x.Source}));
-  //   console.log(images);
-  //   return images;
-  // }
-
   get Promo ()
   {
     return this.Event.Promos[0];
@@ -41,7 +36,12 @@ export class EventComponent implements OnInit, OnChanges
     return this.event;
   }
 
-  constructor (private route: ActivatedRoute, private eventService: EventService, private location: Location, private dialog: MatDialog, private transactionService: TransactionService)
+  constructor (
+    private route: ActivatedRoute,
+    private eventService: EventService,
+    private location: Location,
+    private dialog: MatDialog,
+    private transactionService: TransactionService)
   {
   }
 

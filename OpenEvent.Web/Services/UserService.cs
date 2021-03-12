@@ -29,9 +29,7 @@ namespace OpenEvent.Web.Services
         Task<UserViewModel> Create(NewUserInput userInput);
         Task Destroy(Guid id);
         Task<UserAccountModel> Get(Guid id);
-
         Task<UsersAnalytics> GetAnalytics(Guid id);
-
         // Task<User> UpdateBasicInfo(UserAccountModel user);
         Task<string> UpdateAvatar(Guid id, byte[] avatar);
         Task<string> UpdateUserName(Guid id, string name);
@@ -40,7 +38,6 @@ namespace OpenEvent.Web.Services
         Task<bool> PhoneExists(string phoneNumber);
         Task<bool> UpdateThemePreference(Guid id, bool isDarkMode);
         Task<bool> HostOwnsEvent(Guid eventId, Guid userId);
-
         Task<Address> UpdateAddress(Guid id, Address address);
     }
 

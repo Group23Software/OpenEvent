@@ -6,8 +6,10 @@ import {of, throwError} from "rxjs";
 import {EventViewModel, SearchFilter, SearchParam} from "../_models/Event";
 import {Category} from "../_models/Category";
 import {HttpErrorResponse} from "@angular/common/http";
-import {MatSlideToggleChange} from "@angular/material/slide-toggle";
-import {success} from "ng-packagr/lib/utils/log";
+import {RouterTestingModule} from "@angular/router/testing";
+import {Navigation, Router} from "@angular/router";
+import {destroyPlatform} from "@angular/core";
+import createSpyObj = jasmine.createSpyObj;
 
 describe('SearchComponent', () =>
 {
@@ -18,13 +20,13 @@ describe('SearchComponent', () =>
 
   beforeEach(async () =>
   {
-
     eventServiceMock = jasmine.createSpyObj('eventService', ['GetAllCategories', 'Search']);
     eventServiceMock.GetAllCategories.and.returnValue(of());
     eventServiceMock.Search.and.returnValue(of());
 
     await TestBed.configureTestingModule({
       declarations: [SearchComponent],
+      imports: [RouterTestingModule],
       providers: [
         {provide: EventService, useValue: eventServiceMock},
       ]
@@ -33,6 +35,8 @@ describe('SearchComponent', () =>
 
   beforeEach(() =>
   {
+    let router = TestBed.inject(Router);
+    let navigationSpy = spyOn(router,'getCurrentNavigation').and.returnValue({extras: {state: null}} as Navigation)
     fixture = TestBed.createComponent(SearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

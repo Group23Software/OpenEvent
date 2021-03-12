@@ -3,7 +3,6 @@ import {Address} from "./Address";
 import {SocialLinkViewModel} from "./SocialLink";
 import {ImageViewModel} from "./Image";
 import {TicketViewModel} from "./Ticket";
-import {PageViewEvent, TicketVerificationEvent} from "./Analytic";
 import {TransactionViewModel} from "./Transaction";
 import {Promo} from "./Promo";
 
@@ -22,9 +21,6 @@ export interface EventHostModel extends EventViewModel
   Address: Address;
   TicketsLeft: number;
   Tickets: TicketViewModel[];
-  // PageViewEvents?: PageViewEvent[];
-  // VerificationEvents?: TicketVerificationEvent[];
-
   Transactions: TransactionViewModel[];
 }
 
@@ -43,6 +39,11 @@ export interface EventViewModel
 
   Categories: CategoryViewModel[];
   Promos: Promo[];
+}
+
+export interface PopularEventViewModel extends EventViewModel
+{
+  Score: number;
 }
 
 export interface CreateEventBody

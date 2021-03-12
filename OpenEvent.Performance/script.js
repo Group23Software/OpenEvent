@@ -1,11 +1,22 @@
 import http from 'k6/http';
-import { sleep, check } from 'k6';
+import {
+  sleep,
+  check
+} from 'k6';
 
 export let options = {
-  stages: [
-    { duration: '5m', target: 100 }, // simulate ramp-up of traffic from 1 to 100 users over 5 minutes.
-    { duration: '10m', target: 100 }, // stay at 100 users for 10 minutes
-    { duration: '5m', target: 0 }, // ramp-down to 0 users
+  stages: [{
+      duration: '5m',
+      target: 2
+    }, // simulate ramp-up of traffic from 1 to 100 users over 5 minutes.
+    {
+      duration: '10m',
+      target: 2
+    }, // stay at 100 users for 10 minutes
+    {
+      duration: '5m',
+      target: 0
+    }, // ramp-down to 0 users
   ]
 }
 
@@ -13,21 +24,51 @@ const BASE_URL = 'http://localhost:5000/api';
 const EMAIL = 'harrison@thebarkers.me.uk';
 const PASSWORD = 'Password1@';
 
+const eventIds = ['80ef6e01-f1b7-4e27-ac83-9ab8910df475', '4a6c4285-50d1-4242-81ed-0e3efbca040d', '2c6ce1c5-146f-443c-976b-27dead85f748','1456ba4a-9fe9-42d3-95b3-98ae5be4109d'];
+
 export default () => {
 
-    let params = {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
+  // let params = {
+  //     headers: {
+  //         'Content-Type': 'application/json',
+  //     },
+  // };
 
-    let res = http.post(BASE_URL + '/auth/login', `{"Email":"${EMAIL}","Password":"${PASSWORD}","Remember":false}`, params);
+  // let res = http.post(BASE_URL + '/auth/login', `{"Email":"${EMAIL}","Password":"${PASSWORD}","Remember":false}`, params);
 
-    check(res, {
-        'response code was 200': (res) => res.status == 200,
-      });
+  // check(res, {
+  //     'response code was 200': (res) => res.status == 200,
+  //   });
 
-    sleep(1);
+  // sleep(1);
+
+//   fetch("http://localhost:5000/api/event/public?id=4a6c4285-50d1-4242-81ed-0e3efbca040d", {
+//   "headers": {
+//     "accept": "application/json, text/plain, */*",
+//     "accept-language": "en-US,en;q=0.9",
+//     "authorization": "Bearer",
+//     "sec-fetch-dest": "empty",
+//     "sec-fetch-mode": "cors",
+//     "sec-fetch-site": "same-site"
+//   },
+//   "referrer": "http://localhost:4200/",
+//   "referrerPolicy": "strict-origin-when-cross-origin",
+//   "body": null,
+//   "method": "GET",
+//   "mode": "cors"
+// });
+
+
+let url = BASE_URL + '/event/public?id=' + eventIds[Math.floor(Math.random() * eventIds.length)];
+console.log(url);
+  let res = http.get(url);
+
+
+  check(res, {
+    'response code was 200': (res) => res.status == 200,
+  });
+
+  sleep(1);
 }
 
 // export default function () {

@@ -1,0 +1,49 @@
+:host {
+  height: 100%;
+}
+
+#featured {
+  height: 300px;
+  background-color: lightgrey;
+  margin-bottom: 1rem;
+  display: flex;
+  border-radius: 5px;
+  position: relative;
+}
+
+#featured img {
+  width: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#imageShadow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 100ms linear;
+  cursor: pointer;
+}
+
+#imageShadow:hover {
+  box-shadow: inset 0 0 12px 0px rgba(0 0 0 / 50%);
+  border-radius: 5px;
+}
+
+#featured img:hover {
+  border-radius: 5px;
+}
+
+#featuredName {
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%,-50%);
+  padding: 2rem;
+  cursor: pointer;
+}
+
+

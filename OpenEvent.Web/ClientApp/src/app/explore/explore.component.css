@@ -38,12 +38,6 @@
   overflow: auto;
 }
 
-#popular {
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-}
-
 .popularTile {
   min-width: 200px;
   min-height: 200px;
@@ -65,4 +59,7 @@ mat-chip > mat-icon {
 .events {
   display: flex;
   flex-direction: row;
+  overflow-x: auto;
+  padding-bottom: 1px;
+  padding-top: 11px;
 }

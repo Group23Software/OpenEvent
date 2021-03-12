@@ -1,0 +1,12 @@
+<mat-card class="mb-3">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>event</mat-icon>
+    <mat-card-title>Popular Events</mat-card-title>
+  </mat-card-header>
+
+  <mat-progress-bar mode="indeterminate" *ngIf="!PopularEvents"></mat-progress-bar>
+
+  <div id="popularEvents">
+    <event-preview [matBadge]="event.Score" *ngFor="let event of PopularEvents" [event]="event" [showDownVote]="false" class="mr-3"></event-preview>
+  </div>
+</mat-card>

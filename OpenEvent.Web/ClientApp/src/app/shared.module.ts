@@ -25,7 +25,6 @@ import {MatSliderModule} from "@angular/material/slider";
 import {NgxMatDatetimePickerModule, NgxMatNativeDateModule} from "@angular-material-components/datetime-picker";
 import {LoadingComponent} from "./loading/loading.component";
 import {MatChipsModule} from "@angular/material/chips";
-import {UserNavComponent} from "./navs/user-nav/user-nav.component";
 import {IvyCarouselModule} from "angular-responsive-carousel";
 import {SocialComponent} from './event/social/social.component';
 import {SafePipeModule} from "safe-pipe";
@@ -49,13 +48,16 @@ import {VirtualCardComponent} from "./account/payment-methods/virtual-card/virtu
 import {MatTableModule} from "@angular/material/table";
 import {MarkdownModule} from "ngx-markdown";
 import { IteratorComponent } from './_extensions/iterator/iterator.component';
+import {MatBadgeModule} from "@angular/material/badge";
+import { PopularEventsComponent } from './popular/popular-events/popular-events.component';
+import { PopularCategoriesComponent } from './popular/popular-categories/popular-categories.component';
+import {EventPreviewComponent} from "./event/event-preview/event-preview.component";
 
 
 @NgModule({
   declarations: [
     LoadingComponent,
     SocialComponent,
-    UserNavComponent,
     EventComponent,
     CategoryListComponent,
     ImageListComponent,
@@ -64,7 +66,10 @@ import { IteratorComponent } from './_extensions/iterator/iterator.component';
     SignalComponent,
     TicketPurchaseDialogComponent,
     VirtualCardComponent,
-    IteratorComponent
+    IteratorComponent,
+    PopularEventsComponent,
+    PopularCategoriesComponent,
+    EventPreviewComponent,
   ],
   imports: [
     HttpClientModule,
@@ -107,10 +112,10 @@ import { IteratorComponent } from './_extensions/iterator/iterator.component';
     MatCarouselModule,
     GalleryModule,
     AngularFittextModule,
-    // MatTableModule
     MatSelectModule,
     MarkdownModule.forRoot(),
     MatTableModule,
+    MatBadgeModule,
   ],
   exports: [
 
@@ -155,7 +160,6 @@ import { IteratorComponent } from './_extensions/iterator/iterator.component';
 
     LoadingComponent,
     SocialComponent,
-    UserNavComponent,
     EventComponent,
     CategoryListComponent,
     ImageListComponent,
@@ -165,9 +169,12 @@ import { IteratorComponent } from './_extensions/iterator/iterator.component';
     GalleryModule,
     AngularFittextModule,
     VirtualCardComponent,
-    // MatTableModule
     MarkdownModule,
     MatTableModule,
+    MatBadgeModule,
+    PopularEventsComponent,
+    PopularCategoriesComponent,
+    EventPreviewComponent,
   ]
 })
 export class SharedModule

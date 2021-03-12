@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "11.1.2",
     "@angular/platform-server": "11.1.2",
     "@angular/router": "11.1.2",
+    "@microsoft/signalr": "^5.0.4",
     "@ngbmodule/material-carousel": "^0.7.1",
     "@stripe/stripe-js": "^1.12.1",
     "@zxing/browser": "0.0.8",

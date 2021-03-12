@@ -25,7 +25,7 @@ namespace OpenEvent.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet("events")]
-        public async Task<ActionResult<List<EventViewModel>>> GetPopularEvents()
+        public async Task<ActionResult<List<PopularEventViewModel>>> GetPopularEvents()
         {
             try
             {
@@ -40,7 +40,7 @@ namespace OpenEvent.Web.Controllers
         
         [AllowAnonymous]
         [HttpGet("categories")]
-        public async Task<ActionResult<List<CategoryViewModel>>> GetPopularCategories()
+        public async Task<ActionResult<List<PopularCategoryViewModel>>> GetPopularCategories()
         {
             try
             {

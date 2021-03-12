@@ -1,5 +1,3 @@
-<user-nav></user-nav>
-
 <mat-card *ngIf="getTicketError || loading" class="m-3">
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
   <div class="mat-warn">{{getTicketError}}</div>
@@ -11,7 +9,7 @@
     <div class="m-auto">Starts at <span class="font-weight-bold">{{Ticket.Event.StartLocal | date:'medium'}}</span> and finishes <span class="font-weight-bold">{{Ticket.Event.EndLocal | date:'medium'}}</span></div>
   </mat-card>
 
-  <mat-card><img class="img-fluid" [src]="Ticket.QRCode"></mat-card>
+  <mat-card id="qr"><img class="img-fluid" [src]="Ticket.QRCode"></mat-card>
 
   <mat-card class="d-flex flex-row justify-content-between align-items-center">
     <button mat-flat-button color="accent" (click)="openReceipt()">Receipt</button>

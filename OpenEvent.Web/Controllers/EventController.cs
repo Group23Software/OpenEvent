@@ -83,7 +83,7 @@ namespace OpenEvent.Web.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("public")]
-        public async Task<ActionResult<EventDetailModel>> GetForPublic(Guid id, Guid userId)
+        public async Task<ActionResult<EventDetailModel>> GetForPublic(Guid id, Guid? userId)
         {
             try
             {

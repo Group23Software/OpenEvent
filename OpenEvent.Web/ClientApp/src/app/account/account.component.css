@@ -1,13 +1,11 @@
-:host {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
 mat-tab-group {
   overflow: auto;
 }
 
 table {
   width: 100%;
+}
+
+:host {
+  overflow: auto;
 }

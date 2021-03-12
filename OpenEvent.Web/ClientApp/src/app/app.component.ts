@@ -1,14 +1,8 @@
-import {
-  AfterViewInit,
-  Component,
-  ComponentFactoryResolver,
-  ElementRef,
-  OnInit,
-  ViewChild,
-  ViewContainerRef
-} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {TriggerService} from "./_Services/trigger.service";
 import {InOutAnimation} from "./_extensions/animations";
+import {UserService} from "./_Services/user.service";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -22,9 +16,15 @@ export class AppComponent implements OnInit, AfterViewInit
 
   public isDark: boolean;
 
-  constructor (private trigger: TriggerService)
+  get IsLogged()
+  {
+    return this.userService.GetUserAsync().pipe(map(x => x != null));
+  }
+
+  constructor (private trigger: TriggerService, private userService: UserService)
   {
     trigger.isDark.subscribe(is => this.isDark = is);
+    // authService.IsAuthenticated().subscribe(x => this.authed = x);
   }
 
   ngOnInit (): void

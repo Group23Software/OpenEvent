@@ -44,6 +44,8 @@ namespace OpenEvent.Test.Factories
 
             var recommendationServiceMock = new Mock<IRecommendationService>();
 
+            var popularityServiceMock = new Mock<IPopularityService>();
+
             var addressResponse = new SearchAddressResponse()
             {
                 Results = new SearchAddressResult[]
@@ -76,7 +78,8 @@ namespace OpenEvent.Test.Factories
                 analyticsServiceMock.Object,
                 recommendationServiceMock.Object,
                 distributedCacheMock.Object, 
-                workQueueMock.Object);
+                workQueueMock.Object,
+                popularityServiceMock.Object);
         }
     }
 }

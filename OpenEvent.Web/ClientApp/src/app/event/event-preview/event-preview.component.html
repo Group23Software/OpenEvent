@@ -3,9 +3,9 @@
     <mat-icon>thumb_down</mat-icon>
   </button>
   <mat-card (click)="navigateToEvent()" *ngIf="event" id="event">
-    <img mat-card-image [src]="event?.Thumbnail.Source">
+    <img mat-card-image [src]="event.Thumbnail?.Source">
     <mat-card-content>
-      <div class="mat-caption mat-accent">{{event.StartLocal | date:'short'}}</div>
+      <div class="mat-caption accent-color">{{event.StartLocal | date:'short'}}</div>
       <div class="mat-title">{{event.Name}}</div>
     </mat-card-content>
   </mat-card>

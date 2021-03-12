@@ -1,5 +1,3 @@
-<user-nav></user-nav>
-
 <mat-tab-group color="primary" #tabGroup (selectedIndexChange)="changeTab($event)">
   <mat-tab label="Account">
     <account-preferences *ngIf="userLoaded"></account-preferences>

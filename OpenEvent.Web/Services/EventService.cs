@@ -33,8 +33,8 @@ namespace OpenEvent.Web.Services
         Task<List<EventHostModel>> GetAllHosts(Guid hostId);
 
         //public methods
-        Task<EventDetailModel> GetForPublic(Guid id, Guid userId);
-        Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters, Guid userId);
+        Task<EventDetailModel> GetForPublic(Guid id, Guid? userId);
+        Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters, Guid? userId);
 
         Task<List<Category>> GetAllCategories();
         Task<ActionResult<EventHostModel>> GetForHost(Guid id);
@@ -278,15 +278,17 @@ namespace OpenEvent.Web.Services
                     Transactions = x.Transactions.Any()
                         ? x.Transactions.Select(transaction => Mapper.Map<TransactionViewModel>(transaction)).ToList()
                         : new List<TransactionViewModel>(),
-                    Promos = x.Promos.Any() ? x.Promos.Select(promo => new PromoViewModel()
-                    {
-                        Active = promo.Active,
-                        Discount = promo.Discount,
-                        End = promo.End,
-                        Id = promo.Id,
-                        Start = promo.Start,
-                        NumberOfSales = x.Transactions.Count(x => x.PromoId == promo.Id)
-                    }).ToList() : new List<PromoViewModel>()
+                    Promos = x.Promos.Any()
+                        ? x.Promos.Select(promo => new PromoViewModel()
+                        {
+                            Active = promo.Active,
+                            Discount = promo.Discount,
+                            End = promo.End,
+                            Id = promo.Id,
+                            Start = promo.Start,
+                            NumberOfSales = x.Transactions.Count(x => x.PromoId == promo.Id)
+                        }).ToList()
+                        : new List<PromoViewModel>()
                 }).ToList();
         }
 
@@ -297,7 +299,7 @@ namespace OpenEvent.Web.Services
         /// <param name="userId"></param>
         /// <returns></returns>
         /// <exception cref="EventNotFoundException"></exception>
-        public async Task<EventDetailModel> GetForPublic(Guid id, Guid userId)
+        public async Task<EventDetailModel> GetForPublic(Guid id, Guid? userId)
         {
             var e = await CacheHelpers.Get<Event>(DistributedCache, id.ToString(), "PublicEvent");
 
@@ -313,24 +315,25 @@ namespace OpenEvent.Web.Services
 
                 if (e == null)
                 {
-                    Logger.LogInformation("Event not fond");
+                    Logger.LogInformation("Event: {ID} not fond", id);
                     throw new EventNotFoundException();
                 }
 
-                Logger.LogInformation("Caching event");
+                Logger.LogInformation("Caching event: {ID}", id);
 
                 await CacheHelpers.Set<Event>(DistributedCache, id.ToString(), "PublicEvent", e);
             }
             else
             {
-                Logger.LogInformation("Found event in cache");
+                Logger.LogInformation("Found event: {ID} in cache", id);
             }
 
 
             WorkQueue.QueueWork(token => AnalyticsService.CapturePageViewAsync(token, e.Id, userId, DateTime.Now));
-            WorkQueue.QueueWork(token =>
-                RecommendationService.InfluenceAsync(token, userId, e.Id, Influence.PageView, DateTime.Now));
-            WorkQueue.QueueWork(token => PopularityService.PopulariseEvent(token,e.Id,DateTime.Now));
+            if (userId != null)
+                WorkQueue.QueueWork(token =>
+                    RecommendationService.InfluenceAsync(token, (Guid) userId, e.Id, Influence.PageView, DateTime.Now));
+            WorkQueue.QueueWork(token => PopularityService.PopulariseEvent(token, e.Id, DateTime.Now));
 
             return new EventDetailModel
             {
@@ -349,7 +352,8 @@ namespace OpenEvent.Web.Services
                 TicketsLeft = e.TicketsLeft,
                 EndUTC = e.EndUTC,
                 StartUTC = e.StartUTC,
-                Promos = e.Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End).Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList()
+                Promos = e.Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End)
+                    .Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList()
             };
         }
 
@@ -360,7 +364,7 @@ namespace OpenEvent.Web.Services
         /// <param name="filters"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters, Guid userId)
+        public async Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters, Guid? userId)
         {
             List<Guid> searchCategories = filters.Where(x => x.Key == SearchParam.Category)
                 .Select(x => Guid.Parse(x.Value)).ToList();
@@ -421,8 +425,9 @@ namespace OpenEvent.Web.Services
 
             WorkQueue.QueueWork(token =>
                 AnalyticsService.CaptureSearchAsync(token, keyword, String.Join(",", filters), userId, DateTime.Now));
-            WorkQueue.QueueWork(token =>
-                RecommendationService.InfluenceAsync(token, userId, keyword, filters, DateTime.Now));
+            if (userId != null)
+                WorkQueue.QueueWork(token =>
+                    RecommendationService.InfluenceAsync(token, (Guid) userId, keyword, filters, DateTime.Now));
 
             return events.Select(e => Mapper.Map<EventViewModel>(e)).ToList();
         }
@@ -461,29 +466,32 @@ namespace OpenEvent.Web.Services
                 .Include(x => x.Promos)
                 .Include(x => x.PageViewEvents)
                 .Include(x => x.Tickets).Select(
-                x => new EventHostModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description,
-                    Address = x.Address,
-                    Categories = x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList(),
-                    Price = x.Price,
-                    Thumbnail = Mapper.Map<ImageViewModel>(x.Thumbnail),
-                    Images = x.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList(),
-                    Tickets = x.Tickets.Select(t => Mapper.Map<TicketViewModel>(t)).ToList(),
-                    EndLocal = x.EndLocal,
-                    IsOnline = x.IsOnline,
-                    SocialLinks = x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
-                    StartLocal = x.StartLocal,
-                    TicketsLeft = x.Tickets.Count,
-                    EndUTC = x.EndUTC,
-                    StartUTC = x.StartUTC,
-                    Transactions = x.Transactions.Any()
-                        ? x.Transactions.Select(transaction => Mapper.Map<TransactionViewModel>(transaction)).ToList()
-                        : new List<TransactionViewModel>(),
-                    Promos = x.Promos.Any() ? x.Promos.Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList() : new List<PromoViewModel>()
-                }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+                    x => new EventHostModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Description = x.Description,
+                        Address = x.Address,
+                        Categories = x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList(),
+                        Price = x.Price,
+                        Thumbnail = Mapper.Map<ImageViewModel>(x.Thumbnail),
+                        Images = x.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList(),
+                        Tickets = x.Tickets.Select(t => Mapper.Map<TicketViewModel>(t)).ToList(),
+                        EndLocal = x.EndLocal,
+                        IsOnline = x.IsOnline,
+                        SocialLinks = x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
+                        StartLocal = x.StartLocal,
+                        TicketsLeft = x.Tickets.Count,
+                        EndUTC = x.EndUTC,
+                        StartUTC = x.StartUTC,
+                        Transactions = x.Transactions.Any()
+                            ? x.Transactions.Select(transaction => Mapper.Map<TransactionViewModel>(transaction))
+                                .ToList()
+                            : new List<TransactionViewModel>(),
+                        Promos = x.Promos.Any()
+                            ? x.Promos.Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList()
+                            : new List<PromoViewModel>()
+                    }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (e == null)
             {

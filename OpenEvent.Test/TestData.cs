@@ -90,7 +90,7 @@ namespace OpenEvent.Test
 
         public static Faker<CreatePromoBody> FakeCreatePromoBody = new Faker<CreatePromoBody>()
             .RuleFor(x => x.Active, f => f.Random.Bool())
-            .RuleFor(x => x.Discount, f => f.Random.Double(0,1))
+            .RuleFor(x => x.Discount, f => f.Random.Int(0,90))
             .RuleFor(x => x.Start, f => f.Date.Between(DateTime.Now, DateTime.Now.AddDays(10)))
             .RuleFor(x => x.End, f => f.Date.Between(DateTime.Now.AddDays(15),DateTime.Now.AddMonths(4)));
     }

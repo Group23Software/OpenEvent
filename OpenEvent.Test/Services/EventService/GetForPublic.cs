@@ -28,6 +28,12 @@ namespace OpenEvent.Test.Services.EventService
         }
 
         [Test]
+        public async Task Should_Not_Get_Canceled_Event()
+        {
+            // TODO
+        }
+
+        [Test]
         public async Task ShouldNotFindEvent()
         {
             await using (var context = new DbContextFactory().CreateContext())

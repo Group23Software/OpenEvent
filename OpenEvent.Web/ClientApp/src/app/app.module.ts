@@ -12,25 +12,28 @@ import {AuthGuard} from "./_guards/auth.guard";
 import {AuthInterceptor} from "./_guards/auth.interceptor";
 import {CreateAccountComponent} from './login/create-account/create-account.component';
 import {ConfirmDialogComponent} from './_extensions/confirm-dialog/confirm-dialog.component';
-import {PublicNavComponent} from "./navs/public-nav/public-nav.component";
 import {SharedModule} from "./shared.module";
 import {EventComponent} from "./event/event/event.component";
 import {SearchComponent} from "./search/search.component";
 import {EventPreviewComponent} from "./event/event-preview/event-preview.component";
 import {NgxStripeModule} from "ngx-stripe";
 import {ReuseRouteReuseStrategy} from "./_extensions/ReuseRouteReuseStrategy";
+import { LandingComponent } from './landing/landing.component';
+import {PublicNavComponent} from "./navs/public-nav/public-nav.component";
+import {UserNavComponent} from "./navs/user-nav/user-nav.component";
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    PublicNavComponent,
     LoginComponent,
     ExploreComponent,
     CreateAccountComponent,
     ConfirmDialogComponent,
     SearchComponent,
-    EventPreviewComponent,
+    LandingComponent,
+    PublicNavComponent,
+    UserNavComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -38,7 +41,7 @@ import {ReuseRouteReuseStrategy} from "./_extensions/ReuseRouteReuseStrategy";
     SharedModule,
     NgxStripeModule.forRoot('pk_test_51ILW9dK2ugLXrgQXdjbh4TSUPcp3TxQeB51iiecfFZMv7ZRW2durBaN1H8KFfIIyQEEmGfeYRaRvr6KS170oOuOA00Ledf7YEh'),
     RouterModule.forRoot([
-      {path: '', redirectTo: 'explore', pathMatch: 'full'},
+      {path: '', pathMatch: 'full', component: LandingComponent},
       // {
       //   path: 'main',
       //   loadChildren: () => import('./main.module').then(m => m.MainModule),
@@ -47,7 +50,7 @@ import {ReuseRouteReuseStrategy} from "./_extensions/ReuseRouteReuseStrategy";
       // },
       {path: 'explore', component: ExploreComponent, canActivate: [AuthGuard]},
       {
-        path: 'search', component: SearchComponent, canActivate: [AuthGuard],
+        path: 'search', component: SearchComponent,
         // data: {
         //   reuseRoute: true
         // }
@@ -65,9 +68,9 @@ import {ReuseRouteReuseStrategy} from "./_extensions/ReuseRouteReuseStrategy";
       },
       {
         path: 'event/:id',
-        component: EventComponent,
-        canActivate: [AuthGuard]
+        component: EventComponent
       },
+      // { path: '**', component: PageNotFoundComponent }
     ]),
   ],
   providers: [

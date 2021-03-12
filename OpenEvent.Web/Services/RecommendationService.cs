@@ -91,12 +91,6 @@ namespace OpenEvent.Web.Services
                     .Include(x => x.RecommendationScores).ThenInclude(x => x.Category)
                     .FirstOrDefaultAsync(x => x.Id == userId);
 
-                if (user == null)
-                {
-                    Logger.LogInformation("Couldn't find user when influencing");
-                    return;
-                }
-
                 var searchCategories = searchFilters
                     .Where(x => x.Key == SearchParam.Category)
                     .Select(x => Guid.Parse(x.Value)).ToList();
@@ -104,6 +98,17 @@ namespace OpenEvent.Web.Services
                 if (!searchCategories.Any()) return;
 
                 var categories = await context.Categories.Where(x => searchCategories.Contains(x.Id)).ToListAsync();
+                
+                foreach (var category in categories)
+                {
+                    WorkQueue.QueueWork(token => PopularityService.PopulariseCategory(token, category.Id, DateTime.Now));
+                } 
+                
+                if (user == null)
+                {
+                    Logger.LogInformation("Couldn't find user when influencing");
+                    return;
+                }
 
                 UpdateRecommendations(user, categories, context);
 
@@ -126,7 +131,6 @@ namespace OpenEvent.Web.Services
             if (user.RecommendationScores == null) user.RecommendationScores = new List<RecommendationScore>();
             categories.ForEach(c =>
             {
-                WorkQueue.QueueWork(token => PopularityService.PopulariseCategory(token, c.Id, DateTime.Now));
 
                 var recommendationScore = user.RecommendationScores.FirstOrDefault(x => x.Category.Id == c.Id);
 

@@ -26,7 +26,7 @@ export class ExploreComponent implements OnInit
   public SelectedCategories: Category[] = [];
   public Events: EventViewModel[];
   public Error: string;
-  private DisplayingExplore: boolean = true;
+  public DisplayingExplore: boolean = true;
 
   get PopularEvents ()
   {

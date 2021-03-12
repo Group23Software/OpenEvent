@@ -1,10 +1,16 @@
-export interface Category {
+export interface Category
+{
   Id: string;
   Name: string;
 }
 
-export class CategoryViewModel
+export interface CategoryViewModel
 {
-  // Id: string;
+  Id: string;
   Name: string;
+}
+
+export interface PopularCategoryViewModel extends CategoryViewModel
+{
+  Score: number;
 }

@@ -6,6 +6,7 @@ import {EventViewModel, SearchFilter, SearchParam} from "../_models/Event";
 import {Category} from "../_models/Category";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-search',
@@ -21,6 +22,7 @@ export class SearchComponent implements OnInit
   public isOnline: boolean = false;
   public events: EventViewModel[];
   public keyword: string = '';
+  public filters: SearchFilter[] = [];
   public categories: Category[] = [];
   public selectedCategories: Category[] = [];
   public getCategoriesError: string;
@@ -33,8 +35,14 @@ export class SearchComponent implements OnInit
   public date: Date;
   public usingDate: boolean = false;
 
-  constructor (private eventService: EventService)
+  constructor (private eventService: EventService, private router: Router)
   {
+    let search = this.router.getCurrentNavigation().extras.state as {keyword: string,filters: SearchFilter[]};
+    if (search) {
+      console.log(search);
+      this.keyword = search.keyword;
+      this.filters = search.filters;
+    }
   }
 
   ngOnInit (): void
@@ -45,28 +53,30 @@ export class SearchComponent implements OnInit
     });
 
     this.eventService.GetAllCategories().subscribe(c => this.categories = c,(e: HttpErrorResponse) => this.getCategoriesError = e.error.Message);
+
+    if (this.filters != [] || this.keyword != '') {
+      this.search();
+    }
   }
 
   public search (): void
   {
     this.loading = true;
-
-    let filters: SearchFilter[] = [];
-    this.selectedCategories.forEach(c => filters.push({Key: SearchParam.Category, Value: c.Id}));
+    this.selectedCategories.forEach(c => this.filters.push({Key: SearchParam.Category, Value: c.Id}));
     if (this.isOnline)
     {
-      filters.push({Key: SearchParam.IsOnline, Value: "true"});
+      this.filters.push({Key: SearchParam.IsOnline, Value: "true"});
     }
 
-    if (this.usersLocation && this.usingCurrentLocation && !this.isOnline) filters.push({
+    if (this.usersLocation && this.usingCurrentLocation && !this.isOnline) this.filters.push({
       Key: SearchParam.Location,
       Value: `${this.usersLocation.coords.latitude},${this.usersLocation.coords.longitude},${this.distanceSelect}`
     })
 
-    if (this.date && this.usingDate) filters.push({Key:SearchParam.Date, Value: this.date.toDateString()})
+    if (this.date && this.usingDate) this.filters.push({Key:SearchParam.Date, Value: this.date.toDateString()})
 
-    console.log(filters);
-    this.eventService.Search(this.keyword, filters).subscribe(events =>
+    console.log(this.filters);
+    this.eventService.Search(this.keyword, this.filters).subscribe(events =>
     {
       this.events = events;
       this.loading = false;

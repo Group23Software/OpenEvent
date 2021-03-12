@@ -12,8 +12,9 @@ namespace OpenEvent.Web.Services
 {
     public interface IAnalyticsService
     {
-        Task CaptureSearchAsync(CancellationToken cancellationToken, string keyword, string searchParams, Guid userId, DateTime created);
-        Task CapturePageViewAsync(CancellationToken cancellationToken, Guid eventId, Guid userId, DateTime created);
+        Task CaptureSearchAsync(CancellationToken cancellationToken, string keyword, string searchParams, Guid? userId,
+            DateTime created);
+        Task CapturePageViewAsync(CancellationToken cancellationToken, Guid eventId, Guid? userId, DateTime created);
         Task CaptureTicketVerifyAsync(CancellationToken cancellationToken, Guid ticketId, Guid eventId, DateTime created);
     }
 
@@ -35,7 +36,7 @@ namespace OpenEvent.Web.Services
         }
 
         public async Task CaptureSearchAsync(CancellationToken cancellationToken, string keyword, string searchParams,
-            Guid userId, DateTime created)
+            Guid? userId, DateTime created)
         {
             if (!cancellationToken.IsCancellationRequested)
             {
@@ -65,7 +66,7 @@ namespace OpenEvent.Web.Services
             }
         }
 
-        public async Task CapturePageViewAsync(CancellationToken cancellationToken, Guid eventId, Guid userId,
+        public async Task CapturePageViewAsync(CancellationToken cancellationToken, Guid eventId, Guid? userId,
             DateTime created)
         {
             if (!cancellationToken.IsCancellationRequested)

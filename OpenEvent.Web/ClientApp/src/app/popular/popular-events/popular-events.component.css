@@ -1,0 +1,12 @@
+#popularEvents {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  padding-bottom: 1px;
+  padding-top: 11px;
+}
+
+:host {
+  height: 100%;
+}
+

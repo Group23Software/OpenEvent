@@ -47,7 +47,11 @@ export class EventService
 
   public GetForPublic (id: string): Observable<EventDetailModel>
   {
-    return this.http.get<EventDetailModel>(this.BaseUrl + EventPaths.GetForPublic, {params: new HttpParams().set('id', id).set('userId', this.userService.User.Id)}).pipe(map(e =>
+    let params: HttpParams = new HttpParams().set('id',id);
+    if (this.userService.User != null) params.set('userId',this.userService.User.Id);
+    return this.http.get<EventDetailModel>(this.BaseUrl + EventPaths.GetForPublic, {
+      params: params
+    }).pipe(map(e =>
     {
       let socialLinks = e.SocialLinks;
       socialLinks.map(s =>
@@ -127,7 +131,9 @@ export class EventService
 
   public Search (keyword: string, filters: SearchFilter[]): Observable<EventViewModel[]>
   {
-    return this.http.post<EventViewModel[]>(this.BaseUrl + EventPaths.Search, filters, {params: new HttpParams().set('keyword', keyword).set('userId', this.userService.User.Id)});
+    let params: HttpParams = new HttpParams().set('keyword', keyword);
+    if (this.userService.User != null) params.set('userId',this.userService.User.Id);
+    return this.http.post<EventViewModel[]>(this.BaseUrl + EventPaths.Search, filters, {params: params});
   }
 
   public Explore (): Observable<EventViewModel[]>
@@ -135,9 +141,10 @@ export class EventService
     return this.http.get<EventViewModel[]>(this.BaseUrl + EventPaths.Explore, {params: new HttpParams().set('id', this.userService.User.Id)});
   }
 
-  public GetAnalytics(id: string) : Observable<MappedEventAnalytics>
+  public GetAnalytics (id: string): Observable<MappedEventAnalytics>
   {
-    return this.http.get<EventAnalytics>(this.BaseUrl + EventPaths.Analytics, {params: new HttpParams().set('id', id)}).pipe(map(a => {
+    return this.http.get<EventAnalytics>(this.BaseUrl + EventPaths.Analytics, {params: new HttpParams().set('id', id)}).pipe(map(a =>
+    {
 
       let pageViews: Map<string, PageViewEvent[]> = new Map<string, PageViewEvent[]>();
       a.PageViewEvents.forEach(x =>
@@ -164,8 +171,8 @@ export class EventService
     }));
   }
 
-  public DownVote(id: string) : Observable<any>
+  public DownVote (id: string): Observable<any>
   {
-    return this.http.post(this.BaseUrl + EventPaths.DownVote,null,{params: new HttpParams().set('userId',this.userService.User.Id).set('eventId',id)});
+    return this.http.post(this.BaseUrl + EventPaths.DownVote, null, {params: new HttpParams().set('userId', this.userService.User.Id).set('eventId', id)});
   }
 }

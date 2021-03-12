@@ -15,7 +15,6 @@ describe('AuthGuard', () =>
 
   beforeEach(() =>
   {
-
     authServiceMock = jasmine.createSpyObj('authService', ['IsAuthenticated']);
 
     routerMock = jasmine.createSpyObj('router', ['navigate']);
@@ -28,7 +27,7 @@ describe('AuthGuard', () =>
       ]
     });
     injector = getTestBed();
-    guard = injector.get(AuthGuard);
+    guard = injector.inject(AuthGuard);
   });
 
   it('should be created', inject([AuthGuard], (guard: AuthGuard) =>
@@ -49,7 +48,7 @@ describe('AuthGuard', () =>
     authServiceMock.IsAuthenticated.and.returnValue(of(false));
     guard.canActivate(null,null).subscribe(result => {
       expect(result).toBeFalsy();
-      expect(routerMock.navigate).toHaveBeenCalledWith(['/login']);
+      expect(routerMock.navigate).toHaveBeenCalledWith(['/']);
     });
   }));
 });

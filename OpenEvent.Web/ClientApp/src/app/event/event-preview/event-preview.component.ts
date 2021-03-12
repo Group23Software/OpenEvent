@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {EventViewModel} from "../../_models/Event";
+import {EventViewModel, PopularEventViewModel} from "../../_models/Event";
 import {Router} from "@angular/router";
 import {EventService} from "../../_Services/event.service";
 
@@ -10,7 +10,7 @@ import {EventService} from "../../_Services/event.service";
 })
 export class EventPreviewComponent implements OnInit
 {
-  @Input() event: EventViewModel;
+  @Input() event: EventViewModel | PopularEventViewModel;
   @Input() showDownVote: boolean = true;
 
   constructor (private router: Router, private eventService: EventService)

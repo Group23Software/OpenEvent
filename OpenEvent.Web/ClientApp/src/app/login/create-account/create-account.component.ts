@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserValidatorsService} from "../../_Services/user-validators.service";
-import {ImageCroppedEvent} from "ngx-image-cropper";
 import {UserService} from "../../_Services/user.service";
 import {NewUserInput} from "../../_models/User";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";

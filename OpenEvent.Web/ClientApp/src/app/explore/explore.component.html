@@ -1,34 +1,29 @@
-<user-nav></user-nav>
+<div class="m-3">
+  <popular-events [PopularEvents]="PopularEvents"></popular-events>
 
-<mat-card class="m-3" id="popular">
-<!--  <div class="popularTile" *ngFor="let i of PopularEvents">Popular</div>-->
-  <div *ngIf="PopularEvents" class="events">
-    <div *ngFor="let event of PopularEvents" class="mr-3">
-      <event-preview [event]="event" [showDownVote]="false"></event-preview>
+  <mat-card class="mb-3 overflow-hidden">
+    <div *ngIf="Categories" id="groundControl">
+      <button mat-flat-button color="primary" (click)="explore()" [disabled]="DisplayingExplore" [class.activeButton]="DisplayingExplore">Explore</button>
+      <mat-chip-list aria-orientation="horizontal" selectable multiple class="overflow-hidden">
+        <div id="categorySelect">
+          <mat-chip #c="matChip" selectable removable (click)="categoriesSelectionChange(c,category)" *ngFor="let category of Categories" [@inOutAnimation]>
+            <mat-icon *ngIf="c.selected">check</mat-icon>
+            {{category.Name}}
+          </mat-chip>
+        </div>
+      </mat-chip-list>
     </div>
-  </div>
-</mat-card>
+    <mat-progress-bar mode="indeterminate" *ngIf="!Categories"></mat-progress-bar>
+  </mat-card>
 
-<mat-card class="m-3 overflow-hidden">
-  <div *ngIf="Categories" id="groundControl">
-    <button mat-flat-button color="primary" (click)="explore()">Explore</button>
-    <mat-chip-list aria-orientation="horizontal" selectable multiple class="overflow-hidden">
-      <div id="categorySelect">
-        <mat-chip #c="matChip" selectable removable (click)="categoriesSelectionChange(c,category)" *ngFor="let category of Categories" [@inOutAnimation]>
-          <mat-icon *ngIf="c.selected">check</mat-icon>
-          {{category.Name}}
-        </mat-chip>
+  <mat-card *ngIf="!Events"><mat-progress-bar mode="indeterminate"></mat-progress-bar></mat-card>
+
+  <div *ngIf="Events">
+    <div *ngIf="Events" class="events">
+      <div *ngFor="let event of Events; let i = index" [ngClass]="i != Events.length-1 ? 'mb-3' : null">
+        <event-preview [event]="event"></event-preview>
       </div>
-    </mat-chip-list>
-  </div>
-  <mat-progress-bar mode="indeterminate" *ngIf="!Categories"></mat-progress-bar>
-</mat-card>
-
-<mat-card class="m-3">
-  <div *ngIf="Events" class="events">
-    <div *ngFor="let event of Events; let i = index" [ngClass]="i != Events.length-1 ? 'mb-3' : null">
-      <event-preview [event]="event"></event-preview>
     </div>
   </div>
-  <mat-progress-bar mode="indeterminate" *ngIf="!Events"></mat-progress-bar>
-</mat-card>
+
+</div>

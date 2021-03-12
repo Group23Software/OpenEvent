@@ -1,0 +1,11 @@
+<mat-card class="flex-grow-1 d-flex flex-column h-100">
+  <mat-card-header>
+    <mat-icon mat-card-avatar>tag</mat-icon>
+    <mat-card-title>Popular Categories</mat-card-title>
+  </mat-card-header>
+  <mat-card-content id="popularCategories">
+    <div [matBadge]="category.Score" (click)="navigateToCategory(category)" class="popularCategory" *ngFor="let category of PopularCategories">
+      <div class="m-auto">{{category.Name}}</div>
+    </div>
+  </mat-card-content>
+</mat-card>

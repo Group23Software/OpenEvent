@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using OpenEvent.Web.Contexts;
+using OpenEvent.Web.Hubs;
 using OpenEvent.Web.Services;
 using OpenEvent.Web.UserOwnsEvent;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
@@ -90,6 +91,14 @@ namespace OpenEvent.Web
 
             // Add automapping configuration.
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddSignalR(options =>
+            {
+                
+            }).AddJsonProtocol(options =>
+            {
+                options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+            });
 
             services.AddSingleton<IWorkQueue, WorkQueue>();
             services.AddHostedService<BackGroundWorkService>();
@@ -177,6 +186,8 @@ namespace OpenEvent.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+
+                endpoints.MapHub<PopularityHub>("/popularityHub");
 
                 endpoints.MapMetrics();
             });

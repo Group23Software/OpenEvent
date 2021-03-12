@@ -7,8 +7,8 @@ export const FakeEventHostModel: EventHostModel = {
   Transactions: [],
   Address: {AddressLine1: "", AddressLine2: "", City: "", CountryCode: "", CountryName: "", PostalCode: ""},
   Categories: [
-    {Name: "Music"},
-    {Name: "Performing"}
+    {Id: "0",Name: "Music"},
+    {Id: "1",Name: "Performing"}
   ],
   Description: "this is a host event model",
   EndLocal: new Date(0),
