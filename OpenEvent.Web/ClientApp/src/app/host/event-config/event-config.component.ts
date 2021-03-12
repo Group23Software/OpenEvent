@@ -96,8 +96,8 @@ export class EventConfigComponent implements OnInit
   private loadFormData ()
   {
     this.loading = false;
-    this.categories = this.categoryStore.filter(c => this.event.Categories.find(eC => eC.Name == c.Name));
-    this.categoryStore = this.categoryStore.filter(c => !this.event.Categories.find(eC => eC.Name == c.Name))
+    this.categories = this.categoryStore != null && this.categoryStore.length > 0 ? this.categoryStore.filter(c => this.event.Categories.find(eC => eC.Name == c.Name)) : [];
+    this.categoryStore = this.categoryStore != null && this.categoryStore.length > 0 ? this.categoryStore.filter(c => !this.event.Categories.find(eC => eC.Name == c.Name)) : [];
     this.Name.setValue(this.event.Name);
     this.Description.setValue(this.event.Description);
     this.Price.setValue(this.event.Price);
@@ -108,20 +108,21 @@ export class EventConfigComponent implements OnInit
     this.addressForm.setValue(this.event.Address);
     if (!this.IsOnline)
     {
-      for (let control in this.addressForm.controls)
-      {
-        this.addressForm.controls[control].disable();
-      }
+      this.addressForm.disable();
+      // for (let control in this.addressForm.controls)
+      // {
+      //   this.addressForm.controls[control].disable();
+      // }
     }
-    console.log(this.event);
-    if (this.event.SocialLinks != null && this.event.SocialLinks.length > 0)
-    {
-      this.Site.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Site).Link);
-      this.Instagram.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Instagram).Link);
-      this.Facebook.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Facebook).Link);
-      this.Twitter.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Twitter).Link);
-      this.Reddit.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Reddit).Link);
-    }
+    // TODO: Fix social media links, this is nasty.
+    // if (this.event.SocialLinks != null && this.event.SocialLinks.length > 0)
+    // {
+    //   this.Site.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Site).Link);
+    //   this.Instagram.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Instagram).Link);
+    //   this.Facebook.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Facebook).Link);
+    //   this.Twitter.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Twitter).Link);
+    //   this.Reddit.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Reddit).Link);
+    // }
   }
 
   public clickedOnline ()
@@ -175,7 +176,7 @@ export class EventConfigComponent implements OnInit
     this.eventService.Update(updateEvent).subscribe(response =>
     {
       this.updatingEvent = false;
-      this.trigger.Iterate('Updated event',1000,IteratorStatus.good);
+      this.trigger.Iterate('Updated event', 1000, IteratorStatus.good);
     }, (e: HttpErrorResponse) =>
     {
       this.updatingEvent = false;

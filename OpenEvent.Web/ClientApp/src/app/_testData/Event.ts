@@ -1,6 +1,7 @@
 import {EventHostModel} from "../_models/Event";
 import {SocialMedia} from "../_models/SocialMedia";
 import {Address} from "../_models/Address";
+import {CategoryViewModel} from "../_models/Category";
 
 export const FakeEventHostModel: EventHostModel = {
   Promos: [],
@@ -9,7 +10,7 @@ export const FakeEventHostModel: EventHostModel = {
   Categories: [
     {Id: "0",Name: "Music"},
     {Id: "1",Name: "Performing"}
-  ],
+  ] as CategoryViewModel[],
   Description: "this is a host event model",
   EndLocal: new Date(0),
   EndUTC: new Date(0),

@@ -2,7 +2,8 @@ import {Component, ComponentRef, ElementRef, Input, OnDestroy, OnInit, ViewChild
 import {InOutAnimation} from "../animations";
 import {animate, AnimationBuilder, AnimationPlayer, state, style} from "@angular/animations";
 
-export enum IteratorStatus {
+export enum IteratorStatus
+{
   default = "black",
   bad = "red",
   good = "green"
@@ -48,12 +49,7 @@ export class IteratorComponent implements OnInit, OnDestroy
     console.log('creating animation for', this.elementRef);
     if (this.player) this.player.destroy();
 
-    let animationFactory = this.animationBuilder
-                               .build([
-                                 // state('*', style({ transform: 'translateX(0)' })),
-                                 // style(),
-                                 animate(200, style({transform: 'translateX(100%)'}))
-                               ]);
+    let animationFactory = this.animationBuilder.build([animate(200, style({transform: 'translateX(100%)'}))]);
 
     this.player = animationFactory.create(this.elementRef.nativeElement);
   }

@@ -10,6 +10,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {TransactionService} from "../../_Services/transaction.service";
 import {ActivatedRoute, convertToParamMap} from "@angular/router";
+import {ImageViewModel} from "../../_models/Image";
 
 describe('EventComponent', () =>
 {
@@ -149,5 +150,12 @@ describe('EventComponent', () =>
     let onInitSpy = spyOn(component, 'ngOnInit');
     component.ngOnChanges(null);
     expect(onInitSpy).toHaveBeenCalled();
+  });
+
+  it('should open purchase dialog', () =>
+  {
+    dialogMock.open.and.returnValue({afterClosed: () => of("Some data")})
+    component.purchase();
+    expect(dialogMock.open).toHaveBeenCalled();
   });
 });

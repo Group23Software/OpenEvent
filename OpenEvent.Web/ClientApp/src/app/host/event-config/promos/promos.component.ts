@@ -17,7 +17,8 @@ import {IteratorStatus} from "../../../_extensions/iterator/iterator.component";
 export class PromosComponent implements OnInit
 {
   @Input() Event: EventHostModel;
-  private error: string;
+  public error: string;
+  public Loading: boolean = false;
 
   constructor (private matDialog: MatDialog, private promoService: PromoService, private trigger: TriggerService)
   {
@@ -44,15 +45,17 @@ export class PromosComponent implements OnInit
 
   public delete (promo: Promo)
   {
+    this.Loading = true;
     this.promoService.Destroy(promo.Id).subscribe(r =>
     {
       this.Event.Promos = this.Event.Promos.filter(x => x.Id != promo.Id);
       this.trigger.Iterate("Removed promo", 2000, IteratorStatus.good);
-    }, (e: HttpErrorResponse) => this.error = e.message);
+    }, (e: HttpErrorResponse) => this.error = e.message,() => this.Loading = false);
   }
 
   public activeToggle (event: MatSlideToggleChange, promo: Promo)
   {
+    this.Loading = true;
     this.promoService.Update({
       Active: event.checked,
       Discount: promo.Discount,
@@ -63,6 +66,6 @@ export class PromosComponent implements OnInit
     {
       this.Event.Promos[this.Event.Promos.findIndex(x => x.Id == promo.Id)] = r;
       this.trigger.Iterate("Updated promo", 2000, IteratorStatus.good);
-    }, (e: HttpErrorResponse) => this.error = e.message);
+    }, (e: HttpErrorResponse) => this.error = e.message, () => this.Loading = false);
   }
 }

@@ -43,14 +43,14 @@ export class VerifyTicketComponent implements OnInit
     this.EventId = this.route.snapshot.paramMap.get('id');
   }
 
-  Verify ()
+  public Verify ()
   {
     this.ticketService.Verify({
       Id: this.Id.value,
       EventId: this.EventId
     }).subscribe(r =>
     {
-      this.trigger.Iterate('Verified Ticket',1000,IteratorStatus.good);
+      this.trigger.IterateForever('Verified Ticket', IteratorStatus.good);
     }, (e: HttpErrorResponse) =>
     {
       const dialogRef = this.dialog.open(VerifyDialog);
@@ -58,19 +58,19 @@ export class VerifyTicketComponent implements OnInit
     }, () => this.loading = false);
   }
 
-  scanSuccess (event: string)
+  public scanSuccess (ticketId: string)
   {
-    if (event != this.lastTicket)
+    if (ticketId != this.lastTicket)
     {
-      this.lastTicket = event;
-      console.log(event);
+      this.lastTicket = ticketId;
+      console.log(ticketId);
       this.loading = true;
       this.ticketService.Verify({
-        Id: event,
+        Id: ticketId,
         EventId: this.EventId
       }).subscribe(r =>
       {
-        this.trigger.Iterate('Verified Ticket',1000,IteratorStatus.good);
+        this.trigger.IterateForever('Verified Ticket', IteratorStatus.good);
       }, (e: HttpErrorResponse) =>
       {
         const dialogRef = this.dialog.open(VerifyDialog);
@@ -85,11 +85,6 @@ export class VerifyTicketComponent implements OnInit
   }
 
   scanError (event: Error)
-  {
-
-  }
-
-  verifyId ()
   {
 
   }

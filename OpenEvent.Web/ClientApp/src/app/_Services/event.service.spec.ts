@@ -14,6 +14,7 @@ import {
 import {UserService} from "./user.service";
 import {UserAccountModel} from "../_models/User";
 import {SocialMedia} from "../_models/SocialMedia";
+import {EventAnalytics, MappedEventAnalytics} from "../_models/Analytic";
 
 class UserServiceStub
 {
@@ -241,10 +242,41 @@ describe('EventService', () =>
 
   it('should search for events', () =>
   {
-    httpClientMock.post.and.returnValue(of([mockEventViewModel,mockEventViewModel,mockEventViewModel]));
-    service.Search("",[{Key:SearchParam.IsOnline,Value: "true"}]).subscribe(r =>
+    httpClientMock.post.and.returnValue(of([mockEventViewModel, mockEventViewModel, mockEventViewModel]));
+    service.Search("", [{Key: SearchParam.IsOnline, Value: "true"}]).subscribe(r =>
     {
-      expect(r).toEqual([mockEventViewModel,mockEventViewModel,mockEventViewModel]);
+      expect(r).toEqual([mockEventViewModel, mockEventViewModel, mockEventViewModel]);
+    });
+  });
+
+  it('should get explore', () =>
+  {
+    httpClientMock.get.and.returnValue(of([mockEventViewModel, mockEventViewModel, mockEventViewModel]));
+    service.Explore().subscribe(x => expect(x).not.toBeNull());
+  });
+
+  it('should down vote', () =>
+  {
+    httpClientMock.post.and.returnValue(of(new HttpResponse()));
+    service.DownVote("EventId").subscribe(x => expect(x).not.toBeNull());
+  });
+
+  it('should analytics', () =>
+  {
+    httpClientMock.get.and.returnValue(of({
+      PageViewEvents: [{Id: "EventId", Created: new Date(), EventId: "EventId"}],
+      AverageRecommendationScores: [{CategoryName: "Music", Weight: 1}],
+      TicketVerificationEvents: [{
+        Id: "EventId",
+        EventId: "EventId",
+        TicketId: "TicketId",
+        UserId: "UserId",
+        Created: new Date()
+      }]
+    } as EventAnalytics));
+    service.GetAnalytics("EventId").subscribe(x => {
+      expect(x).not.toBeNull();
+      // TODO: Check that it maps.
     });
   });
 

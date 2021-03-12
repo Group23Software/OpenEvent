@@ -1,12 +1,10 @@
 using System;
 using System.Text;
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,8 +18,6 @@ using OpenEvent.Web.Services;
 using OpenEvent.Web.UserOwnsEvent;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Prometheus;
-using Stripe;
-using EventService = OpenEvent.Web.Services.EventService;
 
 namespace OpenEvent.Web
 {

@@ -11,6 +11,8 @@ import {ActivatedRoute, convertToParamMap} from "@angular/router";
 import {FakeEventHostModel} from "../../_testData/Event";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Category} from "../../_models/Category";
+import {TriggerService} from "../../_Services/trigger.service";
+import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
 
 describe('EventConfigComponent', () =>
@@ -19,17 +21,15 @@ describe('EventConfigComponent', () =>
   let fixture: ComponentFixture<EventConfigComponent>;
   let loader: HarnessLoader;
 
-  let snackBarMock;
-  let dialogMock;
+  let triggerServiceMock;
   let eventServiceMock;
 
   beforeEach(async () =>
   {
-    snackBarMock = jasmine.createSpyObj('matSnackBar', ['open']);
+    triggerServiceMock = jasmine.createSpyObj('TriggerService', ['Iterate']);
+    triggerServiceMock.Iterate.and.returnValue(of(null));
 
-    dialogMock = jasmine.createSpyObj('matDialog', ['open']);
-
-    eventServiceMock = jasmine.createSpyObj('eventService', ['GetAllCategories', 'GetForHost', 'Update','GetAnalytics'], {'HostsEvents': null});
+    eventServiceMock = jasmine.createSpyObj('eventService', ['GetAllCategories', 'GetForHost', 'Update', 'GetAnalytics'], {'HostsEvents': null});
     eventServiceMock.GetAnalytics.and.returnValue(of(null));
     eventServiceMock.GetAllCategories.and.returnValue({
       subscribe: () =>
@@ -46,8 +46,7 @@ describe('EventConfigComponent', () =>
       ],
       providers: [
         {provide: EventService, useValue: eventServiceMock},
-        {provide: MatDialog, useValue: dialogMock},
-        {provide: MatSnackBar, useValue: snackBarMock},
+        {provide: TriggerService, useValue: triggerServiceMock},
         {
           provide: ActivatedRoute, useValue: {
             snapshot: {
@@ -96,16 +95,16 @@ describe('EventConfigComponent', () =>
     }
   });
 
-  // it('should get all categories', () =>
-  // {
-  //   const categories: Category[] = [
-  //     {Name: "Music", Id: "1"},
-  //     {Name: "Sport", Id: "2"}
-  //   ];
-  //   eventServiceMock.GetAllCategories.and.returnValue(of(categories));
-  //   component.ngOnInit();
-  //   expect(component.categoryStore).toEqual(categories);
-  // });
+  it('should get all categories', () =>
+  {
+    const categories: Category[] = [
+      {Name: "Music", Id: "1"},
+      {Name: "Sport", Id: "2"}
+    ];
+    eventServiceMock.GetAllCategories.and.returnValue(of(categories));
+    component.ngOnInit();
+    expect(component.categoryStore).toEqual(categories);
+  });
 
   it('should handle category error', () =>
   {
@@ -114,17 +113,18 @@ describe('EventConfigComponent', () =>
     expect(component.gettingCategoriesError).toEqual("Error getting categories");
   });
 
-  // it('should get event if null', () =>
-  // {
-  //   component.event = null;
-  //   eventServiceMock.GetAllCategories.and.returnValue(of(true));
-  //   eventServiceMock.GetForHost.and.returnValue(of(FakeEventHostModel));
-  //   component.ngOnInit();
-  //   expect(component.event).toEqual(FakeEventHostModel);
-  // });
+  it('should get event if null', () =>
+  {
+    component.event = null;
+    eventServiceMock.GetAllCategories.and.returnValue(of(true));
+    eventServiceMock.GetForHost.and.returnValue(of(FakeEventHostModel));
+    component.ngOnInit();
+    expect(component.event).toEqual(FakeEventHostModel);
+  });
 
   // it('should load data into forms', () =>
   // {
+  //   // TODO: this test could be problematic.
   //   const categories: Category[] = [
   //     {Name: "Music", Id: "1"},
   //     {Name: "Sport", Id: "2"}
@@ -132,15 +132,15 @@ describe('EventConfigComponent', () =>
   //   component.event = null;
   //   eventServiceMock.GetAllCategories.and.returnValue(of(categories));
   //   eventServiceMock.GetForHost.and.returnValue(of(FakeEventHostModel));
-  //   // component.ngOnInit();
+  //   component.ngOnInit();
   //
-  //   // expect(component.Name.value).toEqual(FakeEventHostModel.Name);
-  //   // expect(component.Description.value).toEqual(FakeEventHostModel.Description);
-  //   // expect(component.Price.value).toEqual(FakeEventHostModel.Price);
-  //   // expect(component.StartLocal.value).toEqual(FakeEventHostModel.StartLocal);
-  //   // expect(component.EndLocal.value).toEqual(FakeEventHostModel.EndLocal);
-  //   // expect(component.NumberOfTickets.value).toEqual(FakeEventHostModel.Tickets.length);
-  //   // expect(component.addressForm.value).toEqual(event.Address);
+  //   expect(component.Name.value).toEqual(FakeEventHostModel.Name);
+  //   expect(component.Description.value).toEqual(FakeEventHostModel.Description);
+  //   expect(component.Price.value).toEqual(FakeEventHostModel.Price);
+  //   expect(component.StartLocal.value).toEqual(FakeEventHostModel.StartLocal);
+  //   expect(component.EndLocal.value).toEqual(FakeEventHostModel.EndLocal);
+  //   expect(component.NumberOfTickets.value).toEqual(FakeEventHostModel.Tickets.length);
+  //   expect(component.addressForm.value).toEqual(FakeEventHostModel.Address);
   // });
 
   it('should handle get event error', () =>
@@ -156,22 +156,22 @@ describe('EventConfigComponent', () =>
     expect(component.gettingEventError).toEqual("Error getting event");
   });
 
-  // it('should update event', () =>
-  // {
-  //   eventServiceMock.Update.and.returnValue(of(true));
-  //   component.updateEvent();
-  //   expect(component.updatingEvent).toBeFalse();
-  //   expect(snackBarMock.open).toHaveBeenCalledWith('Updated event', 'close', {duration: 500});
-  // });
-  //
-  // it('should not update', () =>
-  // {
-  //   eventServiceMock.Update.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error updating event"}})));
-  //   component.updateEvent();
-  //   expect(component.updatingEvent).toBeFalse();
-  //   expect(component.updateEventError).toEqual("Error updating event");
-  // });
-  //
+  it('should update event', () =>
+  {
+    eventServiceMock.Update.and.returnValue(of(true));
+    component.updateEvent();
+    expect(component.updatingEvent).toBeFalse();
+    expect(triggerServiceMock.Iterate).toHaveBeenCalledWith('Updated event', 1000, IteratorStatus.good);
+  });
+
+  it('should not update', () =>
+  {
+    eventServiceMock.Update.and.returnValue(throwError(new HttpErrorResponse({error: {Message: "Error updating event"}})));
+    component.updateEvent();
+    expect(component.updatingEvent).toBeFalse();
+    expect(component.updateEventError).toEqual("Error updating event");
+  });
+
   // it('should use existing event', () =>
   // {
   //   const event = FakeEventHostModel;

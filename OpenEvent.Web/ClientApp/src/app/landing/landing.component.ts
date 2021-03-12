@@ -44,15 +44,10 @@ export class LandingComponent implements OnInit
     ];
     forkJoin(subs).subscribe(x =>
     {
-    }, (e: HttpErrorResponse) => this.Error = e.message, () => {
+    }, (e: HttpErrorResponse) => this.Error = e.error, () => {
       this.Loading = false;
       console.log('finished loading', this.Loading);
     });
-  }
-
-  public getRandomColour (): string
-  {
-    return `rgb(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255})`;
   }
 
   public navigateToFeatured ()

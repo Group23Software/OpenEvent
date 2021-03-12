@@ -13,6 +13,8 @@ import {
 import {HttpClient} from "@angular/common/http";
 import {of} from "rxjs";
 import any = jasmine.any;
+import {FakeAddress} from "../_testData/Event";
+import {UsersAnalytics} from "../_models/Analytic";
 
 describe('UserService', () =>
 {
@@ -22,7 +24,7 @@ describe('UserService', () =>
   beforeEach(() =>
   {
 
-    cookieServiceMock = jasmine.createSpyObj('cookieService', ['get', 'set', 'check', 'delete', 'deleteAll','getAll']);
+    cookieServiceMock = jasmine.createSpyObj('cookieService', ['get', 'set', 'check', 'delete', 'deleteAll', 'getAll']);
     cookieServiceMock.get.and.returnValue('');
     cookieServiceMock.set.and.callThrough();
     cookieServiceMock.check.and.callThrough();
@@ -188,4 +190,38 @@ describe('UserService', () =>
     const service: UserService = TestBed.inject(UserService);
     service.PhoneExists("").subscribe(result => expect(result).toBe(true));
   }));
+
+  it('should get detailed account if it does not exist', () =>
+  {
+    const service: UserService = TestBed.inject(UserService);
+    let getSpy = spyOn(service, 'GetAccountUser');
+    service.User = {Avatar: "", Id: "UserId", IsDarkMode: false, UserName: ""};
+    service.NeedAccountUser();
+    expect(getSpy).toHaveBeenCalled();
+  });
+
+  it('should update address', () =>
+  {
+    httpClientMock.post.and.returnValue(of({address: FakeAddress}));
+    const service: UserService = TestBed.inject(UserService);
+    service.User = {Avatar: "", Id: "UserId", IsDarkMode: false, UserName: ""};
+    service.UpdateAddress({
+      Id: "UserId",
+      Address: FakeAddress
+    }).subscribe();
+    expect(service.User.Address).toEqual(FakeAddress);
+  });
+
+  it('should get analytics', () =>
+  {
+    httpClientMock.get.and.returnValue(of({
+      PageViewEvents: [],
+      RecommendationScores: [],
+      SearchEvents: [],
+      TicketVerificationEvents: []
+    } as UsersAnalytics));
+    const service: UserService = TestBed.inject(UserService);
+    service.User = {Avatar: "", Id: "UserId", IsDarkMode: false, UserName: ""};
+    service.GetAnalytics().subscribe(x => expect(x).not.toBeNull());
+  });
 });
