@@ -150,15 +150,16 @@ export class EventService
       a.PageViewEvents.forEach(x =>
       {
         let created = new Date(x.Created);
-        let fullDate: string = (new Date(created.getFullYear(), created.getMonth(), created.getDay())).toDateString();
-        if (!pageViews.has(fullDate))
-        {
-          pageViews.set(fullDate, [x]);
-        } else
+        let fullDate: string = created.toDateString();
+        if (pageViews.has(fullDate))
         {
           pageViews.set(fullDate, [...pageViews.get(fullDate), x]);
+        } else
+        {
+          pageViews.set(fullDate, [x]);
         }
       });
+      console.log(pageViews);
 
       let mapped: MappedEventAnalytics = {
         PageViewEvents: Array.from(pageViews, ([key, value]) => ({Date: new Date(key), PageViews: value})),

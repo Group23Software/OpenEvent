@@ -19,6 +19,7 @@ namespace OpenEvent.Web.Models.Event
         public ImageViewModel Thumbnail { get; set; }
         public List<ImageViewModel> Images { get; set; }
         public List<SocialLinkViewModel> SocialLinks { get; set; }
+        public DateTime Created { get; set; }
         public DateTime StartLocal { get; set; }
         public DateTime StartUTC { get; set; }
         public DateTime EndLocal { get; set; }

@@ -68,13 +68,12 @@ export class EventConfigComponent implements OnInit
       this.categoryStore = x;
       const id = this.route.snapshot.paramMap.get('id');
       this.eventService.GetAnalytics(id).subscribe(analytics => this.analytics = analytics)
-      if (this.eventService.HostsEvents)
-      {
-        this.event = this.eventService.HostsEvents.find(x => x.Id == id);
-        console.log(this.event);
-        this.loadFormData();
-      }
-      console.log(this.event);
+      // if (this.eventService.HostsEvents)
+      // {
+      //   this.event = this.eventService.HostsEvents.find(x => x.Id == id);
+      //   this.loadFormData();
+      // }
+
       if (this.event == null)
       {
         this.eventService.GetForHost(id).subscribe(response =>

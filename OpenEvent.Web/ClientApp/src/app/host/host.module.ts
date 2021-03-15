@@ -12,6 +12,8 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {ZXingScannerModule} from "@zxing/ngx-scanner";
 import { PromosComponent } from './event-config/promos/promos.component';
 import { CreatePromoComponent } from './event-config/promos/create-promo/create-promo.component';
+import {ChartsModule} from "ng2-charts";
+import { TicketSalesComponent } from './event-config/ticket-sales/ticket-sales.component';
 
 
 
@@ -24,7 +26,8 @@ import { CreatePromoComponent } from './event-config/promos/create-promo/create-
     VerifyTicketComponent,
     VerifyDialog,
     PromosComponent,
-    CreatePromoComponent
+    CreatePromoComponent,
+    TicketSalesComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +40,8 @@ import { CreatePromoComponent } from './event-config/promos/create-promo/create-
       {path: 'verify/:id', component: VerifyTicketComponent}
     ]),
     MatDialogModule,
-    ZXingScannerModule
+    ZXingScannerModule,
+    ChartsModule
   ]
 })
 export class HostModule

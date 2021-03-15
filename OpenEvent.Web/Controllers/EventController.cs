@@ -114,7 +114,7 @@ namespace OpenEvent.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [UserOwnsEvent]
+        // [UserOwnsEvent]
         [HttpGet("forHost")]
         public async Task<ActionResult<EventHostModel>> GetForHost(Guid id)
         {

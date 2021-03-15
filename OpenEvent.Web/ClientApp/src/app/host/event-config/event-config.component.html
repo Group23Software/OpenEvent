@@ -254,6 +254,8 @@
       <div>Tickets sold: {{event?.Tickets.length - event.TicketsLeft}}</div>
       <div>Tickets left: {{event?.TicketsLeft}}</div>
 
+      <div id="ticketPercentage"><div id="ticketsLeftPercentage" [style.width]="(event.TicketsLeft / event.Tickets.length)*100 + '%'"></div><div id="ticketsSoldPercentage"></div></div>
+
       <div id="categoryAverageScores">
 
       </div>
@@ -266,6 +268,7 @@
         <mat-card-title>Trends</mat-card-title>
         <mat-card-subtitle>Cool graphs</mat-card-subtitle>
       </mat-card-header>
+      <ticket-sales [Event]="event" [Analytics]="analytics"></ticket-sales>
     </mat-card>
 
     <mat-card class="m-3">

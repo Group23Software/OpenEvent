@@ -100,7 +100,6 @@ namespace OpenEvent.Web.Services
 
             Event newEvent = new Event()
             {
-                // Id = Guid.NewGuid(),
                 Name = createEventBody.Name,
                 Description = createEventBody.Description,
                 Address = createEventBody.Address,
@@ -118,7 +117,8 @@ namespace OpenEvent.Web.Services
                 SocialLinks = createEventBody.SocialLinks != null
                     ? createEventBody.SocialLinks.Select(x => Mapper.Map<SocialLink>(x)).ToList()
                     : new List<SocialLink>(),
-                TicketsLeft = createEventBody.NumberOfTickets
+                TicketsLeft = createEventBody.NumberOfTickets,
+                Created = new DateTime()
             };
 
             List<Ticket> tickets = new List<Ticket>();
@@ -126,7 +126,6 @@ namespace OpenEvent.Web.Services
             {
                 tickets.Add(new Ticket()
                 {
-                    // Id = Guid.NewGuid(),
                     Event = newEvent,
                     Available = true,
                     Uses = 0
@@ -288,7 +287,8 @@ namespace OpenEvent.Web.Services
                             Start = promo.Start,
                             NumberOfSales = x.Transactions.Count(x => x.PromoId == promo.Id)
                         }).ToList()
-                        : new List<PromoViewModel>()
+                        : new List<PromoViewModel>(),
+                    Created = x.Created
                 }).ToList();
         }
 
@@ -329,6 +329,17 @@ namespace OpenEvent.Web.Services
             }
 
 
+            var t = (DateTime.Now - e.Created);
+            Logger.LogInformation("creating page views for {Days} days", t.TotalDays);
+            for (int i = 0; i < t.Days; i++)
+            {
+                for (int j = 0; j < i; j++)
+                {
+                    var date = DateTime.Now.AddDays(-i);
+                    WorkQueue.QueueWork(token => AnalyticsService.CapturePageViewAsync(token, e.Id, userId, date));
+                }
+            }
+            
             WorkQueue.QueueWork(token => AnalyticsService.CapturePageViewAsync(token, e.Id, userId, DateTime.Now));
             if (userId != null)
                 WorkQueue.QueueWork(token =>
@@ -463,35 +474,11 @@ namespace OpenEvent.Web.Services
         public async Task<ActionResult<EventHostModel>> GetForHost(Guid id)
         {
             var e = await ApplicationContext.Events
+                .Include(x => x.EventCategories).ThenInclude(x => x.Category)
+                .Include(x => x.Transactions)
+                .Include(x => x.Tickets)
                 .Include(x => x.Promos)
-                .Include(x => x.PageViewEvents)
-                .Include(x => x.Tickets).Select(
-                    x => new EventHostModel
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Description = x.Description,
-                        Address = x.Address,
-                        Categories = x.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList(),
-                        Price = x.Price,
-                        Thumbnail = Mapper.Map<ImageViewModel>(x.Thumbnail),
-                        Images = x.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList(),
-                        Tickets = x.Tickets.Select(t => Mapper.Map<TicketViewModel>(t)).ToList(),
-                        EndLocal = x.EndLocal,
-                        IsOnline = x.IsOnline,
-                        SocialLinks = x.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList(),
-                        StartLocal = x.StartLocal,
-                        TicketsLeft = x.Tickets.Count,
-                        EndUTC = x.EndUTC,
-                        StartUTC = x.StartUTC,
-                        Transactions = x.Transactions.Any()
-                            ? x.Transactions.Select(transaction => Mapper.Map<TransactionViewModel>(transaction))
-                                .ToList()
-                            : new List<TransactionViewModel>(),
-                        Promos = x.Promos.Any()
-                            ? x.Promos.Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList()
-                            : new List<PromoViewModel>()
-                    }).AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+                .AsNoTracking().AsSplitQuery().FirstOrDefaultAsync(x => x.Id == id);
 
             if (e == null)
             {
@@ -499,7 +486,49 @@ namespace OpenEvent.Web.Services
                 throw new EventNotFoundException();
             }
 
-            return e;
+            return new EventHostModel
+            {
+                Id = e.Id,
+                Name = e.Name,
+                Description = e.Description,
+                Address = e.Address,
+                Price = e.Price,
+                EndLocal = e.EndLocal,
+                IsOnline = e.IsOnline,
+                EndUTC = e.EndUTC,
+                StartUTC = e.StartUTC,
+                Created = e.Created,
+                StartLocal = e.StartLocal,
+                TicketsLeft = e.Tickets.Count(ticket => ticket.Available),
+                Categories = e.EventCategories.Any()
+                    ? e.EventCategories.Select(c => Mapper.Map<CategoryViewModel>(c.Category)).ToList()
+                    : new List<CategoryViewModel>(),
+                Thumbnail = e.Thumbnail.Source != null ? Mapper.Map<ImageViewModel>(e.Thumbnail) : null,
+                Images = e.Images.Any()
+                    ? e.Images.Select(i => Mapper.Map<ImageViewModel>(i)).ToList()
+                    : new List<ImageViewModel>(),
+                Tickets = e.Tickets.Any()
+                    ? e.Tickets.Select(t => Mapper.Map<TicketViewModel>(t)).ToList()
+                    : new List<TicketViewModel>(),
+                SocialLinks = e.SocialLinks.Any()
+                    ? e.SocialLinks.Select(s => Mapper.Map<SocialLinkViewModel>(s)).ToList()
+                    : new List<SocialLinkViewModel>(),
+                Transactions = e.Transactions.Any()
+                    ? e.Transactions.Select(transaction => Mapper.Map<TransactionViewModel>(transaction))
+                        .ToList()
+                    : new List<TransactionViewModel>(),
+                Promos = e.Promos.Any()
+                    ? e.Promos.Select(promo => new PromoViewModel()
+                    {
+                        Active = promo.Active,
+                        Discount = promo.Discount,
+                        End = promo.End,
+                        Id = promo.Id,
+                        Start = promo.Start,
+                        NumberOfSales = e.Transactions.Count(x => x.PromoId == promo.Id)
+                    }).ToList()
+                    : new List<PromoViewModel>(),
+            };;
         }
 
         /// <summary>

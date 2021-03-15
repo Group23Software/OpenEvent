@@ -16,6 +16,7 @@ export interface EventDetailModel extends EventViewModel
 
 export interface EventHostModel extends EventViewModel
 {
+  Created: Date;
   Images: ImageViewModel[];
   SocialLinks: SocialLinkViewModel[];
   Address: Address;
