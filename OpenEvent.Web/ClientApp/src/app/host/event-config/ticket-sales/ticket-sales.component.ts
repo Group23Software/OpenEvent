@@ -21,9 +21,7 @@ export class TicketSalesComponent implements OnInit
     {label: "Page Views", data: [] as ChartPoint[], yAxisID: 'y-axis-1'}
   ];
 
-  ticketSalesLabels: Label[];
-
-  chartColours: Color[] = [
+  public chartColours: Color[] = [
     { // grey
       backgroundColor: 'rgba(148,159,177,0.2)',
       borderColor: 'rgba(148,159,177,1)',
@@ -42,7 +40,7 @@ export class TicketSalesComponent implements OnInit
     }
   ];
 
-  chartOptions: (ChartOptions & { annotation: any }) = {
+  public chartOptions: (ChartOptions & { annotation: any }) = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
@@ -103,8 +101,8 @@ export class TicketSalesComponent implements OnInit
     }
   };
 
-  chartType: ChartType = 'line';
-  chartPlugins = [pluginAnnotations];
+  public chartType: ChartType = 'line';
+  public chartPlugins = [pluginAnnotations];
 
   public loading: boolean = true;
 
@@ -145,8 +143,6 @@ export class TicketSalesComponent implements OnInit
     console.log(this.Analytics.PageViewEvents);
     this.Analytics.PageViewEvents.forEach(p =>
     {
-      // let date = new Date(p.Date);
-      // let fullDate: string = new Date(date.getFullYear(), date.getMonth(), date.getDay()).toDateString();
       pageViewDates.set(p.Date.toDateString(), pageViewDates.get(p.Date.toDateString()) + p.PageViews.length);
     });
 

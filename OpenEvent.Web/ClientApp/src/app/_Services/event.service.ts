@@ -48,7 +48,8 @@ export class EventService
   public GetForPublic (id: string): Observable<EventDetailModel>
   {
     let params: HttpParams = new HttpParams().set('id',id);
-    if (this.userService.User != null) params.set('userId',this.userService.User.Id);
+    console.log(this.userService.User);
+    if (this.userService.User != null) params = params.set('userId',this.userService.User.Id);
     return this.http.get<EventDetailModel>(this.BaseUrl + EventPaths.GetForPublic, {
       params: params
     }).pipe(map(e =>
@@ -132,7 +133,7 @@ export class EventService
   public Search (keyword: string, filters: SearchFilter[]): Observable<EventViewModel[]>
   {
     let params: HttpParams = new HttpParams().set('keyword', keyword);
-    if (this.userService.User != null) params.set('userId',this.userService.User.Id);
+    if (this.userService.User != null) params = params.set('userId',this.userService.User.Id);
     return this.http.post<EventViewModel[]>(this.BaseUrl + EventPaths.Search, filters, {params: params});
   }
 
@@ -164,7 +165,8 @@ export class EventService
       let mapped: MappedEventAnalytics = {
         PageViewEvents: Array.from(pageViews, ([key, value]) => ({Date: new Date(key), PageViews: value})),
         TicketVerificationEvents: a.TicketVerificationEvents,
-        AverageRecommendationScores: a.AverageRecommendationScores
+        AverageRecommendationScores: a.AverageRecommendationScores,
+        Demographics: a.Demographics
       }
 
       return mapped;

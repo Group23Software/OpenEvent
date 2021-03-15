@@ -1,7 +1,6 @@
 <div style="display: block;">
   <canvas *ngIf="!loading" baseChart width="400" height="400"
           [datasets]="ticketSalesData"
-          [labels]="ticketSalesLabels"
           [options]="chartOptions"
           [colors]="chartColours"
           [chartType]="chartType"

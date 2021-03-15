@@ -329,17 +329,17 @@ namespace OpenEvent.Web.Services
             }
 
 
-            var t = (DateTime.Now - e.Created);
-            Logger.LogInformation("creating page views for {Days} days", t.TotalDays);
-            for (int i = 0; i < t.Days; i++)
-            {
-                for (int j = 0; j < i; j++)
-                {
-                    var date = DateTime.Now.AddDays(-i);
-                    WorkQueue.QueueWork(token => AnalyticsService.CapturePageViewAsync(token, e.Id, userId, date));
-                }
-            }
-            
+            // var t = (DateTime.Now - e.Created);
+            // Logger.LogInformation("creating page views for {Days} days for {UserId}", t.TotalDays, userId);
+            // for (int i = 0; i < t.Days; i++)
+            // {
+            //     for (int j = 0; j < i; j++)
+            //     {
+            //         var date = DateTime.Now.AddDays(-i);
+            //         WorkQueue.QueueWork(token => AnalyticsService.CapturePageViewAsync(token, e.Id, userId, date));
+            //     }
+            // }
+
             WorkQueue.QueueWork(token => AnalyticsService.CapturePageViewAsync(token, e.Id, userId, DateTime.Now));
             if (userId != null)
                 WorkQueue.QueueWork(token =>
@@ -528,7 +528,8 @@ namespace OpenEvent.Web.Services
                         NumberOfSales = e.Transactions.Count(x => x.PromoId == promo.Id)
                     }).ToList()
                     : new List<PromoViewModel>(),
-            };;
+            };
+            ;
         }
 
         /// <summary>
@@ -612,12 +613,22 @@ namespace OpenEvent.Web.Services
         {
             // var e = await ApplicationContext.Events.AsNoTracking().AsSplitQuery().Include(x => x.EventCategories).FirstOrDefaultAsync(x => x.Id == id);
 
-            var pageViewEvents = await ApplicationContext.PageViewEvents.AsNoTracking().AsSplitQuery()
+            var pageViewEvents = await ApplicationContext.PageViewEvents
+                .Include(x => x.User)
+                .AsNoTracking().AsSplitQuery()
                 .Where(x => x.Event.Id == id).ToListAsync();
             var ticketVerificationEvents = await ApplicationContext.VerificationEvents.AsNoTracking().AsSplitQuery()
                 .Where(x => x.Event.Id == id).ToListAsync();
             // var recommendationScores = await ApplicationContext.RecommendationScores
             // .Where(x => e.EventCategories.Any(c => c.CategoryId == x.Category.Id)).ToListAsync();
+
+            var demographics = pageViewEvents.Where(x => x.User != null).GroupBy(x => x.User.DateOfBirth).Select(x =>
+                new Demographic()
+                {
+                    Age = (DateTime.Now - x.Key).Days / 365,
+                    // Age = new DateTime(DateTime.Now.Subtract(x.Key).Ticks).Year,
+                    Count = x.Count()
+                }).ToList();
 
             return new EventAnalytics()
             {
@@ -626,6 +637,7 @@ namespace OpenEvent.Web.Services
                 TicketVerificationEvents = ticketVerificationEvents
                     .Select(x => Mapper.Map<TicketVerificationEventViewModel>(x)).OrderByDescending(x => x.Created)
                     .ToList(),
+                Demographics = demographics
             };
         }
 

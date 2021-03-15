@@ -14,6 +14,7 @@ import { PromosComponent } from './event-config/promos/promos.component';
 import { CreatePromoComponent } from './event-config/promos/create-promo/create-promo.component';
 import {ChartsModule} from "ng2-charts";
 import { TicketSalesComponent } from './event-config/ticket-sales/ticket-sales.component';
+import { DemographicComponent } from './event-config/demographic/demographic.component';
 
 
 
@@ -27,7 +28,8 @@ import { TicketSalesComponent } from './event-config/ticket-sales/ticket-sales.c
     VerifyDialog,
     PromosComponent,
     CreatePromoComponent,
-    TicketSalesComponent
+    TicketSalesComponent,
+    DemographicComponent
   ],
   imports: [
     CommonModule,

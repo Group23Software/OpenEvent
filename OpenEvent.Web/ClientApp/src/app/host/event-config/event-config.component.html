@@ -277,6 +277,7 @@
         <mat-card-title>Demographic</mat-card-title>
         <mat-card-subtitle>Analytics based demographic of your event</mat-card-subtitle>
       </mat-card-header>
+      <demographic [Analytics]="analytics"></demographic>
     </mat-card>
   </mat-tab>
   <mat-tab label="Raw Data" *ngIf="analytics">

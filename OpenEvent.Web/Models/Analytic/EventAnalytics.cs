@@ -9,6 +9,7 @@ namespace OpenEvent.Web.Models.Analytic
         public List<PageViewEventViewModel> PageViewEvents { get; set; }
         public List<TicketVerificationEventViewModel> TicketVerificationEvents { get; set; }
         public List<AverageRecommendationScore> AverageRecommendationScores { get; set; }
+        public List<Demographic> Demographics { get; set; }
     }
     
     public class AverageRecommendationScore

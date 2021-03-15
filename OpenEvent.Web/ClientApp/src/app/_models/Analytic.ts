@@ -20,18 +20,26 @@ export interface MappedUsersAnalytics
   TicketVerificationEvents: TicketVerificationEvent[];
 }
 
+export interface Demographic
+{
+  Age: number;
+  Count: number;
+}
+
 export interface EventAnalytics
 {
   PageViewEvents: PageViewEvent[];
   TicketVerificationEvents: TicketVerificationEvent[],
-  AverageRecommendationScores: AverageRecommendationScore[]
+  AverageRecommendationScores: AverageRecommendationScore[],
+  Demographics: Demographic[];
 }
 
 export interface MappedEventAnalytics
 {
   PageViewEvents: PageViewByDate[];
   TicketVerificationEvents: TicketVerificationEvent[];
-  AverageRecommendationScores: AverageRecommendationScore[]
+  AverageRecommendationScores: AverageRecommendationScore[];
+  Demographics: Demographic[];
 }
 
 export interface AverageRecommendationScore
