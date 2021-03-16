@@ -32,9 +32,18 @@ namespace OpenEvent.Web.Services
 
         public async Task<PromoViewModel> Create(CreatePromoBody createPromoBody)
         {
-            var e = await ApplicationContext.Events.FirstOrDefaultAsync(x => x.Id == createPromoBody.EventId);
+            var e = await ApplicationContext.Events.Include(x => x.Promos).AsSplitQuery()
+                .FirstOrDefaultAsync(x => x.Id == createPromoBody.EventId);
 
             if (e == null) throw new EventNotFoundException();
+
+            foreach (var p in e.Promos)
+            {
+                if (p.Start >= createPromoBody.Start && createPromoBody.End <= e.EndLocal)
+                {
+                    throw new InvalidPromoException();
+                }
+            }
 
             Promo promo = new Promo()
             {

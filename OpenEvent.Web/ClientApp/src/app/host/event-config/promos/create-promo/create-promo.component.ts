@@ -19,15 +19,15 @@ export class CreatePromoComponent implements OnInit
     discount: new FormControl(0, [Validators.required]),
     start: new FormControl('', [Validators.required]),
     end: new FormControl('', [Validators.required]),
-    active: new FormControl(false,[Validators.required])
+    active: new FormControl(false, [Validators.required])
   });
   public defaultTime: number[];
-  minDate: Date;
+  public minDate: Date;
 
   public createError: string;
   public loading: boolean = false;
 
-  constructor (@Inject(MAT_DIALOG_DATA) public data: { event: EventHostModel }, private promoService: PromoService, private dialogRef:MatDialogRef<CreatePromoComponent>, private trigger: TriggerService)
+  constructor (@Inject(MAT_DIALOG_DATA) public data: { event: EventHostModel }, private promoService: PromoService, private dialogRef: MatDialogRef<CreatePromoComponent>, private trigger: TriggerService)
   {
   }
 
@@ -46,9 +46,14 @@ export class CreatePromoComponent implements OnInit
       End: this.createPromoForm.controls.end.value,
       Start: this.createPromoForm.controls.start.value,
       EventId: this.data.event.Id
-    }).subscribe(r => {
-      this.trigger.Iterate("Created Promo",2000,IteratorStatus.good);
+    }).subscribe(r =>
+    {
+      this.trigger.Iterate("Created Promo", 2000, IteratorStatus.good);
       this.dialogRef.close(r);
-    }, (e: HttpErrorResponse) => this.createError = e.message, () => this.loading = false)
+    }, (e: HttpErrorResponse) =>
+    {
+      this.createError = e.error.Message;
+      this.loading = false
+    }, () => this.loading = false)
   }
 }

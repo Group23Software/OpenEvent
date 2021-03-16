@@ -5,7 +5,7 @@
     <mat-card-subtitle>Create a promotional offer for this event</mat-card-subtitle>
   </mat-card-header>
 
-  <form [formGroup]="createPromoForm" (ngSubmit)="create()">
+  <form [formGroup]="createPromoForm" (ngSubmit)="create()" class="mb-3">
 
     <mat-form-field floatLabel="always" appearance="outline" class="mb-3 w-100">
       <mat-label>Discount</mat-label>
@@ -35,4 +35,7 @@
       <button mat-flat-button color="accent" type="submit" [disabled]="createPromoForm.invalid">Create</button>
     </div>
   </form>
+
+  <div class="warn-color">{{createError}}</div>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 </div>
