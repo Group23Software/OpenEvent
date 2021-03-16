@@ -4,7 +4,8 @@ let authPaths: ApiAuthPaths = {
   BasePath: 'api/auth',
   Authenticate: '',
   UpdatePassword: '',
-  Login: ''
+  Login: '',
+  ForgotPassword: ''
 }
 
 authPaths = {
@@ -12,6 +13,7 @@ authPaths = {
   Login: authPaths.BasePath + '/login',
   Authenticate: authPaths.BasePath + '/authenticateToken',
   UpdatePassword: authPaths.BasePath + '/updatePassword',
+  ForgotPassword: authPaths.BasePath + '/forgot'
 }
 
 let userPaths: ApiUserPaths =
@@ -153,6 +155,7 @@ interface ApiAuthPaths
   readonly Login: string;
   readonly Authenticate: string;
   readonly UpdatePassword: string;
+  readonly ForgotPassword: string;
 }
 
 interface ApiUserPaths

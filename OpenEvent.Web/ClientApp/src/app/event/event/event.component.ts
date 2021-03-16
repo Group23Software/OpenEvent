@@ -11,8 +11,6 @@ import {
   TicketPurchaseDialogData
 } from "../../ticket/ticket-purchase-dialog/ticket-purchase-dialog.component";
 import {TransactionService} from "../../_Services/transaction.service";
-import {UserService} from "../../_Services/user.service";
-import {AuthService} from "../../_Services/auth.service";
 
 @Component({
   selector: 'event',

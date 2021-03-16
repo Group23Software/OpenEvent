@@ -16,7 +16,5 @@ namespace OpenEvent.Web.Models.User
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public DateTime DateOfBirth { get; set; }
-
-        public bool Remember { get; set; }
     }
 }

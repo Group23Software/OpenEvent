@@ -23,7 +23,8 @@ namespace OpenEvent.Web.Services
         Task<UserViewModel> Login(string email, string password, bool remember);
         Task<UserViewModel> Authenticate(Guid id);
         Task ForgotPassword(string email);
-        Task UpdatePassword(string email, string password);
+        Task UpdatePassword(Guid id, string password);
+        Task ConfirmEmail(Guid id);
     }
 
     /// <summary>
@@ -35,6 +36,7 @@ namespace OpenEvent.Web.Services
         private readonly ApplicationContext ApplicationContext;
         private readonly AppSettings AppSettings;
         private readonly IMapper Mapper;
+        private readonly IEmailService EmailService;
 
         /// <summary>
         /// AuthService default constructor
@@ -43,12 +45,14 @@ namespace OpenEvent.Web.Services
         /// <param name="logger"></param>
         /// <param name="appSettings"></param>
         /// <param name="mapper"></param>
-        public AuthService(ApplicationContext context, ILogger<AuthService> logger, IOptions<AppSettings> appSettings, IMapper mapper)
+        /// <param name="emailService"></param>
+        public AuthService(ApplicationContext context, ILogger<AuthService> logger, IOptions<AppSettings> appSettings, IMapper mapper, IEmailService emailService)
         {
             Logger = logger;
             ApplicationContext = context;
             AppSettings = appSettings.Value;
             Mapper = mapper;
+            EmailService = emailService;
         }
         
         /// <summary>
@@ -70,6 +74,12 @@ namespace OpenEvent.Web.Services
             {
                 Logger.LogInformation("User not found");
                 throw new UserNotFoundException();
+            }
+
+            if (!user.Confirmed)
+            {
+                Logger.LogInformation("User not confirmed");
+                throw new UserNotConfirmedException();
             }
 
             var hasher = PasswordHasher();
@@ -127,27 +137,50 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("User not found");
                 throw new UserNotFoundException();
             }
+            
+            if (!user.Confirmed)
+            {
+                Logger.LogInformation("User not confirmed");
+                throw new UserNotConfirmedException();
+            }
 
             return Mapper.Map<UserViewModel>(user);
         }
         
-        public Task ForgotPassword(string email)
+        public async Task ForgotPassword(string email)
         {
-            throw new System.NotImplementedException();
+            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email);
+
+            if (user == null)
+            {
+                Logger.LogInformation("User not found");
+                throw new UserNotFoundException();
+            }
+
+            try
+            {
+                await EmailService.SendAsync(user.Email, "OpenEvent",
+                    $"<h1>Reset your password</h1><a href='{AppSettings.BaseUrl}/forgot/{user.Id}'>Reset Password</a>", "Forgot Password");
+            }
+            catch
+            {
+                Logger.LogWarning("Failed to email user");
+                throw;
+            }
         }
 
         /// <summary>
         /// Method for updating updating the user's password.
         /// </summary>
-        /// <param name="email"></param>
+        /// <param name="id"></param>
         /// <param name="password"></param>
         /// <returns>
         /// A completed task once updated.
         /// </returns>
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
-        public async Task UpdatePassword(string email, string password)
+        public async Task UpdatePassword(Guid id, string password)
         {
-            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email);
+            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
             {
@@ -159,6 +192,29 @@ namespace OpenEvent.Web.Services
 
             user.Password = hasher.HashPassword(user, password);
 
+            try
+            {
+                await ApplicationContext.SaveChangesAsync();
+            }
+            catch
+            {
+                Logger.LogWarning("User failed to save");
+                throw;
+            }
+        }
+
+        public async Task ConfirmEmail(Guid id)
+        {
+            var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                Logger.LogInformation("User not found");
+                throw new UserNotFoundException();
+            }
+
+            user.Confirmed = true;
+            
             try
             {
                 await ApplicationContext.SaveChangesAsync();

@@ -1,3 +1,5 @@
+using System;
+
 namespace OpenEvent.Web.Models.Auth
 {
     /// <summary>
@@ -5,7 +7,7 @@ namespace OpenEvent.Web.Models.Auth
     /// </summary>
     public class UpdatePasswordBody
     {
-        public string Email { get; set; }
+        public Guid Id { get; set; }
         public string Password { get; set; }
     }
 }

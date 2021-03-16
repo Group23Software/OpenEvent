@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Text;
 using AutoMapper;
 using OpenEvent.Web.Models.Analytic;
@@ -47,7 +49,8 @@ namespace OpenEvent.Web
                 .ForMember(x => x.Id, op => op.Ignore());
 
             CreateMap<Event, EventViewModel>()
-                .ForMember(x => x.Categories, op => op.Ignore());
+                .ForMember(x => x.Categories, op => op.Ignore())
+                .ForMember(x => x.Promos, op => op.MapFrom(x => x.Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End).ToList()));
 
             CreateMap<SocialLinkViewModel, SocialLink>()
                 .ForMember(x => x.Id, op => op.Ignore());

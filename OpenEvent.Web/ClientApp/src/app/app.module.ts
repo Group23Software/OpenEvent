@@ -15,12 +15,14 @@ import {ConfirmDialogComponent} from './_extensions/confirm-dialog/confirm-dialo
 import {SharedModule} from "./shared.module";
 import {EventComponent} from "./event/event/event.component";
 import {SearchComponent} from "./search/search.component";
-import {EventPreviewComponent} from "./event/event-preview/event-preview.component";
 import {NgxStripeModule} from "ngx-stripe";
 import {ReuseRouteReuseStrategy} from "./_extensions/ReuseRouteReuseStrategy";
 import { LandingComponent } from './landing/landing.component';
 import {PublicNavComponent} from "./navs/public-nav/public-nav.component";
 import {UserNavComponent} from "./navs/user-nav/user-nav.component";
+import {ForgotPasswordComponent} from "./login/forgot-password/forgot-password.component";
+import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
+import {ForgotPasswordDialogComponent} from "./login/forgot-password-dialog/forgot-password-dialog.component";
 
 
 @NgModule({
@@ -33,7 +35,9 @@ import {UserNavComponent} from "./navs/user-nav/user-nav.component";
     SearchComponent,
     LandingComponent,
     PublicNavComponent,
-    UserNavComponent
+    UserNavComponent,
+    ForgotPasswordComponent,
+    ForgotPasswordDialogComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -70,7 +74,11 @@ import {UserNavComponent} from "./navs/user-nav/user-nav.component";
         path: 'event/:id',
         component: EventComponent
       },
-      // { path: '**', component: PageNotFoundComponent }
+      {
+        path: 'forgot/:id',
+        component: ForgotPasswordComponent
+      },
+      { path: '**', component: PageNotFoundComponent }
     ]),
   ],
   providers: [

@@ -80,21 +80,7 @@ export class UserService
 
   public CreateUser (newUserInput: NewUserInput): Observable<UserViewModel>
   {
-    return this.http.post<UserViewModel>(this.BaseUrl + UserPaths.BasePath, newUserInput).pipe(
-      map(user =>
-      {
-        let payload: JwtPayload = jwtDecode(user.Token);
-        this.cookieService.set('token', user.Token, new Date(payload.exp * 1000));
-        this.cookieService.set('id', user.Id, new Date(payload.exp * 1000));
-        this.User = {
-          Id: user.Id,
-          Avatar: user.Avatar,
-          UserName: user.UserName,
-          IsDarkMode: user.IsDarkMode
-        };
-        return user;
-      })
-    );
+    return this.http.post<UserViewModel>(this.BaseUrl + UserPaths.BasePath, newUserInput);
   }
 
   public NeedAccountUser (): Observable<UserAccountModel>

@@ -26,7 +26,7 @@ namespace OpenEvent.Web.Services
     /// </summary>
     public interface IUserService
     {
-        Task<UserViewModel> Create(NewUserInput userInput);
+        Task Create(NewUserInput userInput);
         Task Destroy(Guid id);
         Task<UserAccountModel> Get(Guid id);
         Task<UsersAnalytics> GetAnalytics(Guid id);
@@ -50,6 +50,8 @@ namespace OpenEvent.Web.Services
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
         private readonly IAuthService AuthService;
+        private readonly IEmailService EmailService;
+        private readonly AppSettings AppSettings;
 
         /// <summary>
         /// UserService default constructor
@@ -59,13 +61,15 @@ namespace OpenEvent.Web.Services
         /// <param name="mapper"></param>
         /// <param name="authService"><see cref="IAuthService"/>></param>
         public UserService(ApplicationContext context, ILogger<UserService> logger, IMapper mapper,
-            IAuthService authService, IOptions<AppSettings> appSettings)
+            IAuthService authService, IOptions<AppSettings> appSettings,IEmailService emailService)
         {
             Logger = logger;
             ApplicationContext = context;
             Mapper = mapper;
             AuthService = authService;
+            AppSettings = appSettings.Value;
             StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
+            EmailService = emailService;
         }
 
         /// <summary>
@@ -76,7 +80,7 @@ namespace OpenEvent.Web.Services
         /// A task of type <see cref="UserViewModel"/> representing basic user information.
         /// </returns>
         /// <exception cref="UserAlreadyExistsException">Thrown when there is already a user with the same email, phone number or username.</exception>
-        public async Task<UserViewModel> Create(NewUserInput userInput)
+        public async Task Create(NewUserInput userInput)
         {
             var user = await ApplicationContext.Users.FirstOrDefaultAsync(x =>
                 x.Email == userInput.Email || x.UserName == userInput.UserName ||
@@ -106,7 +110,8 @@ namespace OpenEvent.Web.Services
                 LastName = userInput.LastName,
                 PhoneNumber = userInput.PhoneNumber,
                 UserName = userInput.UserName,
-                DateOfBirth = userInput.DateOfBirth
+                DateOfBirth = userInput.DateOfBirth,
+                Confirmed = false
             };
 
             // Hash user's password.
@@ -121,7 +126,7 @@ namespace OpenEvent.Web.Services
                 // Saving user to Db.
                 await ApplicationContext.Users.AddAsync(newUser);
                 await ApplicationContext.SaveChangesAsync();
-                return await AuthService.Login(newUser.Email, userInput.Password, userInput.Remember);
+                await EmailService.SendAsync(newUser.Email, "OpenEvent", $"<h1>Please confirm your email</h1><a href={AppSettings.BaseUrl}/api/auth/confirm?id={newUser.Id}>confirm</a>", "Confirm Email");
             }
             catch
             {

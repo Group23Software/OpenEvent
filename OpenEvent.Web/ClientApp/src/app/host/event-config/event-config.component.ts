@@ -55,6 +55,15 @@ export class EventConfigComponent implements OnInit
   transactionColumns = ['stripeId', 'status', 'start', 'end', 'amount', 'paid'];
   defaultDate = "0001-01-01T00:00:00";
 
+  get CompletedTransactionWorth () {
+    return this.event.Transactions.filter(x => x.Paid).reduce((total,x) => total + x.Amount,0);
+  }
+
+  get PendingTransactionWorth ()
+  {
+   return this.event.Transactions.filter(x => !x.Paid).reduce((total,x) => total + x.Amount,0);
+  }
+
 
   constructor (private route: ActivatedRoute, private eventService: EventService, private trigger: TriggerService)
   {

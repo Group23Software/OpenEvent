@@ -46,7 +46,7 @@
           <th mat-header-cell *matHeaderCellDef> Amount</th>
           <td mat-cell *matCellDef="let element">
             <span class="d-flex flex-row align-items-center">
-            {{element.Amount / 100 | currency:'GBP':true:'1.2-2'}}
+              <span class="warn-color">-{{element.Amount / 100 | currency:'GBP':true:'1.2-2'}}</span>
               <mat-icon class="m-auto" *ngIf="element.PromoId != '00000000-0000-0000-0000-000000000000'">price_change</mat-icon>
             </span>
           </td>

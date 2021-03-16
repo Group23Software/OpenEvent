@@ -51,7 +51,7 @@ namespace OpenEvent.Web.Services
             using var scope = ServiceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 
-            var eventsEnumerable = context.Events.AsSplitQuery().AsNoTracking().AsEnumerable();
+            var eventsEnumerable = context.Events.Include(x => x.Promos).AsSplitQuery().AsNoTracking().AsEnumerable();
 
             var events = eventsEnumerable.Where(x => EventRecords.Any(e => x.Id == e.Record)).ToList();
 
@@ -59,8 +59,10 @@ namespace OpenEvent.Web.Services
             if (!events.Any())
             {
                 return (await context.Events
+                        .Include(x => x.Promos)
                         .AsSplitQuery().AsNoTracking().Take(10).Where(x => !x.isCanceled)
-                        .OrderBy(x => x.StartLocal).ToListAsync()).Select(x => Mapper.Map<PopularEventViewModel>(x)).ToList();
+                        .OrderBy(x => x.StartLocal).ToListAsync()).Select(x => Mapper.Map<PopularEventViewModel>(x))
+                    .ToList();
             }
 
             return events.Select(x =>

@@ -94,7 +94,9 @@ export class TicketSalesComponent implements OnInit
           label: {
             enabled: true,
             fontColor: 'white',
-            content: 'Start'
+            content: 'Event Starts',
+            position: "right",
+            xAdjust: -40
           }
         }
       ]
@@ -121,6 +123,42 @@ export class TicketSalesComponent implements OnInit
     let endDate = new Date(this.Event.EndLocal);
 
     this.chartOptions.annotation.annotations[1].value = new Date(this.Event.StartLocal).toDateString();
+
+    this.Event.Promos.forEach(promo =>
+    {
+      if (promo.Active)
+      {
+        this.chartOptions.annotation.annotations.push({
+          type: 'line',
+          mode: 'vertical',
+          scaleID: 'x-axis-0',
+
+          value: new Date(promo.Start).toDateString(),
+          borderColor: '#4caf50',
+          borderWidth: 2,
+          label: {
+            enabled: true,
+            fontColor: 'white',
+            content: promo.Discount + '% off starts',
+            yAdjust: -100
+          }
+        });
+        this.chartOptions.annotation.annotations.push({
+          type: 'line',
+          mode: 'vertical',
+          scaleID: 'x-axis-0',
+          value: new Date(promo.End).toDateString(),
+          borderColor: '#c34b4b',
+          borderWidth: 2,
+          label: {
+            enabled: true,
+            fontColor: 'white',
+            content: promo.Discount + '% off ends',
+            yAdjust: 100
+          }
+        });
+      }
+    })
 
     console.log(this.chartOptions);
 

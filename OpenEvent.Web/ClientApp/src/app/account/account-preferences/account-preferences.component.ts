@@ -78,7 +78,7 @@ export class AccountPreferencesComponent implements OnInit
   {
     this.updatePasswordLoading = true;
     this.authService.UpdatePassword({
-      Email: this.user.Email,
+      Id: this.user.Id,
       Password: this.newPasswordForm.value.password
     }).subscribe(response =>
     {

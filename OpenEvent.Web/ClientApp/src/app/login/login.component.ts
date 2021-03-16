@@ -5,6 +5,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {CreateAccountComponent} from "./create-account/create-account.component";
+import {ForgotPasswordDialogComponent} from "./forgot-password-dialog/forgot-password-dialog.component";
 
 @Component({
   selector: 'app-login',
@@ -61,11 +62,17 @@ export class LoginComponent implements OnInit
       });
   }
 
-  public create ()
+  public create (): void
   {
-    console.log("sign up has been pressed");
     let dialog = this.dialog.open(CreateAccountComponent, {
       width: "80vw"
+    });
+  }
+
+  public openForgotDialog (): void
+  {
+    let dialog = this.dialog.open(ForgotPasswordDialogComponent, {
+      width: '60vh'
     });
   }
 }

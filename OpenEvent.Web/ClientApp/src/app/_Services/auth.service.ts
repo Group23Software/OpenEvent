@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {AuthBody, UpdatePasswordBody, UserViewModel} from "../_models/User";
 import {map, switchMap} from "rxjs/operators";
@@ -85,5 +85,10 @@ export class AuthService
   public UpdatePassword (updatePasswordBody: UpdatePasswordBody): Observable<any>
   {
     return this.http.post<string>(this.BaseUrl + AuthPaths.UpdatePassword, updatePasswordBody);
+  }
+
+  public ForgetPassword (email: string): Observable<any>
+  {
+    return this.http.get(this.BaseUrl + AuthPaths.ForgotPassword, {params: new HttpParams().set('email', email)});
   }
 }

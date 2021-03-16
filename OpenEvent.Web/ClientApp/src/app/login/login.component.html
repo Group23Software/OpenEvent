@@ -16,7 +16,10 @@
       <mat-form-field appearance="outline" color="accent">
         <mat-label>Password</mat-label>
         <input matInput type="password" id="password" formControlName="password" placeholder="Password123" >
+        <mat-hint><a (click)="openForgotDialog()" class="forgotLink">Forgotten password?</a></mat-hint>
       </mat-form-field>
+
+<!--      <a class="mat-caption">Forgotten password?</a>-->
 
       <mat-checkbox formControlName="remember" class="ml-3">Remember me</mat-checkbox>
 
@@ -27,7 +30,6 @@
 
       <mat-error id="loginError">{{loginError}}</mat-error>
     </form>
-
 
     <loading *ngIf="loading"></loading>
 

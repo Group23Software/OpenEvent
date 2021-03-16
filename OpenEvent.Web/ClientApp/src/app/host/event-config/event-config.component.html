@@ -33,10 +33,10 @@
           </mat-form-field>
         </div>
 
-<!--        <mat-form-field appearance="outline">-->
-<!--          <mat-label>Description</mat-label>-->
-<!--          <textarea rows="8" matInput [formControl]="Description" placeholder="Event description" autocomplete="off"></textarea>-->
-<!--        </mat-form-field>-->
+        <!--        <mat-form-field appearance="outline">-->
+        <!--          <mat-label>Description</mat-label>-->
+        <!--          <textarea rows="8" matInput [formControl]="Description" placeholder="Event description" autocomplete="off"></textarea>-->
+        <!--        </mat-form-field>-->
 
         <div class="d-flex flex-row">
           <mat-form-field appearance="outline" id="description">
@@ -182,6 +182,17 @@
         <mat-card-subtitle>All transactions associated to this event</mat-card-subtitle>
       </mat-card-header>
 
+      <div class="d-flex justify-content-around mb-3" style="font-size: larger">
+        <div class="d-flex">
+          <div class="mr-3">Pending Transactions:</div>
+          <div>{{PendingTransactionWorth / 100 | currency:'GBP':true:'1.2-2'}}</div>
+        </div>
+        <div class="d-flex">
+          <div class="mr-3">Completed Transactions:</div>
+          <div>{{CompletedTransactionWorth / 100 | currency:'GBP':true:'1.2-2'}}</div>
+        </div>
+      </div>
+
       <table mat-table [dataSource]="event.Transactions" class="mat-elevation-z2">
 
         <ng-container matColumnDef="stripeId">
@@ -212,7 +223,7 @@
           <th mat-header-cell *matHeaderCellDef> Amount</th>
           <td mat-cell *matCellDef="let element">
             <span class="d-flex flex-row align-items-center">
-            {{element.Amount / 100 | currency:'GBP':true:'1.2-2'}}
+              <span style="color: #337135;">+{{element.Amount / 100 | currency:'GBP':true:'1.2-2'}}</span>
               <mat-icon class="m-auto" *ngIf="element.PromoId != '00000000-0000-0000-0000-000000000000'">price_change</mat-icon>
             </span>
           </td>
@@ -228,9 +239,9 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef> Actions</th>
           <td mat-cell *matCellDef="let element">
-<!--            <button mat-icon-button *ngIf="element.Status != 'succeeded'" (click)="cancel(element)">-->
-<!--              <mat-icon>delete_forever</mat-icon>-->
-<!--            </button>-->
+            <!--            <button mat-icon-button *ngIf="element.Status != 'succeeded'" (click)="cancel(element)">-->
+            <!--              <mat-icon>delete_forever</mat-icon>-->
+            <!--            </button>-->
           </td>
         </ng-container>
 
@@ -254,7 +265,10 @@
       <div>Tickets sold: {{event?.Tickets.length - event.TicketsLeft}}</div>
       <div>Tickets left: {{event?.TicketsLeft}}</div>
 
-      <div id="ticketPercentage"><div id="ticketsLeftPercentage" [style.width]="(event.TicketsLeft / event.Tickets.length)*100 + '%'"></div><div id="ticketsSoldPercentage"></div></div>
+      <div id="ticketPercentage">
+        <div id="ticketsLeftPercentage" [style.width]="(event.TicketsLeft / event.Tickets.length)*100 + '%'"></div>
+        <div id="ticketsSoldPercentage"></div>
+      </div>
 
       <div id="categoryAverageScores">
 

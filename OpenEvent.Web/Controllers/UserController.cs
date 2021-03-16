@@ -43,8 +43,8 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
-                var result = await UserService.Create(newUserInput);
-                return result;
+                await UserService.Create(newUserInput);
+                return Ok();
             }
             catch (Exception e)
             {

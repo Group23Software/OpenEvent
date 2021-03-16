@@ -90,7 +90,39 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
-                await AuthService.UpdatePassword(updatePasswordBody.Email, updatePasswordBody.Password);
+                await AuthService.UpdatePassword(updatePasswordBody.Id, updatePasswordBody.Password);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.ToString());
+                return BadRequest(e.Message);
+            }
+        }
+        
+        [AllowAnonymous]
+        [HttpGet("confirm")]
+        public async Task<ActionResult<UserViewModel>> Confirm(Guid id)
+        {
+            try
+            {
+                await AuthService.ConfirmEmail(id);
+                return Ok("Confirmed");
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.ToString());
+                return Unauthorized(e.Message);
+            }
+        }
+        
+        [AllowAnonymous]
+        [HttpGet("forgot")]
+        public async Task<ActionResult<UserViewModel>> Confirm(string email)
+        {
+            try
+            {
+                await AuthService.ForgotPassword(email);
                 return Ok();
             }
             catch (Exception e)

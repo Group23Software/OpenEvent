@@ -31,8 +31,7 @@ export class CreateAccountComponent implements OnInit
     passwordConfirm: new FormControl('', [Validators.required, this.userValidators.matches('password')]),
     phoneCode: new FormControl('+44'),
     phoneNumber: new FormControl('', [Validators.required, Validators.pattern("^((\\\\+91-?)|0)?[0-9]{10}$")], [this.userValidators.phoneValidator()]),
-    dOB: new FormControl('', [Validators.required]),
-    remember: new FormControl('')
+    dOB: new FormControl('', [Validators.required])
   });
 
   public imageChangedEvent: any = '';
@@ -58,6 +57,7 @@ export class CreateAccountComponent implements OnInit
   }
 
 // , Validators.pattern('^(((\\+44\\s?\\d{4}|\\(?0\\d{4}\\)?)\\s?\\d{3}\\s?\\d{3})|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$\n')
+  accountCreated: boolean = false;
 
   constructor (
     private userValidators: UserValidatorsService,
@@ -87,16 +87,13 @@ export class CreateAccountComponent implements OnInit
       DateOfBirth: this.createAccountForm.value.dOB,
       PhoneNumber: this.createAccountForm.value.phoneCode + this.createAccountForm.value.phoneNumber,
       Avatar: (new ImageManipulationService).toUTF8Array(this.avatar),
-      Password: this.createAccountForm.value.password,
-      Remember: this.createAccountForm.value.remember == true
+      Password: this.createAccountForm.value.password
     }
 
     this.userService.CreateUser(newUserInput).subscribe((response) =>
     {
-      // TODO: redirect to app
       this.loading = false;
-      this.router.navigate(['/user/account']);
-      this.dialogRef.close();
+      this.accountCreated = true;
     }, (error: HttpErrorResponse) =>
     {
       console.error(error);

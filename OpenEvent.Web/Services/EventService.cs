@@ -398,8 +398,10 @@ namespace OpenEvent.Web.Services
 
             if (events == null)
             {
-                events = ApplicationContext.Events.Include(x => x.EventCategories).AsSplitQuery()
-                    .AsEnumerable();
+                events = ApplicationContext.Events
+                    .Include(x => x.EventCategories)
+                    .Include(x => x.Promos)
+                    .AsSplitQuery().AsEnumerable();
 
                 if (!string.IsNullOrEmpty(keyword))
                 {

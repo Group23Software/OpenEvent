@@ -1,4 +1,4 @@
-<mat-horizontal-stepper [formGroup]="createAccountForm">
+<mat-horizontal-stepper [formGroup]="createAccountForm" *ngIf="!accountCreated">
   <mat-step label="User">
     <div class="formStep">
       <mat-form-field appearance="outline">
@@ -139,13 +139,16 @@
       <div class="mat-caption my-2">By signing up, you agree to our <a href="">Terms</a>, <a href="">Privacy Policy</a>, <a href="">Cookie Use Policy</a> and the <a href="https://stripe.com/gb/connect-account/legal">Stripe Connected Account Agreement</a>.</div>
 
       <div class="d-flex justify-content-end">
-        <div>
-          <mat-checkbox formControlName="remember" labelPosition="before" id="remember">Remember me</mat-checkbox>
-        </div>
         <button [disabled]="createAccountForm.invalid" type="submit" color="primary" mat-flat-button id="completeSignUp" (click)="createAccount()">Sign up</button>
       </div>
+      <div class="warn-color">{{CreateError}}</div>
     </div>
   </mat-step>
 </mat-horizontal-stepper>
+
+<div class="d-flex flex-column" style="text-align: center" *ngIf="accountCreated">
+  <div class="mat-headline mb-3">Account created</div>
+  <div>Please confirm your account by following the link we send you</div>
+</div>
 
 <loading *ngIf="loading"></loading>

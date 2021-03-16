@@ -3,7 +3,7 @@ mat-card {
 }
 
 mat-card:hover {
-  box-shadow:0px 3px 3px -2px rgba(0, 0, 0, 0.2),0px 3px 4px 0px rgba(0, 0, 0, 0.14),0px 1px 8px 0px rgba(0, 0, 0, 0.12)
+  box-shadow: 0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12)
 }
 
 #event {
@@ -15,4 +15,27 @@ mat-card:hover {
   top: -10px;
   right: -10px;
   z-index: 999;
+}
+
+#promoBanner {
+  position: absolute;
+  z-index: 1;
+  border-bottom: 25px solid #cc1431;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  width: 70px;
+  transform: translate(-19.1px, 3.4px) rotate(-45deg);
+  height: 0;
+  /*text-align: center;*/
+  /*font-size: small;*/
+}
+
+/*#promoBanner > div {*/
+/*  margin-top: 0.2rem;*/
+/*}*/
+
+#promoBannerText {
+  position: absolute;
+  transform: translate(-20%, 4%);
+  color: #f8f8f8;
 }

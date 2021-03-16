@@ -21,6 +21,8 @@ namespace OpenEvent.Web
         
         public string StripeApiKey { get; set; }
         
+        public string BaseUrl { get; set; }
+
         public MailSettings MailSettings { get; set; }
     }
 

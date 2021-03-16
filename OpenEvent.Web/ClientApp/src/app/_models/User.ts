@@ -48,7 +48,7 @@ export interface AuthBody
 
 export interface UpdatePasswordBody
 {
-  Email: string;
+  Id: string;
   Password: string;
 }
 
@@ -62,7 +62,6 @@ export interface NewUserInput
   Avatar: any[];
   PhoneNumber: string;
   DateOfBirth: Date;
-  Remember: boolean;
 }
 
 export interface UpdateUserNameBody

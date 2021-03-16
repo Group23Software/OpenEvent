@@ -19,7 +19,7 @@ namespace OpenEvent.Web.Models.User
 
         public string Email { get; set; }
 
-        // TODO: Email confirm
+        public bool Confirmed { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public byte[] Avatar { get; set; }
