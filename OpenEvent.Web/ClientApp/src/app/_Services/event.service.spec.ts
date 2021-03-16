@@ -64,7 +64,8 @@ describe('EventService', () =>
     StartLocal: undefined,
     StartUTC: undefined,
     Thumbnail: undefined,
-    TicketsLeft: 0
+    TicketsLeft: 0,
+    Finished: false
   }
 
   const mockCreateEventBody: CreateEventBody = {
@@ -95,7 +96,8 @@ describe('EventService', () =>
     Price: mockCreateEventBody.Price,
     StartLocal: mockCreateEventBody.StartLocal,
     StartUTC: mockCreateEventBody.StartLocal,
-    Thumbnail: mockCreateEventBody.Thumbnail
+    Thumbnail: mockCreateEventBody.Thumbnail,
+    Finished: false
   }
 
   const mockEventHostModel: EventHostModel = {
@@ -116,7 +118,9 @@ describe('EventService', () =>
     StartUTC: undefined,
     Thumbnail: undefined,
     Tickets: [],
-    TicketsLeft: 0
+    TicketsLeft: 0,
+    Finished: false,
+    Created: new Date()
   }
 
   const mockUpdateEventBody: UpdateEventBody = {
@@ -131,7 +135,8 @@ describe('EventService', () =>
     Price: 0,
     SocialLinks: [],
     StartLocal: undefined,
-    Thumbnail: undefined
+    Thumbnail: undefined,
+    Finished: false
   }
 
   beforeEach(() =>

@@ -21,12 +21,12 @@ namespace OpenEvent.Test.Services.AuthService
             {
                 var service = new AuthServiceFactory().Create(context);
 
-                string email = "exists@email.co.uk";
+                Guid id =  new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C");
 
-                var user = await context.Users.FirstOrDefaultAsync(x => x.Email == email);
+                var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
                 var prevPassword = user.Password;
 
-                await service.UpdatePassword(email, "NewPassword");
+                await service.UpdatePassword(id, "NewPassword");
 
                 user.Password.Should().NotBe(prevPassword);
             }
@@ -39,7 +39,7 @@ namespace OpenEvent.Test.Services.AuthService
             {
                 var service = new AuthServiceFactory().Create(context);
 
-                FluentActions.Invoking(async () => await service.UpdatePassword("fail@email.co.uk", "wrong"))
+                FluentActions.Invoking(async () => await service.UpdatePassword(Guid.Empty, "wrong"))
                     .Should().Throw<UserNotFoundException>();
             }
         }

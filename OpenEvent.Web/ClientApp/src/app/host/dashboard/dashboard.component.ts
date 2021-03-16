@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {InOutAnimation} from "../../_extensions/animations";
+import {MappedEventAnalytics} from "../../_models/Analytic";
 
 @Component({
   selector: 'app-dashboard',
@@ -16,13 +17,17 @@ import {InOutAnimation} from "../../_extensions/animations";
 })
 export class DashboardComponent implements OnInit, AfterViewChecked
 {
-  public eventPreview: EventDetailModel;
+  public eventPreview: EventHostModel;
+  public finishedEventAnalytics: MappedEventAnalytics;
+
   private updated: boolean = false;
   public cancelingEventError: string;
   public gettingEventsError: string;
 
   @ViewChild(MatDrawerContainer) sideNavContainer: MatDrawerContainer
   public loading: boolean = true;
+  today: Date;
+  private error: string;
 
   get Events ()
   {
@@ -41,6 +46,10 @@ export class DashboardComponent implements OnInit, AfterViewChecked
       if (this.Events)
       {
         this.eventPreview = this.Events[0];
+        if (this.eventPreview.Finished) {
+          this.loading = true;
+          this.eventService.GetAnalytics(this.eventPreview.Id).subscribe(analytics => this.finishedEventAnalytics = analytics,(e: HttpErrorResponse) => this.gettingEventsError = e.error.Message,() => this.loading = false);
+        }
       }
     }, (e: HttpErrorResponse) =>
     {
@@ -52,6 +61,10 @@ export class DashboardComponent implements OnInit, AfterViewChecked
   public togglePreview (event: EventHostModel)
   {
     this.eventPreview = event;
+    if (this.eventPreview.Finished) {
+      this.loading = true;
+      this.eventService.GetAnalytics(this.eventPreview.Id).subscribe(analytics => this.finishedEventAnalytics = analytics,(e: HttpErrorResponse) => this.gettingEventsError = e.error.Message,() => this.loading = false);
+    }
   }
 
   ngAfterViewChecked (): void
@@ -99,5 +112,22 @@ export class DashboardComponent implements OnInit, AfterViewChecked
   public navigateToVerify ()
   {
     this.router.navigate(['/host/verify',this.eventPreview.Id]);
+  }
+
+  public hasEnded (event: EventDetailModel) : boolean
+  {
+    return new Date(event.EndLocal) < new Date();
+  }
+
+  public finishEvent () : void
+  {
+    this.loading = true;
+    this.eventService.Update({
+      ...this.eventPreview,
+      Finished: true,
+    }).subscribe(() => {
+      this.eventService.HostsEvents.find(x => x.Id == this.eventPreview.Id).Finished = true;
+      this.togglePreview(this.eventPreview);
+    },(e: HttpErrorResponse) => this.error = e.error.Message,() => this.loading = false);
   }
 }

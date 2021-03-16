@@ -30,10 +30,14 @@ export class DemographicComponent implements OnInit
 
   ngOnInit (): void
   {
-    this.Analytics.Demographics.forEach(d => {
-      this.demographicData.push(d.Count);
-      this.demographicLabels.push(d.Age.toString());
-    })
+    if (this.Analytics)
+    {
+      this.Analytics.Demographics.forEach(d =>
+      {
+        this.demographicData.push(d.Count);
+        this.demographicLabels.push(d.Age.toString());
+      });
+    }
   }
 
 }

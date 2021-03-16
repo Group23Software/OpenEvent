@@ -6,7 +6,6 @@ import {PopularityService} from "../_Services/popularity.service";
 import {Router} from "@angular/router";
 import {PopularEventViewModel} from "../_models/Event";
 import {of} from "rxjs";
-import {HttpErrorResponse} from "@angular/common/http";
 
 describe('LandingComponent', () =>
 {
@@ -61,7 +60,8 @@ describe('LandingComponent', () =>
       Score: 0,
       StartLocal: undefined,
       StartUTC: undefined,
-      Thumbnail: undefined
+      Thumbnail: undefined,
+      Finished: false
     }
     let routeSpy = spyOn(router, 'navigate');
     spyOnProperty(component, 'FeaturedEvent', 'get').and.returnValue(event);

@@ -39,7 +39,7 @@ namespace OpenEvent.Web.Controllers
         /// BadRequest if any exceptions are caught.
         /// </returns>
         [HttpPost]
-        public async Task<ActionResult<UserViewModel>> Create([FromBody] NewUserInput newUserInput)
+        public async Task<ActionResult> Create([FromBody] NewUserInput newUserInput)
         {
             try
             {

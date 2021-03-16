@@ -147,7 +147,8 @@ namespace OpenEvent.Test.Factories
                     RecommendationScores = new List<RecommendationScore>(),
                     SearchEvents = new List<SearchEvent>(),
                     VerificationEvents = new List<TicketVerificationEvent>(),
-                    PageViewEvents = new List<PageViewEvent>()
+                    PageViewEvents = new List<PageViewEvent>(),
+                    Confirmed = true
                 }
             };
 

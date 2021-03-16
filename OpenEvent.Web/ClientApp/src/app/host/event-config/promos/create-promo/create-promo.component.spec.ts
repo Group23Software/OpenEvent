@@ -76,7 +76,9 @@ describe('CreatePromoComponent', () =>
       Thumbnail: undefined,
       Tickets: [],
       TicketsLeft: 0,
-      Transactions: []
+      Transactions: [],
+      Finished: false,
+      Created: new Date()
     }
     component.create();
     expect(component.loading).toBeFalse();

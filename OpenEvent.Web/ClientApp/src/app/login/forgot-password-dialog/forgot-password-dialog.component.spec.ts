@@ -1,25 +1,37 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ForgotPasswordDialogComponent } from './forgot-password-dialog.component';
+import {ForgotPasswordDialogComponent} from './forgot-password-dialog.component';
+import {AuthService} from "../../_Services/auth.service";
 
-describe('ForgotPasswordDialogComponent', () => {
+describe('ForgotPasswordDialogComponent', () =>
+{
   let component: ForgotPasswordDialogComponent;
   let fixture: ComponentFixture<ForgotPasswordDialogComponent>;
 
-  beforeEach(async () => {
+  let authServiceMock;
+
+  beforeEach(async () =>
+  {
+
+    authServiceMock = jasmine.createSpyObj('AuthService',['ForgetPassword']);
+
     await TestBed.configureTestingModule({
-      declarations: [ ForgotPasswordDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [ForgotPasswordDialogComponent],
+      providers: [
+        {provide: AuthService, useValue: authServiceMock}
+      ]
+    }).compileComponents();
   });
 
-  beforeEach(() => {
+  beforeEach(() =>
+  {
     fixture = TestBed.createComponent(ForgotPasswordDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', () =>
+  {
     expect(component).toBeTruthy();
   });
 });

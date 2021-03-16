@@ -32,7 +32,9 @@ export const FakeEventHostModel: EventHostModel = {
   StartUTC: new Date(0),
   Thumbnail: {Label: "thumbnail", Source: "THUMBNAIL"},
   Tickets: [],
-  TicketsLeft: 0
+  TicketsLeft: 0,
+  Finished: false,
+  Created: new Date()
 }
 
 export const FakeAddress: Address = {

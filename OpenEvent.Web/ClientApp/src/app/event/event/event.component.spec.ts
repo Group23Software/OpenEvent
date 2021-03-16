@@ -10,7 +10,6 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {TransactionService} from "../../_Services/transaction.service";
 import {ActivatedRoute, convertToParamMap} from "@angular/router";
-import {ImageViewModel} from "../../_models/Image";
 
 describe('EventComponent', () =>
 {
@@ -44,8 +43,8 @@ describe('EventComponent', () =>
     StartLocal: undefined,
     StartUTC: undefined,
     Thumbnail: undefined,
-    TicketsLeft: 0
-
+    TicketsLeft: 0,
+    Finished: false,
   }
 
   beforeEach(async () =>
@@ -139,7 +138,8 @@ describe('EventComponent', () =>
       StartLocal: undefined,
       StartUTC: undefined,
       Thumbnail: undefined,
-      TicketsLeft: 0
+      TicketsLeft: 0,
+      Finished: false
     };
     component.ngOnInit();
     expect(component.Event).toEqual(component.EventPreview);

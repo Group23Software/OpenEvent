@@ -12,6 +12,7 @@ export interface EventDetailModel extends EventViewModel
   SocialLinks: SocialLinkViewModel[];
   Address: Address;
   TicketsLeft: number;
+  // Tickets: TicketViewModel[];
 }
 
 export interface EventHostModel extends EventViewModel
@@ -37,6 +38,7 @@ export interface EventViewModel
   EndLocal: Date;
   EndUTC: Date;
   Price: number;
+  Finished?: boolean;
 
   Categories: CategoryViewModel[];
   Promos: Promo[];
@@ -78,6 +80,7 @@ export interface UpdateEventBody
   Address: Address;
   IsOnline: boolean;
   Categories: Category[];
+  Finished: boolean;
 }
 
 export enum SearchParam

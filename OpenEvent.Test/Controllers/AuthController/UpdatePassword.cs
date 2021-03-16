@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -18,16 +19,16 @@ namespace OpenEvent.Test.Controllers.AuthController
 
         private readonly UpdatePasswordBody UpdatePasswordBody = new()
         {
-            Email = "email@email.co.uk",
+            Id = new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C"),
             Password = "New Password"
         };
-        
+
         [SetUp]
         public async Task Setup()
         {
-            AuthServiceMock.Setup(x => x.UpdatePassword(UpdatePasswordBody.Email, UpdatePasswordBody.Password));
-            AuthServiceMock.Setup(x => x.UpdatePassword(null, null)).ThrowsAsync(new UserNotFoundException());
-            
+            AuthServiceMock.Setup(x => x.UpdatePassword(UpdatePasswordBody.Id, UpdatePasswordBody.Password));
+            AuthServiceMock.Setup(x => x.UpdatePassword(Guid.Empty, null)).ThrowsAsync(new UserNotFoundException());
+
             AuthController = new Web.Controllers.AuthController(AuthServiceMock.Object,
                 new Mock<ILogger<Web.Controllers.AuthController>>().Object);
         }
@@ -42,7 +43,8 @@ namespace OpenEvent.Test.Controllers.AuthController
         [Test]
         public async Task ShouldNotFindUser()
         {
-            var result = await AuthController.UpdatePassword(new UpdatePasswordBody(){Email = null,Password = null});
+            var result =
+                await AuthController.UpdatePassword(new UpdatePasswordBody() {Id = Guid.Empty, Password = null});
             result.Should().BeOfType<BadRequestObjectResult>().Subject.Value.Should().Be("User Not Found");
         }
     }

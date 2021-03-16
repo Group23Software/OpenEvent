@@ -31,12 +31,10 @@ namespace OpenEvent.Test.Services.UserService
                     UserName = "JoeBlogs",
                     PhoneNumber = "1111111111",
                     Avatar = new byte[100],
-                    Remember = false,
                     DateOfBirth = DateTime.Now.AddYears(-18)
                 };
 
-                var result = await service.Create(user);
-                result.Should().NotBeNull();
+                await service.Create(user);
             }
         }
 

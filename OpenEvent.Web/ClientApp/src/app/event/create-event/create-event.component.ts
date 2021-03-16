@@ -130,7 +130,7 @@ export class CreateEventComponent implements OnInit
         StartUTC: undefined,
         Thumbnail: this.thumbnail,
         TicketsLeft: this.createEventForm.controls.NumberOfTickets.value,
-        Promos: null
+        Promos: null,
       }
     }
   }

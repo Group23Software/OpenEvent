@@ -6,7 +6,7 @@ import {EventService} from "../../_Services/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Category} from "../../_models/Category";
 import {SocialMedia} from "../../_models/SocialMedia";
-import {EventAnalytics, MappedEventAnalytics} from "../../_models/Analytic";
+import {MappedEventAnalytics} from "../../_models/Analytic";
 import {TriggerService} from "../../_Services/trigger.service";
 import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
 
@@ -178,7 +178,8 @@ export class EventConfigComponent implements OnInit
         {SocialMedia: SocialMedia.Reddit, Link: this.Reddit.value},
       ],
       StartLocal: this.StartLocal.value,
-      Thumbnail: this.event.Thumbnail
+      Thumbnail: this.event.Thumbnail,
+      Finished: this.event.Finished
     }
     console.log(updateEvent);
     this.eventService.Update(updateEvent).subscribe(response =>

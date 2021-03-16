@@ -1,25 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DemographicComponent } from './demographic.component';
+import {DemographicComponent} from './demographic.component';
 
-describe('DemographicComponent', () => {
+describe('DemographicComponent', () =>
+{
   let component: DemographicComponent;
   let fixture: ComponentFixture<DemographicComponent>;
 
-  beforeEach(async () => {
+  beforeEach(async () =>
+  {
     await TestBed.configureTestingModule({
-      declarations: [ DemographicComponent ]
-    })
-    .compileComponents();
+      declarations: [DemographicComponent],
+    }).compileComponents();
   });
 
-  beforeEach(() => {
+  beforeEach(() =>
+  {
     fixture = TestBed.createComponent(DemographicComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', () =>
+  {
     expect(component).toBeTruthy();
   });
 });

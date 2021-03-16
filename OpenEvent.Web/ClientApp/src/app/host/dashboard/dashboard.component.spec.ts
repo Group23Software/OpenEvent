@@ -101,7 +101,11 @@ describe('DashboardComponent', () =>
       StartUTC: undefined,
       Thumbnail: undefined,
       TicketsLeft: 0,
-      Id: "1"
+      Id: "1",
+      Finished: false,
+      Created: new Date(),
+      Transactions: null,
+      Tickets: null
     }
   });
 

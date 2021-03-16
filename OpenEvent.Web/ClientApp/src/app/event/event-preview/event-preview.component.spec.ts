@@ -57,7 +57,8 @@ describe('EventPreviewComponent', () =>
       Score: 0,
       StartLocal: undefined,
       StartUTC: undefined,
-      Thumbnail: undefined
+      Thumbnail: undefined,
+      Finished: false
     }
     component.navigateToEvent();
     expect(routerSpy).toHaveBeenCalledWith(['/event',"EventId"]);
@@ -78,7 +79,8 @@ describe('EventPreviewComponent', () =>
       Score: 0,
       StartLocal: undefined,
       StartUTC: undefined,
-      Thumbnail: undefined
+      Thumbnail: undefined,
+      Finished: false
     }
     component.downVote();
     expect(eventServiceMock.DownVote).toHaveBeenCalledWith("EventId");

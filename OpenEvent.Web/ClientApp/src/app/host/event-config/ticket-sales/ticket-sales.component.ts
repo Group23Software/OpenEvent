@@ -116,92 +116,95 @@ export class TicketSalesComponent implements OnInit
 
   ngOnInit (): void
   {
-    let dates: Map<string, number> = new Map<string, number>();
-    let pageViewDates: Map<string, number> = new Map<string, number>();
-
-    let startDate = new Date(this.Event.Created);
-    let endDate = new Date(this.Event.EndLocal);
-
-    this.chartOptions.annotation.annotations[1].value = new Date(this.Event.StartLocal).toDateString();
-
-    this.Event.Promos.forEach(promo =>
+    if (this.Event)
     {
-      if (promo.Active)
+      let dates: Map<string, number> = new Map<string, number>();
+      let pageViewDates: Map<string, number> = new Map<string, number>();
+
+      let startDate = new Date(this.Event.Created);
+      let endDate = new Date(this.Event.EndLocal);
+
+      this.chartOptions.annotation.annotations[1].value = new Date(this.Event.StartLocal).toDateString();
+
+      this.Event.Promos.forEach(promo =>
       {
-        this.chartOptions.annotation.annotations.push({
-          type: 'line',
-          mode: 'vertical',
-          scaleID: 'x-axis-0',
+        if (promo.Active)
+        {
+          this.chartOptions.annotation.annotations.push({
+            type: 'line',
+            mode: 'vertical',
+            scaleID: 'x-axis-0',
 
-          value: new Date(promo.Start).toDateString(),
-          borderColor: '#4caf50',
-          borderWidth: 2,
-          label: {
-            enabled: true,
-            fontColor: 'white',
-            content: promo.Discount + '% off starts',
-            yAdjust: -100
-          }
-        });
-        this.chartOptions.annotation.annotations.push({
-          type: 'line',
-          mode: 'vertical',
-          scaleID: 'x-axis-0',
-          value: new Date(promo.End).toDateString(),
-          borderColor: '#c34b4b',
-          borderWidth: 2,
-          label: {
-            enabled: true,
-            fontColor: 'white',
-            content: promo.Discount + '% off ends',
-            yAdjust: 100
-          }
-        });
+            value: new Date(promo.Start).toDateString(),
+            borderColor: '#4caf50',
+            borderWidth: 2,
+            label: {
+              enabled: true,
+              fontColor: 'white',
+              content: promo.Discount + '% off starts',
+              yAdjust: -100
+            }
+          });
+          this.chartOptions.annotation.annotations.push({
+            type: 'line',
+            mode: 'vertical',
+            scaleID: 'x-axis-0',
+            value: new Date(promo.End).toDateString(),
+            borderColor: '#c34b4b',
+            borderWidth: 2,
+            label: {
+              enabled: true,
+              fontColor: 'white',
+              content: promo.Discount + '% off ends',
+              yAdjust: 100
+            }
+          });
+        }
+      })
+
+      console.log(this.chartOptions);
+
+      for (let d = new Date(startDate.toDateString()); d <= new Date(endDate.toDateString()); d.setDate(d.getDate() + 1))
+      {
+        dates.set(d.toDateString(), 0);
+        pageViewDates.set(d.toDateString(), 0);
       }
-    })
 
-    console.log(this.chartOptions);
+      this.Event.Transactions.forEach(t =>
+      {
+        if (t.Paid)
+        {
+          let end = new Date(t.End)
+          let fullDate: string = end.toDateString();
+          dates.set(fullDate, dates.get(fullDate) + 1);
+        }
+      });
 
-    for (let d = new Date(startDate.toDateString()); d <= new Date(endDate.toDateString()); d.setDate(d.getDate() + 1))
-    {
-      dates.set(d.toDateString(), 0);
-      pageViewDates.set(d.toDateString(), 0);
+      console.log(this.Analytics.PageViewEvents);
+      this.Analytics.PageViewEvents.forEach(p =>
+      {
+        pageViewDates.set(p.Date.toDateString(), pageViewDates.get(p.Date.toDateString()) + p.PageViews.length);
+      });
+
+      let ticketSalesPoints: ChartPoint[] = [];
+      let pageViewPoints: ChartPoint[] = [];
+
+      dates.forEach((total, date) =>
+      {
+        ticketSalesPoints.push({x: date, y: total} as ChartPoint);
+      });
+
+      pageViewDates.forEach((total, date) =>
+      {
+        pageViewPoints.push({x: date, y: total});
+      });
+
+      console.log(pageViewDates);
+
+      this.ticketSalesData[0].data = ticketSalesPoints;
+      this.ticketSalesData[1].data = pageViewPoints;
+      this.loading = false;
     }
-
-    this.Event.Transactions.forEach(t =>
-    {
-      if (t.Paid)
-      {
-        let end = new Date(t.End)
-        let fullDate: string = end.toDateString();
-        dates.set(fullDate, dates.get(fullDate) + 1);
-      }
-    });
-
-    console.log(this.Analytics.PageViewEvents);
-    this.Analytics.PageViewEvents.forEach(p =>
-    {
-      pageViewDates.set(p.Date.toDateString(), pageViewDates.get(p.Date.toDateString()) + p.PageViews.length);
-    });
-
-    let ticketSalesPoints: ChartPoint[] = [];
-    let pageViewPoints: ChartPoint[] = [];
-
-    dates.forEach((total, date) =>
-    {
-      ticketSalesPoints.push({x: date, y: total} as ChartPoint);
-    });
-
-    pageViewDates.forEach((total, date) =>
-    {
-      pageViewPoints.push({x: date, y: total});
-    });
-
-    console.log(pageViewDates);
-
-    this.ticketSalesData[0].data = ticketSalesPoints;
-    this.ticketSalesData[1].data = pageViewPoints;
-    this.loading = false;
   }
 
   chartHovered ($event: { event: MouseEvent; active: {}[] })

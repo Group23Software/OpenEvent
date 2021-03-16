@@ -89,7 +89,6 @@ describe('UserService', () =>
       LastName: "",
       Password: "",
       PhoneNumber: "",
-      Remember: false,
       UserName: ""
     };
 
@@ -99,7 +98,6 @@ describe('UserService', () =>
     service.CreateUser(input).subscribe(result =>
     {
       expect(result).toEqual(u);
-      expect(cookieServiceMock.set).toHaveBeenCalledTimes(2);
     });
   }));
 

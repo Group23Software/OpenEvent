@@ -110,7 +110,7 @@ describe('AuthService', () =>
   {
     httpClientMock.post.and.returnValue(of(new HttpResponse({status: 200})))
     const service: AuthService = TestBed.inject(AuthService);
-    service.UpdatePassword({Email: '', Password: ''}).subscribe(result =>
+    service.UpdatePassword({Id: '', Password: ''}).subscribe(result =>
     {
       expect(result.status).toEqual(200);
       expect(result.body).toBeNull();

@@ -118,7 +118,8 @@ namespace OpenEvent.Web.Services
                     ? createEventBody.SocialLinks.Select(x => Mapper.Map<SocialLink>(x)).ToList()
                     : new List<SocialLink>(),
                 TicketsLeft = createEventBody.NumberOfTickets,
-                Created = new DateTime()
+                Created = new DateTime(),
+                Finished = false
             };
 
             List<Ticket> tickets = new List<Ticket>();
@@ -288,7 +289,8 @@ namespace OpenEvent.Web.Services
                             NumberOfSales = x.Transactions.Count(x => x.PromoId == promo.Id)
                         }).ToList()
                         : new List<PromoViewModel>(),
-                    Created = x.Created
+                    Created = x.Created,
+                    Finished = x.Finished
                 }).ToList();
         }
 
@@ -364,7 +366,8 @@ namespace OpenEvent.Web.Services
                 EndUTC = e.EndUTC,
                 StartUTC = e.StartUTC,
                 Promos = e.Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End)
-                    .Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList()
+                    .Select(promo => Mapper.Map<PromoViewModel>(promo)).ToList(),
+                Finished = e.Finished
             };
         }
 
@@ -530,6 +533,7 @@ namespace OpenEvent.Web.Services
                         NumberOfSales = e.Transactions.Count(x => x.PromoId == promo.Id)
                     }).ToList()
                     : new List<PromoViewModel>(),
+                Finished = e.Finished
             };
             ;
         }
@@ -572,6 +576,7 @@ namespace OpenEvent.Web.Services
             e.EventCategories = updateEventBody.Categories != null
                 ? updateEventBody.Categories.Select(c => new EventCategory() {CategoryId = c.Id}).ToList()
                 : new List<EventCategory>();
+            e.Finished = updateEventBody.Finished;
 
             try
             {

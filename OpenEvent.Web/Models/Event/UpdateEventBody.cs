@@ -17,5 +17,6 @@ namespace OpenEvent.Web.Models.Event
         public Address.Address Address { get; set; }
         public bool IsOnline { get; set; }
         public List<Category.Category> Categories { get; set; }
+        public bool Finished { get; set; }
     }
 }

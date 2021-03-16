@@ -32,5 +32,6 @@ namespace OpenEvent.Web.Models.Event
         public int TicketsLeft { get; set; }
         public List<CategoryViewModel> Categories { get; set; }
         public List<PromoViewModel> Promos { get; set; }
+        public bool Finished { get; set; }
     }
 }

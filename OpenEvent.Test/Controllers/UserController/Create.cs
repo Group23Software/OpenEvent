@@ -31,7 +31,7 @@ namespace OpenEvent.Test.Controllers.UserController
         [SetUp]
         public async Task Setup()
         {
-            UserServiceMock.Setup(x => x.Create(NewUserInput)).ReturnsAsync(UserViewModel);
+            UserServiceMock.Setup(x => x.Create(NewUserInput));
             UserServiceMock.Setup(x => x.Create(ExistingUserInput)).ThrowsAsync(new UserAlreadyExistsException());
 
             UserController = new Web.Controllers.UserController(UserServiceMock.Object,
@@ -42,15 +42,14 @@ namespace OpenEvent.Test.Controllers.UserController
         public async Task ShouldCreate()
         {
             var result = await UserController.Create(NewUserInput);
-            result.Should().BeOfType<ActionResult<UserViewModel>>().Subject.Value.Should()
-                .BeEquivalentTo(UserViewModel);
+            result.Should().BeOfType<OkResult>();
         }
 
         [Test]
         public async Task UserShouldAlreadyExist()
         {
             var result = await UserController.Create(ExistingUserInput);
-            result.Result.Should().BeOfType<BadRequestObjectResult>().Subject.Value.Should().BeOfType<UserAlreadyExistsException>();
+            result.Should().BeOfType<BadRequestObjectResult>().Subject.Value.Should().BeOfType<UserAlreadyExistsException>();
         }
     }
 }

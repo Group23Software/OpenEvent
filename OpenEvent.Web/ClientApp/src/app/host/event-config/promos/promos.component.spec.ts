@@ -67,7 +67,9 @@ describe('PromosComponent', () =>
       Thumbnail: undefined,
       Tickets: [],
       TicketsLeft: 0,
-      Transactions: []
+      Transactions: [],
+      Finished: false,
+      Created: new Date()
     }
 
     fixture.detectChanges();

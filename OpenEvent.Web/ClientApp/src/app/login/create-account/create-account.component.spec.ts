@@ -23,7 +23,6 @@ import {UserValidatorsService} from "../../_Services/user-validators.service";
 import {UserViewModel} from "../../_models/User";
 import {HttpErrorResponse} from "@angular/common/http";
 import 'jasmine';
-import {BrowserModule} from "@angular/platform-browser";
 import {MatSelectModule} from "@angular/material/select";
 
 export class DialogRef
@@ -121,7 +120,6 @@ describe('CreateAccountComponent', () =>
       compiled.querySelector('input[formControlName="phoneNumber"]'),
       compiled.querySelector('input[formControlName="dOB"]'),
       compiled.querySelector('button[id="avatarUploadButton"]'),
-      compiled.querySelector('mat-checkbox[formControlName="remember"]')
     ];
 
     inputs.forEach(input =>
@@ -149,7 +147,6 @@ describe('CreateAccountComponent', () =>
       form.controls.userName.setValue('joe.blogs');
       form.controls.phoneNumber.setValue('0000000000');
       form.controls.dOB.setValue(new Date(new Date().getFullYear() - 19, 0, 0));
-      form.controls.remember.setValue('');
 
 
       fixture.detectChanges();
@@ -174,7 +171,6 @@ describe('CreateAccountComponent', () =>
       form.controls.userName.setValue('joe.blogs');
       form.controls.phoneNumber.setValue('0000000000');
       form.controls.dOB.setValue(new Date(new Date().getFullYear() - 10, 0, 0));
-      form.controls.remember.setValue('');
 
 
       fixture.detectChanges();
@@ -188,15 +184,13 @@ describe('CreateAccountComponent', () =>
   {
     let u: UserViewModel = {Avatar: "", Id: "", IsDarkMode: false, Token: "", UserName: ""};
     userServiceMock.CreateUser.and.returnValue(of(u));
-    let routerSpy = spyOn(router, 'navigate');
     component.createAccount();
 
     fixture.detectChanges();
     tick();
 
     expect(component.loading).toBeFalsy();
-    expect(routerSpy).toHaveBeenCalledWith(['/user/account']);
-    expect(dialogRefMock.close).toHaveBeenCalled();
+    expect(component.accountCreated).toBeTrue();
   }));
 
   it('should not create account', fakeAsync(() =>

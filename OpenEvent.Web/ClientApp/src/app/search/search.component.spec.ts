@@ -81,7 +81,8 @@ describe('SearchComponent', () =>
         Price: 0,
         StartLocal: undefined,
         StartUTC: undefined,
-        Thumbnail: undefined
+        Thumbnail: undefined,
+        Finished: false
       }
     ]
     eventServiceMock.Search.and.returnValue(of(events));

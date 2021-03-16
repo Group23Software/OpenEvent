@@ -14,7 +14,7 @@ export class EventPreviewComponent implements OnInit
   @Input() showDownVote: boolean = true;
 
   get Promo() {
-    return this.event.Promos[0];
+    return this.event?.Promos[0];
   }
 
   constructor (private router: Router, private eventService: EventService)

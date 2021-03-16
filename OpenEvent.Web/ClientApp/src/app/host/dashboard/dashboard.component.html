@@ -9,7 +9,9 @@
             <mat-list-option *ngFor="let event of Events" (click)="togglePreview(event)" [selected]="event == eventPreview" [disableRipple]="true">
               <img *ngIf="event.Thumbnail" [src]="event.Thumbnail.Source" mat-list-avatar>
               <div mat-line>{{event.Name}}</div>
-              <div mat-line>{{event.StartLocal | date: 'medium'}}</div>
+              <div mat-line *ngIf="event.Finished">Event Finished</div>
+              <div mat-line *ngIf="hasEnded(event) && !event.Finished">Event Ended</div>
+              <div mat-line *ngIf="!event.Finished && !hasEnded(event)">{{event.StartLocal | date: 'medium'}}</div>
             </mat-list-option>
           </mat-selection-list>
         </mat-drawer>
@@ -18,7 +20,7 @@
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </mat-card>
 
-        <div id="eventPreview" *ngIf="Events" [@inOutAnimation]>
+        <div id="eventPreview" *ngIf="Events && !eventPreview?.Finished && !hasEnded(eventPreview)" [@inOutAnimation]>
           <mat-toolbar>
             <button mat-icon-button (click)="eventList.toggle()">
               <mat-icon>menu</mat-icon>
@@ -42,6 +44,31 @@
             <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>
           </mat-card>
         </div>
+
+        <div id="eventFinished" *ngIf="Events && hasEnded(eventPreview) && !eventPreview?.Finished">
+          <div class="mat-headline">This event has ended</div>
+          <div><button mat-flat-button color="accent" (click)="finishEvent()">Finish & Show Report</button></div>
+        </div>
+
+        <div id="eventReport" *ngIf="Events && eventPreview?.Finished" [@inOutAnimation]>
+          <mat-card>
+            <mat-card-header>
+              <mat-icon mat-card-avatar>inventory</mat-icon>
+              <mat-card-title>Report</mat-card-title>
+              <mat-card-subtitle>Report of the finished event</mat-card-subtitle>
+            </mat-card-header>
+
+            <div>Total page views: {{finishedEventAnalytics?.PageViewEvents.length}}</div>
+            <div>Tickets sold: {{eventPreview?.Tickets.length - eventPreview.TicketsLeft}}</div>
+            <div>Tickets left: {{eventPreview?.TicketsLeft}}</div>
+
+            <ticket-sales [Event]="eventPreview" [Analytics]="finishedEventAnalytics" *ngIf="finishedEventAnalytics" class="mb-3"></ticket-sales>
+
+            <demographic [Analytics]="finishedEventAnalytics" *ngIf="finishedEventAnalytics"></demographic>
+
+          </mat-card>
+        </div>
+
       </mat-drawer-container>
     </mat-tab>
 

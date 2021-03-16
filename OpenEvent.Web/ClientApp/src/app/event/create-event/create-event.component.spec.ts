@@ -130,6 +130,7 @@ describe('CreateEventComponent', () =>
     component.DateForm.controls.StartLocal.setValue(new Date(0));
     component.thumbnail = null;
     component.createEventForm.controls.NumberOfTickets.setValue(10);
+
     let e = new StepperSelectionEvent();
     e.selectedIndex = 3
     component.loadEventData(e);

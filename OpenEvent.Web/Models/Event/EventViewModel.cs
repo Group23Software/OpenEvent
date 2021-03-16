@@ -24,5 +24,6 @@ namespace OpenEvent.Web.Models.Event
         
         public List<CategoryViewModel> Categories { get; set; }
         public List<PromoViewModel> Promos { get; set; }
+        public bool Finished { get; set; }
     }
 }
