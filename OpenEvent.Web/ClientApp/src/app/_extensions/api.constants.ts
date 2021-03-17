@@ -40,7 +40,7 @@ userPaths = {
   UpdateUserName: userPaths.BasePath + '/updateUserName',
   UpdateThemePreference: userPaths.BasePath + '/updateThemePreference',
   UpdateAddress: userPaths.BasePath + '/updateAddress',
-  GetUsersAnalytics: userPaths.BasePath + '/GetUsersAnalytics'
+  GetUsersAnalytics: userPaths.BasePath + '/analytics'
 }
 
 let eventPaths: ApiEventPaths = {

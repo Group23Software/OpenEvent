@@ -31,7 +31,6 @@ import {Subscription} from "rxjs";
 export class AddressFormComponent implements ControlValueAccessor, OnDestroy, Validator, OnInit
 {
   @Input() Address: Address;
-  // @Input() Disabled: boolean = false;
   @Output() SubmitEvent: EventEmitter<Address> = new EventEmitter<Address>();
 
   public addressForm = new FormGroup({

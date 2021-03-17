@@ -24,10 +24,8 @@ export class AuthGuard implements CanActivate, CanActivateChild
     _next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean>
   {
-    console.log("Checking auth state");
     return this.authService.IsAuthenticated().pipe(tap(isAuthenticated =>
     {
-      console.log(isAuthenticated);
       if (!isAuthenticated) this.router.navigate(['/'])
       return isAuthenticated;
     }));
@@ -35,7 +33,6 @@ export class AuthGuard implements CanActivate, CanActivateChild
 
   canActivateChild (childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>
   {
-    console.log('activating child');
     return this.canActivate(childRoute,state);
   }
 

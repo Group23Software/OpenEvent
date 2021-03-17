@@ -1,0 +1,819 @@
+* commit d5c24d43f44a0ebd328f3623cee517b10184755e
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 16 14:26:12 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 16 14:26:12 2021 +0000
+| 
+|     Event ending with report after event set to finished
+| 
+* commit b79e56106f5d24308d9aa71fd05882e8ddfe46d5
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 16 12:34:40 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 16 12:34:40 2021 +0000
+| 
+|     Promo date check to stop conflicting promos existing.
+| 
+* commit f600c3f7a315d9fa5cb759bbe99080f45edfd32b
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 16 12:04:44 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 16 12:04:44 2021 +0000
+| 
+|     Email confirm and forgot password implemented.
+| 
+* commit 4ceed4dd43a445ed8aa0a17dc6f5413b5f43282d
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Mar 15 16:00:37 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Mon Mar 15 16:00:37 2021 +0000
+| 
+|     demographic pie chart
+| 
+* commit f008acead40f9fec07e2ba6fea0849a99da42efb
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Mar 15 14:41:26 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Mon Mar 15 14:41:26 2021 +0000
+| 
+|     ticket sales with page views graph. Fixed get for host now calls fine.
+| 
+* commit e4079c895466d40333db9a695b67add8aa55240f
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Fri Mar 12 20:01:49 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Fri Mar 12 20:01:49 2021 +0000
+| 
+|     Angular unit tests on new functionality.
+| 
+* commit 17ca829a61416953e17e1d1f0121ea9f733e0958
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Fri Mar 12 12:13:26 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Fri Mar 12 12:13:26 2021 +0000
+| 
+|     Landing page with popular events and categories components with web socket for real time updates. Nav bars are now loaded once in the app component instead on each page with async pipe.
+| 
+* commit c22b9c8674224c069da2442961d647334f2ee5e4
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Thu Mar 11 00:14:27 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Thu Mar 11 00:14:27 2021 +0000
+| 
+|     Popularity middleware
+| 
+* commit 4221566f5c9257872e2b0928db3ac633dfef21cc
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Mar 10 23:35:03 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Mar 10 23:35:03 2021 +0000
+| 
+|     Popularity service and hosted popularity watch dog that monitors popular events, categories and removes entity when their no longer popular.
+| 
+* commit 8bd29664c34b1d5c02a117d5876e102fe89fc677
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Mar 10 15:03:21 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Mar 10 15:03:21 2021 +0000
+| 
+|     Broken account create form to down to steps for better usability add tos agreement link plus stripe agreement link.
+| 
+* commit f15fff7c3ced6f991de13f2cba67592f9d09160f
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Mar 10 12:52:53 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Mar 10 12:52:53 2021 +0000
+| 
+|     Ticket receipt
+| 
+* commit ef8a8f8d43ac67ddd940327d2e1ff39421cec78a
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Mar 10 11:41:03 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Mar 10 11:41:03 2021 +0000
+| 
+|     User and event transaction history shows when a promo has been used
+| 
+* commit 118a438905ae0eed5813cdc695a81b5eebf0a0b0
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 9 17:07:56 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 9 17:07:56 2021 +0000
+| 
+|     User transaction history tab with cancelable payments.
+| 
+* commit 19b54095d72ea1152b8ac8d20005ad897164b9ab
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 9 15:27:11 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 9 15:27:11 2021 +0000
+| 
+|     Show promo on ticket purchase and applies promo to stripe payment.
+| 
+* commit 50070c75e93844bebc9dba019e1ffa50d687a6d4
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 9 14:05:28 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 9 14:05:28 2021 +0000
+| 
+|     Promo list, activate, deactivate and delete promo middleware.
+| 
+* commit 591d499f7f6063da6f57a333a7b37f5a7f323706
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 9 13:17:43 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 9 13:17:43 2021 +0000
+| 
+|     Promo create form and dialog
+| 
+* commit d1cc2a437edc6ea0060ba7f6b15e2628d66be469
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 9 00:12:14 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 9 00:12:14 2021 +0000
+| 
+|     Promo models created and migrated. Basic Promo CRUD endpoints added.
+| 
+* commit 788073e1a93b540d8898e4248a2251770a5d9ed9
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Mar 8 20:12:20 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Mon Mar 8 20:12:20 2021 +0000
+| 
+|     Quickly added alternative bank account form using sort code and account number.
+| 
+* commit a94ac8a03648579a83b8412db66355d88d094527
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Mar 8 17:13:45 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Mon Mar 8 17:13:45 2021 +0000
+| 
+|     Delegated all analytics and recommendation methods to new background hosted service using IWorkQueue to queue all incoming events and resolving them in the background.
+| 
+* commit 99a9a5e66aa5035ea832227e426902c1102f11fb
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sun Mar 7 23:18:49 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sun Mar 7 23:18:49 2021 +0000
+| 
+|     Revamped .Net test suite to now use sqlite in-memory database as mocking the database was causing errors especially with advanced relationships and wasn't acting like the production database.
+| 
+* commit 6689fce2a11221b04b6b83512fd955a4b09aee35
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sat Mar 6 19:40:09 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sat Mar 6 19:40:09 2021 +0000
+| 
+|     Implemented stripe sdk 3D secure, doesn't look nice but works very well.
+| 
+* commit 1b3f0f7a89dbc74a47dfaa9cf92f5f748a3bf9a0
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sat Mar 6 18:34:56 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sat Mar 6 18:34:56 2021 +0000
+| 
+|     Implemented ControlValueAccessor on address and category form to be compatible with Angular form's module. Custom Notification component with service methods as Angular material snack bar lacked flexibility.
+| 
+* commit 23b5382101b42625d56339d1c8053c7ca7d1a977
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Thu Mar 4 23:49:45 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Thu Mar 4 23:49:45 2021 +0000
+| 
+|     Getting all Angular Test beds to construct.
+| 
+* commit 5b0d0b07d23866da7524363b20efa239ef5521fe
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Thu Mar 4 21:16:58 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Thu Mar 4 21:16:58 2021 +0000
+| 
+|     Webhook endpoint implemented for listening to payment success and fail events with email service for notifying users of successes and fails. Added transaction relationship to event.
+| 
+* commit b384fa7a4fa5cb7a51f3aca81ff90de10e04f29c
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Thu Mar 4 00:02:16 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Thu Mar 4 00:02:16 2021 +0000
+| 
+|     Split confirm intent and inject payment method into two separate endpoints. Cancel intent endpoint and called when the users clicks off purchase dialog.
+| 
+* commit df38c18a3040a3dcea64287fdffcd6bdd28f0ef3
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Mar 3 19:25:24 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Mar 3 19:25:24 2021 +0000
+| 
+|     Users recommendation scores are now generated on user create. GetRecommended events now uses average score of all recommendation scores as threshold instead of 0.5.
+| 
+* commit f4eafc434d099a39138fb1d5d2fb8c2ccaab872a
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 2 23:55:05 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 2 23:55:05 2021 +0000
+| 
+|     Basic explore endpoint with recommended events with crude ui. User data updated.
+| 
+* commit c67ceb7500e73efe00038bb56ae2edd25ddcbc91
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 2 15:45:41 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 2 15:45:41 2021 +0000
+| 
+|     Recording ticket verifications as analytics and influencing the users recommendation score.
+| 
+* commit 4aec4c3b816a32a0bc4b334aee69932f5cef6a25
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 2 15:01:27 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 2 15:01:27 2021 +0000
+| 
+|     Verify ticket page and middleware. fixed interceptor http error catching.
+| 
+* commit aa2106987886b37a7e2da0399e2374367a61417d
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 2 12:27:34 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 2 12:27:34 2021 +0000
+| 
+|     Verify ticket endpoint with test
+| 
+* commit 9128bc7338b2b561f67c77dcd08f7ce0a7f2ddf6
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Mar 2 11:51:41 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Mar 2 11:51:41 2021 +0000
+| 
+|     My tickets page added, detailed ticket page with qr code generation added
+| 
+* commit b26267d96a99215f459f2b6b7202f6ec96778a6c
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Mar 1 22:31:34 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Mon Mar 1 22:31:34 2021 +0000
+| 
+|     Get all users tickets endpoint.
+| 
+* commit 384dc807730734166b0e44ddf8b7653dcdaac188
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Mar 1 19:46:36 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Mon Mar 1 19:46:36 2021 +0000
+| 
+|     Simple Ticket purchasing dialog and intent timeout.
+| 
+* commit df91e0d9b78f2e0b06f6b803982eefbba9871a48
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Mar 1 11:29:19 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Mon Mar 1 11:29:19 2021 +0000
+| 
+|     Creat and confirm payment intent endpoints added
+| 
+* commit 7929515819e7e2296102110cfa2cf029d1654682
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sun Feb 28 23:30:40 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sun Feb 28 23:30:40 2021 +0000
+| 
+|     Added transaction service
+| 
+* commit eeea893d3abe406d4f6cebb5eac587ac0df34ce1
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sun Feb 28 20:37:41 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sun Feb 28 20:37:41 2021 +0000
+| 
+|     Added redis caching to GetForPublic and Search methods to improve performance. Fade in and out animation implemented for angular components that are created and destroyed by ngIf and ngFor.
+| 
+* commit 70385a3394b5357185ee0a382ba586533ffce7e2
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Thu Feb 25 22:13:39 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Thu Feb 25 22:13:39 2021 +0000
+| 
+|     More merging.
+|   
+*   commit 11320acd76648812793f783d0cdbd3211256e2e9
+|\  Merge: eb6684a de20ade
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Thu Feb 25 22:04:08 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Thu Feb 25 22:04:08 2021 +0000
+| | 
+| |     Merge branch 'SPRINT-3' into main
+| | 
+| * commit de20ade50810ad52cfe68543c979e48ca30fc67f
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Thu Feb 25 22:03:10 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Thu Feb 25 22:03:10 2021 +0000
+| | 
+| |     Accessibility and responsiveness UI updated. Bank account form improved and will not allow if the user has no address (same for the payment method form).
+| | 
+| * commit 9c2817567cc6f4e0131e065f8d8d392ff9624d3e
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Mon Feb 22 16:36:25 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Mon Feb 22 16:36:25 2021 +0000
+| | 
+| |     Added RecommendationScore model and relationships. Implemented recommendation service with Influence methods for effecting the users preference to categories.
+| | 
+| * commit c996aa0b3bc8e631fc9d9ee8310b1a7b54304259
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Mon Feb 22 12:25:12 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Mon Feb 22 12:25:12 2021 +0000
+| | 
+| |     Included event analytics in host endpoints. Added analytics and raw data tabs to event config.
+| | 
+| * commit 77f702865ddfe2f60e918ece1c22563b4e87d1f2
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Sun Feb 21 21:10:19 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Sun Feb 21 21:10:19 2021 +0000
+| | 
+| |     Added analytics models and service. analytic calls implemented into search and get event endpoint. User data view added to user settings page to view all analytics data collected for the user.
+| | 
+| * commit c27244258b33afa8510fcab75118e04386353d61
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Sat Feb 20 23:41:33 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Sat Feb 20 23:41:33 2021 +0000
+| | 
+| |     Added identity verification for stripe accounts (allows users to receive funds). Added status stripe capabilities and stripe balances. Validation needed.
+| | 
+| * commit ea7f7b57f34c8f4e2cfae245836c81baada19b42
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 19 19:08:25 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 19 19:08:25 2021 +0000
+| | 
+| |     Backend and frontend unit tests added for new features.
+| | 
+| * commit cba3497873a8f7240371d3db8b4b43022ceb1e7b
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Thu Feb 18 19:13:05 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Thu Feb 18 19:13:05 2021 +0000
+| | 
+| |     Add and remove BankAccount endpoint, middleware and ui implemented, error handling needs to be more graceful. Remove and make default PaymentMethod implemented.
+| | 
+| * commit 6b2a3bcce33ec810c3eae262865cb4b20a3f4280
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Thu Feb 18 02:48:33 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Thu Feb 18 02:48:33 2021 +0000
+| | 
+| |     Add payment method endpoint, middleware and ui added. Payment method list ui built. Address form added to user with endpoint. Stripe customer and payment method integration
+| | 
+| * commit 79299d1ba43fd0a0ab06a2976ceb65eab67fe065
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Wed Feb 17 15:38:04 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Wed Feb 17 15:38:04 2021 +0000
+| | 
+| |     Added Transaction, PaymentMethod and BankAccount models with relationships and generated migration
+| | 
+* | commit eb6684a70147c93fb49907a0dbd9b5ac554f32bf
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Wed Feb 17 16:40:16 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Wed Feb 17 16:40:16 2021 +0000
+| | 
+| |     Changed deploy directory in pipeline
+| | 
+* | commit 80a14bfb634524e765ca7146020dcb8aee129931
+|/  Author:     Harrison Barker <harrison@thebarkers.me.uk>
+|   AuthorDate: Wed Feb 17 16:24:18 2021 +0000
+|   Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+|   CommitDate: Wed Feb 17 16:24:18 2021 +0000
+|   
+|       Added deployment tasks to pipeline config
+| 
+* commit eaca45100c4eb022434b9834b7c20ed1c9c51119
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sun Feb 14 22:12:16 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sun Feb 14 22:12:16 2021 +0000
+| 
+|     More Angular and asp.net unit tests
+| 
+* commit 34ea27270c23d7b6688b5c827ab7a1234a07d21d
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sat Feb 13 23:51:21 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sat Feb 13 23:51:21 2021 +0000
+| 
+|     Angular unit tests
+| 
+* commit 26dc94fdef9a74830dd6d317eb11e1e3d3de8fe4
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Fri Feb 12 18:24:00 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Fri Feb 12 18:24:00 2021 +0000
+| 
+|     Created components to reduce duplicate code (image-list,category-list,thumbnail-edit). Progress bars added whenever making request. Broke down GetAllHosts into split queries to improve performance.
+| 
+* commit 6ed2dae06f3630145ed6d2acd37b35cebd5afead
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Thu Feb 11 23:42:21 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Thu Feb 11 23:42:21 2021 +0000
+| 
+|     Search endpoint,middleware and ui with filters (keyword,category,location,date).
+| 
+* commit 441a53dc3fecc9be62c1aeb48294bcad7533ae73
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Feb 10 23:21:06 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Feb 10 23:21:06 2021 +0000
+| 
+|     Db migration test, auto mapper test, fake data added.
+| 
+* commit 6a396e95f959c1881018af7a4a88a7d2ee10b2d4
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Feb 9 20:08:25 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Feb 9 20:08:25 2021 +0000
+| 
+|     Backend controller 100% unit test coverage.
+| 
+* commit 4a45401a3bd66ef18a49fee21e6f96366be86bf3
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Feb 8 23:31:09 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Mon Feb 8 23:31:09 2021 +0000
+| 
+|     UI consistency overhaul. Reduced all image uploading to reusable component. Dashboard and event config usability. Cancel event functionality implemented with confirm.
+| 
+* commit 449e820263b917bc637d6efbe524a0c7475365f1
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Feb 8 16:33:49 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Mon Feb 8 16:33:49 2021 +0000
+| 
+|     Event dashboard and config basic ui, endpoints and middleware. Error handling needs some work
+| 
+* commit 0c0b2ef47a3d237fb125ec6777027a5d5df4c2d4
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Feb 8 00:26:05 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Mon Feb 8 00:26:05 2021 +0000
+| 
+|     Event preview when creating event
+| 
+* commit 712d939c642c4a750ea1b026a16b9b2d62e4c8ed
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sun Feb 7 21:58:51 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sun Feb 7 21:58:51 2021 +0000
+| 
+|     Event page added with social links and map embed, Basic angular unit tests written for new components and services higher coverage need.
+| 
+* commit 2aa7539f1e4a2228e360201910f068a8804cc893
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sat Feb 6 21:11:13 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sat Feb 6 21:11:13 2021 +0000
+| 
+|     Basic create event ui and middleware
+| 
+* commit 22b4ea8b2a3d1b7057ad873d0f4fb530ce0927cf
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Fri Feb 5 22:00:08 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Fri Feb 5 22:00:08 2021 +0000
+| 
+|     Fixed errors from updating angular, removed node-sass as deprecated.
+|   
+*   commit 416044baa2f0dbfaf4c706812539af23762a4dff
+|\  Merge: b4b5889 bdeb4bf
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 21:38:18 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 21:38:18 2021 +0000
+| | 
+| |     Merge branch 'AngularUpdate11' into SPRINT-2
+| | 
+| * commit bdeb4bf569b12a4672a2a88617abec51781238f4
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 21:24:04 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 21:24:04 2021 +0000
+| | 
+| |     update angular material 10 -> 11
+| | 
+| * commit 735f1b3bb829a6562948e9a1e7d5402578bfd4fa
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 21:22:19 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 21:22:19 2021 +0000
+| | 
+| |     update angular 10 -> 11
+| | 
+| * commit 7841c38aae4f4bdd9f6edd52fccd426273249d1b
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 21:18:23 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 21:18:23 2021 +0000
+| | 
+| |     package-lock.json fix
+| | 
+| * commit bd08a2562086848f8b8ff370d4840f8878574faf
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 21:17:09 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 21:17:09 2021 +0000
+| | 
+| |     removed codelyzer deprecated
+| | 
+| * commit 009463d6b0d1d037291d3aa795ed947727a394fa
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 21:15:57 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 21:15:57 2021 +0000
+| | 
+| |     Revert "updated codelyzer"
+| |     
+| |     This reverts commit 3414115749bb9498de7fef737576e0a74b0bc1c9.
+| | 
+| * commit 3414115749bb9498de7fef737576e0a74b0bc1c9
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 21:13:55 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 21:13:55 2021 +0000
+| | 
+| |     updated codelyzer
+| | 
+| * commit b5c85c395b36ce27d97bdca436abbe466f05fe1a
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 21:11:10 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 21:11:10 2021 +0000
+| | 
+| |     remove @nguniversal/module-map-ngfactory-loader deprecated
+| | 
+| * commit a755e2c713b0282b6dd22c48227870e87261216b
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 21:01:24 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 21:01:24 2021 +0000
+| | 
+| |     update angular material 9 -> 10
+| | 
+| * commit 7817833f5fddcc2e9cc3bddc76ed7cd2d3e6a4be
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 20:58:18 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 20:58:18 2021 +0000
+| | 
+| |     update angular 9 -> 10
+| | 
+| * commit 8a961c302c59b5dee2537bdfb0e4ea7bb5bbc1e5
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 20:53:48 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 20:53:48 2021 +0000
+| | 
+| |     update angular material 8 -> 9
+| | 
+| * commit 119483a2b7c5221fd1bce12c64b079e74468ce9b
+| | Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| | AuthorDate: Fri Feb 5 20:48:21 2021 +0000
+| | Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| | CommitDate: Fri Feb 5 20:48:21 2021 +0000
+| | 
+| |     update angular 8 -> 9
+| | 
+* | commit b4b588956708c5ab1a55918a5c2e183ec92acd9d
+|/  Author:     Harrison Barker <harrison@thebarkers.me.uk>
+|   AuthorDate: Fri Feb 5 21:32:59 2021 +0000
+|   Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+|   CommitDate: Fri Feb 5 21:32:59 2021 +0000
+|   
+|       Removed entry component declarations as not needed anymore, TestBed.get switched to TestBed.Inject.
+| 
+* commit 2b2617b6e331dd2233dcd52d080e286b0b06ab3a
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Fri Feb 5 20:42:31 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Fri Feb 5 20:42:31 2021 +0000
+| 
+|     UserOwnsEventFilter unit tests, EventController unit tests. commiting before update to Angular 11.
+| 
+* commit e2529e2470888a303a8ea57e254342b3fc75d04d
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Fri Feb 5 16:49:24 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Fri Feb 5 16:49:24 2021 +0000
+| 
+|     Event isCanceled added to model, Basic Event and Ticket endpoints implemented with services unit tested, User owns authorisation filter added needs tests,
+| 
+* commit ccc026f25213fe608ca24e96d0923feb157b430c
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Feb 3 21:24:45 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Feb 3 21:24:45 2021 +0000
+| 
+|     Event Models created and updated dB with appropriate tables.
+| 
+* commit 752a98eec80dc7bba37a8ea97f0c44ba0949b0bd
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Feb 3 16:03:56 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Feb 3 16:03:56 2021 +0000
+| 
+|     Test configuration fix, test coverage output file was in incorrect location.
+| 
+* commit 57fa52746234502c18a42bf22cb7dd67c9b1867e
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Feb 3 15:36:03 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Feb 3 15:36:03 2021 +0000
+| 
+|     Angular testing on all services and components that will have minimal updating in the future, Angular Material custom theme with theme switcher, theme pref endpoint and middleware with tests.
+| 
+* commit 1eb282eedce4722b7982e5edccb3b85400630dc6
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sun Jan 31 19:32:57 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sun Jan 31 19:32:57 2021 +0000
+| 
+|     Angular lazy loading
+| 
+* commit d4b50c6715c4a8655963cff429d072314cc4d37c
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sun Jan 31 17:53:27 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sun Jan 31 17:53:27 2021 +0000
+| 
+|     Custom exceptions, API documentation.
+| 
+* commit 7b160c648070c9f71340c9d10835d2b4f97c7233
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sun Jan 31 13:26:22 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sun Jan 31 13:26:22 2021 +0000
+| 
+|     User and auth service 100% test coverage on implemented methods, rename of authenticate to login for more consistent naming scheme.
+| 
+* commit 40313b4e72e62ce455e45b0ed26076fad76d5629
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sun Jan 31 00:52:18 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sun Jan 31 00:52:18 2021 +0000
+| 
+|     File clean ups, account page ui updates.
+| 
+* commit a23b3e3e870055077962ca88a4bc1d7dfd14862e
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sat Jan 30 21:32:56 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Sat Jan 30 21:32:56 2021 +0000
+| 
+|     Get user for account page, public and user nav bar.
+| 
+* commit dda997f005ff268bbdb29f18f1a69f225906fc48
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Fri Jan 29 16:27:08 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Fri Jan 29 16:27:08 2021 +0000
+| 
+|     Update user avatar and password with backend tests.
+| 
+* commit 9c10473b12769afccb2cafa1290fd9aca6c27b1d
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Fri Jan 29 13:32:54 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Fri Jan 29 13:32:54 2021 +0000
+| 
+|     Update azure-pipelines.yml for test coverage
+| 
+* commit 218ac87640421adf48ba6009ecaa7db33e9f7a5e
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Fri Jan 29 12:41:49 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Fri Jan 29 12:41:49 2021 +0000
+| 
+|     Update azure-pipelines.yml with correct node.js version
+| 
+* commit d781faa64de741e3ab05f6ed943fdc20a197784d
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Fri Jan 29 12:19:31 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Fri Jan 29 12:19:31 2021 +0000
+| 
+|     Update azure-pipelines.yml for Azure Pipelines
+| 
+* commit 3d37fc55c29c9c559ff36ccbeb90db080c596664
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Thu Jan 28 23:55:47 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Thu Jan 28 23:55:47 2021 +0000
+| 
+|     Basic account config page ui, new password.
+| 
+* commit 5aa3b47d7326e7101b9b6188046dfa1815464b4f
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Jan 27 22:56:00 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Jan 27 22:56:00 2021 +0000
+| 
+|     ci update
+| 
+* commit 5912241c9e806fbc434cd5d028e7e3a05fad95ce
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Jan 27 22:36:26 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Jan 27 22:36:26 2021 +0000
+| 
+|     test ci
+| 
+* commit a209dbe2da3eef244f70f375bbd271fc985d8cb6
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Jan 27 22:22:48 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Jan 27 22:22:48 2021 +0000
+| 
+|     Create account implemented with existing username, email and phone number validation. Test clean up.
+| 
+* commit af5be2105cf78b0a457f587b21db15439c3493df
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Jan 27 15:03:24 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Jan 27 15:03:24 2021 +0000
+| 
+|     Login middleware, auth guard and interceptor. User can now login and have credentials saved in browser for future requests.
+| 
+* commit 5ac0fc22ac437681103bf4bdbd92c0f4fa2b2675
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Wed Jan 27 00:08:54 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Wed Jan 27 00:08:54 2021 +0000
+| 
+|     Basic login ui
+| 
+* commit 342981a94ad30455a4c11dbb46524a31fa21a6e3
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Jan 26 20:28:37 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Jan 26 20:28:37 2021 +0000
+| 
+|     Get user endpoint & tests
+| 
+* commit f73ef9000e7ee541c645d56184715d4c48009767
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Jan 26 20:14:58 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Jan 26 20:14:58 2021 +0000
+| 
+|     Remove user endpoint
+| 
+* commit d84365acffbeace93b8bd844e366a304ee69034e
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Jan 26 18:58:40 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Jan 26 18:58:40 2021 +0000
+| 
+|     Remove Identity server replaced by custom made auth and user service. Basic Authenticate endpoint with no tests. Create user endpoint with tests.
+| 
+* commit 4ea140304b399ef998c7968597dc35e42de25b6a
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Jan 26 16:47:26 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Jan 26 16:47:26 2021 +0000
+| 
+|     Added default identity server with mysql database connection. Migrated and updated database. Basic User Model.
+| 
+* commit b811503e16095ed051479f1e45fa9a1970c26554
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Tue Jan 26 14:19:17 2021 +0000
+| Commit:     Harrison Barker <harrison@thebarkers.me.uk>
+| CommitDate: Tue Jan 26 14:19:17 2021 +0000
+| 
+|     Created development and testing enviroment
+| 
+* commit 2f0eefbfdbd8501a1eb9fc745424e5f200536170
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Mon Jan 25 11:08:56 2021 +0000
+| Commit:     GitHub <noreply@github.com>
+| CommitDate: Mon Jan 25 11:08:56 2021 +0000
+| 
+|     Update README.md
+| 
+* commit 75552938db3908435fa97d7ca57a963bec60450d
+| Author:     Harrison Barker <harrison@thebarkers.me.uk>
+| AuthorDate: Sun Nov 22 17:27:33 2020 +0000
+| Commit:     GitHub <noreply@github.com>
+| CommitDate: Sun Nov 22 17:27:33 2020 +0000
+| 
+|     Create .gitignore
+| 
+* commit f7930562720487b563bc1fc493a2aeb7f32a55c1
+  Author:     Harrison Barker <harrison@thebarkers.me.uk>
+  AuthorDate: Sun Nov 22 17:26:56 2020 +0000
+  Commit:     GitHub <noreply@github.com>
+  CommitDate: Sun Nov 22 17:26:56 2020 +0000
+  
+      Initial commit

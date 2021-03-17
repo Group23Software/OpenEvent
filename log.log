@@ -1,0 +1,106 @@
+* d5c24d4 : Event ending with report after event set to finished
+* b79e561 : Promo date check to stop conflicting promos existing.
+* f600c3f : Email confirm and forgot password implemented.
+* 4ceed4d : demographic pie chart
+* f008ace : ticket sales with page views graph. Fixed get for host now calls fine.
+* e4079c8 : Angular unit tests on new functionality.
+* 17ca829 : Landing page with popular events and categories components with web socket for real time updates. Nav bars are now loaded once in the app component instead on each page with async pipe.
+* c22b9c8 : Popularity middleware
+* 4221566 : Popularity service and hosted popularity watch dog that monitors popular events, categories and removes entity when their no longer popular.
+* 8bd2966 : Broken account create form to down to steps for better usability add tos agreement link plus stripe agreement link.
+* f15fff7 : Ticket receipt
+* ef8a8f8 : User and event transaction history shows when a promo has been used
+* 118a438 : User transaction history tab with cancelable payments.
+* 19b5409 : Show promo on ticket purchase and applies promo to stripe payment.
+* 50070c7 : Promo list, activate, deactivate and delete promo middleware.
+* 591d499 : Promo create form and dialog
+* d1cc2a4 : Promo models created and migrated. Basic Promo CRUD endpoints added.
+* 788073e : Quickly added alternative bank account form using sort code and account number.
+* a94ac8a : Delegated all analytics and recommendation methods to new background hosted service using IWorkQueue to queue all incoming events and resolving them in the background.
+* 99a9a5e : Revamped .Net test suite to now use sqlite in-memory database as mocking the database was causing errors especially with advanced relationships and wasn't acting like the production database.
+* 6689fce : Implemented stripe sdk 3D secure, doesn't look nice but works very well.
+* 1b3f0f7 : Implemented ControlValueAccessor on address and category form to be compatible with Angular form's module. Custom Notification component with service methods as Angular material snack bar lacked flexibility.
+* 23b5382 : Getting all Angular Test beds to construct.
+* 5b0d0b0 : Webhook endpoint implemented for listening to payment success and fail events with email service for notifying users of successes and fails. Added transaction relationship to event.
+* b384fa7 : Split confirm intent and inject payment method into two separate endpoints. Cancel intent endpoint and called when the users clicks off purchase dialog.
+* df38c18 : Users recommendation scores are now generated on user create. GetRecommended events now uses average score of all recommendation scores as threshold instead of 0.5.
+* f4eafc4 : Basic explore endpoint with recommended events with crude ui. User data updated.
+* c67ceb7 : Recording ticket verifications as analytics and influencing the users recommendation score.
+* 4aec4c3 : Verify ticket page and middleware. fixed interceptor http error catching.
+* aa21069 : Verify ticket endpoint with test
+* 9128bc7 : My tickets page added, detailed ticket page with qr code generation added
+* b26267d : Get all users tickets endpoint.
+* 384dc80 : Simple Ticket purchasing dialog and intent timeout.
+* df91e0d : Creat and confirm payment intent endpoints added
+* 7929515 : Added transaction service
+* eeea893 : Added redis caching to GetForPublic and Search methods to improve performance. Fade in and out animation implemented for angular components that are created and destroyed by ngIf and ngFor.
+* 70385a3 : More merging.
+*   11320ac : Merge branch 'SPRINT-3' into main
+|\  
+| * de20ade : Accessibility and responsiveness UI updated. Bank account form improved and will not allow if the user has no address (same for the payment method form).
+| * 9c28175 : Added RecommendationScore model and relationships. Implemented recommendation service with Influence methods for effecting the users preference to categories.
+| * c996aa0 : Included event analytics in host endpoints. Added analytics and raw data tabs to event config.
+| * 77f7028 : Added analytics models and service. analytic calls implemented into search and get event endpoint. User data view added to user settings page to view all analytics data collected for the user.
+| * c272442 : Added identity verification for stripe accounts (allows users to receive funds). Added status stripe capabilities and stripe balances. Validation needed.
+| * ea7f7b5 : Backend and frontend unit tests added for new features.
+| * cba3497 : Add and remove BankAccount endpoint, middleware and ui implemented, error handling needs to be more graceful. Remove and make default PaymentMethod implemented.
+| * 6b2a3bc : Add payment method endpoint, middleware and ui added. Payment method list ui built. Address form added to user with endpoint. Stripe customer and payment method integration
+| * 79299d1 : Added Transaction, PaymentMethod and BankAccount models with relationships and generated migration
+* | eb6684a : Changed deploy directory in pipeline
+* | 80a14bf : Added deployment tasks to pipeline config
+|/  
+* eaca451 : More Angular and asp.net unit tests
+* 34ea272 : Angular unit tests
+* 26dc94f : Created components to reduce duplicate code (image-list,category-list,thumbnail-edit). Progress bars added whenever making request. Broke down GetAllHosts into split queries to improve performance.
+* 6ed2dae : Search endpoint,middleware and ui with filters (keyword,category,location,date).
+* 441a53d : Db migration test, auto mapper test, fake data added.
+* 6a396e9 : Backend controller 100% unit test coverage.
+* 4a45401 : UI consistency overhaul. Reduced all image uploading to reusable component. Dashboard and event config usability. Cancel event functionality implemented with confirm.
+* 449e820 : Event dashboard and config basic ui, endpoints and middleware. Error handling needs some work
+* 0c0b2ef : Event preview when creating event
+* 712d939 : Event page added with social links and map embed, Basic angular unit tests written for new components and services higher coverage need.
+* 2aa7539 : Basic create event ui and middleware
+* 22b4ea8 : Fixed errors from updating angular, removed node-sass as deprecated.
+*   416044b : Merge branch 'AngularUpdate11' into SPRINT-2
+|\  
+| * bdeb4bf : update angular material 10 -> 11
+| * 735f1b3 : update angular 10 -> 11
+| * 7841c38 : package-lock.json fix
+| * bd08a25 : removed codelyzer deprecated
+| * 009463d : Revert "updated codelyzer"
+| * 3414115 : updated codelyzer
+| * b5c85c3 : remove @nguniversal/module-map-ngfactory-loader deprecated
+| * a755e2c : update angular material 9 -> 10
+| * 7817833 : update angular 9 -> 10
+| * 8a961c3 : update angular material 8 -> 9
+| * 119483a : update angular 8 -> 9
+* | b4b5889 : Removed entry component declarations as not needed anymore, TestBed.get switched to TestBed.Inject.
+|/  
+* 2b2617b : UserOwnsEventFilter unit tests, EventController unit tests. commiting before update to Angular 11.
+* e2529e2 : Event isCanceled added to model, Basic Event and Ticket endpoints implemented with services unit tested, User owns authorisation filter added needs tests,
+* ccc026f : Event Models created and updated dB with appropriate tables.
+* 752a98e : Test configuration fix, test coverage output file was in incorrect location.
+* 57fa527 : Angular testing on all services and components that will have minimal updating in the future, Angular Material custom theme with theme switcher, theme pref endpoint and middleware with tests.
+* 1eb282e : Angular lazy loading
+* d4b50c6 : Custom exceptions, API documentation.
+* 7b160c6 : User and auth service 100% test coverage on implemented methods, rename of authenticate to login for more consistent naming scheme.
+* 40313b4 : File clean ups, account page ui updates.
+* a23b3e3 : Get user for account page, public and user nav bar.
+* dda997f : Update user avatar and password with backend tests.
+* 9c10473 : Update azure-pipelines.yml for test coverage
+* 218ac87 : Update azure-pipelines.yml with correct node.js version
+* d781faa : Update azure-pipelines.yml for Azure Pipelines
+* 3d37fc5 : Basic account config page ui, new password.
+* 5aa3b47 : ci update
+* 5912241 : test ci
+* a209dbe : Create account implemented with existing username, email and phone number validation. Test clean up.
+* af5be21 : Login middleware, auth guard and interceptor. User can now login and have credentials saved in browser for future requests.
+* 5ac0fc2 : Basic login ui
+* 342981a : Get user endpoint & tests
+* f73ef90 : Remove user endpoint
+* d84365a : Remove Identity server replaced by custom made auth and user service. Basic Authenticate endpoint with no tests. Create user endpoint with tests.
+* 4ea1403 : Added default identity server with mysql database connection. Migrated and updated database. Basic User Model.
+* b811503 : Created development and testing enviroment
+* 2f0eefb : Update README.md
+* 7555293 : Create .gitignore
+* f793056 : Initial commit

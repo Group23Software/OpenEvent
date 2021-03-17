@@ -237,7 +237,7 @@ namespace OpenEvent.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("GetUsersAnalytics")]
+        [HttpGet("Analytics")]
         public async Task<ActionResult<UsersAnalytics>> GetUsersAnalytics(Guid id)
         {
             try
