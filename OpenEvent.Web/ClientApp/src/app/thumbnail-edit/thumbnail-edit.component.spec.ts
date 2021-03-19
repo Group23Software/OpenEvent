@@ -1,9 +1,7 @@
-import {ComponentFixture, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ThumbnailEditComponent} from './thumbnail-edit.component';
-import {ImageListComponent} from "../image-list/image-list.component";
 import {MatDialog} from "@angular/material/dialog";
-import {By} from "@angular/platform-browser";
 import {ImageUploadComponent, uploadConfig} from "../_extensions/image-upload/image-upload.component";
 import {of} from "rxjs";
 import {ImageViewModel} from "../_models/Image";

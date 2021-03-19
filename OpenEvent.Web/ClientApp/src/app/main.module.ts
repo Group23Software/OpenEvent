@@ -2,8 +2,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from "./shared.module";
 import {RouterModule} from "@angular/router";
-import {SearchComponent} from "./search/search.component";
-import {AuthGuard} from "./_guards/auth.guard";
 
 
 @NgModule({

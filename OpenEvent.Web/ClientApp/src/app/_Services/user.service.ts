@@ -11,7 +11,6 @@ import {Observable, of} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
 import {map} from "rxjs/operators";
-import jwtDecode, {JwtPayload} from "jwt-decode";
 import {UserPaths} from "../_extensions/api.constants";
 import {Address} from "../_models/Address";
 import {MappedUsersAnalytics, PageViewEvent, SearchEvent, UsersAnalytics} from "../_models/Analytic";

@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild, ViewChildren} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {PaymentMethodViewModel} from "../../_models/PaymentMethod";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {EventDetailModel} from "../../_models/Event";

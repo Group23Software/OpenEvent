@@ -1,6 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {UserService} from "./user.service";
 import {Observable} from "rxjs";
 import {TransactionPaths} from "../_extensions/api.constants";
 import {

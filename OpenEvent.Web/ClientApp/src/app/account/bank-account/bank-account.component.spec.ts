@@ -1,10 +1,9 @@
-import {ComponentFixture, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {BankAccountComponent} from './bank-account.component';
 import {StripeElementsService, StripeIbanComponent, StripeService} from "ngx-stripe";
 import {UserService} from "../../_Services/user.service";
 import {BankingService} from "../../_Services/banking.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {of, throwError} from "rxjs";
 import {HttpErrorResponse} from "@angular/common/http";
 import {TriggerService} from "../../_Services/trigger.service";

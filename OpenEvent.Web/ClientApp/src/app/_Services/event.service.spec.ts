@@ -14,7 +14,7 @@ import {
 import {UserService} from "./user.service";
 import {UserAccountModel} from "../_models/User";
 import {SocialMedia} from "../_models/SocialMedia";
-import {EventAnalytics, MappedEventAnalytics} from "../_models/Analytic";
+import {EventAnalytics} from "../_models/Analytic";
 
 class UserServiceStub
 {

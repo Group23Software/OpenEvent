@@ -37,6 +37,7 @@ export class SearchComponent implements OnInit
 
   constructor (private eventService: EventService, private router: Router)
   {
+    console.log('[app:details] constructed app details');
     let search = this.router.getCurrentNavigation().extras.state as {keyword: string,filters: SearchFilter[]};
     if (search) {
       console.log(search);
@@ -62,7 +63,10 @@ export class SearchComponent implements OnInit
   public search (): void
   {
     this.loading = true;
+    this.filters = [];
+
     this.selectedCategories.forEach(c => this.filters.push({Key: SearchParam.Category, Value: c.Id}));
+
     if (this.isOnline)
     {
       this.filters.push({Key: SearchParam.IsOnline, Value: "true"});
@@ -76,6 +80,7 @@ export class SearchComponent implements OnInit
     if (this.date && this.usingDate) this.filters.push({Key:SearchParam.Date, Value: this.date.toDateString()})
 
     console.log(this.filters);
+
     this.eventService.Search(this.keyword, this.filters).subscribe(events =>
     {
       this.events = events;

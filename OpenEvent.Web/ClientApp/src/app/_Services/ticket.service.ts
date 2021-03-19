@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {HttpBackend, HttpClient, HttpParams} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {UserService} from "./user.service";
 import {Observable} from "rxjs";
 import {TicketDetailModel, TicketViewModel, VerifyTicketBody} from "../_models/Ticket";

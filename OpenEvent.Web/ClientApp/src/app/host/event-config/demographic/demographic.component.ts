@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MappedEventAnalytics} from "../../../_models/Analytic";
 import {ChartOptions, ChartType} from "chart.js";
-import {Color, Label} from "ng2-charts";
+import {Label} from "ng2-charts";
 // import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({

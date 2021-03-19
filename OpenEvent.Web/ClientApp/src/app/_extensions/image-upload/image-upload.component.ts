@@ -1,7 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ImageCroppedEvent} from "ngx-image-cropper";
-import {DialogRef} from "../../login/create-account/create-account.component.spec";
 import {FormControl} from "@angular/forms";
 import {ImageViewModel} from "../../_models/Image";
 

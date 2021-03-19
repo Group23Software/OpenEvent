@@ -1,5 +1,3 @@
-import {tick} from "@angular/core/testing";
-
 let authPaths: ApiAuthPaths = {
   BasePath: 'api/auth',
   Authenticate: '',

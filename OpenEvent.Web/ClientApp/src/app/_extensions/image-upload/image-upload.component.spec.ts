@@ -1,8 +1,7 @@
-import {ComponentFixture, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ImageUploadComponent} from './image-upload.component';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {By} from "@angular/platform-browser";
 import {ImageCroppedEvent} from "ngx-image-cropper";
 import {ImageViewModel} from "../../_models/Image";
 

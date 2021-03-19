@@ -8,8 +8,7 @@ import {Category} from "../_models/Category";
 import {HttpErrorResponse} from "@angular/common/http";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Navigation, Router} from "@angular/router";
-import {destroyPlatform} from "@angular/core";
-import createSpyObj = jasmine.createSpyObj;
+
 
 describe('SearchComponent', () =>
 {

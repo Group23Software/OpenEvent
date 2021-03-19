@@ -1,5 +1,4 @@
-import {PublicNavComponent} from "../public-nav/public-nav.component";
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing";
+import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 import {Component, EventEmitter} from "@angular/core";
 import {RouterTestingModule} from "@angular/router/testing";
 import {MatToolbarModule} from "@angular/material/toolbar";

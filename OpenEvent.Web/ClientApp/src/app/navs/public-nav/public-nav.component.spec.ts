@@ -1,4 +1,4 @@
-import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from "@angular/core/testing";
+import {async, ComponentFixture, fakeAsync, TestBed, tick} from "@angular/core/testing";
 import {Router} from "@angular/router";
 import {PublicNavComponent} from "./public-nav.component";
 import {RouterTestingModule} from "@angular/router/testing";

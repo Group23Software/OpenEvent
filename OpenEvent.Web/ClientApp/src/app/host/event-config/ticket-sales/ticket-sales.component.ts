@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {EventHostModel} from "../../../_models/Event";
-import {BaseChartDirective, Color, Label} from "ng2-charts";
+import {BaseChartDirective, Color} from "ng2-charts";
 import {ChartDataSets, ChartOptions, ChartPoint, ChartType} from "chart.js";
 import {MappedEventAnalytics} from "../../../_models/Analytic";
 import * as pluginAnnotations from 'chartjs-plugin-annotation';

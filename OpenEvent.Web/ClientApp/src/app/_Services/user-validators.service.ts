@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, ValidatorFn} from "@angular/forms";
-import {Observable, timer} from "rxjs";
+import {AbstractControl, AsyncValidatorFn, ValidationErrors} from "@angular/forms";
+import {Observable} from "rxjs";
 import {UserService} from "./user.service";
 import {debounceTime, map} from "rxjs/operators";
 

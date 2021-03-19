@@ -1,6 +1,6 @@
-import {Component, ComponentRef, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ComponentRef, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {InOutAnimation} from "../animations";
-import {animate, AnimationBuilder, AnimationPlayer, state, style} from "@angular/animations";
+import {animate, AnimationBuilder, AnimationPlayer, style} from "@angular/animations";
 
 export enum IteratorStatus
 {

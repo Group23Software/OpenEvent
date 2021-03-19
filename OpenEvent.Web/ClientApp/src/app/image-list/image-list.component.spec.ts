@@ -2,7 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ImageListComponent} from './image-list.component';
 import {MatDialog} from "@angular/material/dialog";
-import {By} from "@angular/platform-browser";
 import {ImageUploadComponent, uploadConfig} from "../_extensions/image-upload/image-upload.component";
 import {of} from "rxjs";
 

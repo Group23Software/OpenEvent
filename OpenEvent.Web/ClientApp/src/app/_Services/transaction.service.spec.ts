@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 
 import { TransactionService } from './transaction.service';
 import {HttpClient} from "@angular/common/http";
-import {UserService} from "./user.service";
 
 describe('TransactionService', () => {
   let service: TransactionService;

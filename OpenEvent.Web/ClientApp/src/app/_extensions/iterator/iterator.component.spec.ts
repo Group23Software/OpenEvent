@@ -1,9 +1,7 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import {IteratorComponent} from './iterator.component';
-import {AnimationBuilder, AnimationFactory} from "@angular/animations";
 import {BrowserTestingModule} from "@angular/platform-browser/testing";
-import {MockAnimationPlayer} from "@angular/animations/browser/testing";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('IteratorComponent', () =>

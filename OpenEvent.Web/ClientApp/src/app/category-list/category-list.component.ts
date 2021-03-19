@@ -4,7 +4,6 @@ import {EventEmitter} from '@angular/core';
 import {InOutAnimation} from "../_extensions/animations";
 import {
   ControlValueAccessor,
-  NG_VALIDATORS,
   NG_VALUE_ACCESSOR
 } from "@angular/forms";
 

@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {CreatePromoComponent} from './create-promo.component';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";

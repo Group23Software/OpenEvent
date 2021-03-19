@@ -2,64 +2,60 @@ import {ActivatedRouteSnapshot, DetachedRouteHandle, RouteReuseStrategy} from "@
 
 export class RouteReuse implements RouteReuseStrategy
 {
-  storedRouteHandles = new Map<string, DetachedRouteHandle>();
-  retrievable = {
-    'search': true
-  };
+  handlers: { [key: string]: DetachedRouteHandle } = {};
 
-  // Gets the route from the hashmap
-  retrieve (route: ActivatedRouteSnapshot): DetachedRouteHandle | null
+  calcKey (route: ActivatedRouteSnapshot)
   {
-    console.log('retrieving route', route);
-    return this.storedRouteHandles.get(this.getPath(route)) as DetachedRouteHandle;
-  }
-
-  // Should it create a new component from scratch or reuse
-  shouldAttach (route: ActivatedRouteSnapshot): boolean
-  {
-    if (this.retrievable[this.getPath(route)])
+    let next = route;
+    let url = "";
+    while (next)
     {
-      return this.storedRouteHandles.has(this.getPath(route));
+      if (next.url)
+      {
+        url = next.url.join('/');
+      }
+      next = next.firstChild;
     }
-    return false;
+    console.log('url', url);
+    return url;
   }
 
-  // Should store the outgoing component / route
   shouldDetach (route: ActivatedRouteSnapshot): boolean
   {
-    const path = this.getPath(route);
-    return this.retrievable.hasOwnProperty(path);
+    let shouldReuse = false;
+    if (route.routeConfig.data)
+    {
+      route.routeConfig.data.reuse ? shouldReuse = true : shouldReuse = false;
+    }
+
+    if (shouldReuse) console.log('reusing this route', route);
+
+    return shouldReuse;
   }
 
-  // If the routes are different then trigger router reuse
+  store (route: ActivatedRouteSnapshot, handle: DetachedRouteHandle): void
+  {
+    // console.log('CustomReuseStrategy:store', route, handle);
+    this.handlers[this.calcKey(route)] = handle;
+
+  }
+
+  shouldAttach (route: ActivatedRouteSnapshot): boolean
+  {
+    // console.log('CustomReuseStrategy:shouldAttach', route);
+    return !!route.routeConfig && !!this.handlers[this.calcKey(route)];
+  }
+
+  retrieve (route: ActivatedRouteSnapshot): DetachedRouteHandle
+  {
+    // console.log('CustomReuseStrategy:retrieve', route);
+    if (!route.routeConfig) return null;
+    return this.handlers[this.calcKey(route)];
+  }
+
   shouldReuseRoute (future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean
   {
-    if (this.getPath(future) === 'event/:id' && this.getPath(curr) === 'search')
-    {
-      this.retrievable['search'] = true;
-    } else
-    {
-      this.retrievable['search'] = false;
-    }
-
-    return future.routeConfig === curr.routeConfig;
-  }
-
-  // stores the route in the hashmap
-  store (route: ActivatedRouteSnapshot, handle: DetachedRouteHandle | null): void
-  {
-    console.log('storing route', route);
-    this.storedRouteHandles.set(this.getPath(route), handle);
-  }
-
-  private getPath (route: ActivatedRouteSnapshot): string
-  {
-    if (route.routeConfig !== null && route.routeConfig.path !== null)
-    {
-      console.log(route.routeConfig.path);
-      return route.routeConfig.path;
-    }
-    return '';
+    // console.log('CustomReuseStrategy:shouldReuseRoute', future, curr);
+    return this.calcKey(curr) === this.calcKey(future);
   }
 }
-

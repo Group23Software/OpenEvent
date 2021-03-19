@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpBackend, HttpClient, HttpHeaders} from "@angular/common/http";
 import {UserService} from "./user.service";
 import {AddBankAccountBody, Balance, BankAccountViewModel, RemoveBankAccountBody} from "../_models/BankAccount";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {BankingPaths} from "../_extensions/api.constants";
 import {map} from "rxjs/operators";
 import {environment} from "../../environments/environment";

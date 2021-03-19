@@ -1,7 +1,7 @@
-import {AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, OnInit, ViewChild} from '@angular/core';
 import {EventService} from "../../_Services/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
-import {EventDetailModel, EventHostModel, EventViewModel} from "../../_models/Event";
+import {EventDetailModel, EventHostModel} from "../../_models/Event";
 import {MatDrawerContainer} from "@angular/material/sidenav";
 import {Router} from "@angular/router";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";

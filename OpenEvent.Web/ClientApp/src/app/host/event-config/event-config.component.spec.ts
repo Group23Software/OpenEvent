@@ -2,8 +2,6 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {EventConfigComponent} from './event-config.component';
 import {RouterTestingModule} from "@angular/router/testing";
 import {EventService} from "../../_Services/event.service";
-import {MatDialog} from "@angular/material/dialog";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {of, throwError} from "rxjs";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {MatCardModule} from "@angular/material/card";
