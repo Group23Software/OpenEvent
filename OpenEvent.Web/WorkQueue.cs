@@ -20,8 +20,9 @@ namespace OpenEvent.Web
 
         private readonly ConcurrentQueue<Func<CancellationToken, Task>> Queue = new();
 
+        // private readonly SemaphoreSlim Signal = new(0,10);
         private readonly SemaphoreSlim Signal = new(0);
-
+        
         public WorkQueue(ILogger<WorkQueue> logger)
         {
             Logger = logger;

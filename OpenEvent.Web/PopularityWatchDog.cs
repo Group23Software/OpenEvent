@@ -41,7 +41,7 @@ namespace OpenEvent.Web
             {
                 // If the popularity of the event hasn't increased in x time then downgrade it's popularity.
                 var timeFrom = DateTime.Now - PopularityService.GetEvents()[i].Updated;
-                Logger.LogInformation("time from {Time}", timeFrom);
+                // Logger.LogInformation("time from {Time}", timeFrom);
                 if (timeFrom >= DowngradeSpan)
                 {
                     if (PopularityService.DownGradeEvent(PopularityService.GetEvents()[i].Record)) i--;
@@ -52,7 +52,7 @@ namespace OpenEvent.Web
             {
                 // If the popularity of the event hasn't increased in x time then downgrade it's popularity.
                 var timeFrom = DateTime.Now - PopularityService.GetCategories()[i].Updated;
-                Logger.LogInformation("time from {Time}", timeFrom);
+                // Logger.LogInformation("time from {Time}", timeFrom);
                 if (timeFrom >= DowngradeSpan)
                 {
                     if (PopularityService.DownGradeCategory(PopularityService.GetCategories()[i].Record)) i--;

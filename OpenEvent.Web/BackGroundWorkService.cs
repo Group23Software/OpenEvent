@@ -31,6 +31,7 @@ namespace OpenEvent.Web
 
                 try
                 {
+                    Logger.LogInformation("Working on next");
                     await nextWork(cancellationToken);
                 }
                 catch (Exception ex)

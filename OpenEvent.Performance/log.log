@@ -1,0 +1,29 @@
+
+          /\      |‾‾| /‾‾/   /‾‾/   
+     /\  /  \     |  |/  /   /  /    
+    /  \/    \    |     (   /   ‾‾\  
+   /          \   |  |\  \ |  (‾)  | 
+  / __________ \  |__| \__\ \_____/ .io
+
+  execution: local
+     script: Load_Events.js
+     output: -
+
+  scenarios: (100.00%) 1 scenario, 10 max VUs, 5m30s max duration (incl. graceful stop):
+           * default: Up to 10 looping VUs for 5m0s over 3 stages (gracefulRampDown: 30s, gracefulStop: 30s)
+
+
+running (0m01.0s), 01/10 VUs, 0 complete and 0 interrupted iterations
+default   [   0% ] 01/10 VUs  0m01.0s/5m00.0s
+
+running (0m02.0s), 01/10 VUs, 1 complete and 0 interrupted iterations
+default   [   1% ] 01/10 VUs  0m02.0s/5m00.0s
+
+running (0m03.0s), 01/10 VUs, 2 complete and 0 interrupted iterations
+default   [   1% ] 01/10 VUs  0m03.0s/5m00.0s
+
+running (0m04.0s), 01/10 VUs, 3 complete and 0 interrupted iterations
+default   [   1% ] 01/10 VUs  0m04.0s/5m00.0s
+
+running (0m04.4s), 00/10 VUs, 4 complete and 1 interrupted iterations
+default ✗ [   1% ] 01/10 VUs  0m04.4s/5m00.0s
