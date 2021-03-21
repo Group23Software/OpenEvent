@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserValidatorsService} from "../../_Services/user-validators.service";
 import {UserService} from "../../_Services/user.service";
@@ -15,7 +15,7 @@ import {ImageUploadComponent, uploadConfig} from "../../_extensions/image-upload
   templateUrl: './create-account.component.html',
   styleUrls: ['./create-account.component.css']
 })
-export class CreateAccountComponent implements OnInit
+export class CreateAccountComponent implements OnInit, OnDestroy
 {
 
   public DefaultProfile = DefaultProfile;
@@ -68,6 +68,7 @@ export class CreateAccountComponent implements OnInit
   {
     const currentYear = new Date().getFullYear();
     this.maxDate = new Date(currentYear - 18, 0, 0);
+    this.userService.OpenConnection();
   }
 
   ngOnInit ()
@@ -119,5 +120,10 @@ export class CreateAccountComponent implements OnInit
         this.avatar = image;
       }
     });
+  }
+
+  ngOnDestroy (): void
+  {
+    this.userService.DestroyConnection();
   }
 }

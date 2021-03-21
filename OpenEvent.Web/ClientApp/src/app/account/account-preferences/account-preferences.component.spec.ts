@@ -43,7 +43,7 @@ describe('AccountPreferencesComponent', () =>
 
     dialogMock = jasmine.createSpyObj('matDialog', ['open']);
 
-    userServiceMock = jasmine.createSpyObj('userService', ['Destroy', 'UpdateUserName', 'UpdateAvatar', 'User', 'UserNameExists']);
+    userServiceMock = jasmine.createSpyObj('userService', ['Destroy', 'UpdateUserName', 'UpdateAvatar', 'User', 'UserNameExists','OpenConnection','DestroyConnection']);
     userServiceMock.UserNameExists.and.returnValue(of(false));
 
     authMock = jasmine.createSpyObj('authService', ['IsAuthenticated', 'Login', 'UpdatePassword']);

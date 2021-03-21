@@ -2,18 +2,20 @@ import {Inject, Injectable} from '@angular/core';
 import {
   NewUserInput,
   UpdateAvatarBody,
-  UpdateThemePreferenceBody, UpdateUserAddressBody,
+  UpdateThemePreferenceBody,
+  UpdateUserAddressBody,
   UpdateUserNameBody,
   UserAccountModel,
   UserViewModel
 } from "../_models/User";
-import {Observable, of} from "rxjs";
+import {from, Observable, of} from "rxjs";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
 import {map} from "rxjs/operators";
 import {UserPaths} from "../_extensions/api.constants";
 import {Address} from "../_models/Address";
 import {MappedUsersAnalytics, PageViewEvent, SearchEvent, UsersAnalytics} from "../_models/Analytic";
+import {HubConnection, HubConnectionBuilder, HubConnectionState} from "@microsoft/signalr";
 
 interface addressBody
 {
@@ -67,9 +69,24 @@ export class UserService
   private _User: UserAccountModel;
   private readonly BaseUrl: string;
 
+  private connection: HubConnection;
+
   constructor (private http: HttpClient, @Inject('BASE_URL') baseUrl: string, private cookieService: CookieService)
   {
     this.BaseUrl = baseUrl;
+    this.connection = new HubConnectionBuilder().withUrl(this.BaseUrl + 'userHub').build();
+  }
+
+  public OpenConnection (): void
+  {
+    this.connection.start().then(() => console.log("Connected to the user hub")).catch(err => console.error('error connecting to user hub', err));
+
+    this.connection.onclose(error => console.log("disconnected from the user hub"));
+  }
+
+  public DestroyConnection (): void
+  {
+    this.connection.stop().then(() => console.log('destroyed user hub connection'));
   }
 
   public GetUserAsync (): Observable<UserAccountModel | null>
@@ -104,17 +121,32 @@ export class UserService
 
   public UserNameExists (username: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + UserPaths.UserNameExists, {params: new HttpParams().set('username', username)});
+    if (this.connection.state == HubConnectionState.Connected)
+    {
+      return from(this.connection.invoke("UserNameExists",username));
+    } else {
+      return this.http.get<boolean>(this.BaseUrl + UserPaths.UserNameExists, {params: new HttpParams().set('username', username)});
+    }
   }
 
   public EmailExists (email: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + UserPaths.EmailExists, {params: new HttpParams().set('email', email)});
+    if (this.connection.state == HubConnectionState.Connected)
+    {
+      return from(this.connection.invoke("EmailExists", email));
+    } else {
+      return this.http.get<boolean>(this.BaseUrl + UserPaths.EmailExists, {params: new HttpParams().set('email', email)});
+    }
   }
 
   public PhoneExists (phoneNumber: string): Observable<boolean>
   {
-    return this.http.get<boolean>(this.BaseUrl + UserPaths.PhoneExists, {params: new HttpParams().set('phoneNumber', phoneNumber)});
+    if (this.connection.state == HubConnectionState.Connected)
+    {
+      return from(this.connection.invoke("PhoneExists", phoneNumber));
+    } else {
+      return this.http.get<boolean>(this.BaseUrl + UserPaths.PhoneExists, {params: new HttpParams().set('phoneNumber', phoneNumber)});
+    }
   }
 
   public Destroy (id: string): Observable<any>
@@ -205,7 +237,7 @@ export class UserService
       let mapped: MappedUsersAnalytics = {
         PageViewEvents: Array.from(pageViews, ([key, value]) => ({Date: new Date(key), PageViews: value})),
         RecommendationScores: a.RecommendationScores,
-        SearchEvents: Array.from(searchEvents, ([key, value]) => ({Date: new Date(key), Searches: value})) ,
+        SearchEvents: Array.from(searchEvents, ([key, value]) => ({Date: new Date(key), Searches: value})),
         TicketVerificationEvents: a.TicketVerificationEvents
       }
 

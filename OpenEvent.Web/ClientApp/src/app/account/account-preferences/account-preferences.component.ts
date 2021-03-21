@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ImageManipulationService} from "../../_extensions/image-manipulation.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
@@ -17,7 +17,7 @@ import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
   templateUrl: './account-preferences.component.html',
   styleUrls: ['./account-preferences.component.css']
 })
-export class AccountPreferencesComponent implements OnInit
+export class AccountPreferencesComponent implements OnInit, OnDestroy
 {
 
   get username ()
@@ -67,6 +67,12 @@ export class AccountPreferencesComponent implements OnInit
     private trigger: TriggerService
   )
   {
+    this.userService.OpenConnection();
+  }
+
+  ngOnDestroy (): void
+  {
+    this.userService.DestroyConnection();
   }
 
   ngOnInit ()
@@ -83,7 +89,7 @@ export class AccountPreferencesComponent implements OnInit
     }).subscribe(response =>
     {
       this.updatePasswordLoading = false;
-      this.trigger.Iterate('Updated password',1000,IteratorStatus.good);
+      this.trigger.Iterate('Updated password', 1000, IteratorStatus.good);
     }, (error: HttpErrorResponse) =>
     {
       this.updatePasswordLoading = false;
@@ -157,7 +163,7 @@ export class AccountPreferencesComponent implements OnInit
         }).subscribe(response =>
         {
           this.avatarFileName = null;
-          this.trigger.Iterate('Updated avatar',1000,IteratorStatus.good);
+          this.trigger.Iterate('Updated avatar', 1000, IteratorStatus.good);
           this.updateAvatarLoading = false;
         }, (error: HttpErrorResponse) =>
         {
@@ -173,8 +179,9 @@ export class AccountPreferencesComponent implements OnInit
   {
     this.userService.UpdateAddress({Id: this.user.Id, Address: this.newAddressForm.value}).subscribe(x =>
     {
-      this.trigger.Iterate('Updated address',1000,IteratorStatus.good);
-    }, (e: HttpErrorResponse) => {
+      this.trigger.Iterate('Updated address', 1000, IteratorStatus.good);
+    }, (e: HttpErrorResponse) =>
+    {
       console.error(e);
       this.newAddressError = e.error.Message;
     });

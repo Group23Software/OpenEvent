@@ -48,7 +48,6 @@ describe('CreateEventComponent', () =>
         BrowserAnimationsModule
       ],
       providers: [
-        // {provide: MatDialog, useValue: dialogMock},
         {provide: UserService, useValue: userServiceMock},
         {provide: EventService, useValue: eventServiceMock}
       ]

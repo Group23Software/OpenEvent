@@ -49,7 +49,7 @@ describe('CreateAccountComponent', () =>
     userValidatorsServiceMock.phoneValidator.and.returnValue(of(null));
     userValidatorsServiceMock.usernameValidator.and.returnValue(of(null));
 
-    userServiceMock = jasmine.createSpyObj('userService', ['CreateUser', 'EmailExists', 'PhoneExists', 'UserNameExists']);
+    userServiceMock = jasmine.createSpyObj('userService', ['CreateUser', 'EmailExists', 'PhoneExists', 'UserNameExists','OpenConnection','DestroyConnection']);
     userServiceMock.CreateUser.and.returnValue(of());
 
     dialogRefMock = jasmine.createSpyObj('matDialogRef', ['close']);

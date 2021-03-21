@@ -183,6 +183,7 @@ namespace OpenEvent.Web
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
 
+                endpoints.MapHub<UserHub>("/userHub");
                 endpoints.MapHub<PopularityHub>("/popularityHub");
 
                 endpoints.MapMetrics();
