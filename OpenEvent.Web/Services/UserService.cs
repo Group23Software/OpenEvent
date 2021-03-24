@@ -10,37 +10,16 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
+using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.Transaction;
 using OpenEvent.Web.Models.User;
-using Stripe;
-using Address = OpenEvent.Web.Models.Address.Address;
 
 namespace OpenEvent.Web.Services
 {
-    /// <summary>
-    /// UserService interface
-    /// </summary>
-    public interface IUserService
-    {
-        Task Create(NewUserInput userInput);
-        Task Destroy(Guid id);
-        Task<UserAccountModel> Get(Guid id);
-        Task<UsersAnalytics> GetAnalytics(Guid id);
-        // Task<User> UpdateBasicInfo(UserAccountModel user);
-        Task<string> UpdateAvatar(Guid id, byte[] avatar);
-        Task<string> UpdateUserName(Guid id, string name);
-        Task<bool> UserNameExists(string username);
-        Task<bool> EmailExists(string email);
-        Task<bool> PhoneExists(string phoneNumber);
-        Task<bool> UpdateThemePreference(Guid id, bool isDarkMode);
-        Task<bool> HostOwnsEvent(Guid eventId, Guid userId);
-        Task<Address> UpdateAddress(Guid id, Address address);
-    }
-
     /// <summary>
     /// Service providing all logic for user manipulation and review
     /// </summary>
@@ -49,42 +28,37 @@ namespace OpenEvent.Web.Services
         private readonly ILogger<UserService> Logger;
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
-        private readonly IAuthService AuthService;
         private readonly IEmailService EmailService;
         private readonly AppSettings AppSettings;
 
+
         /// <summary>
-        /// UserService default constructor
+        /// Default constructor
         /// </summary>
-        /// <param name="context"><see cref="ApplicationContext"/>></param>
+        /// <param name="context"></param>
         /// <param name="logger"></param>
         /// <param name="mapper"></param>
-        /// <param name="authService"><see cref="IAuthService"/>></param>
-        public UserService(ApplicationContext context, ILogger<UserService> logger, IMapper mapper,
-            IAuthService authService, IOptions<AppSettings> appSettings,IEmailService emailService)
+        /// <param name="appSettings"></param>
+        /// <param name="emailService"></param>
+        public UserService(
+            ApplicationContext context, ILogger<UserService> logger, IMapper mapper,
+            IOptions<AppSettings> appSettings, IEmailService emailService)
         {
             Logger = logger;
             ApplicationContext = context;
             Mapper = mapper;
-            AuthService = authService;
             AppSettings = appSettings.Value;
-            StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
+            Stripe.StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
             EmailService = emailService;
         }
 
-        /// <summary>
-        /// Method for creating a new user.
-        /// </summary>
-        /// <param name="userInput">All user data collected for signup <see cref="NewUserInput"/>.</param>
-        /// <returns>
-        /// A task of type <see cref="UserViewModel"/> representing basic user information.
-        /// </returns>
+        /// <inheritdoc />
         /// <exception cref="UserAlreadyExistsException">Thrown when there is already a user with the same email, phone number or username.</exception>
-        public async Task Create(NewUserInput userInput)
+        public async Task Create(NewUserBody userBody)
         {
             var user = await ApplicationContext.Users.FirstOrDefaultAsync(x =>
-                x.Email == userInput.Email || x.UserName == userInput.UserName ||
-                x.PhoneNumber == userInput.PhoneNumber);
+                x.Email == userBody.Email || x.UserName == userBody.UserName ||
+                x.PhoneNumber == userBody.PhoneNumber);
 
             if (user != null)
             {
@@ -104,29 +78,34 @@ namespace OpenEvent.Web.Services
             // Creating user object from params.
             User newUser = new User
             {
-                Email = userInput.Email,
-                Avatar = userInput.Avatar,
-                FirstName = userInput.FirstName,
-                LastName = userInput.LastName,
-                PhoneNumber = userInput.PhoneNumber,
-                UserName = userInput.UserName,
-                DateOfBirth = userInput.DateOfBirth,
+                Email = userBody.Email,
+                Avatar = userBody.Avatar,
+                FirstName = userBody.FirstName,
+                LastName = userBody.LastName,
+                PhoneNumber = userBody.PhoneNumber,
+                UserName = userBody.UserName,
+                DateOfBirth = userBody.DateOfBirth,
                 Confirmed = false
             };
 
             // Hash user's password.
-            newUser.Password = hasher.HashPassword(newUser, userInput.Password);
+            newUser.Password = hasher.HashPassword(newUser, userBody.Password);
 
+            // Generates a new recommendation score for each category with weight 0 
             var categories = await ApplicationContext.Categories.ToListAsync();
             newUser.RecommendationScores =
-                categories.Select(x => new RecommendationScore() {Category = x, Weight = 0}).ToList();
+                categories.Select(x => new RecommendationScore {Category = x, Weight = 0}).ToList();
 
             try
             {
                 // Saving user to Db.
                 await ApplicationContext.Users.AddAsync(newUser);
                 await ApplicationContext.SaveChangesAsync();
-                await EmailService.SendAsync(newUser.Email, "OpenEvent", $"<h1>Please confirm your email</h1><a href={AppSettings.BaseUrl}/api/auth/confirm?id={newUser.Id}>confirm</a>", "Confirm Email");
+
+                // Sends confirmation Email
+                await EmailService.SendAsync(newUser.Email,
+                    $"<h1>Please confirm your email</h1><a href={AppSettings.BaseUrl}/api/auth/confirm?id={newUser.Id}>confirm</a>",
+                    "Confirm Email");
             }
             catch
             {
@@ -135,13 +114,7 @@ namespace OpenEvent.Web.Services
             }
         }
 
-        /// <summary>
-        /// Method for removing user.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>
-        /// A completed Task once deleted.
-        /// </returns>
+        /// <inheritdoc />
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         public async Task Destroy(Guid id)
         {
@@ -167,21 +140,15 @@ namespace OpenEvent.Web.Services
             }
         }
 
-        /// <summary>
-        /// Method for getting user data for the account page.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>
-        /// Task of type <see cref="UserAccountModel"/> representing all data needed for account page.
-        /// </returns>
+        /// <inheritdoc />
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         public async Task<UserAccountModel> Get(Guid id)
         {
-            var userRaw = ApplicationContext.Users
+            var userRaw = await ApplicationContext.Users
                 .Include(x => x.BankAccounts)
                 .Include(x => x.PaymentMethods)
                 .Include(x => x.Transactions).ThenInclude(x => x.Event)
-                .AsSplitQuery().AsNoTracking().FirstOrDefault(x => x.Id == id);
+                .AsSplitQuery().AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
             if (userRaw == null)
             {
@@ -214,9 +181,12 @@ namespace OpenEvent.Web.Services
                     : new List<TransactionViewModel>()
             };
 
+            // If the user has a stripe account
             if (user.StripeAccountId != null)
             {
-                var service = new AccountService();
+                var service = new Stripe.AccountService();
+                
+                // Gets users stripe account 
                 var stripeAccount = service.Get(user.StripeAccountId);
 
                 if (stripeAccount == null)
@@ -224,48 +194,42 @@ namespace OpenEvent.Web.Services
                     Logger.LogInformation("Stripe user not found");
                     throw new UserNotFoundException();
                 }
-
+                
                 user.StripeAccountInfo = Mapper.Map<StripeAccountInfo>(stripeAccount);
             }
 
             return user;
         }
 
+        /// <inheritdoc />
         public async Task<UsersAnalytics> GetAnalytics(Guid id)
         {
             var pageViewEvents = await ApplicationContext.PageViewEvents.Include(x => x.Event).AsSplitQuery()
                 .AsNoTracking().Where(x => x.User.Id == id).ToListAsync();
+            
             var searchEvents = await ApplicationContext.SearchEvents.Where(x => x.User.Id == id).AsSplitQuery()
                 .AsNoTracking().ToListAsync();
+            
             var recommendationScores = await ApplicationContext.RecommendationScores.Include(x => x.Category)
                 .AsSplitQuery().AsNoTracking().Where(x => x.User.Id == id)
                 .AsNoTracking().ToListAsync();
+            
             var ticketVerificationEvents = await ApplicationContext.VerificationEvents.Include(x => x.Ticket)
                 .Include(x => x.Event).AsSplitQuery().AsNoTracking().Where(x => x.User.Id == id)
                 .AsNoTracking().ToListAsync();
+            
 
+            // Maps all results into ordered lists
             return new UsersAnalytics
             {
-                SearchEvents = searchEvents.Select(x => Mapper.Map<SearchEventViewModel>(x))
-                    .OrderByDescending(x => x.Created).ToList(),
-                PageViewEvents = pageViewEvents.Select(x => Mapper.Map<PageViewEventViewModel>(x))
-                    .OrderByDescending(x => x.Created).ToList(),
-                RecommendationScores = recommendationScores.Select(x => Mapper.Map<RecommendationScoreViewModel>(x))
-                    .ToList(),
-                TicketVerificationEvents = ticketVerificationEvents
-                    .Select(x => Mapper.Map<TicketVerificationEventViewModel>(x)).OrderByDescending(x => x.Created)
-                    .ToList()
+                SearchEvents = searchEvents.Select(x => Mapper.Map<SearchEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
+                PageViewEvents = pageViewEvents.Select(x => Mapper.Map<PageViewEventViewModel>(x)).OrderByDescending(x => x.Created).ToList(),
+                RecommendationScores = recommendationScores.Select(x => Mapper.Map<RecommendationScoreViewModel>(x)).ToList(),
+                TicketVerificationEvents = ticketVerificationEvents.Select(x => Mapper.Map<TicketVerificationEventViewModel>(x)).OrderByDescending(x => x.Created).ToList()
             };
         }
 
-        /// <summary>
-        /// Method for updating the users avatar.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="avatar">byte array of bitmap image</param>
-        /// <returns>
-        /// Task of string encoded bitmap.
-        /// </returns>
+        /// <inheritdoc />
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         public async Task<string> UpdateAvatar(Guid id, byte[] avatar)
         {
@@ -283,6 +247,8 @@ namespace OpenEvent.Web.Services
             {
                 await ApplicationContext.SaveChangesAsync();
                 Logger.LogInformation("User's avatar updated");
+                
+                // converts byte array to string
                 return Encoding.UTF8.GetString(user.Avatar, 0, user.Avatar.Length);
             }
             catch
@@ -292,14 +258,7 @@ namespace OpenEvent.Web.Services
             }
         }
 
-        /// <summary>
-        /// Method for updating the users username.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <returns>
-        /// Task of username string.
-        /// </returns>
+        /// <inheritdoc />
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         /// <exception cref="UserNameAlreadyExistsException">Thrown when a user with that username already exists.</exception>
         public async Task<string> UpdateUserName(Guid id, string name)
@@ -335,54 +294,32 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        // Gets a user with id
         private async Task<User> User(Guid id)
         {
             return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        /// <summary>
-        /// Method for checking if a user with a username exists.
-        /// </summary>
-        /// <param name="username"></param>
-        /// <returns>
-        /// Task of bool if username exists.
-        /// </returns>
+        /// <inheritdoc />
         public async Task<bool> UserNameExists(string username)
         {
             return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.UserName == username) != null;
         }
 
-        /// <summary>
-        /// Method for checking if a user with a email exists.
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns>
-        /// Task of bool if email exists.
-        /// </returns>
+        /// <inheritdoc />
         public async Task<bool> EmailExists(string email)
         {
             return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email) != null;
         }
 
-        /// <summary>
-        /// Method for checking if a user with a phone number exists.
-        /// </summary>
-        /// <param name="phoneNumber"></param>
-        /// <returns>
-        /// Task of bool if phone number exists.
-        /// </returns>
+        /// <inheritdoc />
         public async Task<bool> PhoneExists(string phoneNumber)
         {
             return await ApplicationContext.Users.FirstOrDefaultAsync(x => x.PhoneNumber == phoneNumber) != null;
         }
 
-        /// <summary>
-        /// Updates users theme preference.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="isDarkMode"></param>
-        /// <returns></returns>
-        /// <exception cref="UserNotFoundException"></exception>
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown when the user is not found</exception>
         public async Task<bool> UpdateThemePreference(Guid id, bool isDarkMode)
         {
             var user = await User(id);
@@ -407,13 +344,8 @@ namespace OpenEvent.Web.Services
                 throw;
             }
         }
-
-        /// <summary>
-        /// Determines if the user owns the event supplied.
-        /// </summary>
-        /// <param name="eventId"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
+        
+        /// <inheritdoc />
         public async Task<bool> HostOwnsEvent(Guid eventId, Guid userId)
         {
             var e = (await ApplicationContext.Events.Include(x => x.Host)
@@ -422,13 +354,8 @@ namespace OpenEvent.Web.Services
             return e;
         }
 
-        /// <summary>
-        /// Updates users address.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="address"></param>
-        /// <returns></returns>
-        /// <exception cref="UserNotFoundException"></exception>
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown when the user is not found</exception>
         public async Task<Address> UpdateAddress(Guid id, Address address)
         {
             var user = await User(id);

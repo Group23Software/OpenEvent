@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OpenEvent.Web.Migrations
 {
+#pragma warning disable CS1591
     public partial class eventCreated : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,4 +23,5 @@ namespace OpenEvent.Web.Migrations
                 table: "Events");
         }
     }
+#pragma warning restore CS1591
 }

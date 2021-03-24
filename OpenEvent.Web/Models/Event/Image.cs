@@ -9,8 +9,19 @@ namespace OpenEvent.Web.Models.Event
     [Owned]
     public class Image
     {
+        /// <summary>
+        /// Unique id
+        /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Image label/caption
+        /// </summary>
         public string Label { get; set; }
+
+        /// <summary>
+        /// Bitmap encoded into byte array
+        /// </summary>
         public byte[] Source { get; set; }
     }
 }

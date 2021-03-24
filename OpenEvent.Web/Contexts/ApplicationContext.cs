@@ -25,6 +25,7 @@ namespace OpenEvent.Web.Contexts
         {
         }
 
+#pragma warning disable CS1591
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Ticket> Tickets { get; set; }
@@ -33,25 +34,30 @@ namespace OpenEvent.Web.Contexts
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
         public virtual DbSet<BankAccount> BankAccounts { get; set; }
-        
+
         public virtual DbSet<PageViewEvent> PageViewEvents { get; set; }
         public virtual DbSet<SearchEvent> SearchEvents { get; set; }
-        public virtual DbSet<TicketVerificationEvent> VerificationEvents { get; set; }  
+        public virtual DbSet<TicketVerificationEvent> VerificationEvents { get; set; }
         public virtual DbSet<RecommendationScore> RecommendationScores { get; set; }
         public virtual DbSet<Promo> Promos { get; set; }
+#pragma warning restore CS1591
 
+        /// <summary>
+        /// Configure extra relationships between entities
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ticket>()
                 .HasOne(x => x.Transaction)
                 .WithOne(x => x.Ticket)
                 .HasForeignKey<Transaction>(x => x.TicketId);
-            
+
 
             modelBuilder.Entity<Event>().OwnsMany(x => x.SocialLinks);
             modelBuilder.Entity<Event>().OwnsOne(x => x.Address);
             modelBuilder.Entity<Event>().OwnsMany(x => x.Images);
-            
+
             modelBuilder.Entity<User>().OwnsOne(x => x.Address);
 
             // Many to many event category

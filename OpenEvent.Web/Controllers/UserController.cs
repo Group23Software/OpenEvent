@@ -33,17 +33,17 @@ namespace OpenEvent.Web.Controllers
         /// <summary>
         /// Endpoint for creating a new user
         /// </summary>
-        /// <param name="newUserInput"></param>
+        /// <param name="newUserBody"></param>
         /// <returns>
         /// ActionResult of <see cref="UserViewModel"/> representing basic user information.
         /// BadRequest if any exceptions are caught.
         /// </returns>
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] NewUserInput newUserInput)
+        public async Task<ActionResult> Create([FromBody] NewUserBody newUserBody)
         {
             try
             {
-                await UserService.Create(newUserInput);
+                await UserService.Create(newUserBody);
                 return Ok();
             }
             catch (Exception e)
@@ -137,15 +137,12 @@ namespace OpenEvent.Web.Controllers
         {
             return Ok(await UserService.PhoneExists(phoneNumber));
         }
-
+        
         /// <summary>
-        /// Endpoint for updating a users username.
+        /// Endpoint for updating a users username
         /// </summary>
-        /// <param name="updateUserNameBody"><see cref="UpdateUserNameBody"/>></param>
-        /// <returns>
-        /// Ok status & username
-        /// BadRequest if any exceptions are caught. 
-        /// </returns>
+        /// <param name="updateUserNameBody"></param>
+        /// <returns>Ok and username if updated</returns>
         [HttpPost("updateUserName")]
         public async Task<ActionResult<string>> UpdateUserName([FromBody] UpdateUserNameBody updateUserNameBody)
         {
@@ -165,13 +162,10 @@ namespace OpenEvent.Web.Controllers
         }
 
         /// <summary>
-        /// Endpoint for updating a users avatar.
+        /// Endpoint for updating a users avatar
         /// </summary>
-        /// <param name="updateAvatarBody"><see cref="UpdateAvatarBody"/>></param>
-        /// <returns>
-        /// Ok status & avatar.
-        /// BadRequest if any exceptions are caught.
-        /// </returns>
+        /// <param name="updateAvatarBody"></param>
+        /// <returns>Ok and avatar string if updated</returns>
         [HttpPost("updateAvatar")]
         public async Task<ActionResult<string>> UpdateAvatar([FromBody] UpdateAvatarBody updateAvatarBody)
         {

@@ -8,6 +8,7 @@ using OpenEvent.Web.Contexts;
 
 namespace OpenEvent.Web.Migrations
 {
+#pragma warning disable CS1591
     [DbContext(typeof(ApplicationContext))]
     [Migration("20210302122053_ticketUses")]
     partial class ticketUses
@@ -666,4 +667,5 @@ namespace OpenEvent.Web.Migrations
 #pragma warning restore 612, 618
         }
     }
+#pragma warning restore CS1591
 }

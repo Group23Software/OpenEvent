@@ -16,7 +16,8 @@ namespace OpenEvent.Web.Controllers
     {
         private readonly IBankingService BankingService;
         private readonly ILogger<BankingController> Logger;
-        
+
+        /// <inheritdoc />
         public BankingController(IBankingService bankingService, ILogger<BankingController> logger)
         {
             BankingService = bankingService;

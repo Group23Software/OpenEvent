@@ -11,7 +11,6 @@ namespace OpenEvent.Test.Factories
     {
         public AnalyticsService Create(ApplicationContext context)
         {
-            var recommendationServiceMock = new Mock<IRecommendationService>();
 
             var serviceProvider = new Mock<IServiceProvider>();
             serviceProvider
@@ -29,12 +28,11 @@ namespace OpenEvent.Test.Factories
             serviceProvider
                 .Setup(x => x.GetService(typeof(IServiceScopeFactory)))
                 .Returns(serviceScopeFactory.Object);
-            
+
 
             return new AnalyticsService(
                 new Logger<AnalyticsService>(new LoggerFactory()),
-                serviceProvider.Object,
-                recommendationServiceMock.Object);
+                serviceProvider.Object);
         }
     }
 }

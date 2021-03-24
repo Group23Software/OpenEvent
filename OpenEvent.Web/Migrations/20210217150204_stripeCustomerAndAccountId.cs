@@ -2,6 +2,7 @@
 
 namespace OpenEvent.Web.Migrations
 {
+#pragma warning disable CS1591
     public partial class stripeCustomerAndAccountId : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,4 +31,5 @@ namespace OpenEvent.Web.Migrations
                 table: "Users");
         }
     }
+#pragma warning restore CS1591
 }

@@ -22,7 +22,7 @@ namespace OpenEvent.Test.Services.EventService
                 
                 var result = await service.GetForHost(new Guid("74831876-FC2E-4D03-99D8-B3872BDEFD5C"));
                 result.Should().NotBeNull();
-                result.Should().BeOfType<ActionResult<EventHostModel>>();
+                result.Should().BeOfType<EventHostModel>();
             }
         }
         

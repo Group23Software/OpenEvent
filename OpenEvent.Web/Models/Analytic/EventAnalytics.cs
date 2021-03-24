@@ -4,17 +4,24 @@ using OpenEvent.Web.Models.Recommendation;
 
 namespace OpenEvent.Web.Models.Analytic
 {
+    /// <summary>
+    /// All analytics associated with an event
+    /// </summary>
     public class EventAnalytics
     {
+        /// <summary>
+        /// List of all page views
+        /// </summary>
         public List<PageViewEventViewModel> PageViewEvents { get; set; }
+
+        /// <summary>
+        /// list of all ticket verification events
+        /// </summary>
         public List<TicketVerificationEventViewModel> TicketVerificationEvents { get; set; }
-        public List<AverageRecommendationScore> AverageRecommendationScores { get; set; }
+
+        /// <summary>
+        /// List of Demographics based on page view analytics
+        /// </summary>
         public List<Demographic> Demographics { get; set; }
-    }
-    
-    public class AverageRecommendationScore
-    {
-        public String CategoryName { get; set; }
-        public double Weight { get; set; }
     }
 }

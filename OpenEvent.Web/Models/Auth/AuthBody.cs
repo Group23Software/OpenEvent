@@ -7,6 +7,9 @@ namespace OpenEvent.Web.Models.Auth
     /// </summary>
     public class AuthBody
     {
+        /// <summary>
+        /// User id
+        /// </summary>
         public Guid Id { get; set; }
     }
 }

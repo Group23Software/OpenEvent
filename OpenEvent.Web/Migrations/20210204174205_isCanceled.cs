@@ -2,6 +2,8 @@
 
 namespace OpenEvent.Web.Migrations
 {
+#pragma warning disable CS1591
+#pragma warning disable CS1591
     public partial class isCanceled : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,4 +23,5 @@ namespace OpenEvent.Web.Migrations
                 table: "Events");
         }
     }
+#pragma warning restore CS1591
 }

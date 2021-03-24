@@ -7,7 +7,14 @@ namespace OpenEvent.Web.Models.User
     /// </summary>
     public class UpdateAvatarBody
     {
+        /// <summary>
+        /// User's id
+        /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Avatar bitmap image as byte array
+        /// </summary>
         public byte[] Avatar { get; set; }
     }
 }

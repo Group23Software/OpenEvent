@@ -2,6 +2,7 @@
 
 namespace OpenEvent.Web.Migrations
 {
+#pragma warning disable CS1591
     public partial class ticketsLeft : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,4 +22,5 @@ namespace OpenEvent.Web.Migrations
                 table: "Events");
         }
     }
+#pragma warning restore CS1591
 }

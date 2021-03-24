@@ -100,6 +100,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
         
+        /// <summary>
+        /// Endpoint to confirm a user email
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>ActionResult of user</returns>
         [AllowAnonymous]
         [HttpGet("confirm")]
         public async Task<ActionResult<UserViewModel>> Confirm(Guid id)
@@ -116,9 +121,14 @@ namespace OpenEvent.Web.Controllers
             }
         }
         
+        /// <summary>
+        /// Endpoint to send a forgot password email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>ActionResult of user</returns>
         [AllowAnonymous]
         [HttpGet("forgot")]
-        public async Task<ActionResult<UserViewModel>> Confirm(string email)
+        public async Task<ActionResult<UserViewModel>> Forgot(string email)
         {
             try
             {

@@ -2,6 +2,7 @@
 
 namespace OpenEvent.Web.Migrations
 {
+#pragma warning disable CS1591
     public partial class paymentMethodNickName : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,4 +53,5 @@ namespace OpenEvent.Web.Migrations
                 oldType: "bigint");
         }
     }
+#pragma warning restore CS1591
 }

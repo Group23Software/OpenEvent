@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -10,31 +9,24 @@ using OpenEvent.Web.Models.Analytic;
 
 namespace OpenEvent.Web.Services
 {
-    public interface IAnalyticsService
-    {
-        Task CaptureSearchAsync(CancellationToken cancellationToken, string keyword, string searchParams, Guid? userId,
-            DateTime created);
-        Task CapturePageViewAsync(CancellationToken cancellationToken, Guid eventId, Guid? userId, DateTime created);
-        Task CaptureTicketVerifyAsync(CancellationToken cancellationToken, Guid ticketId, Guid eventId, DateTime created);
-    }
-
-    /// <summary>
-    /// Service providing all analytics logic.
-    /// </summary>
+    /// <inheritdoc />
     public class AnalyticsService : IAnalyticsService
     {
         private readonly ILogger<AnalyticsService> Logger;
         private readonly IServiceProvider ServiceProvider;
-        private readonly IRecommendationService RecommendationService;
 
-        public AnalyticsService(ILogger<AnalyticsService> logger, IServiceProvider serviceProvider,
-            IRecommendationService recommendationService)
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="serviceProvider"></param>
+        public AnalyticsService(ILogger<AnalyticsService> logger, IServiceProvider serviceProvider)
         {
             Logger = logger;
             ServiceProvider = serviceProvider;
-            RecommendationService = recommendationService;
         }
-
+        
+        /// <inheritdoc />
         public async Task CaptureSearchAsync(CancellationToken cancellationToken, string keyword, string searchParams,
             Guid? userId, DateTime created)
         {
@@ -66,6 +58,7 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task CapturePageViewAsync(CancellationToken cancellationToken, Guid eventId, Guid? userId,
             DateTime created)
         {
@@ -97,6 +90,7 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task CaptureTicketVerifyAsync(CancellationToken cancellationToken, Guid ticketId, Guid eventId,
             DateTime created)
         {
@@ -135,6 +129,7 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        // Saves all tracked entities
         private async Task Save(ApplicationContext context, AnalyticEvent analyticEvent)
         {
             await context.AddAsync(analyticEvent);

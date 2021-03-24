@@ -17,19 +17,8 @@ using OpenEvent.Web.Models.Popularity;
 namespace OpenEvent.Web.Services
 {
     // TODO: converting lists to dictionaries would increase performance
-    public interface IPopularityService
-    {
-        Task<List<PopularEventViewModel>> GetPopularEvents();
-        Task<List<PopularCategoryViewModel>> GetPopularCategories();
-        Task PopulariseEvent(CancellationToken cancellationToken, Guid eventId, DateTime created);
-        Task PopulariseCategory(CancellationToken cancellationToken, Guid categoryId, DateTime created);
-        bool DownGradeEvent(Guid eventId);
-        bool DownGradeCategory(Guid categoryId);
-        List<PopularityRecord<Guid>> GetEvents();
-        List<PopularityRecord<Guid>> GetCategories();
-        void CommunicateState();
-    }
 
+    /// <inheritdoc />
     public class PopularityService : IPopularityService
     {
         private readonly ILogger<PopularityService> Logger;
@@ -37,6 +26,13 @@ namespace OpenEvent.Web.Services
         private readonly IMapper Mapper;
         private readonly IHubContext<PopularityHub> PopularityHubContext;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="serviceProvider"></param>
+        /// <param name="mapper"></param>
+        /// <param name="popularityHubContext"></param>
         public PopularityService(ILogger<PopularityService> logger, IServiceProvider serviceProvider, IMapper mapper,
             IHubContext<PopularityHub> popularityHubContext)
         {
@@ -46,6 +42,7 @@ namespace OpenEvent.Web.Services
             PopularityHubContext = popularityHubContext;
         }
 
+        /// <inheritdoc />
         public async Task<List<PopularEventViewModel>> GetPopularEvents()
         {
             using var scope = ServiceProvider.CreateScope();
@@ -73,6 +70,7 @@ namespace OpenEvent.Web.Services
             }).OrderBy(x => x.StartLocal).ToList();
         }
 
+        /// <inheritdoc />
         public async Task<List<PopularCategoryViewModel>> GetPopularCategories()
         {
             using var scope = ServiceProvider.CreateScope();
@@ -103,6 +101,7 @@ namespace OpenEvent.Web.Services
             }).ToList();
         }
 
+        /// <inheritdoc />
         public async Task PopulariseEvent(CancellationToken cancellationToken, Guid eventId, DateTime created)
         {
             if (!cancellationToken.IsCancellationRequested)
@@ -125,6 +124,7 @@ namespace OpenEvent.Web.Services
                     return;
                 }
 
+                // if the event is already popular
                 if (popularityRecord != null)
                 {
                     Logger.LogInformation("Event {Id} is already popular, making more popular", eventId);
@@ -134,7 +134,7 @@ namespace OpenEvent.Web.Services
                 }
                 else
                 {
-                    EventRecords.Add(new PopularityRecord<Guid>
+                    EventRecords.Add(new PopularityRecord
                     {
                         Added = created,
                         Updated = created,
@@ -151,12 +151,14 @@ namespace OpenEvent.Web.Services
                     }
                 }
 
+                // sends popular events to all web-socket clients
                 await PopularityHubContext.Clients.All.SendAsync("events", await GetPopularEvents());
 
                 Logger.LogInformation("Popularised event {Id}", eventId);
             }
         }
-
+        
+        /// <inheritdoc />
         public async Task PopulariseCategory(CancellationToken cancellationToken, Guid categoryId, DateTime created)
         {
             if (!cancellationToken.IsCancellationRequested)
@@ -164,54 +166,61 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("Popularising category {Id}", categoryId);
 
                 var popularityRecord = CategoryRecords.FirstOrDefault(x => x.Record == categoryId);
+                
+                // if the category is already popular
                 if (popularityRecord != null)
                 {
                     Logger.LogInformation("Category {Id} is already popular, making more popular", categoryId);
 
                     popularityRecord.Updated = created;
                     popularityRecord.Score++;
-
-                    await PopularityHubContext.Clients.All.SendAsync("categories", await GetPopularCategories());
                 }
-
-                using var scope = ServiceProvider.CreateScope();
-                var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-
-                var c = await context.Categories.FirstOrDefaultAsync(x => x.Id == categoryId, cancellationToken);
-
-                if (c == null)
+                else
                 {
-                    Logger.LogInformation("Category not found");
-                    return;
+                    using var scope = ServiceProvider.CreateScope();
+                    var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+
+                    var c = await context.Categories.FirstOrDefaultAsync(x => x.Id == categoryId, cancellationToken);
+
+                    if (c == null)
+                    {
+                        Logger.LogInformation("Category not found");
+                        return;
+                    }
+
+                    CategoryRecords.Add(new PopularityRecord
+                    {
+                        Added = created,
+                        Updated = created,
+                        Record = categoryId,
+                        Score = 1
+                    });
+
                 }
-
-                CategoryRecords.Add(new PopularityRecord<Guid>
-                {
-                    Added = created,
-                    Updated = created,
-                    Record = categoryId,
-                    Score = 1
-                });
-
+                
+                // sends popular categories to all web-socket clients
                 await PopularityHubContext.Clients.All.SendAsync("categories", await GetPopularCategories());
 
                 Logger.LogInformation("Popularised category {Id}", categoryId);
             }
         }
 
+        /// <inheritdoc />
         public bool DownGradeEvent(Guid eventId)
         {
             Logger.LogInformation("Downgrading {Id}'s popularity", eventId);
             return Downgrade(ref EventRecords, eventId);
         }
-
+        
+        /// <inheritdoc />
         public bool DownGradeCategory(Guid categoryId)
         {
             Logger.LogInformation("Downgrading {Id}'s popularity", categoryId);
             return Downgrade(ref CategoryRecords, categoryId);
         }
 
-        private bool Downgrade(ref List<PopularityRecord<Guid>> popularityRecords, Guid id)
+        // Generic method for downgrading event and categories
+        private bool Downgrade(ref List<PopularityRecord> popularityRecords, Guid id)
         {
             var eventRecord = popularityRecords.FirstOrDefault(x => x.Record == id);
             if (eventRecord == null)
@@ -230,17 +239,20 @@ namespace OpenEvent.Web.Services
 
             return false;
         }
-
-        public List<PopularityRecord<Guid>> GetEvents()
+        
+        /// <inheritdoc />
+        public List<PopularityRecord> GetEvents()
         {
             return EventRecords;
         }
 
-        public List<PopularityRecord<Guid>> GetCategories()
+        /// <inheritdoc />
+        public List<PopularityRecord> GetCategories()
         {
             return CategoryRecords;
         }
 
+        /// <inheritdoc />
         public void CommunicateState()
         {
             Task.Run(async () =>
@@ -248,7 +260,7 @@ namespace OpenEvent.Web.Services
             Task.Run(async () => await PopularityHubContext.Clients.All.SendAsync("events", await GetPopularEvents()));
         }
 
-        private List<PopularityRecord<Guid>> EventRecords = new();
-        private List<PopularityRecord<Guid>> CategoryRecords = new();
+        private List<PopularityRecord> EventRecords = new();
+        private List<PopularityRecord> CategoryRecords = new();
     }
 }

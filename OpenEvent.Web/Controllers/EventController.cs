@@ -8,6 +8,7 @@ using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
+using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Services;
 using OpenEvent.Web.UserOwnsEvent;
 
@@ -25,6 +26,7 @@ namespace OpenEvent.Web.Controllers
         private readonly IRecommendationService RecommendationService;
         private readonly IWorkQueue WorkQueue;
 
+        /// <inheritdoc />
         public EventController(IEventService eventService, ILogger<EventController> logger,
             IRecommendationService recommendationService, IWorkQueue workQueue)
         {
@@ -184,6 +186,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint for getting a list of recommended events based on the user
+        /// </summary>
+        /// <param name="id">User's id</param>
+        /// <returns>List of events</returns>
         [HttpGet("explore")]
         public async Task<ActionResult<List<EventViewModel>>> Explore(Guid id)
         {
@@ -198,6 +205,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint for getting all the events analytics
+        /// </summary>
+        /// <param name="id">Event id</param>
+        /// <returns>Event analytics <see cref="EventAnalytics"/></returns>
         [HttpGet("analytics")]
         public async Task<ActionResult<EventAnalytics>> GetAnalytics(Guid id)
         {
@@ -212,8 +224,14 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint for down voting user's recommendation scores based on the event
+        /// </summary>
+        /// <param name="userId">User's id</param>
+        /// <param name="eventId">Event's id</param>
+        /// <returns>Ok</returns>
         [HttpPost("downvote")]
-        public async Task<ActionResult> DownVote(Guid userId, Guid eventId)
+        public ActionResult DownVote(Guid userId, Guid eventId)
         {
             WorkQueue.QueueWork(token =>
                 RecommendationService.InfluenceAsync(token, userId, eventId, Influence.DownVote, DateTime.Now));

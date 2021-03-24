@@ -1,17 +1,22 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using OpenEvent.Web.Exceptions;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.UserOwnsEvent
 {
+    /// <summary>
+    /// Filter that determines if a user owns an event based on request headers
+    /// </summary>
     public class UserOwnsEventFilter : IAsyncAuthorizationFilter
     {
         private readonly IUserService UserService;
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="userService"></param>
         public UserOwnsEventFilter(IUserService userService)
         {
             UserService = userService;
@@ -24,10 +29,13 @@ namespace OpenEvent.Web.UserOwnsEvent
         /// <returns></returns>
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            Debug.WriteLine(context);
             IHeaderDictionary headers = context.HttpContext.Request.Headers;
+            
+            // Extracts headers from the request
             string eventId = headers["eventId"];
             string userId = headers["userId"];
+
+            // If headers don't exist return unauthorised
             if (eventId == null || userId == null || eventId == string.Empty || userId == string.Empty)
             {
                 context.Result = new UnauthorizedResult();
@@ -38,16 +46,15 @@ namespace OpenEvent.Web.UserOwnsEvent
             {
                 var userOwns = await UserService.HostOwnsEvent(Guid.Parse(eventId), Guid.Parse(userId));
 
+                // If the user doesn't own the event return unauthorised
                 if (!userOwns)
                 {
                     context.Result = new UnauthorizedResult();
-                    return;
                 }
             }
             catch
             {
                 context.Result = new UnauthorizedResult();
-                return;
             }
         }
     }

@@ -15,21 +15,7 @@ using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Services
 {
-    /// <summary>
-    /// AuthService interface
-    /// </summary>
-    public interface IAuthService
-    {
-        Task<UserViewModel> Login(string email, string password, bool remember);
-        Task<UserViewModel> Authenticate(Guid id);
-        Task ForgotPassword(string email);
-        Task UpdatePassword(Guid id, string password);
-        Task ConfirmEmail(Guid id);
-    }
-
-    /// <summary>
-    /// Service providing all logic for user authentication
-    /// </summary>
+    /// <inheritdoc />
     public class AuthService : IAuthService
     {
         private readonly ILogger<AuthService> Logger;
@@ -39,7 +25,7 @@ namespace OpenEvent.Web.Services
         private readonly IEmailService EmailService;
 
         /// <summary>
-        /// AuthService default constructor
+        /// Default constructor
         /// </summary>
         /// <param name="context"><see cref="ApplicationContext"/>></param>
         /// <param name="logger"></param>
@@ -54,16 +40,9 @@ namespace OpenEvent.Web.Services
             Mapper = mapper;
             EmailService = emailService;
         }
-        
-        /// <summary>
-        /// Main login method.
-        /// </summary>
-        /// <param name="email"></param>
-        /// <param name="password"></param>
-        /// <param name="remember"></param>
-        /// <returns>
-        /// A task of type <see cref="UserViewModel"/> representing basic user information.
-        /// </returns>
+
+
+        /// <inheritdoc />
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         /// <exception cref="IncorrectPasswordException">Thrown when the password is incorrect.</exception>
         public async Task<UserViewModel> Login(string email, string password, bool remember)
@@ -84,13 +63,14 @@ namespace OpenEvent.Web.Services
 
             var hasher = PasswordHasher();
 
+            // checks the stored hash with the input password hashed
             if (hasher.VerifyHashedPassword(user, user.Password, password) == PasswordVerificationResult.Failed)
             {
                 Logger.LogInformation("Incorrect password");
                 throw new IncorrectPasswordException();
             }
 
-            UserViewModel userViewModel = new UserViewModel()
+            UserViewModel userViewModel = new UserViewModel
             {
                 Id = user.Id,
                 Avatar = Encoding.UTF8.GetString(user.Avatar, 0, user.Avatar.Length),
@@ -102,6 +82,7 @@ namespace OpenEvent.Web.Services
             return userViewModel;
         }
 
+        // Generates a JWT token for the user for a number of days
         private string GenerateToken(User user, int days)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -120,13 +101,7 @@ namespace OpenEvent.Web.Services
             return tokenHandler.WriteToken(token);
         }
 
-        /// <summary>
-        /// Method for authenticating the user once a token has been obtained.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>
-        /// A task of type <see cref="UserViewModel"/> representing basic user information.
-        /// </returns>
+        /// <inheritdoc />
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         public async Task<UserViewModel> Authenticate(Guid id)
         {
@@ -147,6 +122,8 @@ namespace OpenEvent.Web.Services
             return Mapper.Map<UserViewModel>(user);
         }
         
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown when the user is not found</exception>
         public async Task ForgotPassword(string email)
         {
             var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Email == email);
@@ -159,7 +136,7 @@ namespace OpenEvent.Web.Services
 
             try
             {
-                await EmailService.SendAsync(user.Email, "OpenEvent",
+                await EmailService.SendAsync(user.Email,
                     $"<h1>Reset your password</h1><a href='{AppSettings.BaseUrl}/forgot/{user.Id}'>Reset Password</a>", "Forgot Password");
             }
             catch
@@ -169,14 +146,7 @@ namespace OpenEvent.Web.Services
             }
         }
 
-        /// <summary>
-        /// Method for updating updating the user's password.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="password"></param>
-        /// <returns>
-        /// A completed task once updated.
-        /// </returns>
+        /// <inheritdoc />
         /// <exception cref="UserNotFoundException">Thrown when user can't be found.</exception>
         public async Task UpdatePassword(Guid id, string password)
         {
@@ -203,6 +173,8 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException"></exception>
         public async Task ConfirmEmail(Guid id)
         {
             var user = await ApplicationContext.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -226,6 +198,7 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        // Returns a password hasher for hashing and comparing passwords
         private static PasswordHasher<User> PasswordHasher()
         {
             PasswordHasher<User> hasher = new PasswordHasher<User>(

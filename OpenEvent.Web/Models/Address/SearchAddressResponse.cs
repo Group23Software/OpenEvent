@@ -1,5 +1,6 @@
 namespace OpenEvent.Web.Models.Address
 {
+#pragma warning disable CS1591
     public class SearchAddressResponse
     {
         public SearchAddressResult[] Results { get; set; }
@@ -26,4 +27,5 @@ namespace OpenEvent.Web.Models.Address
     public class SearchResultAddress
     {
     }
+#pragma warning restore CS1591
 }

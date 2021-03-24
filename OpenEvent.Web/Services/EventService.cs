@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -20,32 +18,13 @@ using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.Promo;
+using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.Transaction;
 
 namespace OpenEvent.Web.Services
 {
-    public interface IEventService
-    {
-        // Host methods
-        Task<EventViewModel> Create(CreateEventBody createEventBody);
-        Task Cancel(Guid id);
-        Task<List<EventHostModel>> GetAllHosts(Guid hostId);
-
-        //public methods
-        Task<EventDetailModel> GetForPublic(Guid id, Guid? userId);
-        Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters, Guid? userId);
-
-        Task<List<Category>> GetAllCategories();
-        Task<ActionResult<EventHostModel>> GetForHost(Guid id);
-        Task Update(UpdateEventBody updateEventBody);
-        Task<List<EventViewModel>> GetRecommended(Guid id);
-        Task<EventAnalytics> GetAnalytics(Guid id);
-    }
-
-    /// <summary>
-    /// Service providing all event logic.
-    /// </summary>
+    /// <inheritdoc />
     public class EventService : IEventService
     {
         private readonly ILogger<EventService> Logger;
@@ -59,6 +38,19 @@ namespace OpenEvent.Web.Services
         private readonly IWorkQueue WorkQueue;
         private readonly IPopularityService PopularityService;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="logger"></param>
+        /// <param name="mapper"></param>
+        /// <param name="httpClient"></param>
+        /// <param name="appSettings"></param>
+        /// <param name="analyticsService"></param>
+        /// <param name="recommendationService"></param>
+        /// <param name="distributedCache"></param>
+        /// <param name="workQueue"></param>
+        /// <param name="popularityService"></param>
         public EventService(ApplicationContext context, ILogger<EventService> logger, IMapper mapper,
             HttpClient httpClient, IOptions<AppSettings> appSettings, IAnalyticsService analyticsService,
             IRecommendationService recommendationService, IDistributedCache distributedCache,
@@ -76,13 +68,8 @@ namespace OpenEvent.Web.Services
             PopularityService = popularityService;
         }
 
-        /// <summary>
-        /// Creates a new event.
-        /// Gets event location from azure maps API.
-        /// </summary>
-        /// <param name="createEventBody"></param>
-        /// <returns></returns>
-        /// <exception cref="UserNotFoundException"></exception>
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown when the user is not found</exception>
         public async Task<EventViewModel> Create(CreateEventBody createEventBody)
         {
             var host = await ApplicationContext.Users.AsSplitQuery().Include(x => x.HostedEvents)
@@ -94,6 +81,7 @@ namespace OpenEvent.Web.Services
                 throw new UserNotFoundException();
             }
 
+            // get coordinates of the address
             var cords = await GetAddressCords(createEventBody.Address);
             createEventBody.Address.Lat = cords.Lat;
             createEventBody.Address.Lon = cords.Lon;
@@ -122,6 +110,7 @@ namespace OpenEvent.Web.Services
                 Finished = false
             };
 
+            // generate tickets for event
             List<Ticket> tickets = new List<Ticket>();
             for (int i = 0; i < createEventBody.NumberOfTickets; i++)
             {
@@ -159,6 +148,7 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        // Request the Azure maps api with address to get coordinates
         private async Task<CoordinateAbbreviated> GetAddressCords(Address address)
         {
             var addressAsString = $"{address.AddressLine1},{address.City},{address.CountryName},{address.PostalCode}";
@@ -196,12 +186,8 @@ namespace OpenEvent.Web.Services
             throw new AddressNotFoundException();
         }
 
-        /// <summary>
-        /// Sets IsCanceled true.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="EventNotFoundException"></exception>
+
+        /// <exception cref="EventNotFoundException">Thrown if the event is not found</exception>
         public async Task Cancel(Guid id)
         {
             var e = await GetEvent(id);
@@ -226,25 +212,22 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        // Gets an event of id
         private async Task<Event> GetEvent(Guid id)
         {
             return await ApplicationContext.Events.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        /// <summary>
-        /// Gets all of the users hosted events.
-        /// </summary>
-        /// <param name="hostId"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task<List<EventHostModel>> GetAllHosts(Guid hostId)
         {
-            var events = ApplicationContext.Events
+            var events = await Task.Run(() => ApplicationContext.Events
                 .Include(x => x.EventCategories).ThenInclude(x => x.Category)
                 .Include(x => x.Tickets)
                 .Include(x => x.Transactions)
                 .Include(x => x.Host)
                 .Include(x => x.Promos)
-                .AsSplitQuery().AsNoTracking().AsEnumerable();
+                .AsSplitQuery().AsNoTracking().AsEnumerable());
 
             events = events.Where(x => x.Host.Id == hostId && !x.isCanceled);
 
@@ -294,13 +277,8 @@ namespace OpenEvent.Web.Services
                 }).ToList();
         }
 
-        /// <summary>
-        /// Gets all public facing data for an event.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        /// <exception cref="EventNotFoundException"></exception>
+        /// <inheritdoc />
+        /// <exception cref="EventNotFoundException">Thrown if the event is not found</exception>
         public async Task<EventDetailModel> GetForPublic(Guid id, Guid? userId)
         {
             var e = await CacheHelpers.Get<Event>(DistributedCache, id.ToString(), "PublicEvent");
@@ -330,22 +308,15 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("Found event: {ID} in cache", id);
             }
 
-
-            // var t = (DateTime.Now - e.Created);
-            // Logger.LogInformation("creating page views for {Days} days for {UserId}", t.TotalDays, userId);
-            // for (int i = 0; i < t.Days; i++)
-            // {
-            //     for (int j = 0; j < i; j++)
-            //     {
-            //         var date = DateTime.Now.AddDays(-i);
-            //         WorkQueue.QueueWork(token => AnalyticsService.CapturePageViewAsync(token, e.Id, userId, date));
-            //     }
-            // }
-
+            // queue analytics, recommendation and popularity work
             WorkQueue.QueueWork(token => AnalyticsService.CapturePageViewAsync(token, e.Id, userId, DateTime.Now));
+
             if (userId != null)
+            {
                 WorkQueue.QueueWork(token =>
                     RecommendationService.InfluenceAsync(token, (Guid) userId, e.Id, Influence.PageView, DateTime.Now));
+            }
+
             WorkQueue.QueueWork(token => PopularityService.PopulariseEvent(token, e.Id, DateTime.Now));
 
             return new EventDetailModel
@@ -371,13 +342,7 @@ namespace OpenEvent.Web.Services
             };
         }
 
-        /// <summary>
-        /// Searches events.
-        /// </summary>
-        /// <param name="keyword"></param>
-        /// <param name="filters"></param>
-        /// <param name="userId"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task<List<EventViewModel>> Search(string keyword, List<SearchFilter> filters, Guid? userId)
         {
             List<Guid> searchCategories = filters.Where(x => x.Key == SearchParam.Category)
@@ -432,6 +397,7 @@ namespace OpenEvent.Web.Services
 
                 Logger.LogInformation("Caching search");
 
+                // cache specific search
                 await CacheHelpers.Set<List<Event>>(DistributedCache, searchKey, "Search", events.ToList());
             }
             else
@@ -448,35 +414,30 @@ namespace OpenEvent.Web.Services
             return events.Select(e => Mapper.Map<EventViewModel>(e)).ToList();
         }
 
+        // Returns if the event is within an area 
         private static bool EventDistance(double lat, double lon, double[] cords)
         {
-            return CalculateDistance.Calculate(new Location()
+            return CalculateDistance.Calculate(new Location
             {
                 Latitude = lat,
                 Longitude = lon
-            }, new Location()
+            }, new Location
             {
                 Latitude = cords[0],
                 Longitude = cords[1]
             }) < cords[2];
         }
 
-        /// <summary>
-        /// Gets all event categories.
-        /// </summary>
-        /// <returns></returns>
+
+        /// <inheritdoc />
         public Task<List<Category>> GetAllCategories()
         {
             return ApplicationContext.Categories.ToListAsync();
         }
 
-        /// <summary>
-        /// Gets all data for event.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="EventNotFoundException"></exception>
-        public async Task<ActionResult<EventHostModel>> GetForHost(Guid id)
+        /// <inheritdoc />
+        /// <exception cref="EventNotFoundException">Thrown if the event was not found</exception>
+        public async Task<EventHostModel> GetForHost(Guid id)
         {
             var e = await ApplicationContext.Events
                 .Include(x => x.EventCategories).ThenInclude(x => x.Category)
@@ -538,12 +499,8 @@ namespace OpenEvent.Web.Services
             ;
         }
 
-        /// <summary>
-        /// Updates the event.
-        /// </summary>
-        /// <param name="updateEventBody"></param>
-        /// <returns></returns>
-        /// <exception cref="EventNotFoundException"></exception>
+        /// <inheritdoc />
+        /// <exception cref="EventNotFoundException">Thrown if the event was not found</exception>
         public async Task Update(UpdateEventBody updateEventBody)
         {
             var e = await ApplicationContext.Events.Include(x => x.EventCategories)
@@ -590,6 +547,7 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<List<EventViewModel>> GetRecommended(Guid id)
         {
             var recommendationScores = await ApplicationContext.RecommendationScores.AsNoTracking().AsSplitQuery()
@@ -604,6 +562,7 @@ namespace OpenEvent.Web.Services
             Dictionary<string, double> recommendationDictionary =
                 recommendationScores.ToDictionary(x => x.Category.Name, x => x.Weight);
 
+            // average recommendation score, used as minimum recommendation score
             var averageScore = recommendationScores.Select(x => x.Weight).Average();
 
             var recommendedEvents = ApplicationContext.Events.AsSplitQuery().Include(x => x.EventCategories)
@@ -616,24 +575,21 @@ namespace OpenEvent.Web.Services
             ;
         }
 
+        /// <inheritdoc />
         public async Task<EventAnalytics> GetAnalytics(Guid id)
         {
-            // var e = await ApplicationContext.Events.AsNoTracking().AsSplitQuery().Include(x => x.EventCategories).FirstOrDefaultAsync(x => x.Id == id);
-
             var pageViewEvents = await ApplicationContext.PageViewEvents
                 .Include(x => x.User)
                 .AsNoTracking().AsSplitQuery()
                 .Where(x => x.Event.Id == id).ToListAsync();
-            var ticketVerificationEvents = await ApplicationContext.VerificationEvents.AsNoTracking().AsSplitQuery()
-                .Where(x => x.Event.Id == id).ToListAsync();
-            // var recommendationScores = await ApplicationContext.RecommendationScores
-            // .Where(x => e.EventCategories.Any(c => c.CategoryId == x.Category.Id)).ToListAsync();
+
+            var ticketVerificationEvents = await ApplicationContext.VerificationEvents
+                .AsNoTracking().AsSplitQuery().Where(x => x.Event.Id == id).ToListAsync();
 
             var demographics = pageViewEvents.Where(x => x.User != null).GroupBy(x => x.User.DateOfBirth).Select(x =>
-                new Demographic()
+                new Demographic
                 {
                     Age = (DateTime.Now - x.Key).Days / 365,
-                    // Age = new DateTime(DateTime.Now.Subtract(x.Key).Ticks).Year,
                     Count = x.Count()
                 }).ToList();
 
@@ -648,12 +604,14 @@ namespace OpenEvent.Web.Services
             };
         }
 
-        private bool ShouldRecommend(Event e, Dictionary<string, double> scores, double averageScore)
+        // returns true if the event should be recommended
+        private static bool ShouldRecommend(Event e, Dictionary<string, double> scores, double averageScore)
         {
             List<double> eScores = new List<double>();
             if (e.EventCategories.Any())
             {
                 e.EventCategories.ForEach(categoryEvent => { eScores.Add(scores[categoryEvent.Category.Name]); });
+                // if the score is greater than or equal to the average then return true
                 if (eScores.Average() >= averageScore) return true;
             }
 

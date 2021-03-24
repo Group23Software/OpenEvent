@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OpenEvent.Web.Migrations
 {
+#pragma warning disable CS1591
+#pragma warning disable CS1591
     public partial class update : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -117,4 +119,5 @@ namespace OpenEvent.Web.Migrations
                 onDelete: ReferentialAction.Cascade);
         }
     }
+#pragma warning restore CS1591
 }

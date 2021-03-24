@@ -11,8 +11,8 @@ namespace OpenEvent.Web.Helpers
         /// <summary>
         /// Method for calculating the distance between two coordinates.
         /// </summary>
-        /// <param name="point1"></param>
-        /// <param name="point2"></param>
+        /// <param name="point1">Geo coordinate</param>
+        /// <param name="point2">Geo coordinate</param>
         /// <returns>
         /// Returns the distance in meters.
         /// </returns>

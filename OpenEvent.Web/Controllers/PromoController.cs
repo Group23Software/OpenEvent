@@ -7,6 +7,7 @@ using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
 {
+    /// <inheritdoc />
     [ApiController]
     [Route("api/[controller]")]
     public class PromoController : ControllerBase
@@ -14,12 +15,18 @@ namespace OpenEvent.Web.Controllers
         private readonly ILogger<PromoController> Logger;
         private readonly IPromoService PromoService;
 
+        /// <inheritdoc />
         public PromoController(ILogger<PromoController> logger, IPromoService promoService)
         {
             Logger = logger;
             PromoService = promoService;
         }
 
+        /// <summary>
+        /// Endpoint for creating a new promo
+        /// </summary>
+        /// <param name="createPromoBody"></param>
+        /// <returns>Newly created promo</returns>
         [HttpPost]
         public async Task<ActionResult<PromoViewModel>> Create(CreatePromoBody createPromoBody)
         {
@@ -35,6 +42,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint for updating a promo
+        /// </summary>
+        /// <param name="updatePromoBody"></param>
+        /// <returns>Updated promo</returns>
         [HttpPost("update")]
         public async Task<ActionResult<PromoViewModel>> Update(UpdatePromoBody updatePromoBody)
         {
@@ -50,6 +62,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint for destroying a promo
+        /// </summary>
+        /// <param name="id">Promo id</param>
+        /// <returns>Ok if destroyed</returns>
         [HttpDelete]
         public async Task<ActionResult> Destroy(Guid id)
         {

@@ -7,7 +7,14 @@ namespace OpenEvent.Web.Models.Category
     /// </summary>
     public class CategoryViewModel
     {
+        /// <summary>
+        /// Category's id
+        /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Name of category eg: Music
+        /// </summary>
         public string Name { get; set; }
     }
 }

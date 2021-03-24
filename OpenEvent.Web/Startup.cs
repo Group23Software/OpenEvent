@@ -21,8 +21,16 @@ using Prometheus;
 
 namespace OpenEvent.Web
 {
+    /// <summary>
+    /// Class to configuring services and the app
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="env"></param>
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
@@ -32,6 +40,10 @@ namespace OpenEvent.Web
         private IConfiguration Configuration { get; }
         private IWebHostEnvironment Environment { get; }
 
+        /// <summary>
+        /// All dependency injection configuration happens here
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             // Get app settings from appsettings.json
@@ -39,13 +51,13 @@ namespace OpenEvent.Web
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
 
+            // if in development use local db
             if (Environment.IsDevelopment())
             {
                 appSettings.ConnectionString = appSettings.LocalConnectionString;
             }
 
             services.AddResponseCompression(options => { options.Providers.Add<GzipCompressionProvider>(); });
-
             services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
 
             // Add cors so angular dev server can make requests.
@@ -88,6 +100,7 @@ namespace OpenEvent.Web
             // Add automapping configuration.
             services.AddAutoMapper(typeof(Startup));
 
+            // Add signalR with pascal naming scheme for web-sockets 
             services.AddSignalR(options =>
             {
                 
@@ -96,17 +109,18 @@ namespace OpenEvent.Web
                 options.PayloadSerializerOptions.PropertyNamingPolicy = null;
             });
 
+            // Register singleton services (singletons are instantiated once and only) 
             services.AddSingleton<IWorkQueue, WorkQueue>();
-            services.AddHostedService<BackGroundWorkService>();
-            services.AddHostedService<PopularityWatchDog>();
-
             services.AddSingleton<IAnalyticsService, AnalyticsService>();
             services.AddSingleton<IRecommendationService, RecommendationService>();
             services.AddSingleton<IPopularityService, PopularityService>();
-
             services.AddSingleton<IEmailService, EmailService>();
+            
+            // Register hosted services for background work
+            services.AddHostedService<BackGroundWorkService>();
+            services.AddHostedService<PopularityWatchDog>();
 
-            // Add services.
+            // Register scoped services (scoped services are instantiated on every request)
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEventService, EventService>();
@@ -115,13 +129,15 @@ namespace OpenEvent.Web
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<IPromoService, PromoService>();
-
-            services.AddHttpClient<IEventService, EventService>();
-
+            
             services.AddScoped<UserOwnsEventFilter>();
+
+            // Inject http client into the event service
+            services.AddHttpClient<IEventService, EventService>();
 
             services.AddLogging();
 
+            // Registering all controllers
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -140,8 +156,12 @@ namespace OpenEvent.Web
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

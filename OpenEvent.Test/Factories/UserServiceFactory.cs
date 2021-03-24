@@ -25,12 +25,9 @@ namespace OpenEvent.Test.Factories
                     "sk_test_51ILW9dK2ugLXrgQXeYfqg8i0QGAgLXndihLXovHgu47adBimPAedvIwzfr95uffR9TiyleGFAPY7hfSI9mhdmYBF00hkxlAQMv"
             });
 
-            var authService = new AuthService(context,
-                new Logger<AuthService>(new LoggerFactory()), appSettings, mapper, emailServiceMock.Object);
-
             return new UserService(context,
                 new Logger<UserService>(new LoggerFactory()),
-                mapper, authService, appSettings, emailServiceMock.Object);
+                mapper, appSettings, emailServiceMock.Object);
         }
     }
 }

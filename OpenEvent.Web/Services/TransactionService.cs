@@ -18,31 +18,30 @@ using Event = OpenEvent.Web.Models.Event.Event;
 
 namespace OpenEvent.Web.Services
 {
-    public interface ITransactionService
-    {
-        Task<TransactionViewModel> CreateIntent(CreateIntentBody createIntentBody);
-        Task<TransactionViewModel> InjectPaymentMethod(InjectPaymentMethodBody injectPaymentMethodBody);
-        Task<TransactionViewModel> ConfirmIntent(ConfirmIntentBody confirmIntentBody);
-        Task CaptureIntentHook(Stripe.Event @event); // Called by payment intent webhook
-        Task CancelIntent(CancelIntentBody cancelIntentBody);
-    }
-
+    /// <inheritdoc />
     public class TransactionService : ITransactionService
     {
         private readonly ILogger<TransactionService> Logger;
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
         private readonly IServiceScopeFactory ScopeFactory;
-        private readonly IRecommendationService RecommendationService;
         private readonly IEmailService EmailService;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="applicationContext"></param>
+        /// <param name="logger"></param>
+        /// <param name="mapper"></param>
+        /// <param name="appSettings"></param>
+        /// <param name="serviceScopeFactory"></param>
+        /// <param name="emailService"></param>
         public TransactionService(
             ApplicationContext applicationContext,
             ILogger<TransactionService> logger,
             IMapper mapper,
             IOptions<AppSettings> appSettings,
             IServiceScopeFactory serviceScopeFactory,
-            IRecommendationService recommendationService,
             IEmailService emailService)
         {
             Logger = logger;
@@ -50,10 +49,13 @@ namespace OpenEvent.Web.Services
             Mapper = mapper;
             StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
             ScopeFactory = serviceScopeFactory;
-            RecommendationService = recommendationService;
             EmailService = emailService;
         }
 
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown when the user is not found</exception>
+        /// <exception cref="Exception">Thrown if error</exception>
+        /// <exception cref="EventNotFoundException">Thrown if the event is not found</exception>
         public async Task<TransactionViewModel> CreateIntent(CreateIntentBody createIntentBody)
         {
             var user = await ApplicationContext.Users
@@ -73,8 +75,11 @@ namespace OpenEvent.Web.Services
                 throw new UserNotFoundException();
             }
 
+            // if the user doesn't have a customer id or payment method throw exception
             if (user.StripeCustomerId == null || !user.PaymentMethods.Any())
+            {
                 throw new Exception("Not enough stripe info");
+            }
 
             if (e == null)
             {
@@ -82,16 +87,20 @@ namespace OpenEvent.Web.Services
                 throw new EventNotFoundException();
             }
 
+            // if the host of the event hasn't setup a bank account throw exception
             if (e.Host.StripeAccountId == null) throw new Exception("The host doesn't have enough stripe info");
 
+            // gets a promo that's currently active
             var promo = e.Promos.FirstOrDefault(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End);
 
             if (promo != null)
             {
+                // applies discount to price
                 createIntentBody.Amount -= (createIntentBody.Amount * promo.Discount / 100);
                 Logger.LogInformation("Found promo for event");
             }
-    
+
+            // Stipee api create intent options
             var options = new PaymentIntentCreateOptions()
             {
                 Amount = createIntentBody.Amount,
@@ -119,17 +128,20 @@ namespace OpenEvent.Web.Services
 
             try
             {
-                var intent = service.Create(options);
-
                 var ticket = e.Tickets.FirstOrDefault(x => x.Available);
 
+                // if there's no tickets left then throw exception
                 if (ticket == null) throw new Exception("Out of tickets");
+
+                // Sends request to Strip api to create intent
+                var intent = service.Create(options);
 
                 e.TicketsLeft = e.Tickets.Count(x => x.Available) - 1;
 
                 ticket.User = user;
                 ticket.Available = false;
 
+                // records transaction using Stripe response
                 Transaction transaction = new Transaction()
                 {
                     Amount = intent.Amount,
@@ -148,6 +160,7 @@ namespace OpenEvent.Web.Services
                 await ApplicationContext.Transactions.AddAsync(transaction);
                 await ApplicationContext.SaveChangesAsync();
 
+                // start the intent timout method
                 CheckOnIntent(transaction.StripeIntentId, ticket.Id, e.Id);
 
                 return Mapper.Map<TransactionViewModel>(transaction);
@@ -159,13 +172,16 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        // time out check
         private void CheckOnIntent(string id, Guid ticketId, Guid eventId)
         {
             Task.Run(async () =>
             {
                 Logger.LogInformation("Checking intent");
+
                 // waits x amount of time for intent timeout
                 await Task.Delay(TimeSpan.FromMinutes(20));
+
                 Logger.LogInformation("The intent has timed out! Destroying!");
 
                 using var scope = ScopeFactory.CreateScope();
@@ -178,6 +194,7 @@ namespace OpenEvent.Web.Services
             });
         }
 
+        // Contacts Stripe, cancels intent and removes transaction
         private async Task Cancel(ApplicationContext context, string id, Guid eventId, Guid ticketId)
         {
             var transaction = await context.Transactions.FirstOrDefaultAsync(x => x.StripeIntentId == id);
@@ -218,6 +235,9 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown if the user is not found</exception>
+        /// <exception cref="Exception">Thrown if error</exception>
         public async Task<TransactionViewModel> InjectPaymentMethod(InjectPaymentMethodBody injectPaymentMethodBody)
         {
             var user = await ApplicationContext.Users
@@ -235,21 +255,24 @@ namespace OpenEvent.Web.Services
             }
 
             if (user.PaymentMethods.All(x => x.StripeCardId != injectPaymentMethodBody.CardId))
+            {
                 throw new Exception("User doesn't own card");
+            }
 
             if (transaction == null) throw new Exception("Transaction not found");
 
             var service = new PaymentIntentService();
 
             try
-
             {
+                // request the to Stripe api with card id
                 var intent = service.Update(injectPaymentMethodBody.IntentId,
-                    new PaymentIntentUpdateOptions()
+                    new PaymentIntentUpdateOptions
                     {
                         PaymentMethod = injectPaymentMethodBody.CardId
                     });
 
+                // update transaction using Stripe response
                 transaction.Updated = DateTime.Now;
                 transaction.Status = Enum.Parse<PaymentStatus>(intent.Status, true);
                 if (transaction.Status == PaymentStatus.succeeded)
@@ -269,6 +292,8 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <inheritdoc />
+        /// <exception cref="Exception">Thrown if error</exception>
         public async Task<TransactionViewModel> ConfirmIntent(ConfirmIntentBody confirmIntentBody)
         {
             var transaction =
@@ -280,12 +305,15 @@ namespace OpenEvent.Web.Services
             var service = new PaymentIntentService();
 
             try
-
             {
+                // requests intent confirm from Stripe api
                 var intent = service.Confirm(confirmIntentBody.IntentId);
 
+                // updates transaction with Stripe response
                 transaction.Updated = DateTime.Now;
                 transaction.Status = Enum.Parse<PaymentStatus>(intent.Status, true);
+                
+                // if the intent has finished set paid
                 if (transaction.Status == PaymentStatus.succeeded)
                 {
                     transaction.Paid = true;
@@ -302,7 +330,8 @@ namespace OpenEvent.Web.Services
                 throw;
             }
         }
-
+        
+        /// <inheritdoc />
         public async Task CaptureIntentHook(Stripe.Event stripeEvent)
         {
             try
@@ -326,7 +355,8 @@ namespace OpenEvent.Web.Services
 
                         await ApplicationContext.SaveChangesAsync();
 
-                        await EmailService.SendAsync(transaction.User.Email, "OpenEvent",
+                        // sends ticket purchase email if paid
+                        await EmailService.SendAsync(transaction.User.Email,
                             "<h1>Ticket Purchased</h1><p>You have successfully purchased a ticket</p>",
                             "Ticket Purchased");
 
@@ -356,7 +386,8 @@ namespace OpenEvent.Web.Services
 
                         await ApplicationContext.SaveChangesAsync();
 
-                        await EmailService.SendAsync(transaction.User.Email, "OpenEvent",
+                        // sends payment failure email if the payment failed
+                        await EmailService.SendAsync(transaction.User.Email,
                             "<h1>Payment Failure</h1><p>You tried to purchase a ticket but the payment failed</p>",
                             "Payment Failure");
 
@@ -373,7 +404,8 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation(e.Message);
             }
         }
-
+        
+        /// <inheritdoc />
         public async Task CancelIntent(CancelIntentBody cancelIntentBody)
         {
             try

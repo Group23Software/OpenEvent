@@ -12,7 +12,7 @@ namespace OpenEvent.Test.Services.EmailService
         public async Task Should_Send_Purchase_Confirmation()
         {
             var service = new EmailServiceFactory().Create();
-            await service.SendAsync("harrison@thebarkers.me.uk", "OpenEvent", "<h1>Ticket Purchased</h1><p>You have successfully purchased a ticket</p>","Subject");
+            await service.SendAsync("harrison@thebarkers.me.uk", "<h1>Ticket Purchased</h1><p>You have successfully purchased a ticket</p>","Subject");
         }
     }
 }

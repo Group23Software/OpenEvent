@@ -10,9 +10,26 @@ namespace OpenEvent.Web.Models.Category
     /// </summary>
     public class Category
     {
+        /// <summary>
+        /// Unique id
+        /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Name of category eg: Music
+        /// </summary>
         public string Name { get; set; }
-        [JsonIgnore] public List<EventCategory> Events { get; set; }
-        [JsonIgnore] public List<RecommendationScore> Scores { get; set; }
+
+        /// <summary>
+        /// List of all event categories with this category
+        /// </summary>
+        [JsonIgnore]
+        public List<EventCategory> Events { get; set; }
+
+        /// <summary>
+        /// List of recommendation scores of this category
+        /// </summary>
+        [JsonIgnore]
+        public List<RecommendationScore> Scores { get; set; }
     }
 }

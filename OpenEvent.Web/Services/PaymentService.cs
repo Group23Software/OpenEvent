@@ -14,22 +14,20 @@ using PaymentMethod = OpenEvent.Web.Models.PaymentMethod.PaymentMethod;
 
 namespace OpenEvent.Web.Services
 {
-    public interface IPaymentService
-    {
-        Task<PaymentMethodViewModel> AddPaymentMethod(AddPaymentMethodBody addPaymentMethodBody);
-        Task MakeDefault(MakeDefaultBody makeDefaultBody);
-        Task RemovePaymentMethod(RemovePaymentMethodBody removePaymentMethodBody);
-    }
-
-    /// <summary>
-    /// Service for all payment logic.
-    /// </summary>
+    /// <inheritdoc />
     public class PaymentService : IPaymentService
     {
         private readonly ILogger<PaymentService> Logger;
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="applicationContext"></param>
+        /// <param name="logger"></param>
+        /// <param name="mapper"></param>
+        /// <param name="appSettings"></param>
         public PaymentService(ApplicationContext applicationContext, ILogger<PaymentService> logger, IMapper mapper,
             IOptions<AppSettings> appSettings)
         {
@@ -38,15 +36,9 @@ namespace OpenEvent.Web.Services
             Mapper = mapper;
             StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
         }
-
-        /// <summary>
-        /// Creates a stripe customer if null.
-        /// Adds card token to stripe customer.
-        /// Adds card to user.
-        /// </summary>
-        /// <param name="addPaymentMethodBody"></param>
-        /// <returns></returns>
-        /// <exception cref="UserNotFoundException"></exception>
+        
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown when the user is not found</exception>
         public async Task<PaymentMethodViewModel> AddPaymentMethod(AddPaymentMethodBody addPaymentMethodBody)
         {
             var user = await ApplicationContext.Users.Include(x => x.PaymentMethods)
@@ -57,9 +49,10 @@ namespace OpenEvent.Web.Services
                 throw new UserNotFoundException();
             }
 
+            // if the user doesn't have a stripe customer create one
             if (user.StripeCustomerId == null)
             {
-                var customer = await CreatCustomer(user);
+                var customer = CreateCustomer(user);
                 user.StripeCustomerId = customer.Id;
                 await ApplicationContext.SaveChangesAsync();
             }
@@ -73,8 +66,10 @@ namespace OpenEvent.Web.Services
 
             try
             {
+                // request create card to Stripe api
                 var card = service.Create(user.StripeCustomerId, options);
 
+                // create payment method using Stripe response data
                 var paymentMethod = new PaymentMethod()
                 {
                     StripeCardId = card.Id,
@@ -91,22 +86,18 @@ namespace OpenEvent.Web.Services
 
                 user.PaymentMethods.Add(paymentMethod);
                 await ApplicationContext.SaveChangesAsync();
+                
                 return Mapper.Map<PaymentMethodViewModel>(paymentMethod);
             }
             catch (Exception e)
             {
-                Logger.LogWarning(e.Message);
+                Logger.LogInformation(e.Message);
                 throw;
             }
         }
 
-        /// <summary>
-        /// Sets card to default.
-        /// Updates stripe default.
-        /// </summary>
-        /// <param name="makeDefaultBody"></param>
-        /// <returns></returns>
-        /// <exception cref="UserNotFoundException"></exception>
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown if the user is not found</exception>
         public async Task MakeDefault(MakeDefaultBody makeDefaultBody)
         {
             var userWithPayments =
@@ -120,6 +111,7 @@ namespace OpenEvent.Web.Services
 
             try
             {
+                // set all user's payment methods to not default
                 userWithPayments.PaymentMethods.ForEach(p =>
                 {
                     p.IsDefault = p.StripeCardId == makeDefaultBody.PaymentId;
@@ -131,25 +123,22 @@ namespace OpenEvent.Web.Services
                 };
 
                 var service = new CustomerService();
+                
+                // request customer update to Stripe api
                 service.Update(userWithPayments.StripeCustomerId, options);
 
                 await ApplicationContext.SaveChangesAsync();
             }
             catch (Exception e)
             {
-                Logger.LogWarning(e.Message);
+                Logger.LogInformation(e.Message);
                 throw;
             }
         }
 
-        /// <summary>
-        /// Deletes card from stripe customer.
-        /// Removes card from user.
-        /// </summary>
-        /// <param name="removePaymentMethodBody"></param>
-        /// <returns></returns>
-        /// <exception cref="UserNotFoundException"></exception>
-        /// <exception cref="PaymentMethodNotFoundException"></exception>
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown when the user is not found</exception>
+        /// <exception cref="PaymentMethodNotFoundException">Thrown when the users payment method was not found</exception>
         public async Task RemovePaymentMethod(RemovePaymentMethodBody removePaymentMethodBody)
         {
             var userWithPayments =
@@ -176,19 +165,24 @@ namespace OpenEvent.Web.Services
 
             try
             {
+                // request card delete from the Stripe api
                 service.Delete(userWithPayments.StripeCustomerId, paymentMethod.StripeCardId);
+                
+                // remove the payment method and set first to default if the removed card was the default
                 ApplicationContext.PaymentMethods.Remove(paymentMethod);
                 if (paymentWasDefault) userWithPayments.PaymentMethods.First().IsDefault = true;
+                
                 await ApplicationContext.SaveChangesAsync();
             }
             catch (Exception e)
             {
-                Logger.LogWarning(e.Message);
+                Logger.LogInformation(e.Message);
                 throw;
             }
         }
 
-        private async Task<Customer> CreatCustomer(User user)
+        // Contacts the Stripe api to create a new customer using the user's details
+        private Customer CreateCustomer(User user)
         {
             var options = new CustomerCreateOptions()
             {
@@ -205,7 +199,7 @@ namespace OpenEvent.Web.Services
             }
             catch (Exception e)
             {
-                Logger.LogWarning(e.Message);
+                Logger.LogInformation(e.Message);
                 throw;
             }
         }

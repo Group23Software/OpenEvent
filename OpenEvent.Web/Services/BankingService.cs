@@ -15,21 +15,20 @@ using BankAccount = OpenEvent.Web.Models.BankAccount.BankAccount;
 
 namespace OpenEvent.Web.Services
 {
-    public interface IBankingService
-    {
-        Task<BankAccountViewModel> AddBankAccount(AddBankAccountBody addBankAccountBody);
-        Task RemoveBankAccount(RemoveBankAccountBody removeBankAccountBody);
-    }
-
-    /// <summary>
-    /// Service providing all banking logic.
-    /// </summary>
+    /// <inheritdoc />
     public class BankingService : IBankingService
     {
         private readonly ILogger<BankingService> Logger;
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="applicationContext"></param>
+        /// <param name="logger"></param>
+        /// <param name="mapper"></param>
+        /// <param name="appSettings"></param>
         public BankingService(ApplicationContext applicationContext, ILogger<BankingService> logger, IMapper mapper,
             IOptions<AppSettings> appSettings)
         {
@@ -39,14 +38,8 @@ namespace OpenEvent.Web.Services
             StripeConfiguration.ApiKey = appSettings.Value.StripeApiKey;
         }
 
-        /// <summary>
-        /// Creates a stripe account if one does not exist.
-        /// Adds bank token to the user's stripe account.
-        /// Adds bank account to the user entity.
-        /// </summary>
-        /// <param name="addBankAccountBody"></param>
-        /// <returns></returns>
-        /// <exception cref="UserNotFoundException"></exception>
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown when the user is not found</exception>
         public async Task<BankAccountViewModel> AddBankAccount(AddBankAccountBody addBankAccountBody)
         {
             var user = await ApplicationContext.Users.Include(x => x.BankAccounts)
@@ -59,7 +52,7 @@ namespace OpenEvent.Web.Services
 
             if (user.StripeAccountId == null)
             {
-                var account = await CreateAccount(user);
+                var account = CreateAccount(user);
                 user.StripeAccountId = account.Id;
                 await ApplicationContext.SaveChangesAsync();
             }
@@ -73,9 +66,11 @@ namespace OpenEvent.Web.Services
 
             try
             {
+                // request create bank account from the Stripe api
                 var bank = (Stripe.BankAccount) service.Create(user.StripeAccountId, options);
 
-                var bankAccount = new BankAccount()
+                // create bank account using Stripe response
+                var bankAccount = new BankAccount
                 {
                     StripeBankAccountId = bank.Id,
                     Bank = bank.BankName,
@@ -97,13 +92,9 @@ namespace OpenEvent.Web.Services
             }
         }
 
-        /// <summary>
-        /// Deletes the users stripe account.
-        /// </summary>
-        /// <param name="removeBankAccountBody"></param>
-        /// <returns></returns>
-        /// <exception cref="UserNotFoundException"></exception>
-        /// <exception cref="BankAccountNotFoundException"></exception>
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown when the user is not found</exception>
+        /// <exception cref="BankAccountNotFoundException">thrown when the bank account is not found</exception>
         public async Task RemoveBankAccount(RemoveBankAccountBody removeBankAccountBody)
         {
             var user = await ApplicationContext.Users.Include(x => x.BankAccounts)
@@ -122,12 +113,15 @@ namespace OpenEvent.Web.Services
             }
             
             var service = new AccountService();
+            
+            // request delete bank account from the Stripe api
             service.Delete(user.StripeAccountId);
             
             try
             {
                 user.StripeAccountId = null;
                 ApplicationContext.BankAccounts.Remove(bankAccount);
+                
                 await ApplicationContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -137,8 +131,10 @@ namespace OpenEvent.Web.Services
             }
         }
 
-        private async Task<Account> CreateAccount(User user)
+        // Creates a Stripe account using user information
+        private Account CreateAccount(User user)
         {
+            // account create options
             var options = new AccountCreateOptions()
             {
                 BusinessType = "individual",
@@ -178,6 +174,7 @@ namespace OpenEvent.Web.Services
 
             try
             {
+                // requests account create from the Stripe api 
                 var account = service.Create(options);
                 return account;
             }

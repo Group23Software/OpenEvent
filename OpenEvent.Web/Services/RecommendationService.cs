@@ -14,24 +14,7 @@ using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Services
 {
-    public enum Influence
-    {
-        PageView = 200,
-        Search = 100,
-        Purchase = 500,
-        Verify = 400,
-        DownVote = -100
-    }
-
-    public interface IRecommendationService
-    {
-        Task InfluenceAsync(CancellationToken cancellationToken, Guid userId, Guid eventId, Influence influence,
-            DateTime created);
-
-        Task InfluenceAsync(CancellationToken cancellationToken, Guid userId, string keyword,
-            List<SearchFilter> searchFilters, DateTime created);
-    }
-
+    /// <inheritdoc />
     public class RecommendationService : IRecommendationService
     {
         private readonly ILogger<RecommendationService> Logger;
@@ -39,6 +22,13 @@ namespace OpenEvent.Web.Services
         private readonly IPopularityService PopularityService;
         private readonly IWorkQueue WorkQueue;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="serviceScopeFactory"></param>
+        /// <param name="workQueue"></param>
+        /// <param name="popularityService"></param>
         public RecommendationService(ILogger<RecommendationService> logger, IServiceScopeFactory serviceScopeFactory,
             IWorkQueue workQueue, IPopularityService popularityService)
         {
@@ -47,10 +37,10 @@ namespace OpenEvent.Web.Services
             WorkQueue = workQueue;
             PopularityService = popularityService;
         }
-
+        
+        /// <inheritdoc />
         public async Task InfluenceAsync(CancellationToken cancellationToken, Guid userId, Guid eventId,
-            Influence influence,
-            DateTime created)
+            Influence influence, DateTime created)
         {
             if (!cancellationToken.IsCancellationRequested)
             {
@@ -75,10 +65,10 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("Influenced");
             }
         }
-
+        
+        /// <inheritdoc />
         public async Task InfluenceAsync(CancellationToken cancellationToken, Guid userId, string keyword,
-            List<SearchFilter> searchFilters,
-            DateTime created)
+            List<SearchFilter> searchFilters, DateTime created)
         {
             if (!cancellationToken.IsCancellationRequested)
             {
@@ -98,12 +88,13 @@ namespace OpenEvent.Web.Services
                 if (!searchCategories.Any()) return;
 
                 var categories = await context.Categories.Where(x => searchCategories.Contains(x.Id)).ToListAsync();
-                
+
                 foreach (var category in categories)
                 {
-                    WorkQueue.QueueWork(token => PopularityService.PopulariseCategory(token, category.Id, DateTime.Now));
-                } 
-                
+                    WorkQueue.QueueWork(token =>
+                        PopularityService.PopulariseCategory(token, category.Id, DateTime.Now));
+                }
+
                 if (user == null)
                 {
                     Logger.LogInformation("Couldn't find user when influencing");
@@ -118,40 +109,31 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        // calculates the new recommendation score weight
         private double CalculateWeight(double weight, Influence influence)
         {
             double multiplier = ((double) influence / 1000) + 1;
             weight *= multiplier;
-            Logger.LogInformation($"Updated weight {weight}, {multiplier}");
+            Logger.LogInformation("Updated weight {Weight}, {Multiplier}", weight, multiplier);
             return weight;
         }
 
+        // Updates all users recommendation scores for categories in the list
         private void UpdateRecommendations(User user, List<Category> categories, ApplicationContext context)
         {
-            if (user.RecommendationScores == null) user.RecommendationScores = new List<RecommendationScore>();
+            if (user.RecommendationScores == null) return;
+
             categories.ForEach(c =>
             {
-
                 var recommendationScore = user.RecommendationScores.FirstOrDefault(x => x.Category.Id == c.Id);
 
-                if (recommendationScore == null)
-                {
-                    recommendationScore = new RecommendationScore()
-                    {
-                        User = user,
-                        Category = c,
-                        Weight = 0
-                    };
-                    context.RecommendationScores.Add(recommendationScore);
-                }
-                else
-                {
+                if (recommendationScore != null)
                     recommendationScore.Weight =
-                        CalculateWeight(recommendationScore.Weight, Services.Influence.Search);
-                }
+                        CalculateWeight(recommendationScore.Weight, Influence.Search);
             });
         }
 
+        // save the tracked context changes to database
         private async Task SaveAsync(ApplicationContext context)
         {
             try

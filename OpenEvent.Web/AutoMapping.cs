@@ -12,23 +12,19 @@ using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.Transaction;
 using OpenEvent.Web.Models.User;
-using Stripe;
-using BankAccount = OpenEvent.Web.Models.BankAccount.BankAccount;
-using Event = OpenEvent.Web.Models.Event.Event;
-using PaymentMethod = OpenEvent.Web.Models.PaymentMethod.PaymentMethod;
 
 namespace OpenEvent.Web
 {
+    /// <summary>
+    /// Automapping profile, defines all maps
+    /// </summary>
     public class AutoMapping : Profile
     {
+        /// <inheritdoc />
         public AutoMapping()
         {
             CreateMap<User, UserViewModel>()
                 .ForMember(d => d.Avatar, m => m.MapFrom(x => Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length)));
-
-            // CreateMap<User, UserAccountModel>()
-            // .ForMember(d => d.Avatar, m => m.MapFrom(x => Encoding.UTF8.GetString(x.Avatar, 0, x.Avatar.Length)))
-            // .ForMember(d => d.StripeAccountInfo);
 
             CreateMap<Ticket, TicketViewModel>()
                 .ForMember(d => d.QRCode, m => m.MapFrom(x => Encoding.UTF8.GetString(x.QRCode, 0, x.QRCode.Length)))
@@ -59,15 +55,23 @@ namespace OpenEvent.Web
                 .ForMember(d => d.QRCode, m => m.MapFrom(x => Encoding.UTF8.GetString(x.QRCode, 0, x.QRCode.Length)));
 
             CreateMap<PaymentMethod, PaymentMethodViewModel>();
+            
             CreateMap<BankAccount, BankAccountViewModel>();
-            CreateMap<Account, StripeAccountInfo>().ForMember(x => x.PersonId, m => m.MapFrom(x => x.Individual.Id));
+            
+            CreateMap<Stripe.Account, StripeAccountInfo>().ForMember(x => x.PersonId, m => m.MapFrom(x => x.Individual.Id));
 
             CreateMap<SearchEvent, SearchEventViewModel>();
+            
             CreateMap<PageViewEvent, PageViewEventViewModel>();
+            
             CreateMap<Transaction, TransactionViewModel>();
+            
             CreateMap<RecommendationScore, RecommendationScoreViewModel>();
+            
             CreateMap<TicketVerificationEvent, TicketVerificationEventViewModel>();
+            
             CreateMap<Promo, PromoViewModel>().ForMember(x => x.NumberOfSales, op => op.Ignore());
+            
             CreateMap<Event, PopularEventViewModel>()
                 .ForMember(x => x.Categories, op => op.Ignore())
                 .ForMember(x => x.Score, op => op.Ignore());

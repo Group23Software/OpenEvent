@@ -34,7 +34,6 @@ namespace OpenEvent.Test.Factories
             var serviceScopeFactoryMock = new Mock<IServiceScopeFactory>();
             serviceScopeFactoryMock.Setup(x => x.CreateScope()).Returns(() => serviceScopeMock.Object);
 
-            var recommendationServiceMock = new Mock<IRecommendationService>();
             var emailServiceMock = new Mock<IEmailService>();
 
             return new TransactionService(
@@ -43,7 +42,6 @@ namespace OpenEvent.Test.Factories
                 mapper,
                 appSettings,
                 serviceScopeFactoryMock.Object,
-                recommendationServiceMock.Object,
                 emailServiceMock.Object
             );
         }

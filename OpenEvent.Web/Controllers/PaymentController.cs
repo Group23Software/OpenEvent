@@ -16,7 +16,8 @@ namespace OpenEvent.Web.Controllers
     {
         private readonly IPaymentService PaymentService;
         private readonly ILogger<PaymentController> Logger;
-        
+
+        /// <inheritdoc />
         public PaymentController(IPaymentService paymentService, ILogger<PaymentController> logger)
         {
             PaymentService = paymentService;

@@ -7,23 +7,38 @@ using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web
 {
+    /// <summary>
+    /// Watchdog service that checks if popular events and categories should be demoted 
+    /// </summary>
     public class PopularityWatchDog : IHostedService, IDisposable
     {
         private readonly ILogger<PopularityWatchDog> Logger;
         private readonly IPopularityService PopularityService;
 
+        // Check times
         private readonly TimeSpan CheckSpan = TimeSpan.FromMinutes(10);
         private readonly TimeSpan DowngradeSpan = TimeSpan.FromHours(1);
-
-        // Using timer will not wait for the last operation to finish.
+        
         private Timer Timer;
 
+        /// <summary>
+        /// Constructor, injects logger and popularity service
+        /// </summary>
+        /// <param name="logger">ILogger</param>
+        /// <param name="popularityService">IPopularityService</param>
         public PopularityWatchDog(ILogger<PopularityWatchDog> logger, IPopularityService popularityService)
         {
             Logger = logger;
             PopularityService = popularityService;
         }
 
+        /// <summary>
+        /// Start method for building and initialising the service
+        /// </summary>
+        /// <param name="cancellationToken">Cancel</param>
+        /// <returns>
+        /// Completed task once built
+        /// </returns>
         public Task StartAsync(CancellationToken cancellationToken)
         {
             Logger.LogInformation("Popularity watchdog running");
@@ -41,7 +56,7 @@ namespace OpenEvent.Web
             {
                 // If the popularity of the event hasn't increased in x time then downgrade it's popularity.
                 var timeFrom = DateTime.Now - PopularityService.GetEvents()[i].Updated;
-                // Logger.LogInformation("time from {Time}", timeFrom);
+                
                 if (timeFrom >= DowngradeSpan)
                 {
                     if (PopularityService.DownGradeEvent(PopularityService.GetEvents()[i].Record)) i--;
@@ -52,19 +67,26 @@ namespace OpenEvent.Web
             {
                 // If the popularity of the event hasn't increased in x time then downgrade it's popularity.
                 var timeFrom = DateTime.Now - PopularityService.GetCategories()[i].Updated;
-                // Logger.LogInformation("time from {Time}", timeFrom);
+                
                 if (timeFrom >= DowngradeSpan)
                 {
                     if (PopularityService.DownGradeCategory(PopularityService.GetCategories()[i].Record)) i--;
                 }
             }
             
-            // Sending updated event and category arrays to client.
+            // Sending updated event and category arrays to client using web-socket.
             PopularityService.CommunicateState();
 
             Logger.LogInformation("Finished checking popularity");
         }
 
+        /// <summary>
+        /// Runs when disposed or cancellation token
+        /// </summary>
+        /// <param name="cancellationToken">Cancel</param>
+        /// <returns>
+        /// Completed task once stopped
+        /// </returns>
         public Task StopAsync(CancellationToken cancellationToken)
         {
             Logger.LogInformation("Stopping popularity watchdog");
@@ -74,6 +96,9 @@ namespace OpenEvent.Web
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Disposes timer once finished
+        /// </summary>
         public void Dispose()
         {
             Timer?.Dispose();

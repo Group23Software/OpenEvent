@@ -8,6 +8,7 @@ using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
 {
+    /// <inheritdoc />
     [ApiController]
     [Route("api/[controller]")]
     public class TicketController : ControllerBase
@@ -15,12 +16,18 @@ namespace OpenEvent.Web.Controllers
         private readonly ITicketService TicketService;
         private readonly ILogger<TicketController> Logger;
 
+        /// <inheritdoc />
         public TicketController(ITicketService ticketService, ILogger<TicketController> logger)
         {
             TicketService = ticketService;
             Logger = logger;
         }
 
+        /// <summary>
+        /// Endpoint for getting a ticket
+        /// </summary>
+        /// <param name="id">Ticket id</param>
+        /// <returns>Ticket</returns>
         [HttpGet]
         public async Task<ActionResult<TicketDetailModel>> Get(Guid id)
         {
@@ -36,6 +43,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint for getting all a users tickets
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <returns>List of tickets</returns>
         [HttpGet("users")]
         public async Task<ActionResult<List<TicketViewModel>>> GetAllUsersTickets(Guid id)
         {
@@ -51,6 +63,11 @@ namespace OpenEvent.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint for verifying a ticket
+        /// </summary>
+        /// <param name="ticketVerifyBody"><see cref="TicketVerifyBody"/></param>
+        /// <returns>Ok if the ticket verifies and Unauthorized if not</returns>
         [HttpPost("Verify")]
         public async Task<ActionResult> Verify(TicketVerifyBody ticketVerifyBody)
         {

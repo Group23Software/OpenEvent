@@ -10,19 +10,19 @@ using OpenEvent.Web.Models.Promo;
 
 namespace OpenEvent.Web.Services
 {
-    public interface IPromoService
-    {
-        Task<PromoViewModel> Create(CreatePromoBody createPromoBody);
-        Task<PromoViewModel> Update(UpdatePromoBody updatePromoBody);
-        Task Destroy(Guid id);
-    }
-
+    /// <inheritdoc />
     public class PromoService : IPromoService
     {
         private readonly ILogger<PromoService> Logger;
         private readonly ApplicationContext ApplicationContext;
         private readonly IMapper Mapper;
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="applicationContext"></param>
+        /// <param name="mapper"></param>
         public PromoService(ILogger<PromoService> logger, ApplicationContext applicationContext, IMapper mapper)
         {
             Logger = logger;
@@ -30,6 +30,9 @@ namespace OpenEvent.Web.Services
             Mapper = mapper;
         }
 
+        /// <inheritdoc />
+        /// <exception cref="EventNotFoundException">Thrown if the event is not found</exception>
+        /// <exception cref="InvalidPromoException">Thrown if the promo dates are not valid</exception>
         public async Task<PromoViewModel> Create(CreatePromoBody createPromoBody)
         {
             var e = await ApplicationContext.Events.Include(x => x.Promos).AsSplitQuery()
@@ -37,15 +40,13 @@ namespace OpenEvent.Web.Services
 
             if (e == null) throw new EventNotFoundException();
 
-            foreach (var p in e.Promos)
+            // check if the promo conflicts with existing promos
+            if (e.Promos.Any(p => p.Start >= createPromoBody.Start && createPromoBody.End <= e.EndLocal))
             {
-                if (p.Start >= createPromoBody.Start && createPromoBody.End <= e.EndLocal)
-                {
-                    throw new InvalidPromoException();
-                }
+                throw new InvalidPromoException();
             }
 
-            Promo promo = new Promo()
+            Promo promo = new Promo
             {
                 Start = createPromoBody.Start,
                 End = createPromoBody.End,
@@ -68,12 +69,15 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <inheritdoc />
+        /// <exception cref="PromoNotFoundException">Thrown if the promo is not found</exception>
         public async Task<PromoViewModel> Update(UpdatePromoBody updatePromoBody)
         {
             var promo = await ApplicationContext.Promos.FirstOrDefaultAsync(x => x.Id == updatePromoBody.Id);
 
             if (promo == null) throw new PromoNotFoundException();
 
+            // sets values to new values
             promo.Active = updatePromoBody.Active;
             promo.Discount = updatePromoBody.Discount;
             promo.End = updatePromoBody.End;
@@ -92,6 +96,8 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <inheritdoc />
+        /// <exception cref="PromoNotFoundException">Thrown if the promo is not found</exception>
         public async Task Destroy(Guid id)
         {
             var promo = await ApplicationContext.Promos.FirstOrDefaultAsync(x => x.Id == id);

@@ -8,9 +8,25 @@ namespace OpenEvent.Web.Models.Category
     /// </summary>
     public class EventCategory
     {
+        /// <summary>
+        /// Categories id
+        /// </summary>
         public Guid CategoryId { get; set; }
+
+        /// <summary>
+        /// Category
+        /// </summary>
         public Category Category { get; set; }
+
+        /// <summary>
+        /// Event's id
+        /// </summary>
         public Guid EventId { get; set; }
-        [JsonIgnore] public Event.Event Event { get; set; }
+
+        /// <summary>
+        /// Event
+        /// </summary>
+        [JsonIgnore]
+        public Event.Event Event { get; set; }
     }
 }

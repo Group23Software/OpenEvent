@@ -22,7 +22,7 @@ namespace OpenEvent.Test.Services.UserService
             {
                 var service = new UserServiceFactory().Create(context);
 
-                NewUserInput user = new NewUserInput()
+                NewUserBody user = new NewUserBody()
                 {
                     Email = "email@email.co.uk",
                     Password = "Password",
@@ -45,7 +45,7 @@ namespace OpenEvent.Test.Services.UserService
             {
                 var service = new UserServiceFactory().Create(context);
 
-                NewUserInput user = new NewUserInput()
+                NewUserBody user = new NewUserBody()
                 {
                     Email = "exists@email.co.uk",
                     Password = "Fail",

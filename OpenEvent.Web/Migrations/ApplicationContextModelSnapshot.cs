@@ -7,6 +7,7 @@ using OpenEvent.Web.Contexts;
 
 namespace OpenEvent.Web.Migrations
 {
+#pragma warning disable CS1591
     [DbContext(typeof(ApplicationContext))]
     partial class ApplicationContextModelSnapshot : ModelSnapshot
     {
@@ -784,4 +785,5 @@ namespace OpenEvent.Web.Migrations
 #pragma warning restore 612, 618
         }
     }
+#pragma warning restore CS1591
 }

@@ -11,19 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
+using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.Ticket;
 using QRCoder;
 
 namespace OpenEvent.Web.Services
 {
-    public interface ITicketService
-    {
-        Task<List<TicketViewModel>> GetAllUsersTickets(Guid id);
-        Task VerifyTicket(TicketVerifyBody ticketVerifyBody);
-
-        Task<TicketDetailModel> Get(Guid id);
-    }
-
+    /// <inheritdoc />
     public class TicketService : ITicketService
     {
         private readonly ILogger<TicketService> Logger;
@@ -32,8 +26,16 @@ namespace OpenEvent.Web.Services
         private readonly IAnalyticsService AnalyticsService;
         private readonly IRecommendationService RecommendationService;
         private readonly IWorkQueue WorkQueue;
-
-
+        
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="logger"></param>
+        /// <param name="mapper"></param>
+        /// <param name="analyticsService"></param>
+        /// <param name="recommendationService"></param>
+        /// <param name="workQueue"></param>
         public TicketService(ApplicationContext context, ILogger<TicketService> logger, IMapper mapper,
             IAnalyticsService analyticsService, IRecommendationService recommendationService, IWorkQueue workQueue)
         {
@@ -42,8 +44,11 @@ namespace OpenEvent.Web.Services
             ApplicationContext = context;
             AnalyticsService = analyticsService;
             WorkQueue = workQueue;
+            RecommendationService = recommendationService;
         }
 
+        /// <inheritdoc />
+        /// <exception cref="UserNotFoundException">Thrown if the user is not found</exception>
         public async Task<List<TicketViewModel>> GetAllUsersTickets(Guid id)
         {
             var user = await ApplicationContext.Users
@@ -56,6 +61,8 @@ namespace OpenEvent.Web.Services
             return user.Tickets.Where(x => x.Transaction !=null && x.Transaction.Paid).Select(x => Mapper.Map<TicketViewModel>(x)).ToList();
         }
 
+        /// <inheritdoc />
+        /// <exception cref="UnauthorizedAccessException">Thrown if the user doesn't own the ticket</exception>
         public async Task VerifyTicket(TicketVerifyBody ticketVerifyBody)
         {
             var ticket = await ApplicationContext.Tickets
@@ -88,6 +95,8 @@ namespace OpenEvent.Web.Services
             }
         }
 
+        /// <inheritdoc />
+        /// <exception cref="TicketNotFoundException">Thrown if ticket is not found</exception>
         public async Task<TicketDetailModel> Get(Guid id)
         {
             var ticket = await ApplicationContext.Tickets
@@ -101,6 +110,7 @@ namespace OpenEvent.Web.Services
                 throw new TicketNotFoundException();
             }
 
+            // if the ticket doesn't have a qr code then generate one
             if (ticket.QRCode == null)
             {
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -116,13 +126,12 @@ namespace OpenEvent.Web.Services
             return Mapper.Map<TicketDetailModel>(ticket);
         }
 
-        private static Byte[] BitmapToBytes(Bitmap img)
+        // converts a bitmap image into a stream of bytes
+        private static byte[] BitmapToBytes(Bitmap img)
         {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                img.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                return stream.ToArray();
-            }
+            using MemoryStream stream = new MemoryStream();
+            img.Save(stream, ImageFormat.Png);
+            return stream.ToArray();
         }
     }
 }

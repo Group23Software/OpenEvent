@@ -8,6 +8,7 @@ using OpenEvent.Web.Contexts;
 
 namespace OpenEvent.Web.Migrations
 {
+#pragma warning disable CS1591
     [DbContext(typeof(ApplicationContext))]
     [Migration("20210301160039_decimalToLong")]
     partial class decimalToLong
@@ -657,4 +658,5 @@ namespace OpenEvent.Web.Migrations
 #pragma warning restore 612, 618
         }
     }
+#pragma warning restore CS1591
 }

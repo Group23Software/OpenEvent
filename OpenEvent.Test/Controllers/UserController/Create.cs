@@ -16,9 +16,9 @@ namespace OpenEvent.Test.Controllers.UserController
 
         private Web.Controllers.UserController UserController;
 
-        private readonly NewUserInput ExistingUserInput = new() {Email = "existing@email.co.uk"};
+        private readonly NewUserBody ExistingUserBody = new() {Email = "existing@email.co.uk"};
 
-        private readonly NewUserInput NewUserInput = new()
+        private readonly NewUserBody NewUserBody = new()
         {
             UserName = "Username"
         };
@@ -31,8 +31,8 @@ namespace OpenEvent.Test.Controllers.UserController
         [SetUp]
         public async Task Setup()
         {
-            UserServiceMock.Setup(x => x.Create(NewUserInput));
-            UserServiceMock.Setup(x => x.Create(ExistingUserInput)).ThrowsAsync(new UserAlreadyExistsException());
+            UserServiceMock.Setup(x => x.Create(NewUserBody));
+            UserServiceMock.Setup(x => x.Create(ExistingUserBody)).ThrowsAsync(new UserAlreadyExistsException());
 
             UserController = new Web.Controllers.UserController(UserServiceMock.Object,
                 new Mock<ILogger<Web.Controllers.UserController>>().Object);
@@ -41,14 +41,14 @@ namespace OpenEvent.Test.Controllers.UserController
         [Test]
         public async Task ShouldCreate()
         {
-            var result = await UserController.Create(NewUserInput);
+            var result = await UserController.Create(NewUserBody);
             result.Should().BeOfType<OkResult>();
         }
 
         [Test]
         public async Task UserShouldAlreadyExist()
         {
-            var result = await UserController.Create(ExistingUserInput);
+            var result = await UserController.Create(ExistingUserBody);
             result.Should().BeOfType<BadRequestObjectResult>().Subject.Value.Should().BeOfType<UserAlreadyExistsException>();
         }
     }

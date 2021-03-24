@@ -2,6 +2,7 @@
 
 namespace OpenEvent.Web.Migrations
 {
+#pragma warning disable CS1591
     public partial class promoDiscountToInt : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,4 +27,5 @@ namespace OpenEvent.Web.Migrations
                 oldType: "int");
         }
     }
+#pragma warning restore CS1591
 }

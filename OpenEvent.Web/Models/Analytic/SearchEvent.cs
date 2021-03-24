@@ -2,21 +2,30 @@ using System;
 
 namespace OpenEvent.Web.Models.Analytic
 {
+    /// <summary>
+    /// Search event analytic
+    /// </summary>
     public class SearchEvent : AnalyticEvent
     {
+        /// <inheritdoc />
         public override Guid Id { get; set; }
+
+        /// <inheritdoc />
         public override DateTime Created { get; set; }
+
+        /// <summary>
+        /// User who searched
+        /// </summary>
         public User.User User { get; set; }
+
+        /// <summary>
+        /// Search keyword
+        /// </summary>
         public string Search { get; set; }
-        public string Params { get; set; }
-    }
-    
-    public class SearchEventViewModel: AnalyticEvent
-    {
-        public override Guid Id { get; set; }
-        public override DateTime Created { get; set; }
-        public Guid UserId { get; set; }
-        public string Search { get; set; }
+
+        /// <summary>
+        /// Search filters concatenated into one string
+        /// </summary>
         public string Params { get; set; }
     }
 }

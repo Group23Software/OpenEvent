@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace OpenEvent.Web.Pages
 {
+#pragma warning disable CS1591
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class ErrorModel : PageModel
     {
@@ -28,4 +29,5 @@ namespace OpenEvent.Web.Pages
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
         }
     }
+#pragma warning restore CS1591
 }
