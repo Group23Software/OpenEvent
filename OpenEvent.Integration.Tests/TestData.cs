@@ -1,23 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using OpenEvent.Web;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.Auth;
-using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.PaymentMethod;
 using OpenEvent.Web.Models.Promo;
 using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.Transaction;
 using OpenEvent.Web.Models.User;
+using Stripe;
+using Address = OpenEvent.Web.Models.Address.Address;
+using BankAccount = OpenEvent.Web.Models.BankAccount.BankAccount;
+using Event = OpenEvent.Web.Models.Event.Event;
+using PaymentMethod = OpenEvent.Web.Models.PaymentMethod.PaymentMethod;
 
 namespace OpenEvent.Integration.Tests
 {
@@ -34,11 +38,16 @@ namespace OpenEvent.Integration.Tests
                 Remember = false
             };
             var response = await client.PostAsJsonAsync(new UriBuilder(BaseUrl + "/api/auth/login").Uri, body);
-            return await response.Content.ReadFromJsonAsync<UserViewModel>();
+            var loggedUser = await response.Content.ReadFromJsonAsync<UserViewModel>();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loggedUser.Token);
+            return loggedUser;
+
         }
 
-        public static void InitializeDbForTests(ApplicationContext context)
+        public static void InitializeDbForTests(ApplicationContext context, AppSettings appSettings)
         {
+            StripeConfiguration.ApiKey = appSettings.StripeApiKey;
+            
             PasswordHasher<User> hasher = new PasswordHasher<User>(
                 new OptionsWrapper<PasswordHasherOptions>(
                     new PasswordHasherOptions
@@ -48,7 +57,58 @@ namespace OpenEvent.Integration.Tests
             );
 
             context.AddRange(Categories);
+            
             User.Password = hasher.HashPassword(User, "Password");
+            
+            var customerCreateOptions = new CustomerCreateOptions()
+            {
+                Email = User.Email,
+                Phone = User.PhoneNumber,
+                Name = User.FirstName + " " + User.LastName
+            };
+            var customerService = new CustomerService();
+            var customer = customerService.Create(customerCreateOptions);
+            User.StripeCustomerId = customer.Id;
+            
+            var accountCreateOptions = new AccountCreateOptions()
+            {
+                BusinessType = "individual",
+                TosAcceptance = new AccountTosAcceptanceOptions() {Date = DateTime.Now, Ip = "127.0.0.1"},
+                BusinessProfile = new AccountBusinessProfileOptions()
+                    {Mcc = "7991", Url = "http://www.harrisonbarker.co.uk"},
+                Individual = new AccountIndividualOptions()
+                {
+                    FirstName = User.FirstName,
+                    LastName = User.LastName,
+                    Dob = new DobOptions()
+                    {
+                        Year = User.DateOfBirth.Year,
+                        Month = User.DateOfBirth.Month,
+                        Day = User.DateOfBirth.Day
+                    },
+                    Address = new AddressOptions()
+                    {
+                        Line1 = User.Address.AddressLine1,
+                        Line2 = User.Address.AddressLine2,
+                        City = User.Address.City,
+                        Country = User.Address.CountryCode,
+                        PostalCode = User.Address.PostalCode
+                    },
+                    Email = User.Email,
+                    Phone = User.PhoneNumber
+                },
+                Capabilities = new AccountCapabilitiesOptions
+                {
+                    CardPayments = new AccountCapabilitiesCardPaymentsOptions {Requested = true},
+                    Transfers = new AccountCapabilitiesTransfersOptions {Requested = true},
+                },
+                Type = "custom"
+            };
+
+            var accountService = new AccountService();
+            var account = accountService.Create(accountCreateOptions);
+            User.StripeAccountId = account.Id;
+
             context.Add(User);
             context.Add(Event);
             context.SaveChanges();
@@ -181,6 +241,11 @@ namespace OpenEvent.Integration.Tests
                         Status = PaymentStatus.succeeded,
                         User = User
                     }
+                },
+                new()
+                {
+                    Available = true,
+                    Uses = 0
                 }
             },
             Transactions = new List<Transaction>(),

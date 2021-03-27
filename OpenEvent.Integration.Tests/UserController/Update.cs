@@ -47,7 +47,6 @@ namespace OpenEvent.Integration.Tests.UserController
         [Test]
         public async Task Should_Update_User_Name()
         {
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", LoggedUser.Token);
 
             UpdateUserNameBody body = new()
             {
@@ -67,7 +66,6 @@ namespace OpenEvent.Integration.Tests.UserController
         [Test]
         public async Task Should_Update_Avatar()
         {
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", LoggedUser.Token);
 
             UpdateAvatarBody body = new()
             {
@@ -87,7 +85,6 @@ namespace OpenEvent.Integration.Tests.UserController
         [Test]
         public async Task Should_Update_Address()
         {
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", LoggedUser.Token);
 
             UpdateUserAddressBody body = new()
             {
@@ -115,7 +112,6 @@ namespace OpenEvent.Integration.Tests.UserController
         [Test]
         public async Task Should_Update_Theme_Pref()
         {
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", LoggedUser.Token);
 
             UpdateThemePreferenceBody body = new()
             {

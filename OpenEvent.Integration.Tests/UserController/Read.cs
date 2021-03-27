@@ -27,8 +27,6 @@ namespace OpenEvent.Integration.Tests.UserController
             var loggedUser = await TestData.LogUserIn(Client);
             
             var builder = new UriBuilder(TestData.BaseUrl + "/api/user/Account") {Query = $"id={loggedUser.Id}"};
-
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",loggedUser.Token);
             
             var response = await Client.GetAsync(builder.Uri);
             response.StatusCode.Should().Be(200);

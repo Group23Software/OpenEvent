@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using OpenEvent.Web;
@@ -164,13 +165,14 @@ namespace OpenEvent.Integration.Tests
                 var logger = scopedServices
                     .GetRequiredService<ILogger<ApplicationFactory<TStartup>>>();
 
+                var config = scopedServices.GetRequiredService<IOptions<AppSettings>>();
+
                 db.Database.EnsureDeleted();
-                // db.Database.EnsureCreated();
                 db.Database.Migrate();
 
                 try
                 {
-                    TestData.InitializeDbForTests(db);
+                    TestData.InitializeDbForTests(db,config.Value);
                 }
                 catch (Exception ex)
                 {
