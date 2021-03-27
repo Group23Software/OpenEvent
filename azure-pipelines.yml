@@ -38,7 +38,7 @@ stages:
               testRunTitle: 'Run .net unit tests and collect coverage'
             displayName: 'Unit Tests (.net)'
 
-          - task: DotNetCoreCli@3
+          - task: DotNetCoreCli@2
             condition: succeeded()
             inputs:
               command: 'test'
