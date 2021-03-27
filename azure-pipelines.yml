@@ -42,7 +42,7 @@ stages:
             condition: succeeded()
             inputs:
               command: 'test'
-              projects: '**/*.Integration/*.csproj'
+              projects: '**/*.Integration.Tests/*.csproj'
               arguments: -c $(BuildConfiguration) --collect:"XPlat Code Coverage"
               testRunTitle: 'Run .net integration tests and collect coverage'
             displayName: 'Integration Tests (.net)'

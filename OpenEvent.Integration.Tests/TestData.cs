@@ -13,6 +13,7 @@ using OpenEvent.Web.Models.BankAccount;
 using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Models.PaymentMethod;
+using OpenEvent.Web.Models.Promo;
 using OpenEvent.Web.Models.Recommendation;
 using OpenEvent.Web.Models.Ticket;
 using OpenEvent.Web.Models.Transaction;
@@ -45,10 +46,11 @@ namespace OpenEvent.Integration.Tests
                         CompatibilityMode = PasswordHasherCompatibilityMode.IdentityV2
                     })
             );
-            
+
             context.AddRange(Categories);
             User.Password = hasher.HashPassword(User, "Password");
             context.Add(User);
+            context.Add(Event);
             context.SaveChanges();
         }
 
@@ -102,7 +104,7 @@ namespace OpenEvent.Integration.Tests
         public static readonly List<Category> Categories = new()
         {
             // , Id = new Guid("534DE110-2D1D-4AE8-9293-68FC8037DB5A")
-            new() {Name = "Music"},
+            new() {Name = "Music", Id = new Guid("534DE110-2D1D-4AE8-9293-68FC8037DB5A")},
             new() {Name = "Business"},
             new() {Name = "Charity"},
             new() {Name = "Culture"},
@@ -127,6 +129,75 @@ namespace OpenEvent.Integration.Tests
             new() {Name = "Outdoor"},
             new() {Name = "Travel"},
             new() {Name = "Automobile"}
+        };
+
+        public static Event Event = new()
+        {
+            Id = new Guid("74831876-FC2E-4D03-99D8-B3872BDEFD5C"),
+            Address = new Address
+            {
+                AddressLine1 = "Main Street",
+                AddressLine2 = "",
+                City = "City",
+                CountryCode = "GB",
+                CountryName = "United Kingdom",
+                PostalCode = "AA1 1AA",
+                Lat = 51.47338,
+                Lon = -0.08375
+            },
+            Description = "This is a test event",
+            Images = new List<Image>
+            {
+                new() {Label = "Image", Source = new Byte[] {1, 1, 1, 1}}
+            },
+            isCanceled = false,
+            Name = "Test Event",
+            Host = User,
+            Price = 1010,
+            Thumbnail = new Image {Label = "Thumbnail", Source = new Byte[] {1, 1, 1, 1}},
+            EndLocal = new DateTime(),
+            EndUTC = new DateTime(),
+            StartLocal = new DateTime(),
+            StartUTC = new DateTime(),
+            IsOnline = false,
+            SocialLinks = new List<SocialLink> {new() {Link = "custom.co.uk", SocialMedia = SocialMedia.Site}},
+            Tickets = new List<Ticket>
+            {
+                new()
+                {
+                    Id = new Guid("A85DDDF9-C5ED-469C-914F-75097B950024"),
+                    Available = false,
+                    User = User,
+                    Uses = 0,
+                    QRCode = new Byte[] {0, 0, 0, 0},
+                    Transaction = new Transaction
+                    {
+                        StripeIntentId = "1",
+                        Amount = 100,
+                        End = DateTime.Now,
+                        Start = DateTime.Now,
+                        Updated = DateTime.Now,
+                        Paid = true,
+                        Status = PaymentStatus.succeeded,
+                        User = User
+                    }
+                }
+            },
+            Transactions = new List<Transaction>(),
+            VerificationEvents = new List<TicketVerificationEvent>(),
+            PageViewEvents = new List<PageViewEvent>(),
+            EventCategories = new List<EventCategory>(),
+            Promos = new List<Promo>
+            {
+                new()
+                {
+                    Id = new Guid("AB261AEC-B56A-4D12-A9CC-8F499B98D4B1"),
+                    Active = true,
+                    Discount = 50,
+                    Start = DateTime.Now,
+                    End = DateTime.Now.AddMonths(1)
+                }
+            }
         };
     }
 }

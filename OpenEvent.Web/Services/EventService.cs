@@ -82,15 +82,18 @@ namespace OpenEvent.Web.Services
             }
 
             // get coordinates of the address
-            var cords = await GetAddressCords(createEventBody.Address);
-            createEventBody.Address.Lat = cords.Lat;
-            createEventBody.Address.Lon = cords.Lon;
+            if (createEventBody.Address != null)
+            {
+                var cords = await GetAddressCords(createEventBody.Address);
+                createEventBody.Address.Lat = cords.Lat;
+                createEventBody.Address.Lon = cords.Lon;
+            }
 
-            Event newEvent = new Event()
+            var newEvent = new Event()
             {
                 Name = createEventBody.Name,
                 Description = createEventBody.Description,
-                Address = createEventBody.Address,
+                // Address = new Address(),
                 isCanceled = false,
                 Price = createEventBody.Price,
                 IsOnline = createEventBody.IsOnline,

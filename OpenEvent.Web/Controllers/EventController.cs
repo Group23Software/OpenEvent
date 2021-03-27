@@ -17,6 +17,7 @@ namespace OpenEvent.Web.Controllers
     /// <summary>
     /// API controller for all event related endpoints.
     /// </summary>
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EventController : ControllerBase
@@ -116,7 +117,7 @@ namespace OpenEvent.Web.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        // [UserOwnsEvent]
+        [UserOwnsEvent]
         [HttpGet("forHost")]
         public async Task<ActionResult<EventHostModel>> GetForHost(Guid id)
         {

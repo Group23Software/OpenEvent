@@ -191,6 +191,7 @@ namespace OpenEvent.Web
             }
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseSwagger();
 

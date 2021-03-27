@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -23,6 +24,10 @@ namespace OpenEvent.Integration.Tests.UserController
         [Test]
         public async Task Should_Create_User()
         {
+            var loggedUser = await TestData.LogUserIn(Client);
+            
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loggedUser.Token);
+            
             var builder = new UriBuilder(TestData.BaseUrl + "/api/user");
 
             NewUserBody body = new NewUserBody()

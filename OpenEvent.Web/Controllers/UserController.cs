@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OpenEvent.Web.Models.Analytic;
@@ -11,6 +12,7 @@ namespace OpenEvent.Web.Controllers
     /// <summary>
     /// API controller for all user related endpoints.
     /// </summary>
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -105,6 +107,7 @@ namespace OpenEvent.Web.Controllers
         /// <returns>
         /// ActionResult of bool if username exists.
         /// </returns>
+        [AllowAnonymous]
         [HttpGet("UserNameExists")]
         public async Task<ActionResult<bool>> UserNameExists(string username)
         {
@@ -118,6 +121,7 @@ namespace OpenEvent.Web.Controllers
         /// <returns>
         /// ActionResult of bool if email exists.
         /// </returns>
+        [AllowAnonymous]
         [HttpGet("EmailExists")]
         public async Task<ActionResult<bool>> EmailExists(string email)
         {
@@ -131,6 +135,7 @@ namespace OpenEvent.Web.Controllers
         /// <returns>
         /// ActionResult of bool if phone number exists.
         /// </returns>
+        [AllowAnonymous]
         [HttpGet("PhoneExists")]
         public async Task<ActionResult<bool>> PhoneExists(string phoneNumber)
         {

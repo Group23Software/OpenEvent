@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using OpenEvent.Web.Models.User;
 
@@ -32,9 +33,10 @@ namespace OpenEvent.Integration.Tests.UserController
             var response = await Client.GetAsync(builder.Uri);
             response.StatusCode.Should().Be(200);
             
-            var user = await response.Content.ReadFromJsonAsync<UserAccountModel>();
+            var user = await response.Content.ReadAsStringAsync();
             user.Should().NotBeNull();
-            user.Should().BeOfType<UserAccountModel>();
+            var userAccountModel = JsonConvert.DeserializeObject<UserAccountModel>(user);
+            userAccountModel.Should().BeOfType<UserAccountModel>();
         }
     }
 }

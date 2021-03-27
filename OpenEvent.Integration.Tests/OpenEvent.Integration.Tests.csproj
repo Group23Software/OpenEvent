@@ -21,5 +21,9 @@
   <ItemGroup>
     <ProjectReference Include="..\OpenEvent.Web\OpenEvent.Web.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UserController" />
+  </ItemGroup>
   
 </Project>
