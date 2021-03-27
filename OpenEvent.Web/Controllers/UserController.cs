@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenEvent.Web.Migrations;
 using OpenEvent.Web.Models.Analytic;
 using OpenEvent.Web.Models.User;
 using OpenEvent.Web.Services;
@@ -187,7 +186,7 @@ namespace OpenEvent.Web.Controllers
         /// <param name="updateThemePreferenceBody"></param>
         /// <returns></returns>
         [HttpPost("updateThemePreference")]
-        public async Task<ActionResult<bool>> UpdateThemePreference(
+        public async Task<ActionResult> UpdateThemePreference(
             [FromBody] UpdateThemePreferenceBody updateThemePreferenceBody)
         {
             try

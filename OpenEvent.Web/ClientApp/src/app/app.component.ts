@@ -3,6 +3,7 @@ import {TriggerService} from "./_Services/trigger.service";
 import {InOutAnimation} from "./_extensions/animations";
 import {UserService} from "./_Services/user.service";
 import {map} from "rxjs/operators";
+import {AuthService} from "./_Services/auth.service";
 
 @Component({
   selector: 'app-root',
@@ -21,10 +22,10 @@ export class AppComponent implements OnInit, AfterViewInit
     return this.userService.GetUserAsync().pipe(map(x => x != null));
   }
 
-  constructor (private trigger: TriggerService, private userService: UserService)
+  constructor (private trigger: TriggerService, private userService: UserService, private authService: AuthService)
   {
     trigger.isDark.subscribe(is => this.isDark = is);
-    // authService.IsAuthenticated().subscribe(x => this.authed = x);
+    authService.IsAuthenticated().subscribe();
   }
 
   ngOnInit (): void

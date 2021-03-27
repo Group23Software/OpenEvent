@@ -46,12 +46,6 @@ import {RouteReuse} from "./_extensions/RouteReuse";
     NgxStripeModule.forRoot('pk_test_51ILW9dK2ugLXrgQXdjbh4TSUPcp3TxQeB51iiecfFZMv7ZRW2durBaN1H8KFfIIyQEEmGfeYRaRvr6KS170oOuOA00Ledf7YEh'),
     RouterModule.forRoot([
       {path: '', pathMatch: 'full', component: LandingComponent},
-      // {
-      //   path: 'main',
-      //   loadChildren: () => import('./main.module').then(m => m.MainModule),
-      //   pathMatch: 'full',
-      //   canActivate: [AuthGuard]
-      // },
       {path: 'explore', component: ExploreComponent, canActivate: [AuthGuard]},
       {
         path: 'search', component: SearchComponent,

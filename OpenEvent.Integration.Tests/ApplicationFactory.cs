@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,91 +56,91 @@ namespace OpenEvent.Integration.Tests
     //     }
     // }
 
-    public class TestStartup
-    {
-        private IConfiguration Configuration { get; }
-
-        public TestStartup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            // base.ConfigureServices(services);
-            
-            // Get app settings from appsettings.json
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-            var appSettings = appSettingsSection.Get<AppSettings>();
-
-            // Add cors so angular dev server can make requests.
-            services.AddCors(options =>
-            {
-                options.AddPolicy(name: "AllowOrigin",
-                    builder =>
-                    {
-                        builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod()
-                            .AllowCredentials();
-                    });
-            });
-
-            services.AddDbContext<ApplicationContext>(options => { options.UseInMemoryDatabase("OpenEventTesting"); });
-
-            // Register JWT using secret from app settings.
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(x =>
-                {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
-
-            // Add automapping configuration.
-            services.AddAutoMapper(typeof(TestStartup));
-
-            services.AddControllersWithViews().AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-                }
-            );
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            // base.Configure(app, env);
-            
-            app.UseDeveloperExceptionPage();
-
-            // app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseCors("AllowOrigin");
-
-            app.UseAuthentication();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-            });
-        }
-    }
+    // public class TestStartup
+    // {
+    //     private IConfiguration Configuration { get; }
+    //
+    //     public TestStartup(IConfiguration configuration)
+    //     {
+    //         Configuration = configuration;
+    //     }
+    //
+    //     public void ConfigureServices(IServiceCollection services)
+    //     {
+    //         // base.ConfigureServices(services);
+    //         
+    //         // Get app settings from appsettings.json
+    //         var appSettingsSection = Configuration.GetSection("AppSettings");
+    //         services.Configure<AppSettings>(appSettingsSection);
+    //         var appSettings = appSettingsSection.Get<AppSettings>();
+    //
+    //         // Add cors so angular dev server can make requests.
+    //         services.AddCors(options =>
+    //         {
+    //             options.AddPolicy(name: "AllowOrigin",
+    //                 builder =>
+    //                 {
+    //                     builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod()
+    //                         .AllowCredentials();
+    //                 });
+    //         });
+    //
+    //         services.AddDbContext<ApplicationContext>(options => { options.UseInMemoryDatabase("OpenEventTesting"); });
+    //
+    //         // Register JWT using secret from app settings.
+    //         var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+    //         services.AddAuthentication(x =>
+    //             {
+    //                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    //                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    //             })
+    //             .AddJwtBearer(x =>
+    //             {
+    //                 x.RequireHttpsMetadata = false;
+    //                 x.SaveToken = true;
+    //                 x.TokenValidationParameters = new TokenValidationParameters
+    //                 {
+    //                     ValidateIssuerSigningKey = true,
+    //                     IssuerSigningKey = new SymmetricSecurityKey(key),
+    //                     ValidateIssuer = false,
+    //                     ValidateAudience = false
+    //                 };
+    //             });
+    //
+    //         // Add automapping configuration.
+    //         services.AddAutoMapper(typeof(TestStartup));
+    //
+    //         services.AddControllersWithViews().AddNewtonsoftJson(options =>
+    //             {
+    //                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    //                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+    //                 options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+    //             }
+    //         );
+    //     }
+    //
+    //     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    //     {
+    //         // base.Configure(app, env);
+    //         
+    //         app.UseDeveloperExceptionPage();
+    //
+    //         // app.UseStaticFiles();
+    //
+    //         app.UseRouting();
+    //
+    //         app.UseCors("AllowOrigin");
+    //
+    //         app.UseAuthentication();
+    //
+    //         app.UseEndpoints(endpoints =>
+    //         {
+    //             endpoints.MapControllerRoute(
+    //                 name: "default",
+    //                 pattern: "{controller}/{action=Index}/{id?}");
+    //         });
+    //     }
+    // }
 
     public class ApplicationFactory<TStartup>
         : WebApplicationFactory<TStartup> where TStartup : class
@@ -149,10 +150,33 @@ namespace OpenEvent.Integration.Tests
             builder.ConfigureAppConfiguration(config =>
             {
                 var integrationConfig = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile("appsettings.test.json")
                     .Build();
 
                 config.AddConfiguration(integrationConfig);
+            });
+
+            builder.ConfigureServices(services =>
+            {
+                using var scope = services.BuildServiceProvider().CreateScope();
+                var scopedServices = scope.ServiceProvider;
+                var db = scopedServices.GetRequiredService<ApplicationContext>();
+                var logger = scopedServices
+                    .GetRequiredService<ILogger<ApplicationFactory<TStartup>>>();
+
+                db.Database.EnsureDeleted();
+                // db.Database.EnsureCreated();
+                db.Database.Migrate();
+
+                try
+                {
+                    TestData.InitializeDbForTests(db);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "An error occurred seeding the " +
+                                        "database with test messages. Error: {Message}", ex.Message);
+                }
             });
         }
 
@@ -164,7 +188,7 @@ namespace OpenEvent.Integration.Tests
                     logging.ClearProviders();
                     logging.AddConsole();
                 })
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<TestStartup>(); });
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<TStartup>(); });
         }
     }
 }

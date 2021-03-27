@@ -38,14 +38,14 @@ namespace OpenEvent.Test.Controllers.UserController
         public async Task ShouldUpdateThemePreference()
         {
             var result = await UserController.UpdateThemePreference(UpdateThemePreferenceBody);
-            result.Result.Should().BeOfType<OkObjectResult>().Subject.Value.Should().NotBeNull();
+            result.Should().BeOfType<OkObjectResult>().Subject.Value.Should().NotBeNull();
         }
         
         [Test]
         public async Task ShouldNotFindUser()
         {
             var result = await UserController.UpdateThemePreference(new UpdateThemePreferenceBody(){Id = new Guid()});
-            result.Result.Should().BeOfType<BadRequestObjectResult>().Subject.Value.Should().BeOfType<UserNotFoundException>();
+            result.Should().BeOfType<BadRequestObjectResult>().Subject.Value.Should().BeOfType<UserNotFoundException>();
         }
     }
 }

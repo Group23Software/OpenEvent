@@ -38,6 +38,15 @@ stages:
               testRunTitle: 'Run .net unit tests and collect coverage'
             displayName: 'Unit Tests (.net)'
 
+          - task: DotNetCoreCli@3
+            condition: succeeded()
+            inputs:
+              command: 'test'
+              projects: '**/*.Integration/*.csproj'
+              arguments: -c $(BuildConfiguration) --collect:"XPlat Code Coverage"
+              testRunTitle: 'Run .net integration tests and collect coverage'
+            displayName: 'Integration Tests (.net)'
+
           - task: Npm@1
             condition: succeededOrFailed()
             displayName: "npm install"

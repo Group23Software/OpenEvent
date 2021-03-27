@@ -26,7 +26,9 @@ export class EventComponent implements OnInit, OnChanges
 
   get Promo ()
   {
-    return this.Event.Promos[0];
+    if (this.Event.Promos != null) {
+      return this.Event.Promos[0];
+    }
   }
 
   get Event ()
