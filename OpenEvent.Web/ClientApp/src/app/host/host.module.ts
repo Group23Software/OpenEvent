@@ -15,6 +15,7 @@ import { CreatePromoComponent } from './event-config/promos/create-promo/create-
 import {ChartsModule} from "ng2-charts";
 import { TicketSalesComponent } from './event-config/ticket-sales/ticket-sales.component';
 import { DemographicComponent } from './event-config/demographic/demographic.component';
+import { SocialLinksFormComponent } from '../event/create-event/social-links-form/social-links-form.component';
 
 
 
@@ -29,7 +30,8 @@ import { DemographicComponent } from './event-config/demographic/demographic.com
     PromosComponent,
     CreatePromoComponent,
     TicketSalesComponent,
-    DemographicComponent
+    DemographicComponent,
+    SocialLinksFormComponent
   ],
   imports: [
     CommonModule,

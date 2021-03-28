@@ -1,6 +1,4 @@
-<!--<user-nav></user-nav>-->
-
-<mat-card class="m-3 flex-grow-1 overflow-auto" *ngIf="!loading">
+<mat-card class="m-3 flex-grow-1 overflow-hidden" *ngIf="!loading">
   <div class="overlay" [@inOutAnimation] *ngIf="!UserHasBank">
     <mat-card class="m-auto">
       <div class="mat-headline warn-color">You need to add a bank account!</div>
@@ -46,8 +44,6 @@
             <markdown [data]="markdown" ngPreserveWhitespaces></markdown>
           </div>
 
-          <!--        <thumbnail-edit [thumbnail]="thumbnail" (thumbnailEvent)="thumbnail = $event"></thumbnail-edit>-->
-
           <div class="d-flex flex-row">
             <mat-form-field appearance="outline" class="mr-3">
               <mat-label>Price (£)</mat-label>
@@ -75,41 +71,59 @@
           <address-form [formControl]="addressForm"></address-form>
         </div>
       </mat-step>
-      <mat-step [stepControl]="SocialLinks" [editable]="isEditable">
-        <form [formGroup]="SocialLinks">
+      <mat-step [stepControl]="ImagesAndSocialsForm" [editable]="isEditable">
+        <form [formGroup]="ImagesAndSocialsForm">
           <ng-template matStepLabel>Images & Social</ng-template>
 
-          <image-list [images]="eventImages" (imageEvent)="eventImages = $event"></image-list>
+          <mat-card class="mb-3">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>insert_photo</mat-icon>
+              <mat-card-title>Thumbnail</mat-card-title>
+              <mat-card-subtitle>Upload a thumbnail for your event to catch user's eyes</mat-card-subtitle>
+            </mat-card-header>
+            <thumbnail-edit [thumbnail]="thumbnail" (thumbnailEvent)="thumbnail = $event"></thumbnail-edit>
+          </mat-card>
 
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Site URL</mat-label>
-            <input matInput formControlName="Site" placeholder="https://www.custom.co.uk" autocomplete="off">
-          </mat-form-field>
+          <mat-card class="mb-3">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>collections</mat-icon>
+              <mat-card-title>Gallery</mat-card-title>
+              <mat-card-subtitle>Upload images to be shown in the event's image gallery</mat-card-subtitle>
+            </mat-card-header>
+            <image-list (imageEvent)="eventImages = $event"></image-list>
+          </mat-card>
 
-          <div class="d-flex flex-row">
-            <div class="d-flex flex-column w-100 mr-3">
-              <mat-form-field appearance="outline">
-                <mat-label>Instagram</mat-label>
-                <input matInput formControlName="Instagram" placeholder="username" class="w-100" autocomplete="off">
-              </mat-form-field>
+          <social-links-form formControlName="socialLinks"></social-links-form>
 
-              <mat-form-field appearance="outline">
-                <mat-label>Twitter</mat-label>
-                <input matInput formControlName="Twitter" placeholder="@username" class="w-100" autocomplete="off">
-              </mat-form-field>
-            </div>
-            <div class="d-flex flex-column w-100">
-              <mat-form-field appearance="outline">
-                <mat-label>Facebook</mat-label>
-                <input matInput formControlName="Facebook" placeholder="username" class="w-100" autocomplete="off">
-              </mat-form-field>
+<!--          <mat-form-field appearance="outline" class="w-100">-->
+<!--            <mat-label>Site URL</mat-label>-->
+<!--            <input matInput formControlName="Site" placeholder="https://www.custom.co.uk" autocomplete="off">-->
+<!--          </mat-form-field>-->
 
-              <mat-form-field appearance="outline">
-                <mat-label>Reddit</mat-label>
-                <input matInput formControlName="Reddit" placeholder="username" class="w-100" autocomplete="off">
-              </mat-form-field>
-            </div>
-          </div>
+<!--          <div class="d-flex flex-row">-->
+<!--            <div class="d-flex flex-column w-100 mr-3">-->
+<!--              <mat-form-field appearance="outline">-->
+<!--                <mat-label>Instagram</mat-label>-->
+<!--                <input matInput formControlName="Instagram" placeholder="username" class="w-100" autocomplete="off">-->
+<!--              </mat-form-field>-->
+
+<!--              <mat-form-field appearance="outline">-->
+<!--                <mat-label>Twitter</mat-label>-->
+<!--                <input matInput formControlName="Twitter" placeholder="@username" class="w-100" autocomplete="off">-->
+<!--              </mat-form-field>-->
+<!--            </div>-->
+<!--            <div class="d-flex flex-column w-100">-->
+<!--              <mat-form-field appearance="outline">-->
+<!--                <mat-label>Facebook</mat-label>-->
+<!--                <input matInput formControlName="Facebook" placeholder="username" class="w-100" autocomplete="off">-->
+<!--              </mat-form-field>-->
+
+<!--              <mat-form-field appearance="outline">-->
+<!--                <mat-label>Reddit</mat-label>-->
+<!--                <input matInput formControlName="Reddit" placeholder="username" class="w-100" autocomplete="off">-->
+<!--              </mat-form-field>-->
+<!--            </div>-->
+<!--          </div>-->
         </form>
       </mat-step>
       <mat-step>
@@ -117,12 +131,12 @@
         <div id="eventPreview">
           <mat-card class="d-flex flex-row align-items-center my-3">
             <div style="flex: 1; font-size: larger">Preview</div>
-            <!--          <button type="submit" mat-flat-button color="primary" (click)="create()">Create</button>-->
-            <button type="submit" mat-flat-button color="primary" (click)="create()" [disabled]="createEventForm.invalid || addressForm.invalid || SocialLinks.invalid">Create event</button>
+                      <button type="submit" mat-flat-button color="primary" (click)="create()">Create</button>
+<!--            <button type="submit" mat-flat-button color="primary" (click)="create()" [disabled]="createEventForm.invalid || addressForm.invalid || SocialLinks.invalid">Create event</button>-->
           </mat-card>
           <mat-card>
             <mat-card-content>
-              <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>
+<!--              <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>-->
             </mat-card-content>
           </mat-card>
         </div>

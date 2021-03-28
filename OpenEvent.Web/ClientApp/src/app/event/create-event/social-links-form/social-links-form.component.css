@@ -1,0 +1,32 @@
+#SelectedSocialLinks {
+  display: flex;
+  flex-direction: column;
+}
+
+#SelectedSocialLinks > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+form {
+  width: 100%;
+  display: flex;
+}
+
+form > mat-form-field {
+  margin-right: 1rem;
+}
+
+.selectedRow {
+  margin-right: 1rem;
+  margin-bottom: 25.5px;
+}
+
+#SocialLinkSelection {
+  align-items: center;
+}
+
+#SocialLinkSelection > button {
+  margin-bottom: 25.5px;
+}

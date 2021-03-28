@@ -18,7 +18,7 @@ namespace OpenEvent.Web
     {
         private static readonly Counter TickTock =
             Metrics.CreateCounter("openEvent_ticks_total", "Just keeps on ticking");
-        
+
         /// <summary>
         /// Main method run on startup
         /// </summary>
@@ -33,13 +33,7 @@ namespace OpenEvent.Web
             //     TickTock.Inc();
             //     Thread.Sleep(TimeSpan.FromSeconds(1));
             // }
-            
-            Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.Seq("http://localhost:80", apiKey: "UgrmhkMuEVCZxOX89WUm")
-                .CreateLogger();
-            
+
             var host = CreateHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
             {
@@ -92,6 +86,13 @@ namespace OpenEvent.Web
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseSerilog((context, services, configuration) => configuration
+                    .ReadFrom.Configuration(context.Configuration)
+                    .ReadFrom.Services(services)
+                    .Enrich.FromLogContext()
+                    .WriteTo.Console()
+                    .WriteTo.Seq("http://localhost:80", apiKey: "UgrmhkMuEVCZxOX89WUm")
+                )
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();

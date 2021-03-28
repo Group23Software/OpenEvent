@@ -11,7 +11,6 @@ import {Observable, throwError} from "rxjs";
 import {AuthService} from "../_Services/auth.service";
 import {catchError, map} from "rxjs/operators";
 import {TriggerService} from "../_Services/trigger.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {IteratorStatus} from "../_extensions/iterator/iterator.component";
 
 @Injectable({
@@ -19,7 +18,7 @@ import {IteratorStatus} from "../_extensions/iterator/iterator.component";
 })
 export class AuthInterceptor implements HttpInterceptor
 {
-  constructor (private authService: AuthService, private trigger: TriggerService, private snackBar: MatSnackBar)
+  constructor (private authService: AuthService, private trigger: TriggerService)
   {
   }
 
@@ -31,7 +30,6 @@ export class AuthInterceptor implements HttpInterceptor
 
     if (token != null)
     {
-      console.log("using bearer token");
       req = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
@@ -42,13 +40,11 @@ export class AuthInterceptor implements HttpInterceptor
     return next.handle(req).pipe(
       map((event: HttpEvent<any>) =>
       {
-        console.log("there was an http event", event);
         if (event instanceof HttpResponse) this.trigger.loading.emit(false);
         return event;
       }),
       catchError((error: HttpErrorResponse) =>
       {
-        console.log("there was an error response");
         this.trigger.loading.emit(false);
         this.trigger.IterateForever(error.message,IteratorStatus.bad);
         return throwError(error);

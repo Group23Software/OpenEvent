@@ -51,12 +51,6 @@ namespace OpenEvent.Web
             services.Configure<AppSettings>(appSettingsSection);
             var appSettings = appSettingsSection.Get<AppSettings>();
 
-            // if in development use local db
-            if (Environment.IsDevelopment())
-            {
-                appSettings.ConnectionString = appSettings.LocalConnectionString;
-            }
-
             services.AddResponseCompression(options => { options.Providers.Add<GzipCompressionProvider>(); });
             services.AddLogging(loggingBuilder => { loggingBuilder.AddSeq(); });
 

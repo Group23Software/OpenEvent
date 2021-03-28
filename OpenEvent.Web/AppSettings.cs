@@ -16,11 +16,6 @@ namespace OpenEvent.Web
         public string ConnectionString { get; set; }
 
         /// <summary>
-        /// Local connection string.
-        /// </summary>
-        public string LocalConnectionString { get; set; }
-
-        /// <summary>
         /// Azure maps api key for getting cords
         /// </summary>
         public string AzureMapsKey { get; set; }

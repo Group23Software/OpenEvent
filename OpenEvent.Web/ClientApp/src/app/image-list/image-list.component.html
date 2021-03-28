@@ -1,7 +1,7 @@
 <div id="images">
   <div *ngFor="let image of images" class="eventImg">
-    <img [src]="image.Source" [alt]="image.Label"> <label>{{image.Label}}</label>
+    <img [src]="image.Source" [alt]="image.Label" class="mat-elevation-z1"> <label>{{image.Label}}</label>
     <button mat-mini-fab class="imageDeleteButton" (click)="removeImage(image)"><mat-icon>delete_forever</mat-icon></button>
   </div>
-  <div id="newImageTile"><button mat-fab (click)="imageUpload()" id="newImageButton"><mat-icon>add</mat-icon></button></div>
+  <div id="newImageTile" class="mat-elevation-z1"><button mat-fab (click)="imageUpload()" id="newImageButton"><mat-icon>add</mat-icon></button></div>
 </div>

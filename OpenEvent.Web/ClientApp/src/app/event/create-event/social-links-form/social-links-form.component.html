@@ -1,0 +1,35 @@
+<div id="SelectedSocialLinks">
+  <div *ngFor="let social of optionsSelected" class="mb-2">
+
+    <button mat-icon-button class="selectedRow" (click)="removeSocialLink(social)" color="accent">
+      <mat-icon>remove</mat-icon>
+    </button>
+
+    <social class="selectedRow" [socialLink]="social"></social>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Url</mat-label>
+      <input [(ngModel)]="social.Link" matInput [value]="social.Link">
+    </mat-form-field>
+  </div>
+</div>
+
+<form (ngSubmit)="addSocialLink()" id="SocialLinkSelection" [formGroup]="socialLinkForm" *ngIf="optionsLeft.length > 0">
+
+  <mat-form-field appearance="outline">
+    <mat-label>Social media</mat-label>
+    <mat-select formControlName="socialMedia">
+      <mat-option *ngFor="let option of optionsLeft" [value]="option">{{option}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="flex-grow-1" appearance="outline">
+    <mat-label>Url</mat-label>
+    <input matInput formControlName="url"/>
+  </mat-form-field>
+
+  <button type="submit" mat-fab color="primary">
+    <mat-icon>add</mat-icon>
+  </button>
+
+</form>

@@ -63,29 +63,33 @@ export class CreateEventComponent implements OnInit
     Reddit: new FormControl('')
   });
   public isEditable: boolean = true;
-  public eventImages: ImageViewModel[] = [
-    {
-      Label: "slippers",
-      Source: testImg
-    },
-    {
-      Label: "slippers",
-      Source: testImg
-    },
-    {
-      Label: "slippers",
-      Source: testImg
-    },
-    {
-      Label: "slippers",
-      Source: testImg
-    },
-    {
-      Label: "slippers",
-      Source: testImg
-    }
-  ];
+  public eventImages: ImageViewModel[];
+  // public eventImages: ImageViewModel[] = [
+  //   {
+  //     Label: "slippers",
+  //     Source: testImg
+  //   },
+  //   {
+  //     Label: "slippers",
+  //     Source: testImg
+  //   },
+  //   {
+  //     Label: "slippers",
+  //     Source: testImg
+  //   },
+  //   {
+  //     Label: "slippers",
+  //     Source: testImg
+  //   },
+  //   {
+  //     Label: "slippers",
+  //     Source: testImg
+  //   }
+  // ];
   markdown: string;
+  ImagesAndSocialsForm = new FormGroup({
+    socialLinks: new FormControl('',[Validators.required])
+  });
 
 
   constructor (private dialog: MatDialog, private userService: UserService, private eventService: EventService, private router: Router)
@@ -170,16 +174,16 @@ export class CreateEventComponent implements OnInit
 
     console.log(createEventBody);
 
-    this.eventService.Create(createEventBody).subscribe(response =>
-    {
-      console.log(response);
-      this.loading = false;
-      this.router.navigate(['/event', response.Id])
-    }, (error: HttpErrorResponse) =>
-    {
-      console.error(error);
-      this.CreateError = error.error.Message;
-      this.loading = false;
-    });
+    // this.eventService.Create(createEventBody).subscribe(response =>
+    // {
+    //   console.log(response);
+    //   this.loading = false;
+    //   this.router.navigate(['/event', response.Id])
+    // }, (error: HttpErrorResponse) =>
+    // {
+    //   console.error(error);
+    //   this.CreateError = error.error.Message;
+    //   this.loading = false;
+    // });
   }
 }

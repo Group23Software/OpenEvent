@@ -179,6 +179,7 @@ export class AccountPreferencesComponent implements OnInit, OnDestroy
   {
     this.userService.UpdateAddress({Id: this.user.Id, Address: this.newAddressForm.value}).subscribe(x =>
     {
+      this.newAddressForm.disable();
       this.trigger.Iterate('Updated address', 1000, IteratorStatus.good);
     }, (e: HttpErrorResponse) =>
     {

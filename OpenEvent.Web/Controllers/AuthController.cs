@@ -12,6 +12,7 @@ namespace OpenEvent.Web.Controllers
     /// <summary>
     /// API controller for all authentication related endpoints.
     /// </summary>
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
