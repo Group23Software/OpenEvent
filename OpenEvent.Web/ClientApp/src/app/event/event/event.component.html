@@ -3,12 +3,16 @@
 </mat-card>
 
 <div class="container" *ngIf="Event">
-  <div id="eventHeader" ngClass.lt-sm="flex-column">
-    <div class="mr-3 flex-grow-1">
-      <div style="width: 80%; height: 80%;">
-        <div>{{Event.Name}}</div>
-      </div>
-    </div>
+  <!--  <div id="eventHeader" ngClass.lt-sm="flex-column">-->
+  <!--    <div class="mr-3 flex-grow-1">-->
+  <!--      <div style="width: 80%; height: 80%;">-->
+  <!--        <div>{{Event.Name}}</div>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
+
+  <div class="my-3">
+    <div class="display-4">{{Event.Name}}</div>
   </div>
 
   <mat-card id="promoBanner" *ngIf="Promo">
@@ -16,7 +20,7 @@
     <div class="mat-headline">{{Promo.Discount}}% Off Now!</div>
   </mat-card>
 
-  <gallery id="imageGallery" *ngIf="eventImages" [items]="eventImages" [thumb]="false" imageSize="cover" loadingStrategy="lazy"></gallery>
+  <gallery id="imageGallery" *ngIf="eventImages && eventImages.length > 0" [items]="eventImages" [thumb]="false" imageSize="cover" loadingStrategy="lazy"></gallery>
 
   <div id="eventInfo">
     <div class="d-flex flex-row" ngClass.lt-sm="flex-column">
@@ -27,8 +31,7 @@
       <mat-card id="ticketsAndPrice">
         <div class="mr-3">{{Event.TicketsLeft}} ticket(s) left!</div>
         <button *ngIf="Promo && Event.TicketsLeft != 0" mat-flat-button color="accent" (click)="purchase()">
-          <span style="text-decoration: line-through; margin-right: 0.25rem">{{Event.Price / 100 |currency:'GBP'}}</span>
-          <span>{{(Event.Price / 100) - (((Event.Price / 100) / 100) * Promo.Discount) |currency:'GBP'}}</span>
+          <span style="text-decoration: line-through; margin-right: 0.25rem">{{Event.Price / 100 |currency:'GBP'}}</span> <span>{{(Event.Price / 100) - (((Event.Price / 100) / 100) * Promo.Discount) |currency:'GBP'}}</span>
         </button>
         <button *ngIf="!Promo" mat-flat-button color="accent" [disabled]="Event.TicketsLeft == 0" (click)="purchase()">{{Event.Price / 100 |currency:'GBP'}}</button>
       </mat-card>
@@ -55,7 +58,7 @@
           </mat-card-header>
           <mat-card-content>
             <div *ngIf="Event.IsOnline">Online event</div>
-            <div *ngIf="!Event.IsOnline">
+            <div *ngIf="!Event.IsOnline && Event.Address != null">
               <div id="address">
                 <div>{{Event.Address.AddressLine1}}</div>
                 <div>{{Event.Address.AddressLine2}}</div>

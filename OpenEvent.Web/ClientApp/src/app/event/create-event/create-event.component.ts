@@ -1,11 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {ImageViewModel} from "../../_models/Image";
 import {MatDialog} from "@angular/material/dialog";
-import {testImg} from "./TestImage";
 import {CreateEventBody, EventDetailModel} from "../../_models/Event";
 import {UserService} from "../../_Services/user.service";
-import {SocialMedia} from "../../_models/SocialMedia";
 import {EventService} from "../../_Services/event.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Category} from "../../_models/Category";
@@ -29,7 +26,6 @@ export class CreateEventComponent implements OnInit
     return this.userService.User?.BankAccounts?.length > 0
   }
 
-  public thumbnail: ImageViewModel;
   public minDate: Date;
   public defaultTime: number[];
   public CreateError: string;
@@ -55,42 +51,15 @@ export class CreateEventComponent implements OnInit
 
   public addressForm = new FormControl();
 
-  public SocialLinks = new FormGroup({
-    Site: new FormControl(''),
-    Instagram: new FormControl(''),
-    Twitter: new FormControl(''),
-    Facebook: new FormControl(''),
-    Reddit: new FormControl('')
-  });
   public isEditable: boolean = true;
-  public eventImages: ImageViewModel[];
-  // public eventImages: ImageViewModel[] = [
-  //   {
-  //     Label: "slippers",
-  //     Source: testImg
-  //   },
-  //   {
-  //     Label: "slippers",
-  //     Source: testImg
-  //   },
-  //   {
-  //     Label: "slippers",
-  //     Source: testImg
-  //   },
-  //   {
-  //     Label: "slippers",
-  //     Source: testImg
-  //   },
-  //   {
-  //     Label: "slippers",
-  //     Source: testImg
-  //   }
-  // ];
-  markdown: string;
-  ImagesAndSocialsForm = new FormGroup({
-    socialLinks: new FormControl('',[Validators.required])
+
+  public ImagesAndSocialsForm = new FormGroup({
+    socialLinks: new FormControl([]),
+    thumbnail: new FormControl('', [Validators.required]),
+    images: new FormControl([], [Validators.required]),
   });
 
+  public markdown: string;
 
   constructor (private dialog: MatDialog, private userService: UserService, private eventService: EventService, private router: Router)
   {
@@ -111,7 +80,6 @@ export class CreateEventComponent implements OnInit
   {
     if (event.selectedIndex == 3)
     {
-      console.log('updating preview data');
       this.eventPreview = {
         Address: this.addressForm.value,
         Categories: this.createEventForm.controls.Categories.value,
@@ -119,20 +87,14 @@ export class CreateEventComponent implements OnInit
         EndLocal: this.DateForm.controls.EndLocal.value,
         EndUTC: undefined,
         Id: "",
-        Images: this.eventImages,
+        Images: this.ImagesAndSocialsForm.controls.images.value,
         IsOnline: this.IsOnline.value == true,
         Name: this.createEventForm.controls.Name.value,
         Price: this.createEventForm.controls.Price.value,
-        SocialLinks: [
-          {SocialMedia: SocialMedia.Site, Link: this.SocialLinks.controls.Site.value},
-          {SocialMedia: SocialMedia.Instagram, Link: this.SocialLinks.controls.Instagram.value},
-          {SocialMedia: SocialMedia.Twitter, Link: this.SocialLinks.controls.Twitter.value},
-          {SocialMedia: SocialMedia.Facebook, Link: this.SocialLinks.controls.Facebook.value},
-          {SocialMedia: SocialMedia.Reddit, Link: this.SocialLinks.controls.Reddit.value},
-        ],
+        SocialLinks: this.ImagesAndSocialsForm.controls.socialLinks.value,
         StartLocal: this.DateForm.controls.StartLocal.value,
         StartUTC: undefined,
-        Thumbnail: this.thumbnail,
+        Thumbnail: this.ImagesAndSocialsForm.controls.thumbnail.value,
         TicketsLeft: this.createEventForm.controls.NumberOfTickets.value,
         Promos: null,
       }
@@ -147,8 +109,6 @@ export class CreateEventComponent implements OnInit
   create ()
   {
     this.loading = true;
-    console.log(this);
-    console.log(this.DateForm);
 
     let createEventBody: CreateEventBody = {
       Address: this.addressForm.value != null ? this.addressForm.value: null,
@@ -156,34 +116,30 @@ export class CreateEventComponent implements OnInit
       Description: this.createEventForm.controls.Description.value,
       EndLocal: this.DateForm.controls.EndLocal.value,
       HostId: this.userService.User.Id,
-      Images: this.eventImages,
+      Images: this.ImagesAndSocialsForm.controls.images.value,
       IsOnline: this.IsOnline.value == true,
       Name: this.createEventForm.controls.Name.value,
       NumberOfTickets: this.createEventForm.controls.NumberOfTickets.value,
-      Price: this.createEventForm.controls.Price.value,
-      SocialLinks: [
-        {SocialMedia: SocialMedia.Site, Link: this.SocialLinks.controls.Site.value},
-        {SocialMedia: SocialMedia.Instagram, Link: this.SocialLinks.controls.Instagram.value},
-        {SocialMedia: SocialMedia.Twitter, Link: this.SocialLinks.controls.Twitter.value},
-        {SocialMedia: SocialMedia.Facebook, Link: this.SocialLinks.controls.Facebook.value},
-        {SocialMedia: SocialMedia.Reddit, Link: this.SocialLinks.controls.Reddit.value},
-      ],
+      Price: this.createEventForm.controls.Price.value * 100,
+      SocialLinks: this.ImagesAndSocialsForm.controls.socialLinks.value,
       StartLocal: this.DateForm.controls.StartLocal.value,
-      Thumbnail: this.thumbnail
+      Thumbnail: this.ImagesAndSocialsForm.controls.thumbnail.value,
     }
 
     console.log(createEventBody);
 
-    // this.eventService.Create(createEventBody).subscribe(response =>
-    // {
-    //   console.log(response);
-    //   this.loading = false;
-    //   this.router.navigate(['/event', response.Id])
-    // }, (error: HttpErrorResponse) =>
-    // {
-    //   console.error(error);
-    //   this.CreateError = error.error.Message;
-    //   this.loading = false;
-    // });
+    this.eventService.Create(createEventBody).subscribe(response =>
+    {
+      console.log(response);
+      this.loading = false;
+
+      // navigate to the event once created
+      this.router.navigate(['/event', response.Id])
+    }, (error: HttpErrorResponse) =>
+    {
+      console.error(error);
+      this.CreateError = error.error.Message;
+      this.loading = false;
+    });
   }
 }

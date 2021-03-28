@@ -1,5 +1,4 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {CreateEventComponent} from './create-event.component';
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {UserService} from "../../_Services/user.service";
@@ -32,7 +31,7 @@ describe('CreateEventComponent', () =>
 
     dialogMock = jasmine.createSpyObj('matDialog', ['open', 'afterClosed']);
 
-    userServiceMock = jasmine.createSpyObj('UserService', ['User','NeedAccountUser']);
+    userServiceMock = jasmine.createSpyObj('UserService', ['User', 'NeedAccountUser']);
     userServiceMock.NeedAccountUser.and.returnValue(of(null));
 
     eventServiceMock = jasmine.createSpyObj('EventService', ['GetAllCategories', 'Create']);
@@ -112,23 +111,27 @@ describe('CreateEventComponent', () =>
       Lon: 1,
       Lat: 1
     });
+
     component.createEventForm.controls.Categories.setValue(null);
     component.createEventForm.controls.Description.setValue("Description");
-    component.DateForm.controls.EndLocal.setValue(new Date(0));
-    component.eventImages = null;
-    component.IsOnline.setValue(true);
     component.createEventForm.controls.Name.setValue("Name");
     component.createEventForm.controls.Price.setValue(10);
-
-    component.SocialLinks.controls.Site.setValue("Site");
-    component.SocialLinks.controls.Instagram.setValue("Instagram");
-    component.SocialLinks.controls.Twitter.setValue("Twitter");
-    component.SocialLinks.controls.Facebook.setValue("Facebook");
-    component.SocialLinks.controls.Reddit.setValue("Reddit");
+    component.createEventForm.controls.NumberOfTickets.setValue(10);
 
     component.DateForm.controls.StartLocal.setValue(new Date(0));
-    component.thumbnail = null;
-    component.createEventForm.controls.NumberOfTickets.setValue(10);
+    component.DateForm.controls.EndLocal.setValue(new Date(0));
+
+    component.IsOnline.setValue(true);
+
+    component.ImagesAndSocialsForm.controls.images.setValue(null);
+    component.ImagesAndSocialsForm.controls.socialLinks.setValue([
+      {SocialMedia: SocialMedia.Site, Link: "Site"},
+      {SocialMedia: SocialMedia.Instagram, Link: "Instagram"},
+      {SocialMedia: SocialMedia.Twitter, Link: "Twitter"},
+      {SocialMedia: SocialMedia.Facebook, Link: "Facebook"},
+      {SocialMedia: SocialMedia.Reddit, Link: "Reddit"}
+    ]);
+    component.ImagesAndSocialsForm.controls.thumbnail.setValue(null);
 
     let e = new StepperSelectionEvent();
     e.selectedIndex = 3

@@ -11,19 +11,25 @@ import {ImageUploadComponent} from "../../_extensions/image-upload/image-upload.
 import {UpdateUserNameBody, UserAccountModel} from "../../_models/User";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
-import {Component} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {TriggerService} from "../../_Services/trigger.service";
 import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
-
+import {MatCardModule} from "@angular/material/card";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {MatInputModule} from "@angular/material/input";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
+import {MockAddressFormComponent} from "../../address-form/address-form.mock";
 
 @Component({
   template: ''
 })
 export class fakeComponent
 {
-
 }
-
 
 describe('AccountPreferencesComponent', () =>
 {
@@ -43,7 +49,7 @@ describe('AccountPreferencesComponent', () =>
 
     dialogMock = jasmine.createSpyObj('matDialog', ['open']);
 
-    userServiceMock = jasmine.createSpyObj('userService', ['Destroy', 'UpdateUserName', 'UpdateAvatar', 'User', 'UserNameExists','OpenConnection','DestroyConnection']);
+    userServiceMock = jasmine.createSpyObj('userService', ['Destroy', 'UpdateUserName', 'UpdateAvatar', 'User', 'UserNameExists', 'OpenConnection', 'DestroyConnection']);
     userServiceMock.UserNameExists.and.returnValue(of(false));
 
     authMock = jasmine.createSpyObj('authService', ['IsAuthenticated', 'Login', 'UpdatePassword']);
@@ -54,9 +60,21 @@ describe('AccountPreferencesComponent', () =>
       imports: [
         RouterTestingModule.withRoutes([{path: 'login', component: fakeComponent}]),
         ImageCropperModule,
-        MatDialogModule
+        MatDialogModule,
+        MatCardModule,
+        MatProgressBarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule
       ],
-      declarations: [AccountPreferencesComponent],
+      declarations: [
+        AccountPreferencesComponent,
+        MockAddressFormComponent
+      ],
       providers: [
         {provide: UserService, useValue: userServiceMock},
         {provide: MatDialog, useValue: dialogMock},
@@ -124,7 +142,7 @@ describe('AccountPreferencesComponent', () =>
 
     expect(component.avatarFileName).toBeNull();
     expect(component.updateAvatarLoading).toBeFalse();
-    expect(triggerMock.Iterate).toHaveBeenCalledWith('Updated avatar',1000,IteratorStatus.good);
+    expect(triggerMock.Iterate).toHaveBeenCalledWith('Updated avatar', 1000, IteratorStatus.good);
   });
 
   it('should handle update avatar error', () =>
@@ -222,7 +240,7 @@ describe('AccountPreferencesComponent', () =>
 
     component.UpdatePassword();
     expect(component.updatePasswordLoading).toBe(false);
-    expect(triggerMock.Iterate).toHaveBeenCalledWith('Updated password',1000,IteratorStatus.good);
+    expect(triggerMock.Iterate).toHaveBeenCalledWith('Updated password', 1000, IteratorStatus.good);
   });
 
   it('should handle password error', () =>

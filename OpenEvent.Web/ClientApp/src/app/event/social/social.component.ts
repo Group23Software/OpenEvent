@@ -9,7 +9,7 @@ import {SocialMedia} from "../../_models/SocialMedia";
 })
 export class SocialComponent implements OnInit
 {
-
+  @Input() socialString: string;
   @Input() socialLink: SocialLinkViewModel;
   public image: string;
 
@@ -19,6 +19,13 @@ export class SocialComponent implements OnInit
 
   ngOnInit (): void
   {
+    console.log(this.socialLink,this.socialString);
+
+    if (this.socialString != null)
+    {
+      this.socialLink = {SocialMedia: SocialMedia[this.socialString], Link: ''}
+    };
+
     if (this.socialLink)
     {
       switch (this.socialLink.SocialMedia)

@@ -19,7 +19,18 @@
   <mat-form-field appearance="outline">
     <mat-label>Social media</mat-label>
     <mat-select formControlName="socialMedia">
-      <mat-option *ngFor="let option of optionsLeft" [value]="option">{{option}}</mat-option>
+      <mat-select-trigger>
+        <span class="d-flex align-items-center">
+<!--          <social class="mr-1" [socialString]="socialLinkForm.controls.socialMedia.value"></social>-->
+          {{socialLinkForm.controls.socialMedia.value}}
+        </span>
+      </mat-select-trigger>
+      <mat-option *ngFor="let option of optionsLeft" [value]="option">
+        <span class="d-flex align-items-center">
+          <social class="mr-1" [socialString]="option"></social>
+          {{option}}
+        </span>
+      </mat-option>
     </mat-select>
   </mat-form-field>
 

@@ -15,7 +15,7 @@
           <form id="newUserName" (ngSubmit)="UpdateUserName()">
             <mat-form-field appearance="outline">
               <mat-label>User name</mat-label>
-              <input matInput type="text" [formControl]="userName" id="userName">
+              <input matInput type="text" [formControl]="userName" id="userName" name="userName">
               <mat-error *ngIf="username.errors && username.errors.usernameExists">
                 Username already in use
               </mat-error>
@@ -53,8 +53,8 @@
           <mat-card-title>Address</mat-card-title>
           <mat-card-subtitle>Billing address</mat-card-subtitle>
         </mat-card-header>
-        <address-form [Address]="user.Address" [formControl]="newAddressForm"></address-form>
-        <button [disabled]="newAddressForm.invalid || newAddressForm.disabled" (click)="newAddress()" mat-flat-button color="accent" style="width: fit-content">Submit</button>
+          <address-form [Address]="user.Address" [formControl]="newAddressForm"></address-form>
+          <button [disabled]="newAddressForm.invalid || newAddressForm.disabled" (click)="newAddress()" mat-flat-button color="accent" style="width: fit-content">Submit</button>
       </mat-card>
     </div>
 
@@ -68,14 +68,14 @@
         <form [formGroup]="newPasswordForm" id="newPassword" ngClass.lt-sm="flex-column" (ngSubmit)="UpdatePassword()">
           <mat-form-field appearance="outline">
             <mat-label>Password</mat-label>
-            <input matInput type="password" formControlName="password" placeholder="P@ssword1">
+            <input matInput type="password" formControlName="password" placeholder="P@ssword1" name="password">
             <mat-error>
               Password must have 8+ characters, 1+ uppercase letter, lowercase letter, number and special character
             </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Confirm Password</mat-label>
-            <input matInput type="password" formControlName="passwordConfirm" placeholder="P@ssword1">
+            <input matInput type="password" formControlName="passwordConfirm" placeholder="P@ssword1" name="passwordConfirm">
             <mat-error *ngIf="passwordConfirm.hasError('matches')">
               Passwords must match
             </mat-error>

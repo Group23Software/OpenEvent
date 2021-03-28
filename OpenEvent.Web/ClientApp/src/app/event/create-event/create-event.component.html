@@ -1,4 +1,4 @@
-<mat-card class="m-3 flex-grow-1 overflow-hidden" *ngIf="!loading">
+<mat-card class="m-3 flex-grow-1 overflow-auto" *ngIf="!loading">
   <div class="overlay" [@inOutAnimation] *ngIf="!UserHasBank">
     <mat-card class="m-auto">
       <div class="mat-headline warn-color">You need to add a bank account!</div>
@@ -9,11 +9,10 @@
     <mat-card-title>Create Event</mat-card-title>
     <mat-card-subtitle>Fill in all the information and preview your event</mat-card-subtitle>
   </mat-card-header>
-  <div fxLayout style="height: 95%">
-    <mat-horizontal-stepper [linear]="false" (selectionChange)="loadEventData($event)" fxLayout="column" fxFlex="100" fxLayoutAlign=" stretch">
-      <mat-step [stepControl]="createEventForm" [editable]="isEditable" fxFlex="100" fxLayout="column">
+  <mat-card-content>
+    <mat-horizontal-stepper [linear]="false" (selectionChange)="loadEventData($event)">
+      <mat-step [stepControl]="createEventForm" [editable]="isEditable" label="Basic info">
         <form [formGroup]="createEventForm" id="createEventForm">
-          <ng-template matStepLabel>Basic info</ng-template>
 
           <mat-form-field appearance="outline">
             <mat-label>Name</mat-label>
@@ -44,104 +43,150 @@
             <markdown [data]="markdown" ngPreserveWhitespaces></markdown>
           </div>
 
-          <div class="d-flex flex-row">
-            <mat-form-field appearance="outline" class="mr-3">
-              <mat-label>Price (£)</mat-label>
-              <input autocomplete="off" matInput type="number" min="0" step="0.01" formControlName="Price" placeholder="00.00">
-            </mat-form-field>
-
-            <!--      //TODO: Break down of fees. //TODO: Slider for price.-->
-
-            <mat-form-field appearance="outline">
-              <mat-label>Tickets</mat-label>
-              <input autocomplete="off" matInput type="number" min="0" step="1" formControlName="NumberOfTickets" placeholder="1">
-            </mat-form-field>
-          </div>
-
-          <div class="mat-caption mb-3">Please select at least one category</div>
-          <category-list [categories]="categoryStore" [inset]="true" formControlName="Categories"></category-list>
-          <mat-error *ngIf="createEventForm.controls.Categories.invalid && createEventForm.controls.Categories.dirty">You must select at least one category</mat-error>
-
-        </form>
-      </mat-step>
-      <mat-step [stepControl]="addressForm" [editable]="isEditable" fxFlex="100" fxLayout="column">
-        <ng-template matStepLabel>Address</ng-template>
-        <div class="d-flex flex-column w-100">
-          <mat-checkbox id="isOnline" [formControl]="IsOnline" (click)="clickedOnline()">Online?</mat-checkbox>
-          <address-form [formControl]="addressForm"></address-form>
-        </div>
-      </mat-step>
-      <mat-step [stepControl]="ImagesAndSocialsForm" [editable]="isEditable">
-        <form [formGroup]="ImagesAndSocialsForm">
-          <ng-template matStepLabel>Images & Social</ng-template>
-
           <mat-card class="mb-3">
             <mat-card-header>
-              <mat-icon mat-card-avatar>insert_photo</mat-icon>
-              <mat-card-title>Thumbnail</mat-card-title>
-              <mat-card-subtitle>Upload a thumbnail for your event to catch user's eyes</mat-card-subtitle>
+              <mat-icon mat-card-avatar>local_offer</mat-icon>
+              <mat-card-title>Tickets & Price</mat-card-title>
+              <mat-card-subtitle>Set the price and number of tickets</mat-card-subtitle>
             </mat-card-header>
-            <thumbnail-edit [thumbnail]="thumbnail" (thumbnailEvent)="thumbnail = $event"></thumbnail-edit>
-          </mat-card>
+            <mat-card-content class="d-flex flex-row">
+              <div class="d-flex flex-column mr-3 flex-grow-1">
+                <mat-form-field appearance="outline">
+                  <mat-label>Price (£)</mat-label>
+                  <input autocomplete="off" matInput type="number" min="0" step="0.01" formControlName="Price" placeholder="00.00">
+                </mat-form-field>
 
-          <mat-card class="mb-3">
-            <mat-card-header>
-              <mat-icon mat-card-avatar>collections</mat-icon>
-              <mat-card-title>Gallery</mat-card-title>
-              <mat-card-subtitle>Upload images to be shown in the event's image gallery</mat-card-subtitle>
-            </mat-card-header>
-            <image-list (imageEvent)="eventImages = $event"></image-list>
-          </mat-card>
+                <mat-form-field appearance="outline">
+                  <mat-label>Tickets</mat-label>
+                  <input autocomplete="off" matInput type="number" min="0" step="1" formControlName="NumberOfTickets" placeholder="1">
+                </mat-form-field>
+              </div>
 
-          <social-links-form formControlName="socialLinks"></social-links-form>
-
-<!--          <mat-form-field appearance="outline" class="w-100">-->
-<!--            <mat-label>Site URL</mat-label>-->
-<!--            <input matInput formControlName="Site" placeholder="https://www.custom.co.uk" autocomplete="off">-->
-<!--          </mat-form-field>-->
-
-<!--          <div class="d-flex flex-row">-->
-<!--            <div class="d-flex flex-column w-100 mr-3">-->
-<!--              <mat-form-field appearance="outline">-->
-<!--                <mat-label>Instagram</mat-label>-->
-<!--                <input matInput formControlName="Instagram" placeholder="username" class="w-100" autocomplete="off">-->
-<!--              </mat-form-field>-->
-
-<!--              <mat-form-field appearance="outline">-->
-<!--                <mat-label>Twitter</mat-label>-->
-<!--                <input matInput formControlName="Twitter" placeholder="@username" class="w-100" autocomplete="off">-->
-<!--              </mat-form-field>-->
-<!--            </div>-->
-<!--            <div class="d-flex flex-column w-100">-->
-<!--              <mat-form-field appearance="outline">-->
-<!--                <mat-label>Facebook</mat-label>-->
-<!--                <input matInput formControlName="Facebook" placeholder="username" class="w-100" autocomplete="off">-->
-<!--              </mat-form-field>-->
-
-<!--              <mat-form-field appearance="outline">-->
-<!--                <mat-label>Reddit</mat-label>-->
-<!--                <input matInput formControlName="Reddit" placeholder="username" class="w-100" autocomplete="off">-->
-<!--              </mat-form-field>-->
-<!--            </div>-->
-<!--          </div>-->
-        </form>
-      </mat-step>
-      <mat-step>
-        <ng-template matStepLabel>Confirm</ng-template>
-        <div id="eventPreview">
-          <mat-card class="d-flex flex-row align-items-center my-3">
-            <div style="flex: 1; font-size: larger">Preview</div>
-                      <button type="submit" mat-flat-button color="primary" (click)="create()">Create</button>
-<!--            <button type="submit" mat-flat-button color="primary" (click)="create()" [disabled]="createEventForm.invalid || addressForm.invalid || SocialLinks.invalid">Create event</button>-->
-          </mat-card>
-          <mat-card>
-            <mat-card-content>
-<!--              <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>-->
+              <div id="FeedBreakdown">
+                <div class="mat-title d-flex align-items-center">
+                  <mat-icon class="mr-1">euro</mat-icon>
+                  Breakdown
+                </div>
+                <div class="d-flex flex-row">
+                  <div>Ticket price</div>
+                  <div class="dottedLine"></div>
+                  <div>{{createEventForm.controls.Price.value | currency:'GBP':'symbol':'1.2-2'}}</div>
+                </div>
+                <div class="d-flex flex-row">
+                  <div>Service fee (10%)</div>
+                  <div class="dottedLine"></div>
+                  <div>{{createEventForm.controls.Price.value * 0.1 | currency:'GBP':'symbol':'1.2-2'}}</div>
+                </div>
+                <div class="d-flex flex-row">
+                  <div>What you get</div>
+                  <div class="dottedLine"></div>
+                  <div>{{createEventForm.controls.Price.value * 0.9 | currency: 'GBP':'symbol':'1.2-2'}}</div>
+                </div>
+              </div>
             </mat-card-content>
           </mat-card>
+
+          <mat-card class="mb-3">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>category</mat-icon>
+              <mat-card-title>Categories</mat-card-title>
+              <mat-card-subtitle>Please select at least one category</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <category-list [categories]="categoryStore" [inset]="true" formControlName="Categories"></category-list>
+            </mat-card-content>
+            <mat-card-footer>
+              <mat-error *ngIf="createEventForm.controls.Categories.invalid && createEventForm.controls.Categories.dirty">You must select at least one category</mat-error>
+            </mat-card-footer>
+          </mat-card>
+
+          <div class="d-flex ml-auto">
+            <button mat-button matStepperNext [disabled]="createEventForm.invalid">Next</button>
+          </div>
+
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="addressForm" [editable]="isEditable" label="Address">
+        <div class="d-flex flex-column w-100">
+          <mat-card class="w-100 mb-3">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>home</mat-icon>
+              <mat-card-title>Address</mat-card-title>
+              <mat-card-subtitle>Does your event have an address or is it online</mat-card-subtitle>
+            </mat-card-header>
+            <div class="d-flex flex-column w-100">
+              <mat-checkbox id="isOnline" [formControl]="IsOnline" (click)="clickedOnline()">Online?</mat-checkbox>
+              <address-form [formControl]="addressForm"></address-form>
+            </div>
+          </mat-card>
+
+          <div class="d-flex ml-auto">
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext [disabled]="addressForm.invalid">Next</button>
+          </div>
+        </div>
+      </mat-step>
+      <mat-step [stepControl]="ImagesAndSocialsForm" [editable]="isEditable" label="Images & Social">
+        <div class="d-flex flex-column w-100">
+          <form [formGroup]="ImagesAndSocialsForm">
+
+            <mat-card class="mb-3">
+              <mat-card-header>
+                <mat-icon mat-card-avatar>insert_photo</mat-icon>
+                <mat-card-title>Thumbnail</mat-card-title>
+                <mat-card-subtitle>Upload a thumbnail for your event to catch user's eyes</mat-card-subtitle>
+              </mat-card-header>
+              <thumbnail-edit formControlName="thumbnail"></thumbnail-edit>
+              <div class="warn-color" *ngIf="ImagesAndSocialsForm.controls.thumbnail.hasError('required')">A thumbnail is required</div>
+            </mat-card>
+
+            <mat-card class="mb-3">
+              <mat-card-header>
+                <mat-icon mat-card-avatar>collections</mat-icon>
+                <mat-card-title>Gallery</mat-card-title>
+                <mat-card-subtitle>Upload images to be shown in the event's image gallery</mat-card-subtitle>
+              </mat-card-header>
+              <image-list formControlName="images"></image-list>
+            </mat-card>
+
+            <mat-card class="mb-3">
+              <mat-card-header>
+                <mat-icon mat-card-avatar>collections</mat-icon>
+                <mat-card-title>Social links</mat-card-title>
+                <mat-card-subtitle>Add social links so users can find out more about you</mat-card-subtitle>
+              </mat-card-header>
+              <social-links-form formControlName="socialLinks"></social-links-form>
+            </mat-card>
+          </form>
+
+          <div class="d-flex ml-auto">
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext [disabled]="ImagesAndSocialsForm.invalid">Next</button>
+          </div>
+        </div>
+      </mat-step>
+      <mat-step label="Confirm">
+        <div class="d-flex flex-column w-100">
+          <mat-card class="w-100 mb-3">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>preview</mat-icon>
+              <mat-card-title>Preview</mat-card-title>
+              <mat-card-subtitle>This is how the public will see your event</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="d-flex flex-column">
+
+              <button class="ml-auto" type="submit" mat-flat-button color="primary" (click)="create()" [disabled]="createEventForm.invalid || addressForm.invalid || ImagesAndSocialsForm.invalid">Create event</button>
+
+              <event *ngIf="eventPreview" [EventPreview]="eventPreview" [@inOutAnimation]></event>
+            </mat-card-content>
+          </mat-card>
+
+          <div class="d-flex ml-auto">
+            <button mat-button matStepperPrevious>Back</button>
+          </div>
         </div>
       </mat-step>
     </mat-horizontal-stepper>
-  </div>
+  </mat-card-content>
 </mat-card>
 <loading *ngIf="loading" [@inOutAnimation]></loading>

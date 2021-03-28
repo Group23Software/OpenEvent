@@ -35,3 +35,19 @@ category-list {
 form {
   width: 100%;
 }
+
+#FeedBreakdown {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(146, 146, 146, 0.05);
+  flex-grow: 1;
+  padding: 1rem;
+}
+
+.dottedLine {
+  border-bottom: dotted;
+  height: 0;
+  margin: auto 0.5rem;
+  filter: opacity(0.5);
+  flex-grow: 1;
+}

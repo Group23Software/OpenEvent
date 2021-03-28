@@ -34,7 +34,7 @@
           </div>
           <div class="d-flex flex-row justify-content-between" *ngIf="Promo">
             <div>Promo applied ({{Promo.Discount}}%)</div>
-            <div>{{(Event.Price * Promo.Discount) / 10000|currency:'GBP':true:'1.2-2'}}</div>
+            <div>{{(Event.Price * Promo.Discount) / 10000 | currency:'GBP':true:'1.2-2'}}</div>
           </div>
           <div class="d-flex flex-row justify-content-between" *ngIf="Promo">
             <div>Total</div>
@@ -43,7 +43,7 @@
           <mat-divider></mat-divider>
           <div class="d-flex flex-row justify-content-between">
             <div>Service fee (10%)</div>
-            <div>£{{(Transaction?.Amount * 0.1) / 100}}</div>
+            <div>{{(Transaction?.Amount * 0.1) / 100 | currency:'GBP':true:'1.2-2'}}</div>
           </div>
           <div class="d-flex flex-row justify-content-between">
             <div>What the event gets</div>
