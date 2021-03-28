@@ -4,6 +4,7 @@ import {ImageListComponent} from './image-list.component';
 import {MatDialog} from "@angular/material/dialog";
 import {ImageUploadComponent, uploadConfig} from "../_extensions/image-upload/image-upload.component";
 import {of} from "rxjs";
+import {MatIconModule} from "@angular/material/icon";
 
 describe('ImageListComponent', () =>
 {
@@ -19,6 +20,7 @@ describe('ImageListComponent', () =>
     dialogMock.open.and.returnValue({afterClosed: () => of(true)});
 
     await TestBed.configureTestingModule({
+      imports: [MatIconModule],
       declarations: [ImageListComponent],
       providers: [
         {provide: MatDialog, useValue: dialogMock}

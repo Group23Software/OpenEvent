@@ -8,6 +8,10 @@ import {TransactionService} from "../_Services/transaction.service";
 import {RouterTestingModule} from "@angular/router/testing";
 import {TransactionViewModel} from "../_models/Transaction";
 import {Router} from "@angular/router";
+import {MatCardModule} from "@angular/material/card";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 describe('AccountComponent', () =>
@@ -29,7 +33,13 @@ describe('AccountComponent', () =>
     transactionServiceMock.CancelIntent.and.returnValue(of());
 
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [
+        RouterTestingModule,
+        MatCardModule,
+        MatTabsModule,
+        MatProgressBarModule,
+        BrowserAnimationsModule
+      ],
       declarations: [AccountComponent],
       providers: [
         {provide: UserService, useValue: userServiceMock},

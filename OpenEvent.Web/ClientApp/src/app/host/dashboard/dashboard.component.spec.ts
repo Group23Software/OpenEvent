@@ -10,6 +10,11 @@ import {EventHostModel} from "../../_models/Event";
 import {ConfirmDialogComponent} from "../../_extensions/confirm-dialog/confirm-dialog.component";
 import {HttpErrorResponse} from "@angular/common/http";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatCardModule} from "@angular/material/card";
+import {MatListModule} from "@angular/material/list";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatSidenavModule} from "@angular/material/sidenav";
 
 describe('DashboardComponent', () =>
 {
@@ -68,7 +73,12 @@ describe('DashboardComponent', () =>
     await TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        MatTabsModule,
+        MatCardModule,
+        MatListModule,
+        MatProgressBarModule,
+        MatSidenavModule
       ],
       declarations: [DashboardComponent],
       providers: [

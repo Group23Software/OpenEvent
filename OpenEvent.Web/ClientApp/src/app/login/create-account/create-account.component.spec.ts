@@ -24,6 +24,9 @@ import {UserViewModel} from "../../_models/User";
 import {HttpErrorResponse} from "@angular/common/http";
 import 'jasmine';
 import {MatSelectModule} from "@angular/material/select";
+import {MatStepperModule} from "@angular/material/stepper";
+import {MatDividerModule} from "@angular/material/divider";
+import {MatIconModule} from "@angular/material/icon";
 
 export class DialogRef
 {
@@ -76,7 +79,9 @@ describe('CreateAccountComponent', () =>
         MatNativeDateModule,
         MatSelectModule,
         MatOptionModule,
-
+        MatStepperModule,
+        MatDividerModule,
+        MatIconModule
       ], providers: [
         {provide: 'BASE_URL', useValue: ''},
         {provide: UserService, useValue: userServiceMock},

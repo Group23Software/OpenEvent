@@ -10,6 +10,22 @@ import {FakeAddress} from "../../_testData/Event";
 import {HttpErrorResponse} from "@angular/common/http";
 import {TriggerService} from "../../_Services/trigger.service";
 import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
+import {MatCardModule} from "@angular/material/card";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatIconModule} from "@angular/material/icon";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {Component, Input} from "@angular/core";
+
+@Component({
+  selector: 'ngx-stripe-card',
+  template: '',
+})
+class MockStripeCardComponent
+{
+  @Input() options: any;
+  @Input() elementsOptions: any;
+}
 
 describe('PaymentMethodsComponent', () =>
 {
@@ -31,8 +47,19 @@ describe('PaymentMethodsComponent', () =>
     // let userSpy = spyOnProperty(component,'User','get').and.returnValue(null);
 
     await TestBed.configureTestingModule({
-      declarations: [PaymentMethodsComponent],
-      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [
+        PaymentMethodsComponent,
+        MockStripeCardComponent
+      ],
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        BrowserAnimationsModule
+      ],
       providers: [
         {provide: StripeService, useValue: stripeServiceMock},
         {provide: UserService, useValue: userServiceMock},
@@ -86,7 +113,7 @@ describe('PaymentMethodsComponent', () =>
       FirstName: "Test",
       LastName: "Name"
     });
-    paymentServiceMock.AddPaymentMethod.and.returnValue(throwError({error:{Message: "Error adding payment method"}} as HttpErrorResponse));
+    paymentServiceMock.AddPaymentMethod.and.returnValue(throwError({error: {Message: "Error adding payment method"}} as HttpErrorResponse));
     component.createToken();
     expect(component.createCardTokenError).toEqual("Error adding payment method");
   });
@@ -117,7 +144,8 @@ describe('PaymentMethodsComponent', () =>
       empty: false,
       error: undefined,
       value: {postalCode: ""},
-      complete: true});
+      complete: true
+    });
     expect(component.cardComplete).toBeTrue();
   });
 });

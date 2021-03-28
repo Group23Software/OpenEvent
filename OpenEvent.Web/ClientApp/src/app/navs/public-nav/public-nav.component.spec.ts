@@ -6,6 +6,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {Component} from "@angular/core";
 import {By} from "@angular/platform-browser";
 import {Location} from '@angular/common';
+import {MatIconModule} from "@angular/material/icon";
 
 describe('PublicNavComponent', () =>
 {
@@ -24,6 +25,7 @@ describe('PublicNavComponent', () =>
       imports: [
         RouterTestingModule.withRoutes([{path:'login',component: DummyComponent}]),
         MatToolbarModule,
+        MatIconModule
       ],
     }).compileComponents();
   }));

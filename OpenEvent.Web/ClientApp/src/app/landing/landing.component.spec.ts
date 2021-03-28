@@ -6,6 +6,7 @@ import {PopularityService} from "../_Services/popularity.service";
 import {Router} from "@angular/router";
 import {PopularEventViewModel} from "../_models/Event";
 import {of} from "rxjs";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 describe('LandingComponent', () =>
 {

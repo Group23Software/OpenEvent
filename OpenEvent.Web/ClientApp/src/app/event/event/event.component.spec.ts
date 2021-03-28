@@ -10,6 +10,8 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {MatDialog} from "@angular/material/dialog";
 import {TransactionService} from "../../_Services/transaction.service";
 import {ActivatedRoute, convertToParamMap} from "@angular/router";
+import {MatCardModule} from "@angular/material/card";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 describe('EventComponent', () =>
 {
@@ -62,7 +64,9 @@ describe('EventComponent', () =>
     await TestBed.configureTestingModule({
       declarations: [EventComponent],
       imports: [
-        RouterTestingModule.withRoutes([])
+        RouterTestingModule.withRoutes([]),
+        MatCardModule,
+        MatProgressBarModule
       ],
       providers: [
         {provide: EventService, useValue: eventServiceMock},

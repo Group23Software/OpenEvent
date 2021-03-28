@@ -11,7 +11,31 @@ import {HttpErrorResponse} from "@angular/common/http";
 import {Category} from "../../_models/Category";
 import {TriggerService} from "../../_Services/trigger.service";
 import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {NgxMatDatetimePickerModule, NgxMatNativeDateModule} from "@angular-material-components/datetime-picker";
+import {MockMarkdown} from "../../_extensions/markdown.mock";
+import {MockThumbnailEditComponent} from "../../thumbnail-edit/thumbnail-edit.mock";
+import {MockCategoryListComponent} from "../../category-list/category-list.mock";
+import {MockImageListComponent} from "../../image-list/image-list.mock";
+import {Component, Input} from "@angular/core";
 
+
+@Component({
+  selector: 'promos',
+  template: ''
+})
+class MockPromosComponent
+{
+  @Input() Event: any;
+}
 
 describe('EventConfigComponent', () =>
 {
@@ -37,10 +61,11 @@ describe('EventConfigComponent', () =>
     eventServiceMock.GetForHost.and.returnValue(of(null));
 
     await TestBed.configureTestingModule({
-      declarations: [EventConfigComponent],
+      declarations: [
+        EventConfigComponent,
+      ],
       imports: [
-        RouterTestingModule.withRoutes([]),
-        MatCardModule
+        RouterTestingModule.withRoutes([])
       ],
       providers: [
         {provide: EventService, useValue: eventServiceMock},

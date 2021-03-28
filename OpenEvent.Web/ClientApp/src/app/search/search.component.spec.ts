@@ -8,6 +8,19 @@ import {Category} from "../_models/Category";
 import {HttpErrorResponse} from "@angular/common/http";
 import {RouterTestingModule} from "@angular/router/testing";
 import {Navigation, Router} from "@angular/router";
+import {MatCardModule} from "@angular/material/card";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MockCategoryListComponent} from "../category-list/category-list.mock";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatIconModule} from "@angular/material/icon";
+import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 describe('SearchComponent', () =>
@@ -24,8 +37,24 @@ describe('SearchComponent', () =>
     eventServiceMock.Search.and.returnValue(of());
 
     await TestBed.configureTestingModule({
-      declarations: [SearchComponent],
-      imports: [RouterTestingModule],
+      declarations: [
+        SearchComponent,
+        // MockCategoryListComponent
+      ],
+      imports: [
+        RouterTestingModule,
+        // MatCardModule,
+        // MatInputModule,
+        // MatExpansionModule,
+        // MatSlideToggleModule,
+        // MatCheckboxModule,
+        // MatIconModule,
+        // MatOptionModule,
+        // MatDatepickerModule,
+        // MatNativeDateModule,
+        // MatProgressBarModule,
+        // BrowserAnimationsModule
+      ],
       providers: [
         {provide: EventService, useValue: eventServiceMock},
       ]

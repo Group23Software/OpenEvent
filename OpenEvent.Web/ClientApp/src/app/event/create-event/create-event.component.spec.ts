@@ -13,6 +13,27 @@ import {EventDetailModel} from "../../_models/Event";
 import {Router} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatCardModule} from "@angular/material/card";
+import {MatIconModule} from "@angular/material/icon";
+import {MatStepperModule} from "@angular/material/stepper";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MockMarkdown} from "../../_extensions/markdown.mock";
+import {MockCategoryListComponent} from "../../category-list/category-list.mock";
+import {MockImageListComponent} from "../../image-list/image-list.mock";
+import {MockThumbnailEditComponent} from "../../thumbnail-edit/thumbnail-edit.mock";
+import {
+  NgxMatDatetimeInput,
+  NgxMatDatetimePicker,
+  NgxMatDatetimePickerModule, NgxMatNativeDateModule
+} from "@angular-material-components/datetime-picker";
+import {MockAddressFormComponent} from "../../address-form/address-form.mock";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatButtonModule} from "@angular/material/button";
+import {MockSocialLinksFormComponent} from "./social-links-form/social-links.mock";
+
+
 
 describe('CreateEventComponent', () =>
 {
@@ -39,12 +60,33 @@ describe('CreateEventComponent', () =>
     eventServiceMock.Create.and.returnValue(of());
 
     TestBed.configureTestingModule({
-      declarations: [CreateEventComponent],
+      declarations: [
+        CreateEventComponent,
+        // MockMarkdown,
+        // MockCategoryListComponent,
+        // MockImageListComponent,
+        // MockThumbnailEditComponent,
+        // NgxMatDatetimeInput,
+        // NgxMatDatetimePicker,
+        // MockAddressFormComponent,
+        // MockSocialLinksFormComponent
+      ],
       imports: [
         BrowserDynamicTestingModule,
         RouterTestingModule,
         MatDialogModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        // MatCardModule,
+        // MatIconModule,
+        // MatStepperModule,
+        // MatFormFieldModule,
+        // MatInputModule,
+        // FormsModule,
+        // ReactiveFormsModule,
+        // NgxMatDatetimePickerModule,
+        // MatCheckboxModule,
+        // MatButtonModule,
+        // NgxMatNativeDateModule
       ],
       providers: [
         {provide: UserService, useValue: userServiceMock},

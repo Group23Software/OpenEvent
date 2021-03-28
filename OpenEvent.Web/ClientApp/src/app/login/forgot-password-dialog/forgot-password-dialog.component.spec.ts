@@ -2,6 +2,10 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ForgotPasswordDialogComponent} from './forgot-password-dialog.component';
 import {AuthService} from "../../_Services/auth.service";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 describe('ForgotPasswordDialogComponent', () =>
 {
@@ -13,9 +17,16 @@ describe('ForgotPasswordDialogComponent', () =>
   beforeEach(async () =>
   {
 
-    authServiceMock = jasmine.createSpyObj('AuthService',['ForgetPassword']);
+    authServiceMock = jasmine.createSpyObj('AuthService', ['ForgetPassword']);
 
     await TestBed.configureTestingModule({
+      imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule
+      ],
       declarations: [ForgotPasswordDialogComponent],
       providers: [
         {provide: AuthService, useValue: authServiceMock}

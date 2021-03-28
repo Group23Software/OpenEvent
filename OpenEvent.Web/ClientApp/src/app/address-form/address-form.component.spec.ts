@@ -4,6 +4,10 @@ import { AddressFormComponent } from './address-form.component';
 import {FakeAddress} from "../_testData/Event";
 import {EventEmitter} from "@angular/core";
 import {Address} from "../_models/Address";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 class triggerServiceStub {
   public loading: EventEmitter<Address> = new EventEmitter<Address>();
@@ -15,6 +19,13 @@ describe('AddressFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule
+      ],
       declarations: [ AddressFormComponent ],
       providers: []
     })

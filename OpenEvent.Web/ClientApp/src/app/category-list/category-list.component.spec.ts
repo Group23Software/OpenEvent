@@ -5,8 +5,11 @@ import {TestbedHarnessEnvironment} from "@angular/cdk/testing/testbed";
 import {HarnessLoader} from "@angular/cdk/testing";
 import {By} from "@angular/platform-browser";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatIconModule} from "@angular/material/icon";
+import {MatDividerModule} from "@angular/material/divider";
 
-describe('CategoryListent', () =>
+describe('CategoryListComponent', () =>
 {
   let component: CategoryListComponent;
   let fixture: ComponentFixture<CategoryListComponent>;
@@ -16,7 +19,12 @@ describe('CategoryListent', () =>
   {
     await TestBed.configureTestingModule({
       declarations: [CategoryListComponent],
-      imports: [BrowserAnimationsModule]
+      imports: [
+        BrowserAnimationsModule,
+        MatChipsModule,
+        MatIconModule,
+        MatDividerModule
+      ]
     }).compileComponents();
   });
 
@@ -33,14 +41,14 @@ describe('CategoryListent', () =>
     expect(component).toBeTruthy();
   });
 
-  it('should add category to list', async () =>
+  it('should add category to list', () =>
   {
     component.categories = [
       {Id: "1", Name: "Music"},
       {Id: "2", Name: "Drama"}
     ];
     fixture.detectChanges();
-    fixture.whenStable().then( async () =>
+    fixture.whenStable().then(async () =>
     {
       const icon = fixture.debugElement.query(By.css('#add')).nativeElement;
       expect(icon).toBeTruthy();
@@ -58,7 +66,7 @@ describe('CategoryListent', () =>
       {Id: "2", Name: "Drama"}
     ];
     fixture.detectChanges();
-    fixture.whenStable().then( async () =>
+    fixture.whenStable().then(() =>
     {
       const icon = fixture.debugElement.query(By.css('#remove')).nativeElement;
       expect(icon).toBeTruthy();
@@ -70,14 +78,14 @@ describe('CategoryListent', () =>
     });
   }));
 
-  it('should render chips', async () =>
+  it('should render chips', () =>
   {
     component.categories = [
       {Id: "1", Name: "Music"},
       {Id: "2", Name: "Drama"}
     ];
     fixture.detectChanges();
-    fixture.whenStable().then( async () =>
+    fixture.whenStable().then(async () =>
     {
       const chips = fixture.debugElement.queryAll(By.css('mat-chip'));
       expect(chips.length).toBe(2);

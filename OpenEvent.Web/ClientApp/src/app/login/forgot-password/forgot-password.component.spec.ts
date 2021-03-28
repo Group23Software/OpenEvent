@@ -7,6 +7,12 @@ import {AuthService} from "../../_Services/auth.service";
 import {ActivatedRoute, convertToParamMap} from "@angular/router";
 import {RouterTestingModule} from "@angular/router/testing";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {MatCardModule} from "@angular/material/card";
+import {MatIconModule} from "@angular/material/icon";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 describe('ForgotPasswordComponent', () =>
 {
@@ -27,7 +33,17 @@ describe('ForgotPasswordComponent', () =>
 
     await TestBed.configureTestingModule({
       declarations: [ForgotPasswordComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [
+        RouterTestingModule,
+        HttpClientTestingModule,
+        MatCardModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule
+      ],
       providers: [
         {provide: 'BASE_URL', useValue: ''},
         {provide: AuthService, useValue: authServiceMock},

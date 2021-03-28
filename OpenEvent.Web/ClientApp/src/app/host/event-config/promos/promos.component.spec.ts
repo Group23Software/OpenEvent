@@ -7,8 +7,12 @@ import {PromoService} from "../../../_Services/promo.service";
 import {of} from "rxjs";
 import {CreatePromoComponent} from "./create-promo/create-promo.component";
 import {IteratorStatus} from "../../../_extensions/iterator/iterator.component";
-import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {MatSlideToggleChange, MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {Promo} from "../../../_models/Promo";
+import {MatCardModule} from "@angular/material/card";
+import {MatIconModule} from "@angular/material/icon";
+import {MatSliderModule} from "@angular/material/slider";
+import {MatChipsModule} from "@angular/material/chips";
 
 describe('PromosComponent', () =>
 {
@@ -32,6 +36,12 @@ describe('PromosComponent', () =>
     dialogMock.open.and.returnValue({afterClosed: () => of(true)});
 
     await TestBed.configureTestingModule({
+      imports: [
+        MatCardModule,
+        MatIconModule,
+        MatSlideToggleModule,
+        MatChipsModule
+      ],
       declarations: [PromosComponent],
       providers: [
         {provide: MatDialog, useValue: dialogMock},

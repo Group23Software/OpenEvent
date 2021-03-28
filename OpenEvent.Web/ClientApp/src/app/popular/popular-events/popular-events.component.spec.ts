@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PopularEventsComponent } from './popular-events.component';
+import {MatCardModule} from "@angular/material/card";
+import {MatIconModule} from "@angular/material/icon";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 describe('PopularEventsComponent', () => {
   let component: PopularEventsComponent;
@@ -8,6 +11,11 @@ describe('PopularEventsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [
+        MatCardModule,
+        MatIconModule,
+        MatProgressBarModule
+      ],
       declarations: [ PopularEventsComponent ]
     })
     .compileComponents();

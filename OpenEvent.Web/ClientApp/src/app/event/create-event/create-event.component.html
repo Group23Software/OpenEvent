@@ -38,9 +38,9 @@
           <div class="d-flex flex-row">
             <mat-form-field appearance="outline" id="description">
               <mat-label>Description</mat-label>
-              <textarea matInput mat-autosize cdkTextareaAutosize cdkAutosizeMinRows="20" [(ngModel)]="markdown" formControlName="Description" placeholder="Event description" autocomplete="off"></textarea>
+              <textarea matInput mat-autosize cdkTextareaAutosize cdkAutosizeMinRows="20" formControlName="Description" placeholder="Event description" autocomplete="off"></textarea>
             </mat-form-field>
-            <markdown [data]="markdown" ngPreserveWhitespaces></markdown>
+            <markdown [data]="createEventForm.controls.Description.value" ngPreserveWhitespaces></markdown>
           </div>
 
           <mat-card class="mb-3">

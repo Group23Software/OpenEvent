@@ -17,12 +17,7 @@ import {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
       useExisting: CategoryListComponent
-    },
-    // {
-    //   provide: NG_VALIDATORS,
-    //   useExisting: CategoryListComponent,
-    //   multi: true
-    // }
+    }
   ]
 })
 export class CategoryListComponent implements ControlValueAccessor

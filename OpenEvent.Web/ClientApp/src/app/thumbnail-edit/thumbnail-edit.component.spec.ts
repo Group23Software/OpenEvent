@@ -5,6 +5,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ImageUploadComponent, uploadConfig} from "../_extensions/image-upload/image-upload.component";
 import {of} from "rxjs";
 import {ImageViewModel} from "../_models/Image";
+import {MatIconModule} from "@angular/material/icon";
 
 describe('ThumbnailEditComponent', () =>
 {
@@ -19,6 +20,9 @@ describe('ThumbnailEditComponent', () =>
     dialogMock = jasmine.createSpyObj('matDialog', ['open']);
 
     await TestBed.configureTestingModule({
+      imports: [
+        MatIconModule
+      ],
       declarations: [ThumbnailEditComponent],
       providers: [{provide: MatDialog, useValue: dialogMock}]
     }).compileComponents();

@@ -5,6 +5,8 @@ import {RouterTestingModule} from "@angular/router/testing";
 import {CategoryViewModel} from "../../_models/Category";
 import {Router} from "@angular/router";
 import {SearchFilter, SearchParam} from "../../_models/Event";
+import {MatCardModule} from "@angular/material/card";
+import {MatIconModule} from "@angular/material/icon";
 
 describe('PopularCategoriesComponent', () =>
 {
@@ -16,9 +18,12 @@ describe('PopularCategoriesComponent', () =>
   {
     await TestBed.configureTestingModule({
       declarations: [PopularCategoriesComponent],
-      imports: [RouterTestingModule]
-    })
-                 .compileComponents();
+      imports: [
+        RouterTestingModule,
+        MatCardModule,
+        MatIconModule
+      ]
+    }).compileComponents();
   });
 
   beforeEach(() =>
