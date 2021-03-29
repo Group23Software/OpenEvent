@@ -8,6 +8,22 @@ import {of, throwError} from "rxjs";
 import {HttpErrorResponse} from "@angular/common/http";
 import {TriggerService} from "../../_Services/trigger.service";
 import {IteratorStatus} from "../../_extensions/iterator/iterator.component";
+import {MatCardModule} from "@angular/material/card";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {Component, Input} from "@angular/core";
+import {MatIconModule} from "@angular/material/icon";
+import {MatInputModule} from "@angular/material/input";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+
+@Component({
+  selector: 'ngx-stripe-iban',
+  template: '',
+})
+class MockStripeIbanComponent
+{
+  @Input() options: any;
+}
 
 describe('BankAccountComponent', () =>
 {
@@ -34,8 +50,19 @@ describe('BankAccountComponent', () =>
     }
 
     await TestBed.configureTestingModule({
-      declarations: [BankAccountComponent],
-      // imports: [NgxStripeModule],
+      imports: [
+        MatCardModule,
+        MatFormFieldModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatInputModule,
+        BrowserAnimationsModule
+      ],
+      declarations: [
+        BankAccountComponent,
+        MockStripeIbanComponent
+      ],
       providers: [
         {provide: StripeService, useValue: stripeServiceMock},
         {provide: UserService, useValue: userServiceMock},
