@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Data.Models.BankAccount;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.BankAccount;
 
 namespace OpenEvent.Test.Controllers.BankingController
 {
@@ -20,6 +20,11 @@ namespace OpenEvent.Test.Controllers.BankingController
         {
             BankToken = "Test bank token"
         };
+        
+        private readonly AddBankAccountBody UserNotFoundBody = new()
+        {
+            BankToken = "Not there"
+        };
 
         private readonly AddBankAccountBody SaveErrorBody = new()
         {
@@ -30,7 +35,7 @@ namespace OpenEvent.Test.Controllers.BankingController
         public async Task Setup()
         {
             BankingService.Setup(x => x.AddBankAccount(AddBankAccountBody));
-            BankingService.Setup(x => x.AddBankAccount(null)).ThrowsAsync(new UserNotFoundException());
+            BankingService.Setup(x => x.AddBankAccount(UserNotFoundBody)).ThrowsAsync(new UserNotFoundException());
             BankingService.Setup(x => x.AddBankAccount(SaveErrorBody)).ThrowsAsync(new DbUpdateException());
             BankingController = new Web.Controllers.BankingController(BankingService.Object,
                 new Mock<ILogger<Web.Controllers.BankingController>>().Object);
@@ -46,7 +51,7 @@ namespace OpenEvent.Test.Controllers.BankingController
         [Test]
         public async Task Should_Not_Find_User()
         {
-            var result = await BankingController.AddBankAccount(null);
+            var result = await BankingController.AddBankAccount(UserNotFoundBody);
             result.Result.Should().BeOfType<BadRequestObjectResult>().Subject.Value.Should().BeOfType<UserNotFoundException>();
         }
 

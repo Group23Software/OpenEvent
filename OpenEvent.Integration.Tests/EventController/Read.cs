@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using OpenEvent.Web.Models.Event;
 
 namespace OpenEvent.Integration.Tests.EventController
 {

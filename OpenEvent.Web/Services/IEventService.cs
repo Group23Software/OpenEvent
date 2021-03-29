@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OpenEvent.Web.Models.Analytic;
-using OpenEvent.Web.Models.Category;
-using OpenEvent.Web.Models.Event;
+using OpenEvent.Data.Models.Analytic;
+using OpenEvent.Data.Models.Category;
+using OpenEvent.Data.Models.Event;
 
 namespace OpenEvent.Web.Services
 {

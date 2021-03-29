@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using OpenEvent.Web.Models.Category;
-using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.Popularity;
+using OpenEvent.Data.Models.Category;
+using OpenEvent.Data.Models.Event;
+using OpenEvent.Data.Models.Popularity;
 
 namespace OpenEvent.Web.Services
 {

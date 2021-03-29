@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using OpenEvent.Data.Models.Recommendation;
+using OpenEvent.Data.Models.Ticket;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Recommendation;
-using OpenEvent.Web.Models.Ticket;
 using QRCoder;
 
 namespace OpenEvent.Web.Services

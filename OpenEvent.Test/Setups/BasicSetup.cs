@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
 using Microsoft.EntityFrameworkCore;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models.User;
 using EntityFrameworkCoreMock;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using OpenEvent.Web.Models.Address;
-using OpenEvent.Web.Models.Analytic;
-using OpenEvent.Web.Models.BankAccount;
-using OpenEvent.Web.Models.Category;
-using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.PaymentMethod;
-using OpenEvent.Web.Models.Recommendation;
-using OpenEvent.Web.Models.Ticket;
-using OpenEvent.Web.Models.Transaction;
+using OpenEvent.Data.Models.Address;
+using OpenEvent.Data.Models.Analytic;
+using OpenEvent.Data.Models.BankAccount;
+using OpenEvent.Data.Models.Category;
+using OpenEvent.Data.Models.Event;
+using OpenEvent.Data.Models.PaymentMethod;
+using OpenEvent.Data.Models.Recommendation;
+using OpenEvent.Data.Models.Ticket;
+using OpenEvent.Data.Models.Transaction;
+using OpenEvent.Data.Models.User;
 
 namespace OpenEvent.Test.Setups
 {

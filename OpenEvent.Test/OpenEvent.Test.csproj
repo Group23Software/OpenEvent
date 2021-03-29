@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OpenEvent.Web\OpenEvent.Web.csproj" />
+    <ProjectReference Include="..\OpenEvent.Data\OpenEvent.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

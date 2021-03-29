@@ -1,5 +1,5 @@
 using System;
-using OpenEvent.Web.Models.Address;
+using OpenEvent.Data.Models.Address;
 
 namespace OpenEvent.Web.Helpers
 {

@@ -16,7 +16,7 @@ namespace OpenEvent.Test.Services.PromoService
             {
                 var service = new PromoServiceFactory().Create(context);
 
-                var createPromoBody = TestData.FakeCreatePromoBody.Generate();
+                var createPromoBody = Data.Data.FakeCreatePromoBody.Generate();
                 var e = await context.Events.FirstAsync();
                 e.Should().NotBeNull();
                 createPromoBody.EventId = e.Id;

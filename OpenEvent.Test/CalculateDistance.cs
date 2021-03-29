@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
-using OpenEvent.Web.Models.Address;
+using OpenEvent.Data.Models.Address;
 
 namespace OpenEvent.Test
 {

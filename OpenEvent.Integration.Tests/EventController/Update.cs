@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
-using OpenEvent.Web.Models.Event;
+using OpenEvent.Data.Models.Event;
 
 namespace OpenEvent.Integration.Tests.EventController
 {

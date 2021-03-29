@@ -4,11 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models.Analytic;
-using OpenEvent.Web.Models.Category;
-using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.Recommendation;
+using OpenEvent.Data.Models.Analytic;
+using OpenEvent.Data.Models.Category;
+using OpenEvent.Data.Models.Event;
+using OpenEvent.Data.Models.Recommendation;
 using OpenEvent.Web.Services;
 using OpenEvent.Web.UserOwnsEvent;
 
@@ -47,6 +46,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("{Id} is creating an event called {Name}", createEventBody.HostId, createEventBody.Name);
                 var result = await EventService.Create(createEventBody);
                 return result;
             }
@@ -68,6 +68,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("{Id} is being canceled", id);
                 await EventService.Cancel(id);
                 return Ok();
             }
@@ -90,6 +91,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Getting {Id} for public", id);
                 var result = await EventService.GetForPublic(id, userId);
                 return result;
             }
@@ -108,6 +110,7 @@ namespace OpenEvent.Web.Controllers
         [HttpGet("host")]
         public async Task<ActionResult<List<EventHostModel>>> GetAllHosts(Guid id)
         {
+            Logger.LogInformation("Getting {Id}'s events", id);
             var result = await EventService.GetAllHosts(id);
             return result;
         }
@@ -123,6 +126,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Getting {Id} for host", id);
                 var result = await EventService.GetForHost(id);
                 return result;
             }
@@ -144,6 +148,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Updating {Id}", updateEventBody.Id);
                 await EventService.Update(updateEventBody);
                 return Ok();
             }
@@ -158,9 +163,11 @@ namespace OpenEvent.Web.Controllers
         /// Endpoint to get all the available event categories.
         /// </summary>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet("categories")]
         public async Task<ActionResult<List<Category>>> GetAllCategories()
         {
+            Logger.LogInformation("Getting all categories");
             return await EventService.GetAllCategories();
         }
 
@@ -171,12 +178,14 @@ namespace OpenEvent.Web.Controllers
         /// <param name="filters"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         [HttpPost("search")]
         public async Task<ActionResult<List<EventViewModel>>> Search(string keyword, List<SearchFilter> filters,
             Guid userId)
         {
             try
             {
+                Logger.LogInformation("Searching {Keyword} with {Filters}", keyword, string.Join(",", filters));
                 var results = await EventService.Search(keyword, filters, userId);
                 return results;
             }
@@ -197,6 +206,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("{Id} is exploring", id);
                 return await EventService.GetRecommended(id);
             }
             catch (Exception e)
@@ -216,6 +226,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Getting analytics for {Id}", id);
                 return await EventService.GetAnalytics(id);
             }
             catch (Exception e)
@@ -234,6 +245,7 @@ namespace OpenEvent.Web.Controllers
         [HttpPost("downvote")]
         public ActionResult DownVote(Guid userId, Guid eventId)
         {
+            Logger.LogInformation("Down voting {Id} for {UserId}", eventId, userId);
             WorkQueue.QueueWork(token =>
                 RecommendationService.InfluenceAsync(token, userId, eventId, Influence.DownVote, DateTime.Now));
             return Ok();

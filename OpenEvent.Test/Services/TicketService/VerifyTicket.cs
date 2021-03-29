@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Data.Models.Ticket;
 using OpenEvent.Test.Factories;
 using OpenEvent.Test.Setups;
-using OpenEvent.Web.Models.Ticket;
 
 namespace OpenEvent.Test.Services.TicketService
 {

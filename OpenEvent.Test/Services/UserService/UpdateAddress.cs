@@ -5,10 +5,10 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Data.Models.Address;
 using OpenEvent.Test.Factories;
 using OpenEvent.Test.Setups;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Address;
 
 namespace OpenEvent.Test.Services.UserService
 {
@@ -17,7 +17,7 @@ namespace OpenEvent.Test.Services.UserService
     {
 
         private readonly Guid UserId = new Guid("046E876E-D413-45AF-AC2A-552D7AA46C5C");
-        private readonly Address Address = TestData.FakeAddress.Generate();
+        private readonly Address Address = Data.Data.FakeAddress.Generate();
         
         [Test]
         public async Task Should_Update()

@@ -1,13 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OpenEvent.Data.Models.Category;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models.Category;
+using OpenEvent.Web.Services;
 using Prometheus;
 using Serilog;
+using Serilog.Enrichers.AspNetCore;
+using Serilog.Events;
+using Serilog.Exceptions;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace OpenEvent.Web
 {
@@ -23,7 +30,7 @@ namespace OpenEvent.Web
         /// Main method run on startup
         /// </summary>
         /// <param name="args"></param>
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             // var server = new MetricServer(hostname: "localhost", port: 1234);
             // server.Start();
@@ -40,10 +47,13 @@ namespace OpenEvent.Web
                 var services = scope.ServiceProvider;
                 var context = services.GetService<ApplicationContext>();
 
-                context.Database.EnsureCreated();
+                // context.Database.EnsureCreated();
 
                 using (context)
                 {
+                    // await context.Database.EnsureDeletedAsync();
+                    // await context.Database.EnsureCreatedAsync();
+                    
                     if (!context.Categories.Any())
                     {
                         List<Category> categories = new List<Category>
@@ -78,6 +88,8 @@ namespace OpenEvent.Web
                         context.Categories.AddRange(categories);
                         context.SaveChanges();
                     }
+
+                    // await Flagship.SeedDatabase(context, services);
                 }
             }
 
@@ -87,17 +99,17 @@ namespace OpenEvent.Web
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog((context, services, configuration) => configuration
-                    .ReadFrom.Configuration(context.Configuration)
+                    // .ReadFrom.Configuration(context.Configuration)
+                    .MinimumLevel.Information()
+                    .MinimumLevel.Override("Microsoft",LogEventLevel.Warning)
+                    .MinimumLevel.Override("Microsoft.Hosting.Lifetime",LogEventLevel.Information)
                     .ReadFrom.Services(services)
                     .Enrich.FromLogContext()
-                    .WriteTo.Console()
+                    .Enrich.WithExceptionDetails()
+                    .Enrich.WithCorrelationId()
+                    .WriteTo.Console(theme: AnsiConsoleTheme.Code,outputTemplate: "{CorrelationId} [{Timestamp:HH:mm:ss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}")
                     .WriteTo.Seq("http://localhost:80", apiKey: "UgrmhkMuEVCZxOX89WUm")
                 )
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                    logging.AddConsole();
-                })
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
     }
 }

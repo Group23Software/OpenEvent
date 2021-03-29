@@ -11,9 +11,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
+using OpenEvent.Data.Models.Address;
 using OpenEvent.Web;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models.Address;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Test.Factories

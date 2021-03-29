@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenEvent.Web.Models.Analytic;
-using OpenEvent.Web.Models.User;
+using OpenEvent.Data.Models.Analytic;
+using OpenEvent.Data.Models.User;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
@@ -39,11 +39,13 @@ namespace OpenEvent.Web.Controllers
         /// ActionResult of <see cref="UserViewModel"/> representing basic user information.
         /// BadRequest if any exceptions are caught.
         /// </returns>
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] NewUserBody newUserBody)
         {
             try
             {
+                Logger.LogInformation("Creating {Email}", newUserBody.Email);
                 await UserService.Create(newUserBody);
                 return Ok();
             }
@@ -67,6 +69,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Destroying {Id}", id);
                 await UserService.Destroy(id);
                 return Ok();
             }
@@ -90,6 +93,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Getting {Id}'s account", id);
                 var result = await UserService.Get(id);
                 return result;
             }
@@ -111,6 +115,7 @@ namespace OpenEvent.Web.Controllers
         [HttpGet("UserNameExists")]
         public async Task<ActionResult<bool>> UserNameExists(string username)
         {
+            Logger.LogInformation("Checking if {Username} exists", username);
             return Ok(await UserService.UserNameExists(username));
         }
 
@@ -125,6 +130,7 @@ namespace OpenEvent.Web.Controllers
         [HttpGet("EmailExists")]
         public async Task<ActionResult<bool>> EmailExists(string email)
         {
+            Logger.LogInformation("Checking if {Email} exists", email);
             return Ok(await UserService.EmailExists(email));
         }
 
@@ -139,9 +145,10 @@ namespace OpenEvent.Web.Controllers
         [HttpGet("PhoneExists")]
         public async Task<ActionResult<bool>> PhoneExists(string phoneNumber)
         {
+            Logger.LogInformation("Checking if {PhoneNumber} exists", phoneNumber);
             return Ok(await UserService.PhoneExists(phoneNumber));
         }
-        
+
         /// <summary>
         /// Endpoint for updating a users username
         /// </summary>
@@ -152,6 +159,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Updating {Id}'s username to {UserName}", updateUserNameBody.Id, updateUserNameBody.UserName);
                 var result = await UserService.UpdateUserName(updateUserNameBody.Id, updateUserNameBody.UserName);
                 return Ok(new
                 {
@@ -175,6 +183,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Updating {Id}'s avatar", updateAvatarBody.Id);
                 var result = await UserService.UpdateAvatar(updateAvatarBody.Id, updateAvatarBody.Avatar);
                 return Ok(new {avatar = result});
             }
@@ -196,6 +205,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Updating {Id}'s theme preference to {Pref}", updateThemePreferenceBody.Id, updateThemePreferenceBody.IsDarkMode);
                 await UserService.UpdateThemePreference(updateThemePreferenceBody.Id,
                     updateThemePreferenceBody.IsDarkMode);
                 return Ok(new {isDarkMode = updateThemePreferenceBody.IsDarkMode});
@@ -206,7 +216,7 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
-        
+
         /// <summary>
         /// Endpoint for updating a users address.
         /// </summary>
@@ -217,6 +227,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Updating {Id}'s address to {Address}", updateUserAddressBody.Id, updateUserAddressBody.Address.ToString());
                 var result = await UserService.UpdateAddress(updateUserAddressBody.Id, updateUserAddressBody.Address);
                 return Ok(new
                 {
@@ -240,6 +251,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Getting {Id}'s analytics", id);
                 var result = await UserService.GetAnalytics(id);
                 return result;
             }

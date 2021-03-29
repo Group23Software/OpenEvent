@@ -6,22 +6,22 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using OpenEvent.Data.Models.Analytic;
+using OpenEvent.Data.Models.Auth;
+using OpenEvent.Data.Models.Category;
+using OpenEvent.Data.Models.Event;
+using OpenEvent.Data.Models.Promo;
+using OpenEvent.Data.Models.Recommendation;
+using OpenEvent.Data.Models.Ticket;
+using OpenEvent.Data.Models.Transaction;
+using OpenEvent.Data.Models.User;
 using OpenEvent.Web;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models.Analytic;
-using OpenEvent.Web.Models.Auth;
-using OpenEvent.Web.Models.Category;
-using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.Promo;
-using OpenEvent.Web.Models.Recommendation;
-using OpenEvent.Web.Models.Ticket;
-using OpenEvent.Web.Models.Transaction;
-using OpenEvent.Web.Models.User;
 using Stripe;
-using Address = OpenEvent.Web.Models.Address.Address;
-using BankAccount = OpenEvent.Web.Models.BankAccount.BankAccount;
-using Event = OpenEvent.Web.Models.Event.Event;
-using PaymentMethod = OpenEvent.Web.Models.PaymentMethod.PaymentMethod;
+using Address = OpenEvent.Data.Models.Address.Address;
+using BankAccount = OpenEvent.Data.Models.BankAccount.BankAccount;
+using Event = OpenEvent.Data.Models.Event.Event;
+using PaymentMethod = OpenEvent.Data.Models.PaymentMethod.PaymentMethod;
 
 namespace OpenEvent.Integration.Tests
 {
@@ -141,7 +141,7 @@ namespace OpenEvent.Integration.Tests
                     StripeBankAccountId = "ba_1IPycn2cYsy6zvuIWycwMVYN"
                 }
             },
-            Address = new Address
+            Address = new Data.Models.Address.Address
             {
                 AddressLine1 = "21 Wellsway",
                 AddressLine2 = "",

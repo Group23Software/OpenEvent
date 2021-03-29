@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using OpenEvent.Web.Models.BankAccount;
+using OpenEvent.Data.Models.BankAccount;
 
 namespace OpenEvent.Web.Services
 {

@@ -7,9 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using NUnit.Framework;
+using OpenEvent.Data;
+using OpenEvent.Data.Models.Event;
+using OpenEvent.Data.Models.User;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Test
 {
@@ -31,8 +32,8 @@ namespace OpenEvent.Test
         {
             public static void Seed(ApplicationContext context)
             {
-                User user = TestData.TestUserData.FakeUser.Generate();
-                Event e = TestData.TestEventData.FakeEvent.Generate();
+                User user = UserData.FakeUser.Generate();
+                Event e = EventData.FakeEvent.Generate();
 
                 context.Add(user);
                 context.AddAsync(e);

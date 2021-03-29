@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+using OpenEvent.Data.Models.Address;
+using OpenEvent.Data.Models.Category;
+using OpenEvent.Data.Models.Event;
 using OpenEvent.Test.Factories;
 using OpenEvent.Test.Setups;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Address;
-using OpenEvent.Web.Models.Category;
-using OpenEvent.Web.Models.Event;
 
 namespace OpenEvent.Test.Services.EventService
 {
@@ -40,7 +40,7 @@ namespace OpenEvent.Test.Services.EventService
             {
                 var service = new EventServiceFactory().Create(context);
 
-                var validCreateEventBody = TestData.FakeCreateEventBody.Generate();
+                var validCreateEventBody = Data.Data.FakeCreateEventBody.Generate();
                 validCreateEventBody.Categories = await context.Categories.ToListAsync();
                 var result = await service.Create(validCreateEventBody);
                 result.Should().NotBeNull();
@@ -57,7 +57,7 @@ namespace OpenEvent.Test.Services.EventService
             {
                 var service = new EventServiceFactory().Create(context);
 
-                var validCreateEventBody = TestData.FakeCreateEventBody.Generate();
+                var validCreateEventBody = Data.Data.FakeCreateEventBody.Generate();
                 validCreateEventBody.Categories = await context.Categories.ToListAsync();
                 var result = await service.Create(validCreateEventBody);
                 result.Should().NotBeNull();
@@ -67,7 +67,7 @@ namespace OpenEvent.Test.Services.EventService
                 tickets.Count().Should().Be(validCreateEventBody.NumberOfTickets);
             }
         }
-        
+
         // [Test]
         // public async Task Should_Not_Find_Address()
         // {
@@ -102,7 +102,7 @@ namespace OpenEvent.Test.Services.EventService
             using (var context = new DbContextFactory().CreateContext())
             {
                 var service = new EventServiceFactory().Create(context);
-                var validCreateEventBody = TestData.FakeCreateEventBody.Generate();
+                var validCreateEventBody = Data.Data.FakeCreateEventBody.Generate();
                 validCreateEventBody.Categories = await context.Categories.ToListAsync();
                 var result = await service.Create(validCreateEventBody);
                 result.Should().NotBeNull();

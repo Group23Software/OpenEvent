@@ -1,6 +1,6 @@
 <!--<input type="file" (change)="fileChangeEvent($event)" />-->
 <mat-dialog-content *ngIf="imageChangedEvent">
-  <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false" [aspectRatio]="config.width/config.height" format="png" (imageCropped)="imageCropped($event)" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+  <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="config.width/config.height" format="png" (imageCropped)="imageCropped($event)" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
 
   <mat-form-field appearance="outline" color="accent" class="w-100" *ngIf="!config.isAvatar">
     <mat-label>Label</mat-label>

@@ -130,6 +130,8 @@ namespace OpenEvent.Web
             services.AddHttpClient<IEventService, EventService>();
 
             services.AddLogging();
+            
+            services.AddHttpContextAccessor();
 
             // Registering all controllers
             services.AddControllersWithViews().AddNewtonsoftJson(options =>

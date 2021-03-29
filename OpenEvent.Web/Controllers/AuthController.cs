@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenEvent.Web.Models.Auth;
-using OpenEvent.Web.Models.User;
+using OpenEvent.Data.Models.Auth;
+using OpenEvent.Data.Models.User;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
@@ -50,7 +50,7 @@ namespace OpenEvent.Web.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError(e.ToString());
+                Logger.LogInformation("Login error {Exception}", e.ToString());
                 return Unauthorized(e.Message);
             }
         }
@@ -73,7 +73,7 @@ namespace OpenEvent.Web.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError(e.ToString());
+                Logger.LogInformation("Authenticate error {Exception}", e);
                 return Unauthorized(e.Message);
             }
         }
@@ -86,21 +86,23 @@ namespace OpenEvent.Web.Controllers
         /// ActionResult if password has been updated.
         /// BadRequest if any exceptions are caught.
         /// </returns>
+        [AllowAnonymous]
         [HttpPost("updatePassword")]
         public async Task<ActionResult> UpdatePassword([FromBody] UpdatePasswordBody updatePasswordBody)
         {
             try
             {
+                Logger.LogInformation("Updating password {Id}", updatePasswordBody.Id);
                 await AuthService.UpdatePassword(updatePasswordBody.Id, updatePasswordBody.Password);
                 return Ok();
             }
             catch (Exception e)
             {
-                Logger.LogError(e.ToString());
+                Logger.LogInformation("Update password error {Exception}", e);
                 return BadRequest(e.Message);
             }
         }
-        
+
         /// <summary>
         /// Endpoint to confirm a user email
         /// </summary>
@@ -112,16 +114,17 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Confirming {Id}", id);
                 await AuthService.ConfirmEmail(id);
                 return Ok("Confirmed");
             }
             catch (Exception e)
             {
-                Logger.LogError(e.ToString());
+                Logger.LogInformation("Confirm email error {Exception}", e);
                 return Unauthorized(e.Message);
             }
         }
-        
+
         /// <summary>
         /// Endpoint to send a forgot password email
         /// </summary>
@@ -133,12 +136,13 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("{Email} forgetting password", email);
                 await AuthService.ForgotPassword(email);
                 return Ok();
             }
             catch (Exception e)
             {
-                Logger.LogError(e.ToString());
+                Logger.LogInformation("Forgot email error {Exception}", e);
                 return BadRequest(e.Message);
             }
         }

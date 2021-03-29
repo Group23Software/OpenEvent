@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Data.Models.Address;
+using OpenEvent.Data.Models.Event;
 using OpenEvent.Web;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Address;
-using OpenEvent.Web.Models.Event;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Test.Controllers.EventController
@@ -36,14 +36,16 @@ namespace OpenEvent.Test.Controllers.EventController
             Description = "This is an updated test event"
         };
 
+        private UpdateEventBody ErrorBody = new UpdateEventBody() { };
+
         private Web.Controllers.EventController EventController;
 
         [SetUp]
         public async Task Setup()
         {
             EventServiceMock.Setup(x => x.Update(UpdateEventBody));
-            EventServiceMock.Setup(x => x.Update(null))
-                .ThrowsAsync(new EventNotFoundException());
+            EventServiceMock.Setup(x => x.Update(ErrorBody)).ThrowsAsync(new EventNotFoundException());
+            
             EventController = new Web.Controllers.EventController(
                 EventServiceMock.Object,
                 new Mock<ILogger<Web.Controllers.EventController>>().Object, 
@@ -61,7 +63,7 @@ namespace OpenEvent.Test.Controllers.EventController
         [Test]
         public async Task ShouldCatchException()
         {
-            var result = await EventController.Update(null);
+            var result = await EventController.Update(ErrorBody);
             result.Should()
                 .BeOfType<BadRequestObjectResult>()
                 .Subject.Value.Should().BeOfType<EventNotFoundException>();

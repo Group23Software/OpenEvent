@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Data.Models.Event;
 using OpenEvent.Test.Factories;
 using OpenEvent.Test.Setups;
-using OpenEvent.Web.Models.Event;
 
 namespace OpenEvent.Test.Services.EventService
 {

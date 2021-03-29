@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using OpenEvent.Web.Models.Intent;
-using OpenEvent.Web.Models.Transaction;
+using OpenEvent.Data.Models.Intent;
+using OpenEvent.Data.Models.Transaction;
 
 namespace OpenEvent.Web.Services
 {

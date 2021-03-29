@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using OpenEvent.Web.Models.BankAccount;
+using OpenEvent.Data.Models.BankAccount;
 
 namespace OpenEvent.Integration.Tests.BankingController
 {

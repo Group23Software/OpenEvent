@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using OpenEvent.Web.Models.Promo;
+using OpenEvent.Data.Models.Promo;
 
 namespace OpenEvent.Web.Services
 {

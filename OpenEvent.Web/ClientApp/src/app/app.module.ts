@@ -16,13 +16,36 @@ import {SharedModule} from "./shared.module";
 import {EventComponent} from "./event/event/event.component";
 import {SearchComponent} from "./search/search.component";
 import {NgxStripeModule} from "ngx-stripe";
-import { LandingComponent } from './landing/landing.component';
+import {LandingComponent} from './landing/landing.component';
 import {PublicNavComponent} from "./navs/public-nav/public-nav.component";
 import {UserNavComponent} from "./navs/user-nav/user-nav.component";
 import {ForgotPasswordComponent} from "./login/forgot-password/forgot-password.component";
 import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {ForgotPasswordDialogComponent} from "./login/forgot-password-dialog/forgot-password-dialog.component";
 import {RouteReuse} from "./_extensions/RouteReuse";
+import {MockAddressFormComponent} from "./address-form/address-form.mock";
+import {MockImageListComponent} from "./image-list/image-list.mock";
+import {MockCategoryListComponent} from "./category-list/category-list.mock";
+import {MockMarkdown} from "./_extensions/markdown.mock";
+import {MockSocialComponent} from "./event/social/social.mock";
+import {MockSocialLinksFormComponent} from "./event/create-event/social-links-form/social-links.mock";
+import {MockThumbnailEditComponent} from "./thumbnail-edit/thumbnail-edit.mock";
+
+@NgModule({
+  declarations: [
+    MockAddressFormComponent,
+    MockImageListComponent,
+    MockCategoryListComponent,
+    MockMarkdown,
+    MockSocialComponent,
+    MockSocialLinksFormComponent,
+    MockThumbnailEditComponent
+  ]
+})
+export class MockModule
+{
+
+}
 
 
 @NgModule({
@@ -72,8 +95,9 @@ import {RouteReuse} from "./_extensions/RouteReuse";
         path: 'forgot/:id',
         component: ForgotPasswordComponent
       },
-      { path: '**', component: PageNotFoundComponent }
+      {path: '**', component: PageNotFoundComponent}
     ]),
+    MockModule
   ],
   providers: [
     CookieService,
@@ -85,3 +109,5 @@ import {RouteReuse} from "./_extensions/RouteReuse";
 export class AppModule
 {
 }
+
+

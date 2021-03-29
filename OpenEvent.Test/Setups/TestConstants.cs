@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using OpenEvent.Web.Models.Category;
+using OpenEvent.Data.Models.Category;
 
 namespace OpenEvent.Test.Setups
 {

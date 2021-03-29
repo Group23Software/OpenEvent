@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenEvent.Web.Models.Ticket;
+using OpenEvent.Data.Models.Ticket;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
@@ -33,6 +33,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Getting {Id}", id);
                 var result = await TicketService.Get(id);
                 return result;
             }
@@ -53,6 +54,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Getting all tickets for {Id}", id);
                 var result = await TicketService.GetAllUsersTickets(id);
                 return result;
             }
@@ -73,6 +75,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Verifying {Id} for {Event}", ticketVerifyBody.Id, ticketVerifyBody.EventId);
                 await TicketService.VerifyTicket(ticketVerifyBody);
                 return Ok();
             }

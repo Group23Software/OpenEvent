@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.Recommendation;
+using OpenEvent.Data.Models.Event;
+using OpenEvent.Data.Models.Recommendation;
 
 namespace OpenEvent.Web.Services
 {

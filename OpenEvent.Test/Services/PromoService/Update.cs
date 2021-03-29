@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+using OpenEvent.Data.Models.Promo;
 using OpenEvent.Test.Factories;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Promo;
 
 namespace OpenEvent.Test.Services.PromoService
 {

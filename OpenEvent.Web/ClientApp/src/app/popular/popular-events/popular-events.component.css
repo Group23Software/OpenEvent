@@ -6,6 +6,10 @@
   padding-top: 11px;
 }
 
+#popularEvents > event-preview {
+  max-width: 300px;
+}
+
 :host {
   height: 100%;
 }

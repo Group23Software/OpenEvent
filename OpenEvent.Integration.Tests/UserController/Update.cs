@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
-using OpenEvent.Web.Models.Address;
-using OpenEvent.Web.Models.User;
+using OpenEvent.Data.Models.Address;
+using OpenEvent.Data.Models.User;
 
 namespace OpenEvent.Integration.Tests.UserController
 {

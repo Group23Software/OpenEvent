@@ -6,12 +6,12 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OpenEvent.Data.Models.BankAccount;
+using OpenEvent.Data.Models.User;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.BankAccount;
-using OpenEvent.Web.Models.User;
 using Stripe;
-using BankAccount = OpenEvent.Web.Models.BankAccount.BankAccount;
+using BankAccount = OpenEvent.Data.Models.BankAccount.BankAccount;
 
 namespace OpenEvent.Web.Services
 {

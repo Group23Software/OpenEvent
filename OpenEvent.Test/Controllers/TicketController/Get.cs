@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Data.Models.Ticket;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Ticket;
 
 namespace OpenEvent.Test.Controllers.TicketController
 {

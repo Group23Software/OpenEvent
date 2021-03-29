@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
-using OpenEvent.Web.Models.Auth;
+using OpenEvent.Data.Models.Auth;
 
 namespace OpenEvent.Integration.Tests.AuthController
 {

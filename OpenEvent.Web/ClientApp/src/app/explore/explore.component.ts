@@ -53,8 +53,6 @@ export class ExploreComponent implements OnInit
     forkJoin(subs).subscribe(x => {
       console.log("explore data loaded", x);
     }, (e: HttpErrorResponse) => this.Error = e.message);
-    // this.eventService.GetAllCategories().subscribe(x => this.Categories = x);
-    // this.eventService.Explore().subscribe(x => this.Events = x);
   }
 
   public explore ()

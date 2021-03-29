@@ -3,8 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenEvent.Web.Models.Intent;
-using OpenEvent.Web.Models.Transaction;
+using OpenEvent.Data.Models.Intent;
+using OpenEvent.Data.Models.Transaction;
 using OpenEvent.Web.Services;
 using Stripe;
 
@@ -35,6 +35,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Creating intent of {Amount} by {User} for {Event}", createIntentBody.Amount, createIntentBody.UserId, createIntentBody.EventId);
                 var result = await TransactionService.CreateIntent(createIntentBody);
                 return result;
             }
@@ -55,6 +56,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Confirming {Id} for {User}", confirmIntentBody.IntentId, confirmIntentBody.UserId);
                 var result = await TransactionService.ConfirmIntent(confirmIntentBody);
                 return result;
             }
@@ -64,7 +66,7 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
-        
+
         /// <summary>
         /// Endpoint for injecting a user's selected payment method into a payment
         /// </summary>
@@ -75,6 +77,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Injecting payment into {Id}", injectPaymentMethodBody.IntentId);
                 var result = await TransactionService.InjectPaymentMethod(injectPaymentMethodBody);
                 return result;
             }
@@ -95,6 +98,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Canceling {Id}", cancelIntentBody.Id);
                 await TransactionService.CancelIntent(cancelIntentBody);
                 return Ok();
             }
@@ -114,12 +118,12 @@ namespace OpenEvent.Web.Controllers
         public async Task<ActionResult> Capture()
         {
             Logger.LogInformation("Capturing webhook");
-            
+
             var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
             var stripeEvent = EventUtility.ParseEvent(json);
 
             await TransactionService.CaptureIntentHook(stripeEvent);
-            
+
             return Ok();
         }
     }

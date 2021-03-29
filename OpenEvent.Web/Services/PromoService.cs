@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using OpenEvent.Data.Models.Promo;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Promo;
 
 namespace OpenEvent.Web.Services
 {

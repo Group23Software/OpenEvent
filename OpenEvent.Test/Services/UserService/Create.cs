@@ -5,10 +5,10 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Data.Models.User;
 using OpenEvent.Test.Factories;
 using OpenEvent.Test.Setups;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Test.Services.UserService
 {

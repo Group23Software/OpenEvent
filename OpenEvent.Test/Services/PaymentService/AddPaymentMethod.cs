@@ -3,11 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Data.Models.PaymentMethod;
 using OpenEvent.Test.Factories;
 using OpenEvent.Test.Setups;
-using OpenEvent.Web.Models.Address;
-using OpenEvent.Web.Models.PaymentMethod;
-using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Test.Services.PaymentService
 {

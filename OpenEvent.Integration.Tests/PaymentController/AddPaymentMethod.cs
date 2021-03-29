@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using OpenEvent.Web.Models.PaymentMethod;
+using OpenEvent.Data.Models.PaymentMethod;
 
 namespace OpenEvent.Integration.Tests.PaymentController
 {

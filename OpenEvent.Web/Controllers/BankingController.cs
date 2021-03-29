@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenEvent.Web.Models.BankAccount;
+using OpenEvent.Data.Models.BankAccount;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
@@ -12,7 +12,7 @@ namespace OpenEvent.Web.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class BankingController: ControllerBase
+    public class BankingController : ControllerBase
     {
         private readonly IBankingService BankingService;
         private readonly ILogger<BankingController> Logger;
@@ -23,7 +23,7 @@ namespace OpenEvent.Web.Controllers
             BankingService = bankingService;
             Logger = logger;
         }
-        
+
         /// <summary>
         /// Endpoint for adding the user's bank account.
         /// </summary>
@@ -34,6 +34,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("{Id} is adding a bank", addBankAccountBody.UserId);
                 var result = await BankingService.AddBankAccount(addBankAccountBody);
                 return result;
             }
@@ -43,7 +44,7 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
-        
+
         /// <summary>
         /// Endpont for removing the user's bank account.
         /// </summary>
@@ -54,6 +55,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("{Id} is removing a bank", removeBankAccountBody.UserId);
                 await BankingService.RemoveBankAccount(removeBankAccountBody);
                 return Ok();
             }

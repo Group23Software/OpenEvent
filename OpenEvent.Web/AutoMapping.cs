@@ -2,16 +2,16 @@ using System;
 using System.Linq;
 using System.Text;
 using AutoMapper;
-using OpenEvent.Web.Models.Analytic;
-using OpenEvent.Web.Models.BankAccount;
-using OpenEvent.Web.Models.Category;
-using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.PaymentMethod;
-using OpenEvent.Web.Models.Promo;
-using OpenEvent.Web.Models.Recommendation;
-using OpenEvent.Web.Models.Ticket;
-using OpenEvent.Web.Models.Transaction;
-using OpenEvent.Web.Models.User;
+using OpenEvent.Data.Models.Analytic;
+using OpenEvent.Data.Models.BankAccount;
+using OpenEvent.Data.Models.Category;
+using OpenEvent.Data.Models.Event;
+using OpenEvent.Data.Models.PaymentMethod;
+using OpenEvent.Data.Models.Promo;
+using OpenEvent.Data.Models.Recommendation;
+using OpenEvent.Data.Models.Ticket;
+using OpenEvent.Data.Models.Transaction;
+using OpenEvent.Data.Models.User;
 
 namespace OpenEvent.Web
 {

@@ -6,10 +6,10 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Data.Models.BankAccount;
 using OpenEvent.Test.Factories;
 using OpenEvent.Test.Setups;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.BankAccount;
 
 namespace OpenEvent.Test.Services.BankingService
 {

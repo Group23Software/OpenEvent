@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenEvent.Web.Models.Category;
-using OpenEvent.Web.Models.Event;
+using OpenEvent.Data.Models.Category;
+using OpenEvent.Data.Models.Event;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
@@ -35,6 +35,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Getting popular events");
                 return await PopularityService.GetPopularEvents();
             }
             catch (Exception e)
@@ -54,6 +55,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Getting popular categories");
                 return await PopularityService.GetPopularCategories();
             }
             catch (Exception e)

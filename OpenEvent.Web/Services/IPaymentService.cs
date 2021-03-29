@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using OpenEvent.Web.Models.PaymentMethod;
+using OpenEvent.Data.Models.PaymentMethod;
 
 namespace OpenEvent.Web.Services
 {

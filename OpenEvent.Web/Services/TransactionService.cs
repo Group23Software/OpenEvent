@@ -7,14 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OpenEvent.Data.Models.Intent;
+using OpenEvent.Data.Models.Transaction;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Intent;
-using OpenEvent.Web.Models.Ticket;
-using OpenEvent.Web.Models.Transaction;
 using Serilog;
 using Stripe;
-using Event = OpenEvent.Web.Models.Event.Event;
+using Event = OpenEvent.Data.Models.Event.Event;
 
 namespace OpenEvent.Web.Services
 {

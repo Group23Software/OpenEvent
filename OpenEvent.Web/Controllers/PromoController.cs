@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenEvent.Web.Models.Promo;
+using OpenEvent.Data.Models.Promo;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
@@ -32,6 +32,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Creating {Discount}% promo for {Id}", createPromoBody.Discount, createPromoBody.EventId);
                 var result = await PromoService.Create(createPromoBody);
                 return result;
             }
@@ -52,6 +53,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Updating {Id}", updatePromoBody.Id);
                 var result = await PromoService.Update(updatePromoBody);
                 return result;
             }
@@ -72,6 +74,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("Destroying {Id}", id);
                 await PromoService.Destroy(id);
                 return Ok();
             }
@@ -81,6 +84,5 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
-        
     }
 }

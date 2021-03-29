@@ -49,7 +49,7 @@ export class UserValidatorsService
   {
     return (control: AbstractControl): Observable<ValidationErrors | null> =>
     {
-      return this.userService.PhoneExists(control.value).pipe(
+      return this.userService.PhoneExists(control.parent?.controls['phoneCode'].value + control.value).pipe(
         debounceTime(500),
         map(res => res ? {phoneExists: true} : null)
       );

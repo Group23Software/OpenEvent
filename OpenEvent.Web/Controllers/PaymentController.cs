@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OpenEvent.Web.Models.PaymentMethod;
+using OpenEvent.Data.Models.PaymentMethod;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Web.Controllers
@@ -34,6 +34,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("{Id} is adding a payment method", addPaymentMethodBody.UserId);
                 var result = await PaymentService.AddPaymentMethod(addPaymentMethodBody);
                 return result;
             }
@@ -43,7 +44,7 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
-        
+
         /// <summary>
         /// Endpoint for removing a user's payment method.
         /// </summary>
@@ -54,6 +55,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("{Id} is removing a payment method", removePaymentMethodBody.UserId);
                 await PaymentService.RemovePaymentMethod(removePaymentMethodBody);
                 return Ok();
             }
@@ -63,7 +65,7 @@ namespace OpenEvent.Web.Controllers
                 return BadRequest(e);
             }
         }
-        
+
         /// <summary>
         /// Endpoint for setting the default payment method.
         /// </summary>
@@ -74,6 +76,7 @@ namespace OpenEvent.Web.Controllers
         {
             try
             {
+                Logger.LogInformation("{Id} is making a {Card} default", makeDefaultBody.UserId, makeDefaultBody.PaymentId);
                 await PaymentService.MakeDefault(makeDefaultBody);
                 return Ok();
             }

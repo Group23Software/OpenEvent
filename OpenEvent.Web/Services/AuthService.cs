@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using OpenEvent.Data.Models.User;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Services
 {

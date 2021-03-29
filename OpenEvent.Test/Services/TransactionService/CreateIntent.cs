@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using OpenEvent.Data.Models.Intent;
 using OpenEvent.Test.Factories;
 using OpenEvent.Test.Setups;
-using OpenEvent.Web.Models.Intent;
 
 namespace OpenEvent.Test.Services.TransactionService
 {

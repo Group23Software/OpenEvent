@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OpenEvent.Web.Models.Ticket;
+using OpenEvent.Data.Models.Ticket;
 
 namespace OpenEvent.Web.Services
 {

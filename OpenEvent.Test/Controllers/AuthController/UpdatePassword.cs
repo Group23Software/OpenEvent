@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Data.Models.Auth;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Auth;
 
 namespace OpenEvent.Test.Controllers.AuthController
 {

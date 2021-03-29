@@ -20,7 +20,7 @@
 
   <div *ngIf="Events">
     <div *ngIf="Events" class="events">
-      <div *ngFor="let event of Events; let i = index" [ngClass]="i != Events.length-1 ? 'mb-3' : null">
+      <div class="mr-3" *ngFor="let event of Events; let i = index" [ngClass]="i != Events.length-1 ? 'mb-3' : null">
         <event-preview [event]="event"></event-preview>
       </div>
     </div>

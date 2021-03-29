@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
+using OpenEvent.Data;
+using OpenEvent.Data.Models.Event;
 using OpenEvent.Test.Factories;
 using OpenEvent.Test.Setups;
-using OpenEvent.Web.Models.Event;
 
 namespace OpenEvent.Test.Services.EventService
 {
@@ -68,7 +69,7 @@ namespace OpenEvent.Test.Services.EventService
             {
                 var service = new EventServiceFactory().Create(context);
 
-                await context.Events.AddRangeAsync(TestData.TestEventData.FakeEvent.Generate(100).ToList());
+                await context.Events.AddRangeAsync(EventData.FakeEvent.Generate(100).ToList());
                 await context.SaveChangesAsync();
                 var result = await service.Search("", new List<SearchFilter>(), new Guid());
                 result.Should().NotBeNull();
@@ -97,7 +98,7 @@ namespace OpenEvent.Test.Services.EventService
             {
                 var service = new EventServiceFactory().Create(context);
 
-                var e = TestData.TestEventData.FakeEvent.Generate();
+                var e = EventData.FakeEvent.Generate();
                 e.Address.Lat = 51.47353;
                 e.Address.Lon = -0.08069;
                 await context.Events.AddAsync(e);
@@ -117,7 +118,7 @@ namespace OpenEvent.Test.Services.EventService
             {
                 var service = new EventServiceFactory().Create(context);
 
-                var e = TestData.TestEventData.FakeEvent.Generate();
+                var e = EventData.FakeEvent.Generate();
                 e.StartLocal = new DateTime(0);
                 await context.Events.AddAsync(e);
                 await context.SaveChangesAsync();

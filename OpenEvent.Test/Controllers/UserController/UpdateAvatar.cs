@@ -5,9 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Data.Models.User;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Test.Controllers.UserController
 {

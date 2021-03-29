@@ -6,9 +6,8 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
-using OpenEvent.Web.Models.Address;
-using OpenEvent.Web.Models.Category;
-using OpenEvent.Web.Models.Event;
+using OpenEvent.Data.Models.Category;
+using OpenEvent.Data.Models.Event;
 
 namespace OpenEvent.Integration.Tests.EventController
 {

@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Data.Models.Category;
 using OpenEvent.Web;
-using OpenEvent.Web.Models.Category;
 using OpenEvent.Web.Services;
 
 namespace OpenEvent.Test.Controllers.EventController

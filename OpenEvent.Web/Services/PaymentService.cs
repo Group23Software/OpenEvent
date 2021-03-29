@@ -5,12 +5,12 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OpenEvent.Data.Models.PaymentMethod;
+using OpenEvent.Data.Models.User;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.PaymentMethod;
-using OpenEvent.Web.Models.User;
 using Stripe;
-using PaymentMethod = OpenEvent.Web.Models.PaymentMethod.PaymentMethod;
+using PaymentMethod = OpenEvent.Data.Models.PaymentMethod.PaymentMethod;
 
 namespace OpenEvent.Web.Services
 {

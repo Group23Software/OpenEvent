@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
-using OpenEvent.Web.Models.User;
+using OpenEvent.Data.Models.User;
 
 namespace OpenEvent.Integration.Tests.UserController
 {

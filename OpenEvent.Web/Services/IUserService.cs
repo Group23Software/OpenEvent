@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using OpenEvent.Web.Models.Address;
-using OpenEvent.Web.Models.Analytic;
-using OpenEvent.Web.Models.User;
+using OpenEvent.Data.Models.Address;
+using OpenEvent.Data.Models.Analytic;
+using OpenEvent.Data.Models.User;
 
 namespace OpenEvent.Web.Services
 {

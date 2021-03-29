@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using OpenEvent.Data.Models.PaymentMethod;
 using OpenEvent.Web.Exceptions;
-using OpenEvent.Web.Models.PaymentMethod;
 
 namespace OpenEvent.Test.Controllers.PaymentController
 {
@@ -21,19 +21,24 @@ namespace OpenEvent.Test.Controllers.PaymentController
         {
             NickName = "Add payment method"
         };
-        
+
         private readonly AddPaymentMethodBody SaveErrorBody = new()
         {
             NickName = "Should throw error"
         };
 
+        private readonly AddPaymentMethodBody ErrorBody = new()
+        {
+            NickName = "Error"
+        };
 
         [SetUp]
         public async Task Setup()
         {
             PaymentService.Setup(x => x.AddPaymentMethod(AddPaymentMethodBody));
-            PaymentService.Setup(x => x.AddPaymentMethod(null)).ThrowsAsync(new UserNotFoundException());
+            PaymentService.Setup(x => x.AddPaymentMethod(ErrorBody)).ThrowsAsync(new UserNotFoundException());
             PaymentService.Setup(x => x.AddPaymentMethod(SaveErrorBody)).ThrowsAsync(new DbUpdateException());
+
             PaymentController = new Web.Controllers.PaymentController(PaymentService.Object,
                 new Mock<ILogger<Web.Controllers.PaymentController>>().Object);
         }
@@ -44,11 +49,11 @@ namespace OpenEvent.Test.Controllers.PaymentController
             var result = await PaymentController.AddPaymentMethod(AddPaymentMethodBody);
             result.Should().BeOfType<ActionResult<PaymentMethodViewModel>>();
         }
-        
+
         [Test]
         public async Task Should_Not_Find_User()
         {
-            var result = await PaymentController.AddPaymentMethod(null);
+            var result = await PaymentController.AddPaymentMethod(ErrorBody);
             result.Result.Should().BeOfType<BadRequestObjectResult>().Subject.Value.Should().BeOfType<UserNotFoundException>();
         }
 

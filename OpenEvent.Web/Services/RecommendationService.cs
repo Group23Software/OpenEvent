@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OpenEvent.Data.Models.Category;
+using OpenEvent.Data.Models.Event;
+using OpenEvent.Data.Models.Recommendation;
+using OpenEvent.Data.Models.User;
 using OpenEvent.Web.Contexts;
-using OpenEvent.Web.Models.Category;
-using OpenEvent.Web.Models.Event;
-using OpenEvent.Web.Models.Recommendation;
-using OpenEvent.Web.Models.User;
 
 namespace OpenEvent.Web.Services
 {
