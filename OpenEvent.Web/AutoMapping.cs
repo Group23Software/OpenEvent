@@ -73,6 +73,7 @@ namespace OpenEvent.Web
             CreateMap<Promo, PromoViewModel>().ForMember(x => x.NumberOfSales, op => op.Ignore());
             
             CreateMap<Event, PopularEventViewModel>()
+                // .ForMember(x => x.Promos, p => p.MapFrom(e => e.Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End).Select(promo =>  Mapper.Map<PromoViewModel>(promo)).ToList()))
                 .ForMember(x => x.Categories, op => op.Ignore())
                 .ForMember(x => x.Score, op => op.Ignore());
         }

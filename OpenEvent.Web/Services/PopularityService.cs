@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using OpenEvent.Data.Models.Category;
 using OpenEvent.Data.Models.Event;
 using OpenEvent.Data.Models.Popularity;
+using OpenEvent.Data.Models.Promo;
 using OpenEvent.Web.Contexts;
 using OpenEvent.Web.Hubs;
 
@@ -58,14 +59,24 @@ namespace OpenEvent.Web.Services
                 return (await context.Events
                         .Include(x => x.Promos)
                         .AsSplitQuery().AsNoTracking().Take(10).Where(x => !x.isCanceled)
-                        .OrderBy(x => x.StartLocal).ToListAsync()).Select(x => Mapper.Map<PopularEventViewModel>(x))
+                        .OrderBy(x => x.StartLocal).ToListAsync()).Select(x =>
+                    {
+                        var e = Mapper.Map<PopularEventViewModel>(x);
+                        var promoViewModel = e.Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End).Select(promo => Mapper.Map<PromoViewModel>(promo)).FirstOrDefault();
+                        e.Promos = new List<PromoViewModel> {promoViewModel};
+                        return e;
+                    })
                     .ToList();
             }
 
+            // Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End).Select(promo => Mapper.Map<PromoViewModel>(promo)).First()
+            
             return events.Select(x =>
             {
                 var mapped = Mapper.Map<PopularEventViewModel>(x);
                 mapped.Score = EventRecords.Find(e => x.Id == e.Record).Score;
+                var promoViewModel = mapped.Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End).Select(promo => Mapper.Map<PromoViewModel>(promo)).FirstOrDefault();
+                mapped.Promos = new List<PromoViewModel> {promoViewModel};
                 return mapped;
             }).OrderBy(x => x.StartLocal).ToList();
         }
@@ -157,7 +168,7 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("Popularised event {Id}", eventId);
             }
         }
-        
+
         /// <inheritdoc />
         public async Task PopulariseCategory(CancellationToken cancellationToken, Guid categoryId, DateTime created)
         {
@@ -166,7 +177,7 @@ namespace OpenEvent.Web.Services
                 Logger.LogInformation("Popularising category {Id}", categoryId);
 
                 var popularityRecord = CategoryRecords.FirstOrDefault(x => x.Record == categoryId);
-                
+
                 // if the category is already popular
                 if (popularityRecord != null)
                 {
@@ -195,9 +206,8 @@ namespace OpenEvent.Web.Services
                         Record = categoryId,
                         Score = 1
                     });
-
                 }
-                
+
                 // sends popular categories to all web-socket clients
                 await PopularityHubContext.Clients.All.SendAsync("categories", await GetPopularCategories());
 
@@ -211,7 +221,7 @@ namespace OpenEvent.Web.Services
             Logger.LogInformation("Downgrading {Id}'s popularity", eventId);
             return Downgrade(ref EventRecords, eventId);
         }
-        
+
         /// <inheritdoc />
         public bool DownGradeCategory(Guid categoryId)
         {
@@ -239,7 +249,7 @@ namespace OpenEvent.Web.Services
 
             return false;
         }
-        
+
         /// <inheritdoc />
         public List<PopularityRecord> GetEvents()
         {

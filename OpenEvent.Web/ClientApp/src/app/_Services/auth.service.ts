@@ -39,20 +39,11 @@ export class AuthService
         console.log(this.BaseUrl);
         this.Token = user.Token;
         let payload: JwtPayload = jwtDecode(this.Token);
-        let domain;
 
-        if (environment.production)
-        {
-          domain = ".openevent.azurewebsites.net"
-        } else
-        {
-          domain = "localhost"
-        }
+        console.log("the domain is ", environment.domain);
 
-        console.log("the domain is ", domain);
-
-        this.cookieService.set('token', this.Token, new Date(payload.exp * 1000), '/', domain, true, "Lax");
-        this.cookieService.set('id', user.Id, new Date(payload.exp * 1000), '/', domain, true, "Lax");
+        this.cookieService.set('token', this.Token, new Date(payload.exp * 1000), '/', environment.domain, true, "Lax");
+        this.cookieService.set('id', user.Id, new Date(payload.exp * 1000), '/', environment.domain, true, "Lax");
 
         this.userService.User = user;
         console.log(this.cookieService.getAll());

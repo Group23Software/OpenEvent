@@ -414,7 +414,13 @@ namespace OpenEvent.Web.Services
                 WorkQueue.QueueWork(token =>
                     RecommendationService.InfluenceAsync(token, (Guid) userId, keyword, filters, DateTime.Now));
 
-            return events.Select(e => Mapper.Map<EventViewModel>(e)).ToList();
+            return events.Select(e =>
+            {
+                var mapped = Mapper.Map<EventViewModel>(e);
+                var promoViewModel = mapped.Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End).Select(promo => Mapper.Map<PromoViewModel>(promo)).FirstOrDefault();
+                mapped.Promos = new List<PromoViewModel> {promoViewModel};
+                return mapped;
+            }).ToList();
         }
 
         // Returns if the event is within an area 
@@ -568,13 +574,21 @@ namespace OpenEvent.Web.Services
             // average recommendation score, used as minimum recommendation score
             var averageScore = recommendationScores.Select(x => x.Weight).Average();
 
-            var recommendedEvents = ApplicationContext.Events.AsSplitQuery().Include(x => x.EventCategories)
-                .ThenInclude(x => x.Category).AsEnumerable();
+            var recommendedEvents = ApplicationContext.Events
+                .Include(x => x.Promos)
+                .Include(x => x.EventCategories)
+                .ThenInclude(x => x.Category).AsSplitQuery().AsEnumerable();
 
             recommendedEvents = recommendedEvents.Where(x => ShouldRecommend(x, recommendationDictionary, averageScore))
                 .ToList();
 
-            return recommendedEvents.Select(e => Mapper.Map<EventViewModel>(e)).ToList();
+            return recommendedEvents.Select(e =>
+            {
+                var mapped = Mapper.Map<EventViewModel>(e);
+                var promoViewModel = mapped.Promos.Where(x => x.Active && x.Start < DateTime.Now && DateTime.Now < x.End).Select(promo => Mapper.Map<PromoViewModel>(promo)).FirstOrDefault();
+                mapped.Promos = new List<PromoViewModel> {promoViewModel};
+                return mapped;
+            }).ToList();
             ;
         }
 
