@@ -8,6 +8,7 @@ import jwtDecode, {JwtPayload} from "jwt-decode";
 import {UserService} from "./user.service";
 import {AuthPaths} from "../_extensions/api.constants";
 import {TriggerService} from "./trigger.service";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +36,24 @@ export class AuthService
       map(user =>
       {
         console.log(user);
+        console.log(this.BaseUrl);
         this.Token = user.Token;
         let payload: JwtPayload = jwtDecode(this.Token);
-        this.cookieService.set('token', this.Token, new Date(payload.exp * 1000), '/', 'localhost', true, "Lax");
-        this.cookieService.set('id', user.Id, new Date(payload.exp * 1000), '/', 'localhost', true, "Lax");
+        let domain;
+
+        if (environment.production)
+        {
+          domain = ".openevent.azurewebsites.net"
+        } else
+        {
+          domain = "localhost"
+        }
+
+        console.log("the domain is ", domain);
+
+        this.cookieService.set('token', this.Token, new Date(payload.exp * 1000), '/', domain, true, "Lax");
+        this.cookieService.set('id', user.Id, new Date(payload.exp * 1000), '/', domain, true, "Lax");
+
         this.userService.User = user;
         console.log(this.cookieService.getAll());
         return user;
@@ -54,7 +69,8 @@ export class AuthService
       this.trigger.isDark.emit(user.IsDarkMode);
       console.log(this.userService.User);
       return user;
-    }),catchError(err => {
+    }), catchError(err =>
+    {
 
       // if (err) {
       //   this.userService.LogOut();
