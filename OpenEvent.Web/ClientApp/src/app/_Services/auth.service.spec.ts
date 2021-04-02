@@ -18,10 +18,11 @@ describe('AuthService', () =>
       userServiceMock = jasmine.createSpyObj('userService', ['GetUserAsync']);
       userServiceMock.GetUserAsync.and.returnValue(of({}));
 
-      cookieServiceMock = jasmine.createSpyObj('cookieService', ['get', 'set', 'check']);
+      cookieServiceMock = jasmine.createSpyObj('cookieService', ['get', 'set', 'check','getAll']);
       cookieServiceMock.get.and.returnValue('');
       cookieServiceMock.set.and.callThrough();
       cookieServiceMock.check.and.callThrough();
+      cookieServiceMock.getAll.and.callThrough();
 
       httpClientMock = jasmine.createSpyObj('httpClient', ['post']);
       httpClientMock.post.and.returnValue(jasmine.createSpyObj("post", ["subscribe"]));

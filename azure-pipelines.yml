@@ -115,6 +115,12 @@ stages:
               appType: 'webAppLinux'
               WebAppName: 'OpenEvent'
               packageForLinux: '$(Build.ArtifactStagingDirectory)/dotnet/**/*.zip'
+          
+          - task: AzureAppServiceManage@0
+            inputs:
+              azureSubscription: 'Pay-As-You-Go(9089fb88-0825-4040-b4e2-8281ff2d7726)'
+              Action: 'Start Azure App Service'
+              WebAppName: 'OpenEvent'
 
   # - stage: Deploy
   #   displayName: "Deploy"
