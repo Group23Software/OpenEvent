@@ -102,7 +102,7 @@ export class MockModule
   providers: [
     CookieService,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    {provide: RouteReuseStrategy, useClass: RouteReuse}
+    // {provide: RouteReuseStrategy, useClass: RouteReuse}
   ],
   bootstrap: [AppComponent],
 })

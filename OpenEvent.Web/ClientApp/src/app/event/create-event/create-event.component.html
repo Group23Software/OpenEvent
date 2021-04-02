@@ -1,9 +1,9 @@
+<div class="overWithNav" [@inOutAnimation] *ngIf="!UserHasBank && !loading">
+  <mat-card class="m-auto">
+    <div class="mat-headline warn-color">You need to add a bank account!</div>
+  </mat-card>
+</div>
 <mat-card class="m-3 flex-grow-1 overflow-auto" *ngIf="!loading">
-  <div class="overlay" [@inOutAnimation] *ngIf="!UserHasBank">
-    <mat-card class="m-auto">
-      <div class="mat-headline warn-color">You need to add a bank account!</div>
-    </mat-card>
-  </div>
   <mat-card-header>
     <mat-icon mat-card-avatar>event</mat-icon>
     <mat-card-title>Create Event</mat-card-title>

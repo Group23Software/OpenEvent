@@ -19,3 +19,7 @@ mat-chip {
   flex-direction: row;
   flex-wrap: wrap;
 }
+
+:host {
+  overflow: auto;
+}

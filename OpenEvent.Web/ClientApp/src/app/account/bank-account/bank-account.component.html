@@ -1,4 +1,4 @@
-<div class="overlay" *ngIf="!User.Address">
+<div class="over" *ngIf="!User.Address">
   <mat-card class="m-auto">
     <div class="mat-headline warn-color">You need an address!</div>
   </mat-card>
@@ -59,10 +59,6 @@
     <mat-progress-bar mode="indeterminate" *ngIf="addBankAccountLoading"></mat-progress-bar>
     <div class="warn-color">{{addBankAccountError}}</div>
   </mat-card-footer>
-</mat-card>
-
-<mat-card class="m-3" *ngIf="addBankAccountLoading || addBankAccountError">
-
 </mat-card>
 
 <div *ngIf="bankAccount" class="m-3">

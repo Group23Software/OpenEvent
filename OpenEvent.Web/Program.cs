@@ -107,7 +107,7 @@ namespace OpenEvent.Web
                     .Enrich.FromLogContext()
                     .Enrich.WithExceptionDetails()
                     .Enrich.WithCorrelationId()
-                    .WriteTo.Console(theme: AnsiConsoleTheme.Code,outputTemplate: "{CorrelationId} [{Timestamp:HH:mm:ss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}")
+                    .WriteTo.Console(theme: AnsiConsoleTheme.Code,outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3} {SourceContext}] {Message:lj}{NewLine}{Exception}")
                     .WriteTo.Seq("http://localhost:80", apiKey: "UgrmhkMuEVCZxOX89WUm")
                 )
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });

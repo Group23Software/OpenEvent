@@ -5,7 +5,7 @@
     <mat-icon>thumb_down</mat-icon>
   </button>
   <mat-card (click)="navigateToEvent()" *ngIf="event" id="event">
-    <img mat-card-image [src]="event.Thumbnail?.Source">
+    <img mat-card-image [src]="event.Thumbnail?.Source" [alt]="event.Thumbnail ? event.Thumbnail.Label : 'Cannot load thumbnail'">
     <mat-card-content>
       <div class="mat-caption accent-color">{{event.StartLocal | date:'short'}}</div>
       <div class="mat-title">{{event.Name}}</div>

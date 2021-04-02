@@ -11,6 +11,7 @@ import {
   TicketPurchaseDialogData
 } from "../../ticket/ticket-purchase-dialog/ticket-purchase-dialog.component";
 import {TransactionService} from "../../_Services/transaction.service";
+import {UserService} from "../../_Services/user.service";
 
 @Component({
   selector: 'event',
@@ -36,12 +37,18 @@ export class EventComponent implements OnInit, OnChanges
     return this.event;
   }
 
+  get UserLoggedIn()
+  {
+    return this.userService.GetUserAsync()
+  }
+
   constructor (
     private route: ActivatedRoute,
     private eventService: EventService,
     private location: Location,
     private dialog: MatDialog,
-    private transactionService: TransactionService)
+    private transactionService: TransactionService,
+    private userService: UserService)
   {
   }
 

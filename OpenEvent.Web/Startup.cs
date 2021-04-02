@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +42,8 @@ namespace OpenEvent.Web
 
         private IConfiguration Configuration { get; }
         private IWebHostEnvironment Environment { get; }
+        
+        IServiceCollection _services;
 
         /// <summary>
         /// All dependency injection configuration happens here
@@ -151,6 +156,8 @@ namespace OpenEvent.Web
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
+
+            _services = services;
         }
         
         /// <summary>
@@ -204,6 +211,78 @@ namespace OpenEvent.Web
 
                 endpoints.MapMetrics();
             });
+            
+            app.Map("/allservices", builder => builder.Run(async context =>
+            {
+                var sb = new StringBuilder();
+                var dependencies = new Dictionary<string,string>();
+                sb.AppendLine("<pre>");
+                sb.AppendLine("digraph Services {");
+                var services = _services.Select(svc => svc.ServiceType.ToString()).ToHashSet();
+
+                foreach (var svc in _services)
+                {
+                    var serviceName = svc.ServiceType.ToString();
+                    var implementationName = svc.ImplementationType?.ToString();
+                    if (implementationName != null && serviceName.Contains("OpenEvent"))
+                    {
+                        var implDependencies = svc.ImplementationType.GetConstructors().SelectMany(cons => cons.GetParameters()).Select(p => p.ParameterType.ToString()).Distinct().Where(x => services.Contains(x));
+                        if (implDependencies.Count() > 0)
+                        {
+                            // Register Constructor dependendencies
+                            foreach(var d in implDependencies)
+                            {
+                                dependencies.TryAdd(implementationName, d);
+                            }
+                        }
+                    }
+                }
+                Action<string, string, string, IEnumerable<string>> printGroup = (label, cluster, color, group) =>
+                {
+                    if (group.Count() > 0)
+                    {
+                        sb.AppendLine($"  subgraph cluster_{cluster} {{");
+                        sb.AppendLine("      style = filled;");
+                        sb.AppendLine($"     color = {color};");
+                        sb.AppendLine("      node[style = filled, color = white];");
+                        sb.AppendLine($"     label = \"{label}\";");
+                        foreach (var item in group)
+                        {
+                        sb.AppendLine($"     \"{item}\"");
+                        }
+                        sb.AppendLine("  }");
+                    }
+                };
+                var scopedGroup = _services.Where(s => s.Lifetime == ServiceLifetime.Scoped).Select(s => s.ServiceType.ToString());
+                var transientGroup = _services.Where(s => s.Lifetime == ServiceLifetime.Transient).Select(s => s.ServiceType.ToString());
+                printGroup("scoped", "0", "blue", scopedGroup);
+                printGroup("transient", "1", "lightgrey", transientGroup);
+                // Make interfaces different
+                sb.AppendLine();
+                sb.AppendLine();
+                sb.AppendLine("     node [color=green]");
+                var interfacesGroup = _services.Where(s => s.ServiceType.IsInterface).Select(s => s.ServiceType.ToString());
+                foreach (var @interface in interfacesGroup)
+                {
+                    sb.AppendLine($"     \"{@interface}\"");
+                }
+                sb.AppendLine();
+                sb.AppendLine("    node [color=black]");
+                var noninterfacesGroup = _services.Where(s => !s.ServiceType.IsInterface).Select(s => s.ServiceType.ToString());
+                foreach (var nonInterface in noninterfacesGroup)
+                {
+                    sb.AppendLine($"     \"{nonInterface}\"");
+                }
+                //Now print dependencies
+                foreach (var d in dependencies)
+                {
+                    sb.AppendLine($"     \"{d.Key}\" -> \"{d.Value}\"");
+                }
+                sb.AppendLine("}");
+                sb.AppendLine("</pre>");
+                // Ok ready. Now return all the graph
+                await context.Response.WriteAsync(sb.ToString());
+            }));
 
             app.UseSpa(spa =>
             {

@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Observable, of} from "rxjs";
 import {AuthBody, UpdatePasswordBody, UserViewModel} from "../_models/User";
-import {map, switchMap} from "rxjs/operators";
+import {catchError, map, retry, switchMap} from "rxjs/operators";
 import {CookieService} from "ngx-cookie-service";
 import jwtDecode, {JwtPayload} from "jwt-decode";
 import {UserService} from "./user.service";
@@ -53,6 +53,13 @@ export class AuthService
       this.trigger.isDark.emit(user.IsDarkMode);
       console.log(this.userService.User);
       return user;
+    }),catchError(err => {
+
+      if (err) {
+        this.userService.LogOut();
+      }
+
+      return of(err);
     }));
   }
 

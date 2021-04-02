@@ -20,6 +20,10 @@
 /*  color: var(--white);*/
 /*}*/
 
+:host {
+  overflow: auto;
+}
+
 #groundControl {
   display: flex;
   flex-direction: row;
@@ -35,7 +39,8 @@
 #categorySelect {
   display: flex;
   flex-direction: row;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .popularTile {
@@ -56,10 +61,20 @@ mat-chip > mat-icon {
   margin-right: 5px;
 }
 
+mat-chip {
+  width: fit-content;
+}
+
+mat-chip-list {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 .events {
   display: flex;
   flex-direction: row;
-  overflow-x: auto;
   padding-bottom: 1px;
   padding-top: 11px;
+  flex-wrap: wrap;
 }

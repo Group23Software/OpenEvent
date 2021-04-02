@@ -43,18 +43,3 @@
   display: flex;
   flex-direction: column;
 }
-
-#eventAnalytics {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-#eventAnalytics > mat-card {
-  margin: 1rem;
-  flex: 1;
-}
-
-#eventTabs {
-  height: 100%;
-}

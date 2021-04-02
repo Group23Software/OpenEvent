@@ -30,10 +30,10 @@
 
       <mat-card id="ticketsAndPrice">
         <div class="mr-3">{{Event.TicketsLeft}} ticket(s) left!</div>
-        <button *ngIf="Promo && Event.TicketsLeft != 0" mat-flat-button color="accent" (click)="purchase()">
+        <button *ngIf="Promo && Event.TicketsLeft != 0" mat-flat-button color="accent" (click)="purchase()" [disabled]="!(UserLoggedIn | async)">
           <span style="text-decoration: line-through; margin-right: 0.25rem">{{Event.Price / 100 |currency:'GBP'}}</span> <span>{{(Event.Price / 100) - (((Event.Price / 100) / 100) * Promo.Discount) |currency:'GBP'}}</span>
         </button>
-        <button *ngIf="!Promo" mat-flat-button color="accent" [disabled]="Event.TicketsLeft == 0" (click)="purchase()">{{Event.Price / 100 |currency:'GBP'}}</button>
+        <button *ngIf="!Promo" mat-flat-button color="accent" [disabled]="Event.TicketsLeft == 0 || !(UserLoggedIn | async)" (click)="purchase()">{{Event.Price / 100 |currency:'GBP'}}</button>
       </mat-card>
     </div>
     <div class="d-flex flex-row">

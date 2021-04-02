@@ -2,7 +2,7 @@
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </mat-card>
 
-<div class="d-flex flex-column h-100" *ngIf="PopularEvents && PopularCategories && !Loading">
+<div class="d-flex flex-column h-100 overflow-auto" *ngIf="PopularEvents && PopularCategories && !Loading">
   <div class="d-flex flex-column m-3 flex-grow-1">
     <div id="featured" *ngIf="FeaturedEvent">
       <img [src]="FeaturedEvent?.Thumbnail?.Source"/>

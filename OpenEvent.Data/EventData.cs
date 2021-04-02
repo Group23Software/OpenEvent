@@ -20,7 +20,7 @@ namespace OpenEvent.Data
             .RuleFor(x => x.StartLocal, f => f.Date.Soon())
             .RuleFor(x => x.EndLocal, f => f.Date.Future())
             .RuleFor(x => x.Created, f => f.Date.Between(DateTime.Now.AddMonths(-3), DateTime.Now))
-            .RuleFor(x => x.Price, f => f.Random.Int(0));
+            .RuleFor(x => x.Price, f => f.Random.Long(0,100000));
 
         public static Faker<CreateEventBody> FakeCreateEvent = new Faker<CreateEventBody>()
             .RuleFor(x => x.Name, f => f.Lorem.Sentence())
