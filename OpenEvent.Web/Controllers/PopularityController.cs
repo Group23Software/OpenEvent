@@ -11,6 +11,7 @@ using OpenEvent.Web.Services;
 namespace OpenEvent.Web.Controllers
 {
     /// <inheritdoc />
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PopularityController : ControllerBase

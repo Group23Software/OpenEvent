@@ -55,9 +55,9 @@ export class AuthService
       return user;
     }),catchError(err => {
 
-      if (err) {
-        this.userService.LogOut();
-      }
+      // if (err) {
+      //   this.userService.LogOut();
+      // }
 
       return of(err);
     }));

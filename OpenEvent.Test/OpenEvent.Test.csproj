@@ -35,6 +35,12 @@
 
   <ItemGroup>
     <Folder Include="Services\RecommendationService" />
+    <Folder Include="TestResults\4e59cb18-7943-40e4-bd53-efadfdd7115a" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="TestResults\TestResult__pc-68-163_20210313_181356.html" />
+    <None Remove="TestResults\TestResult__Harrisons-MBP-2_20210330_172551.html" />
   </ItemGroup>
 
 </Project>

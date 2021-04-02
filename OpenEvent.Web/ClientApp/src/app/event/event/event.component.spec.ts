@@ -12,6 +12,7 @@ import {TransactionService} from "../../_Services/transaction.service";
 import {ActivatedRoute, convertToParamMap} from "@angular/router";
 import {MatCardModule} from "@angular/material/card";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {UserService} from "../../_Services/user.service";
 
 describe('EventComponent', () =>
 {
@@ -21,6 +22,7 @@ describe('EventComponent', () =>
   let locationMock;
   let dialogMock;
   let transactionServiceMock;
+  let userServiceMock;
 
   const mockEvent: EventDetailModel = {
     Promos: [],
@@ -60,6 +62,9 @@ describe('EventComponent', () =>
 
     locationMock = jasmine.createSpyObj('location', ['back']);
 
+    userServiceMock = jasmine.createSpyObj('UserService', ['GetUserAsync']);
+    userServiceMock.GetUserAsync.and.returnValue(of(null));
+
 
     await TestBed.configureTestingModule({
       declarations: [EventComponent],
@@ -79,7 +84,8 @@ describe('EventComponent', () =>
               paramMap: convertToParamMap({id: "1"})
             }
           }
-        }
+        },
+        {provide: UserService, useValue: userServiceMock}
       ]
     }).compileComponents();
   });
