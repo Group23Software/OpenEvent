@@ -24,7 +24,9 @@ OpenEvent uses a local MySQL datbase in development so you'll need a local insta
 
 To run the app make sure you have all prerequisites first.
 
-Then simply cd into the OpenEvent.Web directory, restore all the packages (install any extra stuff, should only need to do once) and then run the program.
+Then simply cd into the OpenEvent.Web directory, restore all the packages (install any extra stuff, should only need to do once) and then run the program. 
+
+Running the first time will take along time as it downloads all npm packages and will re compile them into **esm2015** from **es2015**
 
 ```sh
 $ cd OpenEvent.Web
@@ -42,6 +44,14 @@ Then start a listener that forwards to the local API.
 ```sh
 $ stripe listen --forward-to localhost:5000/api/transaction/capture
 ```
+
+### Test User
+
+There is a test user created on startup you can use
+
+**Email** -> test@test.co.uk
+
+**Password** -> Password@1
 
 ## Maintainers
 

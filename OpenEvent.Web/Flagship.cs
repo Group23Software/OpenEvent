@@ -1,15 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OpenEvent.Data;
+using OpenEvent.Data.Models.Address;
 using OpenEvent.Data.Models.Analytic;
+using OpenEvent.Data.Models.BankAccount;
 using OpenEvent.Data.Models.Category;
 using OpenEvent.Data.Models.Event;
+using OpenEvent.Data.Models.PaymentMethod;
 using OpenEvent.Data.Models.Promo;
 using OpenEvent.Data.Models.Recommendation;
 using OpenEvent.Data.Models.Ticket;
@@ -60,7 +64,7 @@ namespace OpenEvent.Web
             context.Categories.AddRange(categories);
             await context.SaveChangesAsync();
         }
-        
+
         public static async Task SeedDatabase(ApplicationContext context, IServiceProvider serviceProvider)
         {
             await SeedUsers(context, serviceProvider);
@@ -89,6 +93,61 @@ namespace OpenEvent.Web
                 u.Password = hasher.HashPassword(u, "Password");
             });
 
+            var testUser = new User
+            {
+                Id = new Guid("23C6C78B-5754-48A5-82E3-5772AA462CDE"),
+                Email = "test@test.co.uk",
+                FirstName = "Test",
+                LastName = "User",
+                UserName = "TestUser",
+                Avatar = Encoding.UTF8.GetBytes("https://picsum.photos/640/480/?image=41"),
+                Address = new Address
+                {
+                    City = "Stowmarket",
+                    AddressLine1 = "21 Wellsway",
+                    PostalCode = "IP146SL",
+                    CountryCode = "GB",
+                    CountryName = "United Kingdom"
+                },
+                PhoneNumber = "+4407852276048",
+                IsDarkMode = false,
+                Confirmed = true,
+                DateOfBirth = new DateTime(2000,7,24),  
+                StripeAccountId = "acct_1IeMUv2euIlqIANk",
+                StripeCustomerId = "cus_JGuDCovqvDgFjb",
+                PaymentMethods = new List<PaymentMethod>()
+                {
+                    new()
+                    {
+                        StripeCardId = "card_1IeMQzK2ugLXrgQX48FGjxMT",
+                        LastFour = "0005",
+                        Brand = "Visa",
+                        Funding = "debit",
+                        ExpiryMonth = 11,
+                        ExpiryYear = 2024,
+                        Country = "GB",
+                        NickName = "Debit",
+                        Name = "TestUser",
+                        IsDefault = true
+                    }
+                },
+                BankAccounts = new List<BankAccount>()
+                {
+                    new()
+                    {
+                        Bank = "STRIPE TEST BANK",
+                        StripeBankAccountId = "ba_1IeMXB2euIlqIANkrYY0NuFS",
+                        Currency = "gbp",
+                        Country = "GB",
+                        LastFour = "2345",
+                        Name = "Test User"
+                    }
+                },
+                RecommendationScores = categories.Select(x => new RecommendationScore {Category = x, Weight = 0}).ToList()
+            };
+            testUser.Password = hasher.HashPassword(testUser, "Password@1");
+
+            await context.Users.AddAsync(testUser);
             await context.Users.AddRangeAsync(users);
             await context.SaveChangesAsync();
         }
@@ -97,22 +156,25 @@ namespace OpenEvent.Web
         {
             var categories = await context.Categories.ToListAsync();
             var users = await context.Users.ToListAsync();
-
-            // var eventService = serviceProvider.GetRequiredService<IEventService>();
-            //
-            // var newEvents = EventData.FakeCreateEvent.Generate(10);
-            //
-            // foreach (var createEventBody in newEvents)
-            // {
-            //     createEventBody.HostId = users.ElementAt(new Random().Next(users.Count)).Id;
-            //     createEventBody.Categories = new List<Category> {categories.ElementAt(new Random().Next(categories.Count))};
-            //     await eventService.Create(createEventBody);
-            // }
+            var testUser = await context.Users.FirstOrDefaultAsync(x => x.Id == new Guid("23C6C78B-5754-48A5-82E3-5772AA462CDE"));
 
             var events = EventData.FakeEvent.Generate(NumberOfEvents);
+            var testUsersEvents = EventData.FakeEvent.Generate(3);
+            
             var tickets = new List<Ticket>();
 
-            events.ForEach(e =>
+            events.ForEach(GenerateEvent(users, categories, tickets));
+            testUsersEvents.ForEach(GenerateEvent(new List<User> {testUser},categories,tickets));
+            
+            
+            await context.Events.AddRangeAsync(events);
+            await context.Tickets.AddRangeAsync(tickets);
+            await context.SaveChangesAsync();
+        }
+
+        private static Action<Event> GenerateEvent(List<User> users, List<Category> categories, List<Ticket> tickets)
+        {
+            return e =>
             {
                 if (new Random().Next() > int.MaxValue / 2)
                 {
@@ -152,12 +214,7 @@ namespace OpenEvent.Web
                         Event = e
                     });
                 }
-            });
-
-
-            await context.Events.AddRangeAsync(events);
-            await context.Tickets.AddRangeAsync(tickets);
-            await context.SaveChangesAsync();
+            };
         }
 
         private static async Task SeedInteraction(ApplicationContext context)
@@ -189,10 +246,10 @@ namespace OpenEvent.Web
                         Key = SearchParam.Category,
                         Value = categories.ElementAt(new Random().Next(categories.Count)).Id.ToString()
                     };
-                    
+
                     searches.Add(new SearchEvent()
                     {
-                        Created = RandomDate(DateTime.Now.AddMonths(-3),DateTime.Now),
+                        Created = RandomDate(DateTime.Now.AddMonths(-3), DateTime.Now),
                         Params = String.Join(",", filter),
                         Search = "",
                         User = u
