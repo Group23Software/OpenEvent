@@ -5,7 +5,7 @@
       <mat-label>Search</mat-label>
       <input matInput type="text" id="searchInput" autocomplete="off" (ngModelChange)="triggerSearchChange()" (keyup.enter)="triggerSearchChange()" [(ngModel)]="keyword">
     </mat-form-field>
-    <button mat-fab (click)="triggerSearchChange()">
+    <button mat-fab (click)="triggerSearchChange()" aria-label="search">
       <mat-icon>search</mat-icon>
     </button>
   </div>

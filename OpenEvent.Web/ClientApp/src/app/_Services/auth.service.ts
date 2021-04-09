@@ -35,18 +35,13 @@ export class AuthService
     return this.http.post<UserViewModel>(this.BaseUrl + AuthPaths.Login, auth).pipe(
       map(user =>
       {
-        console.log(user);
-        console.log(this.BaseUrl);
         this.Token = user.Token;
         let payload: JwtPayload = jwtDecode(this.Token);
-
-        console.log("the domain is ", environment.domain);
 
         this.cookieService.set('token', this.Token, new Date(payload.exp * 1000), '/', environment.domain, true, "Lax");
         this.cookieService.set('id', user.Id, new Date(payload.exp * 1000), '/', environment.domain, true, "Lax");
 
         this.userService.User = user;
-        console.log(this.cookieService.getAll());
         return user;
       })
     );
@@ -58,14 +53,14 @@ export class AuthService
     {
       this.userService.User = user;
       this.trigger.isDark.emit(user.IsDarkMode);
-      console.log(this.userService.User);
       return user;
     }), catchError(err =>
     {
 
-      // if (err) {
-      //   this.userService.LogOut();
-      // }
+      if (err)
+      {
+        this.userService.LogOut();
+      }
 
       return of(err);
     }));
@@ -76,13 +71,14 @@ export class AuthService
     return this.userService.GetUserAsync().pipe(
       switchMap(u =>
         {
+          // if not user
           if (u == null)
           {
-            console.log("There is no user");
+            // has the user been saved
             if (this.cookieService.check('id'))
             {
               let id = this.cookieService.get('id');
-              console.log("Client has token saved, getting user", id);
+              // if the user was saved then get it from the server
               return this.Authenticate(id).pipe(map(x => !!x));
             }
             return of(false);

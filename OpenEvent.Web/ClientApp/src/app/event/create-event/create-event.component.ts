@@ -126,11 +126,8 @@ export class CreateEventComponent implements OnInit
       Thumbnail: this.ImagesAndSocialsForm.controls.thumbnail.value,
     }
 
-    console.log(createEventBody);
-
     this.eventService.Create(createEventBody).subscribe(response =>
     {
-      console.log(response);
       this.loading = false;
 
       // navigate to the event once created

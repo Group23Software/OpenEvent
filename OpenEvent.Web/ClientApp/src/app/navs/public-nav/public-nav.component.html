@@ -2,7 +2,7 @@
   <mat-toolbar color="primary">
 
     <div class="navControls">
-      <button mat-icon-button (click)="back()" class="mr-2" fxHide.lt-sm>
+      <button mat-icon-button (click)="back()" class="mr-2" fxHide.lt-sm  name="back" aria-label="back">
         <mat-icon>arrow_back</mat-icon>
       </button>
       <button mat-flat-button color="accent" [routerLink]="['/search']" [routerLinkActive]="['/search']">Search</button>

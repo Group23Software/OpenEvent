@@ -88,7 +88,7 @@
       <div style="width: fit-content">
         <div class="position-relative m-3">
           <img class="avatarPreview" *ngIf="avatar" [src]="avatar" alt="user's avatar">
-          <button mat-mini-fab type="button" id="avatarUploadButton" (click)="avatarUpload()">
+          <button mat-mini-fab type="button" id="avatarUploadButton" (click)="avatarUpload()" aria-label="upload avatar">
             <mat-icon>upload</mat-icon>
           </button>
         </div>

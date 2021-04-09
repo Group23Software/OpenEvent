@@ -42,7 +42,6 @@ export class LoginComponent implements OnInit
 
   public login ()
   {
-    console.log("login has been pressed", this.loginFormGroup);
     this.loading = true;
 
     this.authService.Login({

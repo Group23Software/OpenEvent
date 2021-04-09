@@ -48,7 +48,7 @@ export class EventService
   public GetForPublic (id: string): Observable<EventDetailModel>
   {
     let params: HttpParams = new HttpParams().set('id',id);
-    console.log(this.userService.User);
+    // console.log(this.userService.User);
     if (this.userService.User != null) params = params.set('userId',this.userService.User.Id);
     return this.http.get<EventDetailModel>(this.BaseUrl + EventPaths.GetForPublic, {
       params: params
@@ -70,7 +70,7 @@ export class EventService
     {
       if (events.length > 0)
       {
-        console.log('events exist', events);
+        // console.log('events exist', events);
         this.hostsEvents = events;
 
         this.hostsEvents.sort((a, b) =>
@@ -160,7 +160,6 @@ export class EventService
           pageViews.set(fullDate, [x]);
         }
       });
-      console.log(pageViews);
 
       let mapped: MappedEventAnalytics = {
         PageViewEvents: Array.from(pageViews, ([key, value]) => ({Date: new Date(key), PageViews: value})),

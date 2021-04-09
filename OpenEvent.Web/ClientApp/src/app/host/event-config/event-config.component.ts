@@ -114,23 +114,7 @@ export class EventConfigComponent implements OnInit
     this.EndLocal.setValue(this.event.EndLocal);
     this.IsOnline.setValue(this.event.IsOnline);
     this.addressForm.setValue(this.event.Address);
-    if (!this.IsOnline)
-    {
-      this.addressForm.disable();
-      // for (let control in this.addressForm.controls)
-      // {
-      //   this.addressForm.controls[control].disable();
-      // }
-    }
-    // TODO: Fix social media links, this is nasty.
-    // if (this.event.SocialLinks != null && this.event.SocialLinks.length > 0)
-    // {
-    //   this.Site.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Site).Link);
-    //   this.Instagram.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Instagram).Link);
-    //   this.Facebook.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Facebook).Link);
-    //   this.Twitter.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Twitter).Link);
-    //   this.Reddit.setValue(this.event.SocialLinks.find(x => x.SocialMedia == SocialMedia.Reddit).Link);
-    // }
+    if (!this.IsOnline) this.addressForm.disable();
   }
 
   public clickedOnline ()
@@ -181,7 +165,7 @@ export class EventConfigComponent implements OnInit
       Thumbnail: this.event.Thumbnail,
       Finished: this.event.Finished
     }
-    console.log(updateEvent);
+
     this.eventService.Update(updateEvent).subscribe(response =>
     {
       this.updatingEvent = false;

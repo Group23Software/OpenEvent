@@ -40,7 +40,6 @@ export class VirtualCardComponent implements OnInit {
           PaymentId: this.Card.StripeCardId
         }).subscribe(response => {
           this.loading = false;
-          console.log('removed');
         }, (e: HttpErrorResponse) => {
           console.error(e);
           this.loading = false;
@@ -56,7 +55,6 @@ export class VirtualCardComponent implements OnInit {
       UserId: this.userService.User.Id,
       PaymentId: this.Card.StripeCardId
     }).subscribe(response => {
-      console.log('made default');
       this.loading = false;
     }, (e: HttpErrorResponse) => {
       console.error(e);

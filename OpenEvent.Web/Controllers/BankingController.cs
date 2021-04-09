@@ -46,7 +46,7 @@ namespace OpenEvent.Web.Controllers
         }
 
         /// <summary>
-        /// Endpont for removing the user's bank account.
+        /// Endpoint for removing the user's bank account.
         /// </summary>
         /// <param name="removeBankAccountBody"></param>
         /// <returns></returns>

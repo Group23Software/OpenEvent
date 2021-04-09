@@ -26,6 +26,41 @@ namespace OpenEvent.Web
         private const int NumberOfPagViews = 10;
         private const int NumberOfSearches = 2;
 
+        public static async Task SeedCategories(ApplicationContext context)
+        {
+            List<Category> categories = new List<Category>
+            {
+                new() {Name = "Music"},
+                new() {Name = "Business"},
+                new() {Name = "Charity"},
+                new() {Name = "Culture"},
+                new() {Name = "Family"},
+                new() {Name = "Education"},
+                new() {Name = "Fashion"},
+                new() {Name = "Film"},
+                new() {Name = "Media"},
+                new() {Name = "Food"},
+                new() {Name = "Politics"},
+                new() {Name = "Health"},
+                new() {Name = "Hobbies"},
+                new() {Name = "Lifestyle"},
+                new() {Name = "Other"},
+                new() {Name = "Performing"},
+                new() {Name = "Visual Arts"},
+                new() {Name = "Religion"},
+                new() {Name = "Science"},
+                new() {Name = "Technology"},
+                new() {Name = "Seasonal"},
+                new() {Name = "Sport"},
+                new() {Name = "Outdoor"},
+                new() {Name = "Travel"},
+                new() {Name = "Automobile"}
+            };
+
+            context.Categories.AddRange(categories);
+            await context.SaveChangesAsync();
+        }
+        
         public static async Task SeedDatabase(ApplicationContext context, IServiceProvider serviceProvider)
         {
             await SeedUsers(context, serviceProvider);

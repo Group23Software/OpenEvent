@@ -72,7 +72,6 @@ export class DashboardComponent implements OnInit, AfterViewChecked
     if (!this.updated && this.eventPreview)
     {
       this.updated = true;
-      console.log(this.sideNavContainer);
       this.sideNavContainer.updateContentMargins();
     }
   }

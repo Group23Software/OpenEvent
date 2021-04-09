@@ -4,7 +4,7 @@
   <mat-card class="mb-3 overflow-hidden">
     <div *ngIf="Categories" id="groundControl">
       <button mat-flat-button color="primary" (click)="explore()" [disabled]="DisplayingExplore" [class.activeButton]="DisplayingExplore">Explore</button>
-      <mat-chip-list aria-orientation="horizontal" selectable multiple>
+      <mat-chip-list aria-orientation="horizontal" selectable multiple aria-label="category selection list">
         <div id="categorySelect">
           <mat-chip #c="matChip" selectable removable (click)="categoriesSelectionChange(c,category)" *ngFor="let category of Categories" [@inOutAnimation]>
             <mat-icon *ngIf="c.selected">check</mat-icon>

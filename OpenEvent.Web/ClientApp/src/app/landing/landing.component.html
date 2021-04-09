@@ -5,7 +5,7 @@
 <div class="d-flex flex-column h-100 overflow-auto" *ngIf="PopularEvents && PopularCategories && !Loading">
   <div class="d-flex flex-column m-3 flex-grow-1">
     <div id="featured" *ngIf="FeaturedEvent">
-      <img [src]="FeaturedEvent?.Thumbnail?.Source"/>
+      <img [src]="FeaturedEvent?.Thumbnail?.Source" [alt]="FeaturedEvent?.Thumbnail?.Label"/>
       <div id="imageShadow" (click)="navigateToFeatured()"></div>
       <mat-card id="featuredName" (click)="navigateToFeatured()">
         <div class="mat-caption accent-color">{{FeaturedEvent?.StartLocal | date:'short'}}</div>

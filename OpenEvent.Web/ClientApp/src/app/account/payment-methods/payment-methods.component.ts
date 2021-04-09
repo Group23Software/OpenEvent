@@ -152,13 +152,11 @@ export class PaymentMethodsComponent implements OnInit
               // TODO: clear card input after added.
             }, (e: HttpErrorResponse) =>
             {
-              console.error(e);
               this.createCardTokenError = e.error.Message;
               this.createCardTokenLoading = false;
             });
           } else if (result.error)
           {
-            console.log(result.error.message);
             this.createCardTokenError = result.error.message;
             this.createCardTokenLoading = false;
           }

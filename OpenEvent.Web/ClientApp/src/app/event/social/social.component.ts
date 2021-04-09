@@ -19,7 +19,7 @@ export class SocialComponent implements OnInit
 
   ngOnInit (): void
   {
-    console.log(this.socialLink,this.socialString);
+    // console.log(this.socialLink,this.socialString);
 
     if (this.socialString != null)
     {

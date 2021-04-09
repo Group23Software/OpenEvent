@@ -37,10 +37,8 @@ export class SearchComponent implements OnInit
 
   constructor (private eventService: EventService, private router: Router)
   {
-    console.log('[app:details] constructed app details');
     let search = this.router.getCurrentNavigation().extras.state as {keyword: string,filters: SearchFilter[]};
     if (search) {
-      console.log(search);
       this.keyword = search.keyword;
       this.filters = search.filters;
     }
@@ -65,21 +63,20 @@ export class SearchComponent implements OnInit
     this.loading = true;
     this.filters = [];
 
+    // adding category filters
     this.selectedCategories.forEach(c => this.filters.push({Key: SearchParam.Category, Value: c.Id}));
 
-    if (this.isOnline)
-    {
-      this.filters.push({Key: SearchParam.IsOnline, Value: "true"});
-    }
+    // adding online filter if used
+    if (this.isOnline) this.filters.push({Key: SearchParam.IsOnline, Value: "true"});
 
+    // adding location filter if used
     if (this.usersLocation && this.usingCurrentLocation && !this.isOnline) this.filters.push({
       Key: SearchParam.Location,
       Value: `${this.usersLocation.coords.latitude},${this.usersLocation.coords.longitude},${this.distanceSelect}`
     })
 
+    // adding date filter to filters if being used
     if (this.date && this.usingDate) this.filters.push({Key:SearchParam.Date, Value: this.date.toDateString()})
-
-    console.log(this.filters);
 
     this.eventService.Search(this.keyword, this.filters).subscribe(events =>
     {
@@ -98,12 +95,11 @@ export class SearchComponent implements OnInit
 
   public toggleCurrentLocation (event: MatSlideToggleChange)
   {
-    console.log(event.checked);
     if (event.checked)
     {
       if (navigator.geolocation)
       {
-        console.log("Geo location supported");
+        // console.log("Geo location supported");
         navigator.geolocation.getCurrentPosition((position) =>
         {
           this.usersLocation = position;

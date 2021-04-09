@@ -1,7 +1,7 @@
 <div class="position-relative">
   <div id="promoBanner" *ngIf="Promo"><div id="promoBannerText">{{Promo.Discount}}%</div>
   </div>
-  <button mat-mini-fab (click)="downVote()" class="mat-elevation-z2" id="downVoteButton" *ngIf="event && showDownVote">
+  <button mat-mini-fab (click)="downVote()" class="mat-elevation-z2" id="downVoteButton" *ngIf="event && showDownVote" aria-label="down-vote event">
     <mat-icon>thumb_down</mat-icon>
   </button>
   <mat-card (click)="navigateToEvent()" *ngIf="event" id="event">

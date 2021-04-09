@@ -22,7 +22,7 @@
         <div>
           <mat-chip color="primary" class="mr-3">Sales: {{promo.NumberOfSales}}</mat-chip>
           <mat-slide-toggle [checked]="promo.Active" (change)="activeToggle($event,promo)" class="mr-3">Active</mat-slide-toggle>
-          <button mat-mini-fab color="warn" (click)="delete(promo)">
+          <button mat-mini-fab color="warn" (click)="delete(promo)" aria-label="delete promo">
             <mat-icon>delete_forever</mat-icon>
           </button>
         </div>

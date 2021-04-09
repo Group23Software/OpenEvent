@@ -32,7 +32,6 @@ export class EventPreviewComponent implements OnInit
 
   downVote ()
   {
-    console.log("down voting", this.event);
     this.eventService.DownVote(this.event.Id).subscribe();
   }
 }

@@ -21,7 +21,7 @@
               </mat-error>
               <mat-error *ngIf="username.errors && username.errors.http">{{newUserNameError}}</mat-error>
             </mat-form-field>
-            <button type="submit" mat-fab>
+            <button type="submit" mat-fab aria-label="save username">
               <mat-icon>save</mat-icon>
             </button>
           </form>
@@ -53,8 +53,8 @@
           <mat-card-title>Address</mat-card-title>
           <mat-card-subtitle>Billing address</mat-card-subtitle>
         </mat-card-header>
-          <address-form [Address]="user.Address" [formControl]="newAddressForm"></address-form>
-          <button [disabled]="newAddressForm.invalid || newAddressForm.disabled" (click)="newAddress()" mat-flat-button color="accent" style="width: fit-content">Submit</button>
+        <address-form [Address]="user.Address" [formControl]="newAddressForm"></address-form>
+        <button [disabled]="newAddressForm.invalid || newAddressForm.disabled" (click)="newAddress()" mat-flat-button color="accent" style="width: fit-content">Submit</button>
       </mat-card>
     </div>
 
@@ -80,7 +80,7 @@
               Passwords must match
             </mat-error>
           </mat-form-field>
-          <button type="submit" mat-fab>
+          <button type="submit" mat-fab aria-label="save password">
             <mat-icon>save</mat-icon>
           </button>
           <mat-error *ngIf="newPasswordForm.errors && newPasswordForm.errors.http">{{newPasswordError}}</mat-error>
@@ -102,7 +102,7 @@
       <mat-card-content>
         <div id="avatarContainer">
           <img id="avatarPreview" *ngIf="user.Avatar" [src]="user.Avatar" alt="user's avatar">
-          <button mat-mini-fab id="avatarEditButton" (click)="avatarUpload()">
+          <button mat-mini-fab id="avatarEditButton" (click)="avatarUpload()" aria-label="edit avatar">
             <mat-icon>edit</mat-icon>
           </button>
         </div>

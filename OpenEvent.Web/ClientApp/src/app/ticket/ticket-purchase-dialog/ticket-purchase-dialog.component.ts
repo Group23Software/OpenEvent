@@ -71,7 +71,6 @@ export class TicketPurchaseDialogComponent implements OnInit
         UserId: this.userService.User?.Id
       }).subscribe(i =>
       {
-        console.log(i);
         this.loadingData = false;
       }, (e: HttpErrorResponse) =>
       {
@@ -91,7 +90,6 @@ export class TicketPurchaseDialogComponent implements OnInit
     {
       if (i.Status == 'requires_action')
       {
-        console.log('requires action', i);
         this.stripeService.handleCardAction(this.transactionService.TransactionSecret).subscribe(value =>
         {
           this.confirm();

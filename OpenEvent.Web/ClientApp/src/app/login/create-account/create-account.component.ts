@@ -77,7 +77,6 @@ export class CreateAccountComponent implements OnInit, OnDestroy
 
   public createAccount () : void
   {
-    console.log('creating account');
     this.loading = true;
 
     let newUserInput: NewUserInput = {

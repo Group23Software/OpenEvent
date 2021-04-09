@@ -63,8 +63,8 @@ export class VerifyTicketComponent implements OnInit
     if (ticketId != this.lastTicket)
     {
       this.lastTicket = ticketId;
-      console.log(ticketId);
       this.loading = true;
+
       this.ticketService.Verify({
         Id: ticketId,
         EventId: this.EventId

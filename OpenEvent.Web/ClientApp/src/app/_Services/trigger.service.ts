@@ -43,7 +43,7 @@ export class TriggerService
     if (status) component.instance.status = status;
 
     this.container.insert(component.hostView);
-    component.onDestroy(() => console.log('the iterator has been destroyed'));
+    // component.onDestroy(() => console.log('the iterator has been destroyed'));
   }
 
 }

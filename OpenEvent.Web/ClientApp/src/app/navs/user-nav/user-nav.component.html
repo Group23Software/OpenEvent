@@ -1,6 +1,6 @@
 <header fxHide.gt-xs>
   <mat-toolbar color="primary" *ngIf="User">
-    <button mat-icon-button (click)="back()">
+    <button mat-icon-button (click)="back()" name="back" aria-label="back">
       <mat-icon>arrow_back</mat-icon>
     </button>
     <button class="mr-2" mat-flat-button color="accent" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>
@@ -37,7 +37,7 @@
   <mat-toolbar class="toolbar" ngClass.gt-xs="toolbar" color="primary" *ngIf="User">
 
     <div class="navControls">
-      <button mat-icon-button (click)="back()" class="mr-2" fxHide.lt-sm>
+      <button mat-icon-button (click)="back()" class="mr-2" fxHide.lt-sm name="back" aria-label="back">
         <mat-icon>arrow_back</mat-icon>
       </button>
       <button mat-flat-button color="accent" class="mr-2" [routerLink]="['/explore']" [routerLinkActive]="['activeLink']">Explore</button>
@@ -49,7 +49,7 @@
     <div class="navControls justify-content-end">
       <mat-progress-spinner *ngIf="loading" [diameter]="40" class="mr-3" color="accent" mode="indeterminate"></mat-progress-spinner>
       <button mat-flat-button color="accent" class="mr-2" [routerLink]="['/host/create']" [routerLinkActive]="['activeLink']">Create Event</button>
-      <img [src]="User.Avatar" class="avatar" [mat-menu-trigger-for]="menu">
+      <img [src]="User.Avatar" class="avatar" [mat-menu-trigger-for]="menu" alt="avatar">
       <mat-menu #menu="matMenu">
         <button mat-menu-item [routerLink]="['/user/account']" [routerLinkActive]="['activeLink']">
           <mat-icon>settings</mat-icon>

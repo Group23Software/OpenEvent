@@ -16,7 +16,7 @@
         <input type="text" autocomplete="off" matInput formControlName="nickName" placeholder="Debit">
       </mat-form-field>
       <div id="cardAddButton">
-        <button type="submit" mat-fab color="primary" [disabled]="stripeTest.invalid || !cardComplete">
+        <button type="submit" mat-fab color="primary" [disabled]="stripeTest.invalid || !cardComplete" aria-label="add card">
           <mat-icon>add</mat-icon>
         </button>
       </div>

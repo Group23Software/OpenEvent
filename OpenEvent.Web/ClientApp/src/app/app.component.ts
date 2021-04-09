@@ -34,7 +34,6 @@ export class AppComponent implements OnInit, AfterViewInit
 
   ngAfterViewInit ()
   {
-    console.log('container', this.container);
     this.trigger.Container = this.container;
   }
 }

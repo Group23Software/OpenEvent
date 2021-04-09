@@ -51,7 +51,7 @@ export class ExploreComponent implements OnInit
       this.popularityService.GetCategories()
     ];
     forkJoin(subs).subscribe(x => {
-      console.log("explore data loaded", x);
+      // console.log("explore data loaded", x);
     }, (e: HttpErrorResponse) => this.Error = e.message);
   }
 
@@ -59,7 +59,6 @@ export class ExploreComponent implements OnInit
   {
     this.eventService.Explore().subscribe(events => this.Events = events);
     this.SelectedCategories = [];
-    console.log(this.chips);
     this.chips.forEach(chip => chip.deselect())
   }
 

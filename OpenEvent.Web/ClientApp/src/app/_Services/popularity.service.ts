@@ -32,7 +32,7 @@ export class PopularityService
   {
     this.BaseUrl = baseUrl;
     this.startConnection();
-    this.connection.start().then(() => console.log('connected to popularity hub')).catch(err => console.error('error connecting to popularity hub', err));
+    this.connection.start().then(() => {}).catch(err => console.error('error connecting to popularity hub', err));
   }
 
   public ListenToEvents ()

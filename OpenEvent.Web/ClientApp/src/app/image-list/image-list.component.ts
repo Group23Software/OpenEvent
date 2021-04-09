@@ -57,7 +57,6 @@ export class ImageListComponent implements ControlValueAccessor, OnInit
     {
       if (image)
       {
-        console.log(image);
         this.images.push(image);
         this.change();
         this.imageEvent.emit(this.images);

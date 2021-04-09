@@ -54,7 +54,6 @@ export class SocialLinksFormComponent implements ControlValueAccessor, OnInit
 
   ngOnInit (): void
   {
-    console.log(this.optionsLeft);
   }
 
   registerOnChange (fn: any): void
@@ -74,7 +73,6 @@ export class SocialLinksFormComponent implements ControlValueAccessor, OnInit
 
   addSocialLink ()
   {
-    console.log(this.socialLinkForm);
     this.optionsLeft = this.optionsLeft.filter(x => x != this.socialLinkForm.controls.socialMedia.value);
     this.optionsSelected.push({
       Link: this.socialLinkForm.controls.url.value,
@@ -84,7 +82,6 @@ export class SocialLinksFormComponent implements ControlValueAccessor, OnInit
       socialMedia: this.optionsLeft[0],
       url: ''
     });
-    console.log(this.optionsLeft, this.socialLinkForm);
 
     this.onChange(this.optionsSelected);
   }

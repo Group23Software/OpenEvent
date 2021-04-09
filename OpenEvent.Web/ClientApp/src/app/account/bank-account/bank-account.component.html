@@ -15,7 +15,7 @@
       <mat-card class="flex-grow-1 mr-3">
         <ngx-stripe-iban (change)="onChange($event)" [options]="options"></ngx-stripe-iban>
       </mat-card>
-      <button type="submit" mat-fab color="primary" (click)="addIBANBankAccount()" [disabled]="!bankComplete">
+      <button type="submit" mat-fab color="primary" (click)="addIBANBankAccount()" [disabled]="!bankComplete" aria-label="add IBAN bank">
         <mat-icon>add</mat-icon>
       </button>
     </div>
@@ -49,7 +49,7 @@
           <mat-label>Account number</mat-label>
           <input matInput type="text" formControlName="accountNumber" placeholder="01234567" onKeyPress="if(this.value.length == 8) return false">
         </mat-form-field>
-        <button type="submit" mat-fab color="primary" [disabled]="bankAccountForm.invalid">
+        <button type="submit" mat-fab color="primary" [disabled]="bankAccountForm.invalid" aria-label="add bank">
           <mat-icon>add</mat-icon>
         </button>
       </div>

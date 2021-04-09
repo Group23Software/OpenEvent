@@ -46,7 +46,6 @@ export class IteratorComponent implements OnInit, OnDestroy
 
   public createAnimationPlayer ()
   {
-    console.log('creating animation for', this.elementRef);
     if (this.player) this.player.destroy();
 
     let animationFactory = this.animationBuilder.build([animate(200, style({transform: 'translateX(100%)'}))]);

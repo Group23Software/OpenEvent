@@ -109,7 +109,6 @@ export class BankAccountComponent implements OnInit
       this.bankingService.GetBalance().subscribe(balance =>
       {
         this.balance = balance;
-        console.log(this.balance);
       });
     }
   }
@@ -122,7 +121,6 @@ export class BankAccountComponent implements OnInit
   public addBankAccount ()
   {
     this.addBankAccountLoading = true;
-    console.log('creating bank account', this.bankAccountForm);
     this.stripeService.createToken('bank_account', {
       account_holder_name: this.User.FirstName + " " + this.User.LastName,
       account_holder_type: 'individual',
@@ -151,7 +149,6 @@ export class BankAccountComponent implements OnInit
 
   private handleBankAccountResult (result)
   {
-    console.log(result);
     if (result.token)
     {
       this.bankingService.AddBankAccount({
@@ -195,10 +192,8 @@ export class BankAccountComponent implements OnInit
     this.documentLoading = true;
     this.bankingService.UploadIdentityDocument(event.target.files[0], StripeFilePurpose.IdentityDocument).subscribe(x =>
     {
-      console.log(x);
       this.bankingService.AttachFrontFile(x.id).subscribe(a =>
       {
-        console.log(a);
         if (a)
         {
           this.documentLoading = false;
@@ -222,10 +217,8 @@ export class BankAccountComponent implements OnInit
     this.documentLoading = true;
     this.bankingService.UploadIdentityDocument(event.target.files[0], StripeFilePurpose.AdditionalVerification).subscribe(x =>
     {
-      console.log(x);
       this.bankingService.AttachAdditionalFile(x.id).subscribe(a =>
       {
-        console.log(a);
         if (a)
         {
           this.documentLoading = false;

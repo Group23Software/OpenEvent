@@ -162,8 +162,6 @@ export class TicketSalesComponent implements OnInit
         }
       })
 
-      console.log(this.chartOptions);
-
       for (let d = new Date(startDate.toDateString()); d <= new Date(endDate.toDateString()); d.setDate(d.getDate() + 1))
       {
         dates.set(d.toDateString(), 0);
@@ -180,7 +178,6 @@ export class TicketSalesComponent implements OnInit
         }
       });
 
-      console.log(this.Analytics.PageViewEvents);
       this.Analytics.PageViewEvents.forEach(p =>
       {
         pageViewDates.set(p.Date.toDateString(), pageViewDates.get(p.Date.toDateString()) + p.PageViews.length);
@@ -198,8 +195,6 @@ export class TicketSalesComponent implements OnInit
       {
         pageViewPoints.push({x: date, y: total});
       });
-
-      console.log(pageViewDates);
 
       this.ticketSalesData[0].data = ticketSalesPoints;
       this.ticketSalesData[1].data = pageViewPoints;

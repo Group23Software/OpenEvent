@@ -27,7 +27,6 @@ export class TicketComponent implements OnInit
     this.ticketService.Get(id).subscribe(t =>
     {
       this.Ticket = t;
-      console.log(this.Ticket);
     }, (e: HttpErrorResponse) =>
     {
       this.getTicketError = e.error.Message

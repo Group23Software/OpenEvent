@@ -43,7 +43,6 @@ export class ThumbnailEditComponent implements ControlValueAccessor, OnInit
 
   ngOnInit (): void
   {
-    console.log('this is the control', this.control);
   }
 
   public thumbnailUpload ()
@@ -66,20 +65,17 @@ export class ThumbnailEditComponent implements ControlValueAccessor, OnInit
         this.onTouched();
 
         this.thumbnailEvent.emit(this.thumbnail);
-        console.log(this.thumbnail);
       }
     });
   }
 
   registerOnChange (fn: any): void
   {
-    console.log(fn);
     this.onChange = fn;
   }
 
   registerOnTouched (fn: any): void
   {
-    console.log(fn);
     this.onTouched = fn;
   }
 
@@ -91,11 +87,8 @@ export class ThumbnailEditComponent implements ControlValueAccessor, OnInit
 
   validate(control: FormControl)
   {
-    console.log('validate thumbnail', control);
-    console.log('touched',control.touched);
     if (control.touched)
     {
-      console.log('the thumbnail was touched when validating')
       if (control.value == null) return {required: true}
     }
     return false;

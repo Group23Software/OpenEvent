@@ -46,7 +46,7 @@ export class LandingComponent implements OnInit
     {
     }, (e: HttpErrorResponse) => this.Error = e.error, () => {
       this.Loading = false;
-      console.log('finished loading', this.Loading);
+      // console.log('finished loading', this.Loading);
     });
   }
 

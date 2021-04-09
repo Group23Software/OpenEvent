@@ -3,13 +3,6 @@
 </mat-card>
 
 <div class="container" *ngIf="Event">
-  <!--  <div id="eventHeader" ngClass.lt-sm="flex-column">-->
-  <!--    <div class="mr-3 flex-grow-1">-->
-  <!--      <div style="width: 80%; height: 80%;">-->
-  <!--        <div>{{Event.Name}}</div>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--  </div>-->
 
   <div class="my-3">
     <div class="display-4">{{Event.Name}}</div>
@@ -40,7 +33,7 @@
 
       <div class="d-flex flex-column w-100">
         <mat-card class="mr-3" *ngIf="Event.Categories?.length > 0">
-          <mat-chip-list>
+          <mat-chip-list aria-label="categories">
             <mat-chip *ngFor="let category of Event.Categories">{{category.Name}}</mat-chip>
           </mat-chip-list>
         </mat-card>
@@ -69,7 +62,7 @@
               <div id="map" *ngIf="mapLink">
                 <div class="mapouter">
                   <div class="gmap_canvas">
-                    <iframe width="300" height="250" id="gmap_canvas" [src]="mapLink | safe:'resourceUrl'" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                    <iframe title="map" width="300" height="250" id="gmap_canvas" [src]="mapLink | safe:'resourceUrl'" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
                   </div>
                 </div>
               </div>

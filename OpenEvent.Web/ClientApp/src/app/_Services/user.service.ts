@@ -79,14 +79,16 @@ export class UserService
 
   public OpenConnection (): void
   {
-    this.connection.start().then(() => console.log("Connected to the user hub")).catch(err => console.error('error connecting to user hub', err));
+    this.connection.start().then(() => {
+    //  console.log("Connected to the user hub")
+    }).catch(err => console.error('error connecting to user hub', err));
 
-    this.connection.onclose(error => console.log("disconnected from the user hub"));
+    // this.connection.onclose(error => console.log("disconnected from the user hub"));
   }
 
   public DestroyConnection (): void
   {
-    this.connection.stop().then(() => console.log('destroyed user hub connection'));
+    this.connection.stop().then(r => {});
   }
 
   public GetUserAsync (): Observable<UserAccountModel | null>
@@ -163,7 +165,6 @@ export class UserService
   {
     return this.http.post<usernameBody>(this.BaseUrl + UserPaths.UpdateUserName, updateUserNameBody).pipe(map(result =>
     {
-      console.log(result);
       this.User.UserName = result.username;
       return result;
     }));
@@ -240,8 +241,6 @@ export class UserService
         SearchEvents: Array.from(searchEvents, ([key, value]) => ({Date: new Date(key), Searches: value})),
         TicketVerificationEvents: a.TicketVerificationEvents
       }
-
-      console.log(mapped);
 
       return mapped;
     }));

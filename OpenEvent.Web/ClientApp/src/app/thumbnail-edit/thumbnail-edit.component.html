@@ -1,4 +1,4 @@
 <div id="newThumbnailTile" class="mat-elevation-z1">
   <img id="thumbnail" *ngIf="thumbnail" [src]="thumbnail.Source" [alt]="thumbnail.Label">
-  <button mat-mini-fab class="imageDeleteButton" (click)="thumbnailUpload()" id="newThumbnailButton"><mat-icon>edit</mat-icon></button>
+  <button mat-mini-fab class="imageDeleteButton" (click)="thumbnailUpload()" id="newThumbnailButton" aria-label="edit thumbnail"><mat-icon>edit</mat-icon></button>
 </div>

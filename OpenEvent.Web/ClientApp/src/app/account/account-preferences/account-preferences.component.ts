@@ -156,7 +156,6 @@ export class AccountPreferencesComponent implements OnInit, OnDestroy
       if (image)
       {
         this.updateAvatarLoading = true;
-        console.log(image);
         this.userService.UpdateAvatar({
           Id: this.user.Id,
           Avatar: (new ImageManipulationService).toUTF8Array(image)
