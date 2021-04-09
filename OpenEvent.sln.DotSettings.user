@@ -4,7 +4,12 @@
 	
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1a7837ff_002D0d86_002D4328_002Da7fe_002D498331429382/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;OpenEvent.Test&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;Project Location="/Users/harrison/Desktop/OpenEvent/OpenEvent.Test" Presentation="&amp;lt;OpenEvent.Test&amp;gt;" /&gt;
+  &lt;Or&gt;
+    &lt;Project Location="/Users/harrison/Desktop/OpenEvent/OpenEvent.Test" Presentation="&amp;lt;OpenEvent.Test&amp;gt;" /&gt;
+    &lt;TestAncestor&gt;
+      &lt;TestId&gt;NUnit3x::A353F924-4FF7-456C-84FD-745D871B38F4::net5.0::OpenEvent.Integration.Tests.UserController.Create.Should_Create_User&lt;/TestId&gt;
+    &lt;/TestAncestor&gt;
+  &lt;/Or&gt;
 &lt;/SessionState&gt;</s:String>
 	
 	
